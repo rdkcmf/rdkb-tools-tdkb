@@ -91,6 +91,25 @@ int ssp_GetDeviceConfigStatus(char* pValue)
 
 
 /*******************************************************************************************
+ * * Function Name       : ssp_getFactoryPartnerId
+ ** Description          : This function will invoke the HAL API to get the factory partner ID
+ ** @param [in]          : String to fetch the Boot Loader Version
+ ** @param [out]         : return status an integer value 0-success and 1-Failure
+ *********************************************************************************************/
+int ssp_getFactoryPartnerId(char* pValue)
+{
+	DEBUG_PRINT(DEBUG_TRACE, "Entering the ssp_getFactoryPartnerId wrapper\n");
+
+	if(platform_hal_getFactoryPartnerId(pValue) != RETURN_OK)
+	{
+		DEBUG_PRINT(DEBUG_ERROR, " platform_hal_getFactoryPartnerId function failure\n");
+		return RETURN_ERR;
+	}
+	return RETURN_OK;
+}
+
+
+/*******************************************************************************************
  * * Function Name       : ssp_GetFirmwareName
  ** Description          : This function will invoke the HAL API to get the Firmware Name
  ** @param [in]          : String to fetch the Fetch the Firmware Name

@@ -233,7 +233,52 @@ void platform_stub_hal::platform_stub_hal_GetDeviceConfigStatus(IN const Json::V
 		return;
 	}
 }
+/*************************************************************************************************
+ *Function name : platform_stub_hal_getFactoryPartnerId
+ *Description   : This function will invoke the SSP  HAL wrapper to get the getFactoryPartnerId
+ *@param [in]   : req - ParamName : Holds the name of the parameter
+ *@param [out]  : response - filled with SUCCESS or FAILURE based on the return value
+ **************************************************************************************************/
+void platform_stub_hal::platform_stub_hal_getFactoryPartnerId(IN const Json::Value& req, OUT Json::Value& response)
+{
+	char getResult[MAX_STRING_SIZE] = {0};
+	int isNegativeScenario = 0;
+	int result = RETURN_FAILURE;
 
+	DEBUG_PRINT(DEBUG_TRACE,"Inside Function platform_stub_hal_getFactoryPartnerId stub\n");
+
+	if(&req["flag"])
+	{
+		isNegativeScenario = req["flag"].asInt();
+	}
+
+	if(isNegativeScenario)
+	{
+		DEBUG_PRINT(DEBUG_TRACE, "Executing negative scenario\n");
+		result = ssp_getFactoryPartnerId(NULL);
+	}
+	else
+	{
+		DEBUG_PRINT(DEBUG_TRACE, "Executing positive scenario\n");
+		result = ssp_getFactoryPartnerId(getResult);
+	}
+	if(result == RETURN_SUCCESS)
+	{
+		response["result"] = "SUCCESS";
+		response["details"] = getResult;
+
+		DEBUG_PRINT(DEBUG_TRACE, "%s:: Test execution successful:: result = %s\n", __func__, getResult);
+		return;
+	}
+	else
+	{
+		response["result"] = "FAILURE";
+		response["details"] = "Factory partner ID not fetched successfully";
+
+		DEBUG_PRINT(DEBUG_TRACE, "%s:: Test execution failed\n", __func__);
+		return;
+	}
+}
 /*************************************************************************************************
  *Function name : platform_stub_hal_GetFirmwareName
  *Description   : This function will invoke the SSP  HAL wrapper to get the GetFirmwareName
