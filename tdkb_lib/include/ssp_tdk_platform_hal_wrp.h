@@ -26,6 +26,7 @@ extern "C"
         int ssp_GetBaseMacAddress(char*);
         int ssp_GetBootloaderVersion(char*,unsigned long int);
         int ssp_GetDeviceConfigStatus(char*);
+        int ssp_getFactoryPartnerId(char*);
         int ssp_GetFreeMemorySize(unsigned long int*);
         int ssp_GetFirmwareName(char*,unsigned long int);
         int ssp_GetHardware(char*);
