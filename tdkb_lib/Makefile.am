@@ -40,7 +40,7 @@ else
 libtdkagentssp_la_SOURCES = src/ssp_messagebus_interface.c src/ssp_tdk_mbus_wrp.c src/ssp_tdk_mbus_lib.c src/ssp_action.c src/ssp_main.c src/ssp_tdk_CosaCM_wrp.c src/ssp_tdk_wrp.c src/ssp_tdk_CosaMTA_wrp.c src/ssp_tdk_WiFi_wrp.c src/ssp_tdk_cmhal_wrp.c src/ssp_tdk_Ethsw_wrp.c src/ssp_tdk_dhcp_hal_wrp.c src/ssp_tdk_platform_hal_wrp.c src/ssp_tdk_mocahal_wrp.c src/ssp_tdk_mtahal_wrp.c
 endif
 if PLATFORM_ENABLED
-libtdkagentssp_la_LDFLAGS =  -lccsp_common -lcm_mgnt -lcm_tr181 -lmta_tr181 -ltr181 -ldmltad -lhal_wifi -lhal_moca -lhal_mta
+libtdkagentssp_la_LDFLAGS =  -lccsp_common -lcm_mgnt -lcm_tr181 -lmta_tr181 -ltr181 -lhal_wifi -lhal_moca -lhal_mta
 else
 libtdkagentssp_la_LDFLAGS =  -lccsp_common -lhal_wifi
 endif
