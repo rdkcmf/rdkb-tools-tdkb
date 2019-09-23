@@ -499,9 +499,15 @@ void MTAHAL::MTAHAL_GetDSXLogs(IN const Json::Value& req, OUT Json::Value& respo
     PMTAMGMT_MTA_DSXLOG pLog = NULL, p;
     unsigned long count = 0;
     int i;
+    char paramType[10] = {'\0'};
 
-    returnValue = ssp_MTAHAL_GetDSXLogs(&count, &pLog);
+    strcpy(paramType, req["paramType"].asCString());
 
+    if(strcmp(paramType, "NULL"))
+        returnValue = ssp_MTAHAL_GetDSXLogs(&count, &pLog);
+    else
+        returnValue = ssp_MTAHAL_GetDSXLogs(&count, NULL);
+     
     if(0 == returnValue)
     {
         if (pLog)
