@@ -119,6 +119,8 @@ void MTAHAL::MTAHAL_GetParamUlongValue(IN const Json::Value& req, OUT Json::Valu
     char paramName[100] = {'\0'};
     char Details[64] = {'\0'};
     unsigned long value = 0;
+    char paramType[10] = {'\0'};
+
 
     /* Validate the input arguments */
     if(&req["paramName"]==NULL)
@@ -129,8 +131,16 @@ void MTAHAL::MTAHAL_GetParamUlongValue(IN const Json::Value& req, OUT Json::Valu
     }
 
     strcpy(paramName,req["paramName"].asCString());
+    strcpy(paramType, req["paramType"].asCString());
 
-    returnValue = ssp_MTAHAL_GetParamUlongValue(paramName,&value);
+    if(strcmp(paramType, "NULL"))
+    {
+        returnValue = ssp_MTAHAL_GetParamUlongValue(paramName,&value);
+    }
+    else
+    {
+        returnValue = ssp_MTAHAL_GetParamUlongValue(paramName,NULL);
+    }
 
     if(0 == returnValue)
     {
@@ -217,8 +227,14 @@ void MTAHAL::MTAHAL_GetDHCPInfo(IN const Json::Value& req, OUT Json::Value& resp
     int returnValue = 0;
     char details[1024] = {'\0'};
     MTAMGMT_MTA_DHCP_INFO dhcpInfo;
+    char paramType[10] = {'\0'};
 
-    returnValue = ssp_MTAHAL_GetDHCPInfo(&dhcpInfo);
+    strcpy(paramType, req["paramType"].asCString());
+
+    if(strcmp(paramType, "NULL"))
+        returnValue = ssp_MTAHAL_GetDHCPInfo(&dhcpInfo);
+    else
+        returnValue = ssp_MTAHAL_GetDHCPInfo(NULL);
 
     if(0 == returnValue)
     {
@@ -252,6 +268,7 @@ void MTAHAL::MTAHAL_GetLineTableGetEntry(IN const Json::Value& req, OUT Json::Va
     char details[1024] = {'\0'};
     MTAMGMT_MTA_LINETABLE_INFO info;
     unsigned long value = 0;
+    char paramType[10] = {'\0'};
 
     if(&req["value"]==NULL)
     {
@@ -261,8 +278,13 @@ void MTAHAL::MTAHAL_GetLineTableGetEntry(IN const Json::Value& req, OUT Json::Va
     }    
 
     value = req["value"].asInt();
+    strcpy(paramType, req["paramType"].asCString());
 
-    returnValue = ssp_MTAHAL_GetLineTableGetEntry(value, &info);
+    if(strcmp(paramType, "NULL"))
+        returnValue = ssp_MTAHAL_GetLineTableGetEntry(value, &info);
+    else
+        returnValue = ssp_MTAHAL_GetLineTableGetEntry(value, NULL);
+
 
     if(0 == returnValue)
     {
@@ -338,7 +360,14 @@ void MTAHAL::MTAHAL_GetServiceFlow(IN const Json::Value& req, OUT Json::Value& r
     PMTAMGMT_MTA_SERVICE_FLOW pFlow = NULL, p;
     int i;
 
-    returnValue = ssp_MTAHAL_GetServiceFlow(&count, &pFlow);
+    char paramType[10] = {'\0'};
+
+    strcpy(paramType, req["paramType"].asCString());
+
+    if(strcmp(paramType, "NULL"))
+        returnValue = ssp_MTAHAL_GetServiceFlow(&count, &pFlow);
+    else
+        returnValue = ssp_MTAHAL_GetServiceFlow(&count, NULL);
 
     if(0 == returnValue)
     {
@@ -455,6 +484,7 @@ void MTAHAL::MTAHAL_GetCALLP(IN const Json::Value& req, OUT Json::Value& respons
     char details[1024] = {'\0'};
     MTAMGMT_MTA_CALLP callp;
     unsigned long value = 0;
+    char paramType[10] = {'\0'};
 
     if(&req["value"]==NULL)
     {
@@ -464,8 +494,13 @@ void MTAHAL::MTAHAL_GetCALLP(IN const Json::Value& req, OUT Json::Value& respons
     }    
 
     value = req["value"].asInt();
+    strcpy(paramType, req["paramType"].asCString());
 
-    returnValue = ssp_MTAHAL_GetCALLP(value, &callp);
+    if(strcmp(paramType, "NULL"))
+        returnValue = ssp_MTAHAL_GetCALLP(value, &callp);
+    else
+        returnValue = ssp_MTAHAL_GetCALLP(value, NULL);
+
 
     if(0 == returnValue)
     {
@@ -561,8 +596,14 @@ void MTAHAL::MTAHAL_GetMtaLog(IN const Json::Value& req, OUT Json::Value& respon
     PMTAMGMT_MTA_MTALOG_FULL pLog = NULL, p;
     unsigned long count = 0;
     int i;
+    char paramType[10] = {'\0'};
 
-    returnValue = ssp_MTAHAL_GetMtaLog(&count, &pLog);
+    strcpy(paramType, req["paramType"].asCString());
+
+    if(strcmp(paramType, "NULL")) 
+        returnValue = ssp_MTAHAL_GetMtaLog(&count, &pLog);
+    else
+        returnValue = ssp_MTAHAL_GetMtaLog(&count, NULL);
 
     if(0 == returnValue)
     {
