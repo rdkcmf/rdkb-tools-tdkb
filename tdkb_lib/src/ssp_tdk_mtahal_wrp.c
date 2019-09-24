@@ -123,8 +123,6 @@ int ssp_MTAHAL_GetParamUlongValue(char* paramName, unsigned long* value)
 {
     int return_status = SSP_SUCCESS;
     unsigned long lineTableNumOfEntries = 0;
-    BOOLEAN dsxLogEnable = FALSE;
-    BOOLEAN callSignallingLogEnable = FALSE;
     BOOLEAN dectEnable = FALSE;
     BOOLEAN batteryInstalled = FALSE;
     unsigned long val = 0;
@@ -144,25 +142,23 @@ int ssp_MTAHAL_GetParamUlongValue(char* paramName, unsigned long* value)
     }    
     else if( !(strcmp(paramName, "DSXLogEnable")) )
     {
-        return_status = mta_hal_GetDSXLogEnable(&dsxLogEnable);
+        return_status = mta_hal_GetDSXLogEnable(value);
         printf("Return status of mta_hal_GetDSXLogEnable %d", return_status);
         if ( return_status != SSP_SUCCESS)
         {
             printf("ssp_MTAHAL_GetParamUlongValue : Failed to get the MTA DSX Log Enable\n");
             return SSP_FAILURE;
         }        
-        *value = dsxLogEnable;
     }    
     else if( !(strcmp(paramName, "CallSignallingLogEnable")) )
     {
-        return_status = mta_hal_GetCallSignallingLogEnable(&callSignallingLogEnable);
+        return_status = mta_hal_GetCallSignallingLogEnable(value);
         printf("Return status of mta_hal_GetCallSignallingLogEnable %d", return_status);
         if ( return_status != SSP_SUCCESS)
         {
             printf("ssp_MTAHAL_SetParamUlongValue : Failed to get the MTA Call Signalling Log Enable\n");
             return SSP_FAILURE;
         }
-        *value = callSignallingLogEnable;
     }
     else if( !(strcmp(paramName, "DectEnable")) )
     {
@@ -254,25 +250,23 @@ int ssp_MTAHAL_GetParamUlongValue(char* paramName, unsigned long* value)
     }
     else if( !(strcmp(paramName, "MTAResetCount")) )
     {
-        return_status = mta_hal_Get_MTAResetCount(&val);
+        return_status = mta_hal_Get_MTAResetCount(value);
         printf("Return status of mta_hal_Get_MTAResetCount %d", return_status);
         if ( return_status != SSP_SUCCESS)
         {
             printf("ssp_MTAHAL_GetParamUlongValue : Failed to get the MTA Reset Count\n");
             return SSP_FAILURE;
         }        
-        *value = val;
     }
     else if( !(strcmp(paramName, "LineResetCount")) )
     {
-        return_status = mta_hal_Get_LineResetCount(&val);
+        return_status = mta_hal_Get_LineResetCount(value);
         printf("Return status of mta_hal_Get_LineResetCount %d", return_status);
         if ( return_status != SSP_SUCCESS)
         {
             printf("ssp_MTAHAL_GetParamUlongValue : Failed to get the Line Reset Count\n");
             return SSP_FAILURE;
         }        
-        *value = val;
     }
     else
     {
