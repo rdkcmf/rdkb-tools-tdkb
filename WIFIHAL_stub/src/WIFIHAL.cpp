@@ -1724,8 +1724,8 @@ void WIFIHAL::WIFIHAL_ParamApIndex(IN const Json::Value& req, OUT Json::Value& r
 void WIFIHAL::WIFIHAL_GetApAssociatedDevice(IN const Json::Value& req, OUT Json::Value& response)
 {
     DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_GetApAssociatedDevice ----->Entry\n");
-    char associated_dev[64]={0};
-    unsigned int output_array_size=64;
+    char associated_dev[1024]={0};
+    unsigned int output_array_size=1024;
     int apIndex = 1;
     int returnValue;
     char details[2000] = {'\0'};
@@ -1741,7 +1741,7 @@ void WIFIHAL::WIFIHAL_GetApAssociatedDevice(IN const Json::Value& req, OUT Json:
     returnValue = ssp_WIFIHALGetApAssociatedDevice(apIndex, associated_dev, output_array_size);
     if(0 == returnValue)
     {
-        sprintf(details,"List of Associated Device: Devices=%s:Value returned is : output_array_size=%d",associated_dev,output_array_size);
+        sprintf(details,"List of Associated Device: Devices=%s:Value returned is : output_array_size=%d",associated_dev,strlen(associated_dev));
         response["result"]="SUCCESS";
         response["details"]=details;
         return;
@@ -1795,6 +1795,539 @@ void WIFIHAL::WIFIHAL_GetApDeviceRSSI(IN const Json::Value& req, OUT Json::Value
     }
     DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_GetApDeviceRSSI  --->Exit\n");
 }
+
+/*******************************************************************************************
+  *
+ * Function Name        : WIFIHAL_DelApAclDevices
+ * Description          : This function invokes WiFi hal's delete api Ap Acl Devices *
+ * @param [in] req-    : methodName - identifier for the hal api name
+                          apIndex - ap index value of wifi
+ * @param [out] response - filled with SUCCESS or FAILURE based on the output status of operation
+ *
+ ********************************************************************************************/
+void WIFIHAL::WIFIHAL_DelApAclDevices(IN const Json::Value& req, OUT Json::Value& response){
+    DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_AddorDelApAclDevice------>Entry\n");
+    int apIndex = 0;
+    int returnValue;
+    char details[200] = {'\0'};
+    apIndex = req["apIndex"].asInt();
+    printf("wifi_del operation to be done\n");
+    returnValue = ssp_WIFIHALDelApAclDevices(apIndex);
+    if(0 == returnValue)
+    {
+        sprintf(details, "%s operation success", __FUNCTION__);
+        response["result"]="SUCCESS";
+        response["details"]=details;
+        return;
+    }
+    else
+    {
+        sprintf(details, "%s operation failed", __FUNCTION__);
+        response["result"]="FAILURE";
+        response["details"]=details;
+        DEBUG_PRINT(DEBUG_TRACE,"\n WiFiCallMethodForDelApAclDevices --->Error in execution\n");
+        return;
+    }
+}
+
+
+
+/*******************************************************************************************
+ *
+ * Function Name        : WIFIHAL_GetApAclDevices
+ * Description          : This function invokes WiFi hal api wifi_getApAclDevices
+ * @param [in] req-     : apIndex - ap index of the wifi
+ * @param [out] response - filled with SUCCESS or FAILURE based on the output status of operation
+ *
+ ********************************************************************************************/
+void WIFIHAL::WIFIHAL_GetApAclDevices(IN const Json::Value& req, OUT Json::Value& response)
+{
+    DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_GetApAclDevices ----->Entry\n");
+    char mac_addr[512]={'\0'};
+    //unsigned int output_array_size;
+    int apIndex = 0;
+    int returnValue;
+    char details[2000] = {'\0'};
+    apIndex = req["apIndex"].asInt();
+    if (mac_addr != NULL)
+    {
+         DEBUG_PRINT(DEBUG_TRACE,"\n Memory Allocated Successfully");
+    }
+    else
+    {
+         DEBUG_PRINT(DEBUG_TRACE, "\n Memory Allocation Failed");
+    }
+    returnValue = ssp_WIFIHALGetApAclDevices(apIndex, mac_addr, sizeof(mac_addr));
+    if(0 == returnValue)
+    {
+        sprintf(details,"List of Mac Address; %s ;Value returned is ; output_array_size=%d",mac_addr,strlen(mac_addr));
+        response["result"]="SUCCESS";
+        response["details"]=details;
+        return;
+    }
+    else
+    {
+        sprintf(details, "wifi_getApAclDevices operation failed");
+        response["result"]="FAILURE";
+        response["details"]=details;
+        DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_GetApAclDevices ---->Error in execution\n");
+        return;
+    }
+}
+
+/*******************************************************************************************
+ * Function Name        : WIFIHAL_GetApDeviceTxRxRate
+ * Description          : This function invokes WiFi hal apis
+ * @param [in] req-     : apIndex      Access Point index
+                                                  MAC          Client MAC in upcase format
+                                                  output_TxRx in Mbps
+ * @param [out] response - filled with SUCCESS or FAILURE based on the output status of operation
+ *
+ ********************************************************************************************/
+void WIFIHAL::WIFIHAL_GetApDeviceTxRxRate(IN const Json::Value& req, OUT Json::Value& response)
+{
+    DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_GetApDeviceTxRxRate ----->Entry\n");
+    char methodName[50] = {'\0'};
+    int returnValue;
+    int apIndex = 0;
+    int output_TxRx = 0;
+    char MAC[64] = {'\0'};
+    char details[200] = {'\0'};
+    apIndex = req["apIndex"].asInt();
+    strcpy(MAC, req["MAC"].asCString());
+    strcpy(methodName, req["methodName"].asCString());
+    returnValue = ssp_WIFIHALGetApDeviceTxRxRate(apIndex, MAC, &output_TxRx, methodName);
+    if(0 == returnValue)
+    {
+        DEBUG_PRINT(DEBUG_TRACE,"\n output: %d\n",output_TxRx);
+        sprintf(details, "Value returned is :%d", output_TxRx);
+        response["result"]="SUCCESS";
+        response["details"]=details;
+        return;
+    }
+    else
+    {
+        sprintf(details, "GetApDeviceTxRxRate operation failed");
+        response["result"]="FAILURE";
+        response["details"]=details;
+        return;
+    }
+    DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_GetApDeviceTxRxRate  --->Exit\n");
+}
+
+/*******************************************************************************************
+ *
+ * Function Name        : WIFIHAL_CreateAp
+ * Description          : This function invokes WiFi hal api wifi_createAp
+ * @param [in] req-     : apIndex     Access Point index
+ * @param [in] req-     :  radioIndex  Radio index
+ * @param [in] req-     :  essid       SSID Name
+ * @param [in] req-     :  hideSsid    True/False, to SSID advertisement enable value
+
+ * @param [out] response - filled with SUCCESS or FAILURE based on the output status of operation
+ *
+*********************************************************************************************/
+void WIFIHAL::WIFIHAL_CreateAp(IN const Json::Value& req, OUT Json::Value& response)
+{
+    DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_CreateAp ----->Entry\n");
+    int apIndex = 1;
+    int radioIndex = 1;
+    int returnValue;
+    char details[1000] = {'\0'};
+    char essid[20] = {'\0'};
+    unsigned char hideSsid;
+    apIndex = req["apIndex"].asInt();
+    radioIndex = req["radioIndex"].asInt();
+    strcpy(essid, req["essid"].asCString());
+    hideSsid = req["hideSsid"].asInt();
+    returnValue = ssp_WIFIHAL_CreateAp(apIndex, radioIndex, essid, hideSsid);
+    if(0 == returnValue)
+    {
+        sprintf(details, "wifi_createAp operation SUCCESS");
+        response["result"]="SUCCESS";
+        response["details"]=details;
+        return;
+    }
+    else
+    {
+        sprintf(details, "wifi_createAp operation failed");
+        response["result"]="FAILURE";
+        response["details"]=details;
+        DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_CreateAp ---->Error in execution\n");
+        return;
+    }
+}
+
+/*******************************************************************************************
+ *
+ * Function Name        : WIFIHAL_GetApAssociatedDeviceDiagnosticResult3
+ * Description          : This function invokes WiFi hal api wifi_getApAssociatedDeviceDiagnosticResult3
+ * @param [in] req-     : apIndex - ap index of the wifi
+ * @param [out] response - filled with SUCCESS or FAILURE based on the output status of operation
+ *
+ ********************************************************************************************/
+void WIFIHAL::WIFIHAL_GetApAssociatedDeviceDiagnosticResult3(IN const Json::Value& req, OUT Json::Value& response)
+{
+    DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_GetApAssociatedDeviceDiagnosticResult3 ----->Entry\n");
+    wifi_associated_dev3_t *associated_dev_array = NULL;
+    unsigned int output_array_size = 0;
+    int apIndex = 0;
+    int returnValue;
+    char details[2000] = {'\0'};
+    apIndex = req["apIndex"].asInt();
+
+    returnValue = ssp_WIFIHALGetApAssociatedDeviceDiagnosticResult3(apIndex, &associated_dev_array, &output_array_size);
+    if(0 == returnValue)
+    {
+       if(associated_dev_array and output_array_size > 0)
+       {
+            sprintf(details,"Value returned is : output_array_size=%u, MAC=%02x:%02x:%02x:%02x:%02x:%02x, IP=%s, AuthState=%d, LastDataDownlinkRate=%u, LastDataUplinkRate=%u, SignalStrength=%d, Retransmissions=%u, Active=%d, OperatingStd= %s, OperatingChBw=%s, SNR=%d, interferenceSources=%s, DataFramesSentAck=%lu, cli_DataFramesSentNoAck=%lu, cli_BytesSent=%lu, cli_BytesReceived=%lu, cli_RSSI=%d, cli_MinRSSI=%d, cli_MaxRSSI=%d, Disassociations=%u, AuthFailures=%u, cli_Associations=%llu, PacketsSent=%lu, PacketsReceived=%lu, ErrorsSent=%lu, RetransCount=%lu, FailedRetransCount=%lu, RetryCount=%lu, MultipleRetryCount=%lu, MaxDownlinkRate=%u, MaxUplinkRate=%u",output_array_size,associated_dev_array->cli_MACAddress[0],associated_dev_array->cli_MACAddress[1],associated_dev_array->cli_MACAddress[2],associated_dev_array->cli_MACAddress[3],associated_dev_array->cli_MACAddress[4],associated_dev_array->cli_MACAddress[5],associated_dev_array->cli_IPAddress,associated_dev_array->cli_AuthenticationState,associated_dev_array->cli_LastDataDownlinkRate,associated_dev_array->cli_LastDataUplinkRate,associated_dev_array->cli_SignalStrength,associated_dev_array->cli_Retransmissions,associated_dev_array->cli_Active,associated_dev_array->cli_OperatingStandard,associated_dev_array->cli_OperatingChannelBandwidth,associated_dev_array->cli_SNR,associated_dev_array->cli_interferenceSources,associated_dev_array->cli_DataFramesSentAck,associated_dev_array->cli_DataFramesSentNoAck,associated_dev_array->cli_BytesSent,associated_dev_array->cli_BytesReceived,associated_dev_array->cli_RSSI,associated_dev_array->cli_MinRSSI,associated_dev_array->cli_MaxRSSI,associated_dev_array->cli_Disassociations,associated_dev_array->cli_AuthenticationFailures,associated_dev_array->cli_Associations,associated_dev_array->cli_PacketsSent,associated_dev_array->cli_PacketsReceived,associated_dev_array->cli_ErrorsSent,associated_dev_array->cli_RetransCount,associated_dev_array->cli_FailedRetransCount,associated_dev_array->cli_RetryCount,associated_dev_array->cli_MultipleRetryCount,associated_dev_array->cli_MaxDownlinkRate,associated_dev_array->cli_MaxUplinkRate);
+            response["result"]="SUCCESS";
+            response["details"]=details;
+            return;
+       }
+       else
+       {
+           sprintf(details, "wifi_getApAssociatedDeviceDiagnosticResult3 returned empty buffer");
+            response["result"]="FAILURE";
+            response["details"]=details;
+            DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_GetApAssociatedDeviceDiagnosticResult3 ----> returned empty buffer\n");
+            return;
+        }
+    }
+    else
+    {
+        sprintf(details, "wifi_getApAssociatedDeviceDiagnosticResult3 operation failed");
+        response["result"]="FAILURE";
+        response["details"]=details;
+        DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_GetApAssociatedDeviceDiagnosticResult3 ---->Error in execution\n");
+        return;
+    }
+}
+
+/*******************************************************************************************
+ * Function Name        : WIFIHAL_SetApScanFilter
+ * Description          : This function invokes WiFi hal's set api, when the value to be set is related to ApScanFilter
+ *
+ * @param [in] req-    : methodName - identifier for the hal api name
+ *                       apIndex - ap index value of wifi
+ *                       mode - the mode value to be set
+ *                       essid - the string value to be set
+ * @param [out] response - filled with SUCCESS or FAILURE based on the output status of operation
+ *
+ * ******************************************************************************************/
+void WIFIHAL::WIFIHAL_SetApScanFilter(IN const Json::Value& req, OUT Json::Value& response)
+{
+       DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_SetApScanFilter  ----->Entry\n");
+       char methodName[50] = {'\0'};
+       int apIndex = 1;
+       int returnValue;
+       int retValue;
+       char details[200] = {'\0'};
+       int mode = 0;
+       char essid[20] = {'\0'};
+       strcpy(methodName, req["methodName"].asCString());
+       apIndex = req["apIndex"].asInt();
+       mode = req["mode"].asInt();
+       strcpy(essid, req["essid"].asCString());
+       printf("wifi_set operation to be done\n");
+       returnValue = ssp_WIFIHALSetApScanFilter(apIndex, mode, essid, methodName);
+       if(0 == returnValue)
+       {
+               sprintf(details, "%s operation success", methodName);
+               response["result"]="SUCCESS";
+               response["details"]=details;
+       }
+       else
+       {
+               sprintf(details, "%s operation failed", methodName);
+               response["result"]="FAILURE";
+               response["details"]=details;
+               DEBUG_PRINT(DEBUG_TRACE,"\n WiFiCallMethodForApScanFilter --->Error in execution\n");
+               return;
+       }
+}
+
+/*******************************************************************************************
+ *
+ * Function Name        : WIFIHAL_GetApAssociatedDeviceStats
+ * Description          : This function invokes WiFi hal get api which are
+                          related to wifi_getApAssociatedDeviceStats
+ * @param [in] req-     : apIndex : apIndex value of wifi
+                        : MAC : DeviceMacAddress - the MacAddress(string)of the device
+ * @param [out] response - filled with SUCCESS or FAILURE based on the output status of operation
+ ********************************************************************************************/
+void WIFIHAL::WIFIHAL_GetApAssociatedDeviceStats(IN const Json::Value& req, OUT Json::Value& response)
+{
+       DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_GetApAssociatedDeviceStats----->Entry\n");
+       wifi_associated_dev_stats_t associated_dev_stats;
+       unsigned long long handle;
+       int apIndex = 1;
+       int i =0;
+       char ClientAddress[64] = {'\0'};
+       int returnValue;
+       mac_address_t MAC;
+       unsigned int tmp_MACConv[6];
+       char details[2000] = {'\0'};
+       apIndex = req["apIndex"].asInt();
+       strcpy(ClientAddress, req["MAC"].asCString());
+       sscanf(ClientAddress, "%02x:%02x:%02x:%02x:%02x:%02x",
+                       &tmp_MACConv[0],
+                       &tmp_MACConv[1],
+                       &tmp_MACConv[2],
+                       &tmp_MACConv[3],
+                       &tmp_MACConv[4],
+                       &tmp_MACConv[5]);
+
+       for(i =0 ;i <6; i++)
+               MAC[i]=(unsigned char)tmp_MACConv[i];
+
+       returnValue = ssp_WIFIHALGetApAssociatedDeviceStats(apIndex, &MAC, &associated_dev_stats, &handle);
+       if(0 == returnValue)
+       {
+               sprintf(details, "Value returned is :cli_rx_bytes=%llu,cli_tx_bytes=%llu,cli_rx_frames=%llu,cli_tx_frames=%llu,cli_rx_retries=%llu,cli_tx_retries=%llu,cli_rx_errors=%llu,cli_tx_errors=%llu,cli_rx_rate=%lf,cli_tx_rate=%lf,cli_rssi_bcn_rssi=%s,cli_rssi_bcn_time_s=%s,cli_rssi_bcn_count=%d,cli_rssi_ack_rssi=%s,cli_rssi_ack_time_s=%s,cli_rssi_ack_count=%d\n",associated_dev_stats.cli_rx_bytes,associated_dev_stats.cli_tx_bytes,associated_dev_stats.cli_rx_frames,associated_dev_stats.cli_tx_frames,associated_dev_stats.cli_rx_retries,associated_dev_stats.cli_tx_retries,associated_dev_stats.cli_rx_errors,associated_dev_stats.cli_tx_errors,associated_dev_stats.cli_rx_rate,associated_dev_stats.cli_tx_rate,associated_dev_stats.cli_rssi_bcn.rssi,associated_dev_stats.cli_rssi_bcn.time_s,associated_dev_stats.cli_rssi_bcn.count,associated_dev_stats.cli_rssi_ack.rssi,associated_dev_stats.cli_rssi_ack.time_s,associated_dev_stats.cli_rssi_ack.count);
+               response["result"]="SUCCESS";
+               response["details"]=details;
+               return;
+       }
+       else
+       {
+               sprintf(details, "wifi_getApAssociatedDeviceStats operation failed");
+               response["result"]="FAILURE";
+               response["details"]=details;
+               DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_GetApAssociatedDeviceStats ---->Error in execution\n");
+               return;
+       }
+}
+
+/*******************************************************************************************
+ *
+ * Function Name        : WIFIHAL_GetApAssociatedDeviceTxStatsResult
+ * Description          : This function invokes WiFi hal get api which are
+                          related to wifi_getApAssociatedDeviceTxStatsResult
+ * @param [in] req-     : radioIndex : radio Index value of wifi
+                        : MAC : DeviceMacAddress - the MacAddress(string)of the device
+ * @param [out] response - filled with SUCCESS or FAILURE based on the output status of operation
+ ********************************************************************************************/
+void WIFIHAL::WIFIHAL_GetApAssociatedDeviceTxStatsResult(IN const Json::Value& req, OUT Json::Value& response)
+{
+    DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_GetApAssociatedDeviceTxStatsResult ----->Entry\n");
+//    wifi_associated_dev_rate_info_tx_stats_t *stats_array = (wifi_associated_dev_rate_info_tx_stats_t*)malloc(sizeof(wifi_associated_dev_rate_info_tx_stats_t));
+    wifi_associated_dev_rate_info_tx_stats_t *tx_stats = NULL;
+    unsigned int output_array_size = 0;
+    unsigned long long handle = 0;
+    int radioIndex = 1;
+    int returnValue = 0;
+    mac_address_t MAC;
+    char details[2000] = {'\0'};
+    int i =0;
+    char ClientAddress[64] = {'\0'};
+    unsigned char tmp_MACConv[6] = {0};
+    radioIndex = req["radioIndex"].asInt();
+    strcpy(ClientAddress, req["MAC"].asCString());
+    sscanf(ClientAddress, "%02x:%02x:%02x:%02x:%02x:%02x",
+                           &tmp_MACConv[0],
+                           &tmp_MACConv[1],
+                           &tmp_MACConv[2],
+                           &tmp_MACConv[3],
+                           &tmp_MACConv[4],
+                           &tmp_MACConv[5]);
+
+    for(i =0 ;i <6; i++)
+        MAC[i]=(unsigned char)tmp_MACConv[i];
+
+    //returnValue = ssp_WIFIHALGetApAssociatedDeviceTxStatsResult(radioIndex, &MAC, &stats_array, &output_array_size, &handle);
+    returnValue = ssp_WIFIHALGetApAssociatedDeviceTxStatsResult(radioIndex, (mac_address_t *)tmp_MACConv, &tx_stats, &output_array_size, &handle);
+    if(0 == returnValue)
+    {
+       if(tx_stats && output_array_size>0)
+       {
+            sprintf(details,"Value returned is : output_array_size=%d rate %1u/%02u/%1u (%08x) bytes %20llu   msdus %20llu    mpdus %20llu ppdus %20llu retries %20llu attempts %20llu",output_array_size,tx_stats[0].nss,tx_stats[0].mcs,tx_stats[0].bw,tx_stats[0].flags,tx_stats[0].bytes,tx_stats[0].msdus,tx_stats[0].mpdus,tx_stats[0].ppdus,tx_stats[0].retries,tx_stats[0].attempts);
+            response["result"]="SUCCESS";
+            response["details"]=details;
+            return;
+       }
+        else
+        {
+            sprintf(details,"wifi_getApAssociatedDeviceTxStatsResult returned empty buffer");
+            response["result"]="FAILURE";
+            response["details"]=details;
+            return;
+        }
+    }
+    else
+    {
+        sprintf(details, "wifi_getApAssociatedDeviceTxStatsResult operation failed");
+        response["result"]="FAILURE";
+        response["details"]=details;
+        DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_GetApAssociatedDeviceTxStatsResult ---->Error in execution\n");
+        return;
+    }
+}
+
+/*******************************************************************************************
+ *
+ * Function Name        : WIFIHAL_GetApAssociatedDeviceRxStatsResult
+ * Description          : This function invokes WiFi hal get api which are
+                          related to wifi_getApAssociatedDeviceRxStatsResult
+ * @param [in] req-     : radioIndex : radio Index value of wifi
+                        : MAC : DeviceMacAddress - the MacAddress(string)of the device
+ * @param [out] response - filled with SUCCESS or FAILURE based on the output status of operation
+ ********************************************************************************************/
+void WIFIHAL::WIFIHAL_GetApAssociatedDeviceRxStatsResult(IN const Json::Value& req, OUT Json::Value& response)
+{
+    DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_GetApAssociatedDeviceRxStatsResult ----->Entry\n");
+    wifi_associated_dev_rate_info_rx_stats_t *stats_array = NULL;
+    unsigned int output_array_size = 0;
+    unsigned long long handle = 0;
+    int radioIndex = 1;
+    int returnValue = 0;
+    mac_address_t MAC;
+    char details[2000] = {'\0'};
+    int i =0;
+    char ClientAddress[64] = {'\0'};
+    unsigned char tmp_MACConv[6];
+    radioIndex = req["radioIndex"].asInt();
+    strcpy(ClientAddress, req["MAC"].asCString());
+    sscanf(ClientAddress, "%02x:%02x:%02x:%02x:%02x:%02x",
+                           &tmp_MACConv[0],
+                           &tmp_MACConv[1],
+                           &tmp_MACConv[2],
+                           &tmp_MACConv[3],
+                           &tmp_MACConv[4],
+                           &tmp_MACConv[5]);
+
+    for(i =0 ;i <6; i++)
+        MAC[i]=(unsigned char)tmp_MACConv[i];
+
+    DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_GetApAssociatedDeviceRxStatsResult MAC %02x:%02x:%02x:%02x:%02x:%02x\n",MAC[0],MAC[1],MAC[2],MAC[3],MAC[4],MAC[5]);
+    returnValue = ssp_WIFIHALGetApAssociatedDeviceRxStatsResult(radioIndex, (mac_address_t *)tmp_MACConv, &stats_array, &output_array_size, &handle);
+    if(0 == returnValue)
+    {
+       if(stats_array && output_array_size>0)
+       {
+            sprintf(details,"Value returned is : output_array_size=%d, rate %1u/%02u/%1u (%08llx)   bytes %20llu   msdus %20llu    mpdus %20llu ppdus %20llu retries %20llu     rssi %20u",output_array_size,stats_array->nss, stats_array->mcs, stats_array->bw, stats_array->flags,stats_array->bytes, stats_array->msdus, stats_array->mpdus, stats_array->ppdus, stats_array->retries, stats_array->rssi_combined);
+            response["result"]="SUCCESS";
+            response["details"]=details;
+            return;
+       }
+       else
+       {
+           sprintf(details,"wifi_getApAssociatedDeviceRxStatsResult returned empty buffer");
+           response["result"]="FAILURE";
+           response["details"]=details;
+           return;
+       }
+    }
+    else
+    {
+        sprintf(details, "wifi_getApAssociatedDeviceRxStatsResult operation failed");
+        response["result"]="FAILURE";
+        response["details"]=details;
+        DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_GetApAssociatedDeviceRxStatsResult ---->Error in execution\n");
+        return;
+    }
+}
+
+/*******************************************************************************************
+ *
+ * Function Name        : WIFIHAL_GetRadioChannelStats2
+ * Description          : This function invokes WiFi hal get api which are
+                          related to wifi_getRadioChannelStats2()
+
+ * @param [in] req-     : radioIndex : radio index of the wifi
+ * @param [out] response - filled with SUCCESS or FAILURE based on the output status of operation
+ *
+ ********************************************************************************************/
+void WIFIHAL::WIFIHAL_GetRadioChannelStats2 (IN const Json::Value& req, OUT Json::Value& response)
+{
+    DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_GetRadioChannelStats ----->Entry\n");
+    wifi_channelStats2_t channelStats;
+    int radioIndex = 0;
+    int returnValue;
+    char details[1000] = {'\0'};
+    radioIndex = req["radioIndex"].asInt();
+    returnValue = ssp_WIFIHALGetRadioChannelStats2(radioIndex, &channelStats);
+    if(0 == returnValue)
+    {
+        sprintf(details, "Value returned is :ch_Frequency=%d,ch_NoiseFloor=%d,ch_Non80211Noise=%d,ch_Max80211Rssi=%d,ch_ObssUtil=%d,ch_SelfBssUtil=%d",channelStats.ch_Frequency,channelStats.ch_NoiseFloor,channelStats.ch_Non80211Noise,channelStats.ch_Max80211Rssi,channelStats.ch_ObssUtil,channelStats.ch_SelfBssUtil);
+        response["result"]="SUCCESS";
+        response["details"]=details;
+        return;
+    }
+    else
+    {
+        sprintf(details, "wifi_getRadioChannelStats2 operation failed");
+        response["result"]="FAILURE";
+        response["details"]=details;
+        DEBUG_PRINT(DEBUG_TRACE,"\n WiFiCallMethodForGetRadioChannelStats2  --->Error in execution\n");
+        return;
+    }
+}
+
+/*******************************************************************************************
+ *
+ * Function Name        : WIFIHAL_StartNeighborScan
+ * Description          : This function invokes WiFi hal api wifi_startNeighborScan
+ * @param [in] req-     : apIndex - The index of access point array.
+ * @param [out]         : scan_mode    - structure with the scan info
+                        : dwell_time - Amount of time spent on each channel in the hopping sequence.
+                        : chan_num - The channel number.
+                        : chan_list - List of channels.
+ * @param [out] response - filled with SUCCESS or FAILURE based on the output status of operation
+ *
+ ********************************************************************************************/
+void WIFIHAL::WIFIHAL_StartNeighborScan(IN const Json::Value& req, OUT Json::Value& response)
+{
+       DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_StartNeighborScan ----->Entry\n");
+       wifi_neighborScanMode_t scan_mode = WIFI_RADIO_SCAN_MODE_NONE;;
+       int scan_mode_tmp = 0;
+       int dwell_time = 0;
+       unsigned int chan_num = 0;
+       unsigned int chan_list[100] = {0};
+       int apIndex = 1;
+       int returnValue = 1;
+       char details[1000] = {'\0'};
+
+        DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_StartNeighborScan: getting param\n");
+       apIndex = req["apIndex"].asInt();
+       dwell_time = req["dwell_time"].asInt();
+//     chan_num = req["chan_num"].asInt();
+//     chan_list = req["chan_list"].asInt();
+       scan_mode_tmp = req["scan_mode"].asInt();
+
+       /*Setting the scan mode */
+       if(scan_mode_tmp == WIFI_RADIO_SCAN_MODE_NONE)
+               scan_mode = WIFI_RADIO_SCAN_MODE_NONE;
+       else if (scan_mode_tmp == WIFI_RADIO_SCAN_MODE_FULL)
+               scan_mode = WIFI_RADIO_SCAN_MODE_FULL;
+       else if (scan_mode_tmp == WIFI_RADIO_SCAN_MODE_ONCHAN)
+               scan_mode = WIFI_RADIO_SCAN_MODE_ONCHAN;
+       else if (scan_mode_tmp ==  WIFI_RADIO_SCAN_MODE_OFFCHAN)
+               scan_mode = WIFI_RADIO_SCAN_MODE_OFFCHAN;
+       else if (scan_mode_tmp == WIFI_RADIO_SCAN_MODE_SURVEY)
+               scan_mode = WIFI_RADIO_SCAN_MODE_SURVEY;
+       else
+               printf("\nScan_mode is not valid\n");
+
+       returnValue = ssp_WIFIHALStartNeighborScan(apIndex, scan_mode, dwell_time, chan_num, chan_list);
+       if(0 == returnValue)
+       {
+               sprintf(details, "wifi_startNeighborScan operation success");
+               response["result"]="SUCCESS";
+               response["details"]=details;
+               return;
+       }
+       else
+       {
+               sprintf(details, "wifi_startNeighborScan operation failed");
+               response["result"]="FAILURE";
+               response["details"]=details;
+               DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_StartNeighborScan ---->Error in execution\n");
+               return;
+       }
+}
+
 
 /**************************************************************************
  * Function Name        : CreateObject
