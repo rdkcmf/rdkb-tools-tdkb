@@ -1,0 +1,119 @@
+<!--
+ If not stated otherwise in this file or this component's Licenses.txt file the
+ following copyright and licenses apply:
+
+ Copyright 2018 RDK Management
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+ http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+<?xml version="1.0" encoding="UTF-8"?><xml>
+  <module name="MoCAHAL" testGroup="Component">
+    <primitiveTests>
+      <primitiveTest id=" " name="MoCAHAL_IfGetDynamicInfo" version="2">
+        <function>MoCAHAL_IfGetDynamicInfo</function>
+        <parameters>
+          <parameter name="ifIndex" value=""/>
+          <parameter name="paramType" value=""/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest id=" " name="MoCAHAL_IfGetStaticInfo" version="2">
+        <function>MoCAHAL_IfGetStaticInfo</function>
+        <parameters>
+          <parameter name="ifIndex" value=""/>
+          <parameter name="paramType" value=""/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest id=" " name="MoCAHAL_IfGetStats" version="2">
+        <function>MoCAHAL_IfGetStats</function>
+        <parameters>
+          <parameter name="ifIndex" value=""/>
+          <parameter name="paramType" value=""/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest id=" " name="MoCAHAL_GetNumAssociatedDevices" version="2">
+        <function>MoCAHAL_GetNumAssociatedDevices</function>
+        <parameters>
+          <parameter name="ifIndex" value=""/>
+          <parameter name="paramType" value=""/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest id=" " name="MoCAHAL_IfGetExtCounter" version="2">
+        <function>MoCAHAL_IfGetExtCounter</function>
+        <parameters>
+          <parameter name="ifIndex" value=""/>
+          <parameter name="paramType" value=""/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest id=" " name="MoCAHAL_IfGetExtAggrCounter" version="2">
+        <function>MoCAHAL_IfGetExtAggrCounter</function>
+        <parameters>
+          <parameter name="ifIndex" value=""/>
+          <parameter name="paramType" value=""/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest id=" " name="MoCAHAL_GetMocaCPEs" version="2">
+        <function>MoCAHAL_GetMocaCPEs</function>
+        <parameters>
+          <parameter name="ifIndex" value=""/>
+          <parameter name="paramType" value=""/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest name="MoCAHAL_GetAssociatedDevices" id=" " version="4">
+        <function>MoCAHAL_GetAssociatedDevices</function>
+        <parameters>
+          <parameter name="ifIndex" value=""/>
+          <parameter name="paramType" value=""/>
+          <parameter name="devCount" value=""/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest id=" " name="MoCAHAL_GetIfConfig" version="1">
+        <function>MoCAHAL_GetIfConfig</function>
+        <parameters>
+          <parameter name="ifIndex" value=""/>
+          <parameter name="paramType" value=""/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest id=" " name="MoCAHAL_GetFullMeshRates" version="1">
+        <function>MoCAHAL_GetFullMeshRates</function>
+        <parameters>
+          <parameter name="ifIndex" value=""/>
+          <parameter name="paramType" value=""/>
+          <parameter name="count" value=""/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest id="" name="MoCAHAL_HardwareEquipped" version="1">
+        <function>MoCAHAL_HardwareEquipped</function>
+        <parameters/>
+      </primitiveTest>
+      <primitiveTest id=" " name="MoCAHAL_FreqMaskToValue" version="1">
+        <function>MoCAHAL_FreqMaskToValue</function>
+        <parameters>
+          <parameter name="mask" value=""/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest name="MoCAHAL_GetFlowStatistics" id=" " version="5">
+        <function>MoCAHAL_GetFlowStatistics</function>
+        <parameters>
+          <parameter name="ifIndex" value=""/>
+          <parameter name="paramType" value=""/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest name="MoCAHAL_GetResetCount" id=" " version="2">
+        <function>MoCAHAL_GetResetCount</function>
+        <parameters>
+          <parameter name="paramType" value=""/>
+        </parameters>
+      </primitiveTest>
+    </primitiveTests>
+  </module>
+</xml>

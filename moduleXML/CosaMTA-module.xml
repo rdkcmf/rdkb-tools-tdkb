@@ -1,0 +1,116 @@
+<!--
+ If not stated otherwise in this file or this component's Licenses.txt file the
+ following copyright and licenses apply:
+
+ Copyright 2018 RDK Management
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+ http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+<?xml version='1.0' encoding='utf-8'?>
+<xml>
+  <module>
+  <!-- Module Name  -->
+    <moduleName>CosaMTA</moduleName>
+  <!-- Category of the module  -->
+    <category>RDKB</category>
+  <!-- Excecution time out of module -->
+    <executionTimeOut>1</executionTimeOut>
+  <!-- Excecution time out of module -->
+    <testGroup>Component</testGroup>
+  <!-- Logs File Names of module -->
+    <logFileNames>[]</logFileNames>
+  <!-- Crash File Names of the module -->
+    <crashFileNames>[]</crashFileNames>
+  <!-- Total functions corresponding module  -->
+    <functions>
+      <function name='CosaMTA_Triggerdiagnostics' />
+      <function name='CosaMTA_BatteryGetStatus' />
+      <function name='CosaMTA_GetResetCount' />
+      <function name='CosaMTA_GetDHCPInfo' />
+      <function name='CosaMTA_BatteryGetPowerStatus' />
+      <function name='CosaMTA_LineTableGetNumberOfEntries' />
+      <function name='CosaMTA_LineTableGetEntry' />
+      <function name='CosaMTA_BatteryGetInfo' />
+      <function name='CosaMTA_GetServiceClass' />
+      <function name='CosaMTA_DectGetEnable' />
+      <function name='CosaMTA_DectSetEnable' />
+      <function name='CosaMTA_DectGetRegistrationMode' />
+      <function name='CosaMTA_DectSetRegistrationMode' />
+      <function name='CosaMTA_GetDect' />
+      <function name='CosaMTA_GetDectPIN' />
+      <function name='CosaMTA_SetDectPIN' />
+      <function name='CosaMTA_GetDSXLogEnable' />
+      <function name='CosaMTA_SetDSXLogEnable' />
+      <function name='CosaMTA_ClearDSXLog' />
+      <function name='CosaMTA_GetCallSignallingLogEnable' />
+      <function name='CosaMTA_SetCallSignallingLogEnable' />
+      <function name='CosaMTA_ClearCallSignallingLog' />
+      <function name='CosaMTA_BatteryGetNumberofCycles' />
+      <function name='CosaMTA_BatteryGetLife' />
+      <function name='CosaMTA_BatteryGetCondition' />
+      <function name='CosaMTA_BatteryGetRemainingTime' />
+    </functions>
+  <!-- Total parameters corresponding module  -->
+    <parameters>
+      <parameter funName='CosaMTA_Triggerdiagnostics' parameterName='index' parameterType='INTEGER' range='0-100' />
+      <parameter funName='CosaMTA_BatteryGetStatus' parameterName='handleType' parameterType='INTEGER' range='0-100' />
+      <parameter funName='CosaMTA_BatteryGetStatus' parameterName='bufferType' parameterType='INTEGER' range='0-100' />
+      <parameter funName='CosaMTA_GetResetCount' parameterName='handleType' parameterType='INTEGER' range='0-100' />
+      <parameter funName='CosaMTA_GetResetCount' parameterName='resetType' parameterType='STRING' range='A-Z' />
+      <parameter funName='CosaMTA_GetResetCount' parameterName='bufferType' parameterType='INTEGER' range='0-100' />
+      <parameter funName='CosaMTA_GetDHCPInfo' parameterName='handleType' parameterType='INTEGER' range='0-100' />
+      <parameter funName='CosaMTA_GetDHCPInfo' parameterName='bufferType' parameterType='INTEGER' range='0-100' />
+      <parameter funName='CosaMTA_BatteryGetPowerStatus' parameterName='handleType' parameterType='INTEGER' range='0-100' />
+      <parameter funName='CosaMTA_BatteryGetPowerStatus' parameterName='bufferType' parameterType='INTEGER' range='0-100' />
+      <parameter funName='CosaMTA_LineTableGetNumberOfEntries' parameterName='handleType' parameterType='INTEGER' range='0-100' />
+      <parameter funName='CosaMTA_LineTableGetEntry' parameterName='handleType' parameterType='INTEGER' range='0-100' />
+      <parameter funName='CosaMTA_LineTableGetEntry' parameterName='bufferType' parameterType='INTEGER' range='0-100' />
+      <parameter funName='CosaMTA_BatteryGetInfo' parameterName='handleType' parameterType='INTEGER' range='0-100' />
+      <parameter funName='CosaMTA_BatteryGetInfo' parameterName='bufferType' parameterType='INTEGER' range='0-100' />
+      <parameter funName='CosaMTA_GetServiceClass' parameterName='handleType' parameterType='INTEGER' range='0-100' />
+      <parameter funName='CosaMTA_DectGetEnable' parameterName='handleType' parameterType='INTEGER' range='0-100' />
+      <parameter funName='CosaMTA_DectGetEnable' parameterName='Value' parameterType='INTEGER' range='0-100' />
+      <parameter funName='CosaMTA_DectSetEnable' parameterName='handleType' parameterType='INTEGER' range='0-100' />
+      <parameter funName='CosaMTA_DectSetEnable' parameterName='Value' parameterType='INTEGER' range='0-100' />
+      <parameter funName='CosaMTA_DectGetRegistrationMode' parameterName='handleType' parameterType='INTEGER' range='0-100' />
+      <parameter funName='CosaMTA_DectGetRegistrationMode' parameterName='Value' parameterType='INTEGER' range='0-100' />
+      <parameter funName='CosaMTA_DectSetRegistrationMode' parameterName='handleType' parameterType='INTEGER' range='0-100' />
+      <parameter funName='CosaMTA_DectSetRegistrationMode' parameterName='Value' parameterType='INTEGER' range='0-100' />
+      <parameter funName='CosaMTA_GetDect' parameterName='handleType' parameterType='INTEGER' range='0-100' />
+      <parameter funName='CosaMTA_GetDect' parameterName='bufferType' parameterType='INTEGER' range='0-100' />
+      <parameter funName='CosaMTA_GetDectPIN' parameterName='handleType' parameterType='INTEGER' range='0-100' />
+      <parameter funName='CosaMTA_GetDectPIN' parameterName='bufferType' parameterType='INTEGER' range='0-100' />
+      <parameter funName='CosaMTA_SetDectPIN' parameterName='handleType' parameterType='INTEGER' range='0-100' />
+      <parameter funName='CosaMTA_SetDectPIN' parameterName='bufferType' parameterType='INTEGER' range='0-100' />
+      <parameter funName='CosaMTA_SetDectPIN' parameterName='value' parameterType='STRING' range='A-Z' />
+      <parameter funName='CosaMTA_GetDSXLogEnable' parameterName='handleType' parameterType='INTEGER' range='0-100' />
+      <parameter funName='CosaMTA_GetDSXLogEnable' parameterName='Value' parameterType='INTEGER' range='0-100' />
+      <parameter funName='CosaMTA_SetDSXLogEnable' parameterName='handleType' parameterType='INTEGER' range='0-100' />
+      <parameter funName='CosaMTA_SetDSXLogEnable' parameterName='Value' parameterType='INTEGER' range='0-100' />
+      <parameter funName='CosaMTA_ClearDSXLog' parameterName='handleType' parameterType='INTEGER' range='0-100' />
+      <parameter funName='CosaMTA_ClearDSXLog' parameterName='Value' parameterType='INTEGER' range='0-100' />
+      <parameter funName='CosaMTA_GetCallSignallingLogEnable' parameterName='handleType' parameterType='INTEGER' range='0-100' />
+      <parameter funName='CosaMTA_GetCallSignallingLogEnable' parameterName='Value' parameterType='INTEGER' range='0-100' />
+      <parameter funName='CosaMTA_SetCallSignallingLogEnable' parameterName='handleType' parameterType='INTEGER' range='0-100' />
+      <parameter funName='CosaMTA_SetCallSignallingLogEnable' parameterName='Value' parameterType='INTEGER' range='0-100' />
+      <parameter funName='CosaMTA_ClearCallSignallingLog' parameterName='handleType' parameterType='INTEGER' range='0-100' />
+      <parameter funName='CosaMTA_ClearCallSignallingLog' parameterName='Value' parameterType='INTEGER' range='0-100' />
+      <parameter funName='CosaMTA_BatteryGetNumberofCycles' parameterName='handleType' parameterType='INTEGER' range='0-100' />
+      <parameter funName='CosaMTA_BatteryGetLife' parameterName='handleType' parameterType='INTEGER' range='0-100' />
+      <parameter funName='CosaMTA_BatteryGetLife' parameterName='bufferType' parameterType='INTEGER' range='0-100' />
+      <parameter funName='CosaMTA_BatteryGetCondition' parameterName='handleType' parameterType='INTEGER' range='0-100' />
+      <parameter funName='CosaMTA_BatteryGetCondition' parameterName='bufferType' parameterType='INTEGER' range='0-100' />
+      <parameter funName='CosaMTA_BatteryGetRemainingTime' parameterName='handleType' parameterType='INTEGER' range='0-100' />
+    </parameters>
+  </module>
+</xml>

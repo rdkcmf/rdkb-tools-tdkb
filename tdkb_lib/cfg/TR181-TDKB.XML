@@ -1,0 +1,2241 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<!--
+ If not stated otherwise in this file or this component's Licenses.txt file the
+ following copyright and licenses apply:
+
+ Copyright 2016 RDK Management
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+ http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+
+<!--
+   Copyright [2014] [Cisco Systems, Inc.]
+
+   Licensed under the Apache License, Version 2.0 (the \"License\");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an \"AS IS\" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+
+<dataModelInfo>
+  <version>1</version>
+  <moduleName>CCSP MTA Agent</moduleName>
+  <author>Ruiqi Tian</author>
+  <description></description>
+
+  <library>
+    <path>libmta_tr181</path>
+    <func_Init>COSA_Init</func_Init>
+    <func_Async_Init>COSA_Async_Init</func_Async_Init>
+    <func_Unload>COSA_Unload</func_Unload>
+    <func_MemoryCheck>COSA_MemoryCheck</func_MemoryCheck>
+    <func_MemoryUsage>COSA_MemoryUsage</func_MemoryUsage>
+    <func_MemoryTable>COSA_MemoryTable</func_MemoryTable>
+  </library>
+
+  <objects>
+    <object>
+      
+      <name>X_CISCO_COM_MTA</name>
+
+      <objectType>object</objectType>
+
+      <functions>
+
+        <func_GetParamBoolValue>X_CISCO_COM_MTA_GetParamBoolValue</func_GetParamBoolValue>
+
+        <func_GetParamIntValue>X_CISCO_COM_MTA_GetParamIntValue</func_GetParamIntValue>
+
+        <func_GetParamUlongValue>X_CISCO_COM_MTA_GetParamUlongValue</func_GetParamUlongValue>
+
+        <func_GetParamStringValue>X_CISCO_COM_MTA_GetParamStringValue</func_GetParamStringValue>
+
+        <func_SetParamBoolValue>X_CISCO_COM_MTA_SetParamBoolValue</func_SetParamBoolValue>
+
+        <func_SetParamIntValue>X_CISCO_COM_MTA_SetParamIntValue</func_SetParamIntValue>
+
+        <func_SetParamUlongValue>X_CISCO_COM_MTA_SetParamUlongValue</func_SetParamUlongValue>
+
+        <func_SetParamStringValue>X_CISCO_COM_MTA_SetParamStringValue</func_SetParamStringValue>
+
+        <func_Validate>X_CISCO_COM_MTA_Validate</func_Validate>
+
+        <func_Commit>X_CISCO_COM_MTA_Commit</func_Commit>
+
+        <func_Rollback>X_CISCO_COM_MTA_Rollback</func_Rollback>
+
+      </functions>
+      
+      <parameters>
+
+        <parameter>
+
+          <name>PrimaryDHCPServer</name>
+
+          <type>string</type>
+
+          <syntax>uint32/ip4_addr</syntax>
+
+        </parameter>
+
+        <parameter>
+
+          <name>SecondaryDHCPServer</name>
+
+          <type>string</type>
+
+          <syntax>uint32/ip4_addr</syntax>
+
+        </parameter>
+
+		    <parameter>
+              
+          <name>pktcMtaDevEnabled</name>
+              
+          <type>boolean</type>
+              
+          <syntax>bool</syntax>
+              
+          <writable>true</writable>
+              
+        </parameter>
+
+		    <parameter>
+              
+          <name>DSXLogEnable</name>
+              
+          <type>boolean</type>
+              
+          <syntax>bool</syntax>
+              
+          <writable>true</writable>
+              
+        </parameter>
+
+		    <parameter>
+              
+          <name>ClearDSXLog</name>
+              
+          <type>boolean</type>
+              
+          <syntax>bool</syntax>
+              
+          <writable>true</writable>
+              
+        </parameter>
+
+    <parameter>
+
+      <name>EnableDECTLog</name>
+      
+      <type>boolean</type>
+      
+      <syntax>bool</syntax>
+
+      <writable>true</writable>
+
+    </parameter>
+
+    <parameter>
+
+      <name>EnableMTALog</name>
+      
+      <type>boolean</type>
+      
+      <syntax>bool</syntax>
+
+      <writable>true</writable>
+
+    </parameter>
+
+		    <parameter>
+              
+          <name>pktcSigDefCallSigTos</name>
+              
+          <type>unsignedInt</type>
+              
+          <syntax>uint32</syntax>
+              
+          <writable>true</writable>
+             
+        </parameter>
+
+		    <parameter>
+              
+          <name>pktcSigDefMediaStreamTos</name>
+              
+          <type>unsignedInt</type>
+              
+          <syntax>uint32</syntax>
+              
+          <writable>true</writable>
+             
+        </parameter>
+
+		    <parameter>
+              
+          <name>pktcMtaDevRealmOrgName</name>
+              
+          <type>unsignedInt</type>
+              
+          <syntax>uint32</syntax>
+              
+        </parameter>
+
+		    <parameter>
+              
+          <name>pktcMtaDevCmsKerbRealmName</name>
+              
+          <type>unsignedInt</type>
+              
+          <syntax>uint32</syntax>
+              
+        </parameter>
+
+		    <parameter>
+              
+          <name>pktcMtaDevCmsIpsecCtrl</name>
+              
+          <type>unsignedInt</type>
+              
+          <syntax>uint32</syntax>
+              
+        </parameter>
+
+		    <parameter>
+              
+          <name>pktcMtaDevCmsSolicitedKeyTimeout</name>
+              
+          <type>unsignedInt</type>
+              
+          <syntax>uint32</syntax>
+              
+        </parameter>
+
+		    <parameter>
+              
+          <name>pktcMtaDevRealmPkinitGracePeriod</name>
+              
+          <type>unsignedInt</type>
+              
+          <syntax>uint32</syntax>
+              
+        </parameter>
+
+        <parameter>
+
+          <name>IPAddress</name>
+
+          <type>string</type>
+
+          <syntax>uint32/ip4_addr</syntax>
+
+        </parameter>
+        
+        <parameter>
+
+          <name>BootFileName</name>
+
+          <type>string(64)</type>
+
+          <syntax>string</syntax>
+
+        </parameter>
+        
+        <parameter>
+
+          <name>FQDN</name>
+
+          <type>string(64)</type>
+
+          <syntax>string</syntax>
+
+        </parameter>
+        
+        <parameter>
+
+          <name>SubnetMask</name>
+
+          <type>string</type>
+
+          <syntax>uint32/ip4_addr</syntax>
+
+        </parameter>
+        
+        <parameter>
+
+          <name>Gateway</name>
+
+          <type>string</type>
+
+          <syntax>uint32/ip4_addr</syntax>
+
+        </parameter>
+        
+        <parameter>
+
+          <name>LeaseTimeRemaining</name>
+
+          <type>unsignedInt</type>
+
+          <syntax>uint32</syntax>
+
+        </parameter>
+        
+        <parameter>
+
+          <name>RebindTimeRemaining</name>
+
+          <type>string(64)</type>
+
+          <syntax>string</syntax>
+
+        </parameter>
+        
+        <parameter>
+
+          <name>RenewTimeRemaining</name>
+
+          <type>string(64)</type>
+
+          <syntax>string</syntax>
+
+        </parameter>
+        
+        <parameter>
+
+          <name>PrimaryDNS</name>
+
+          <type>string</type>
+
+          <syntax>uint32/ip4_addr</syntax>
+
+        </parameter>
+        
+        <parameter>
+
+          <name>SecondaryDNS</name>
+
+          <type>string</type>
+
+          <syntax>uint32/ip4_addr</syntax>
+
+        </parameter>
+        
+        <parameter>
+
+          <name>DHCPOption3</name>
+
+          <type>string(64)</type>
+
+          <syntax>string</syntax>
+
+        </parameter>
+        
+        <parameter>
+
+          <name>DHCPOption6</name>
+
+          <type>string(64)</type>
+
+          <syntax>string</syntax>
+
+        </parameter>
+        
+        <parameter>
+
+          <name>DHCPOption7</name>
+
+          <type>string(64)</type>
+
+          <syntax>string</syntax>
+
+        </parameter>
+        
+        <parameter>
+
+          <name>DHCPOption8</name>
+
+          <type>string(64)</type>
+
+          <syntax>string</syntax>
+
+        </parameter>
+        
+        <parameter>
+
+          <name>PCVersion</name>
+
+          <type>string(64)</type>
+
+          <syntax>string</syntax>
+
+        </parameter>
+        
+        <parameter>
+
+          <name>MACAddress</name>
+
+          <type>string(64)</type>
+
+          <syntax>string</syntax>
+
+        </parameter>
+        
+        <parameter>
+
+          <name>LineTableNumberOfEntries</name>
+
+          <type>unsignedInt</type>
+
+          <syntax>uint32</syntax>
+
+        </parameter>
+        
+        <parameter>
+
+          <name>ServiceFlowNumberOfEntries</name>
+
+          <type>unsignedInt</type>
+
+          <syntax>uint32</syntax>
+
+        </parameter>
+
+		    <parameter>
+
+          <name>DSXLogNumberOfEntries</name>
+
+          <type>unsignedInt</type>
+
+          <syntax>uint32</syntax>
+
+        </parameter>
+        
+      </parameters>
+      
+      <objects>
+
+	      <object>
+                
+          <name>DSXLog</name>
+             
+          <objectType>dynamicTable</objectType>
+             
+          <maxInstance>128</maxInstance>
+                
+          <functions>
+  
+            <func_GetEntryCount>DSXLog_GetEntryCount</func_GetEntryCount>
+  
+            <func_GetEntry>DSXLog_GetEntry</func_GetEntry>
+                  
+            <func_IsUpdated>DSXLog_IsUpdated</func_IsUpdated>
+  
+            <func_Synchronize>DSXLog_Synchronize</func_Synchronize>
+      
+            <func_GetParamUlongValue>DSXLog_GetParamUlongValue</func_GetParamUlongValue>
+
+			      <func_GetParamStringValue>DSXLog_GetParamStringValue</func_GetParamStringValue>
+
+          </functions>
+            
+          <parameters>
+            
+            <parameter>
+  
+              <name>ID</name>
+  
+              <type>unsignedInt</type>
+                
+              <syntax>uint32</syntax>
+  
+            </parameter>
+
+			      <parameter>
+
+              <name>Time</name>
+
+              <type>string(64)</type>
+
+              <syntax>string</syntax>
+
+            </parameter>
+            
+            <parameter>
+  
+              <name>Description</name>
+  
+              <type>string(128)</type>
+                
+              <syntax>string</syntax>
+  
+            </parameter>
+            
+            <parameter>
+  
+              <name>Level</name>
+  
+              <type>unsignedInt</type>
+                
+              <syntax>uint32</syntax>
+  
+            </parameter>
+
+          </parameters>
+                         
+        </object>
+        
+        <object>
+
+          <name>LineTable</name>
+
+          <objectType>staticTable</objectType>
+
+          <maxInstance>128</maxInstance>
+
+          <functions>
+
+            <func_GetEntryCount>LineTable_GetEntryCount</func_GetEntryCount>
+
+            <func_GetEntry>LineTable_GetEntry</func_GetEntry>
+
+            <func_GetParamBoolValue>LineTable_GetParamBoolValue</func_GetParamBoolValue>
+
+            <func_GetParamIntValue>LineTable_GetParamIntValue</func_GetParamIntValue>
+
+            <func_GetParamUlongValue>LineTable_GetParamUlongValue</func_GetParamUlongValue>
+
+            <func_GetParamStringValue>LineTable_GetParamStringValue</func_GetParamStringValue>
+
+            <func_SetParamBoolValue>LineTable_SetParamBoolValue</func_SetParamBoolValue>
+
+            <func_SetParamIntValue>LineTable_SetParamIntValue</func_SetParamIntValue>
+
+            <func_SetParamUlongValue>LineTable_SetParamUlongValue</func_SetParamUlongValue>
+
+            <func_SetParamStringValue>LineTable_SetParamStringValue</func_SetParamStringValue>
+
+            <func_Validate>LineTable_Validate</func_Validate>
+
+            <func_Commit>LineTable_Commit</func_Commit>
+
+            <func_Rollback>LineTable_Rollback</func_Rollback>
+
+          </functions>
+
+          <parameters>
+            
+            <parameter>
+
+              <name>LineNumber</name>
+
+              <type>unsignedInt</type>
+
+              <syntax>uint32</syntax>
+
+            </parameter>
+            
+            <parameter>
+
+              <name>Status</name>
+
+              <type>string: On-Hook(1),Off-Hook(2)</type>
+
+              <syntax>uint32/mapped</syntax>
+
+            </parameter>
+            
+            <parameter>
+
+              <name>HazardousPotential</name>
+
+              <type>string(64)</type>
+
+              <syntax>string</syntax>
+
+            </parameter>
+            
+            <parameter>
+
+              <name>ForeignEMF</name>
+
+              <type>string(64)</type>
+
+              <syntax>string</syntax>
+
+            </parameter>
+            
+            <parameter>
+
+              <name>ResistiveFaults</name>
+
+              <type>string(64)</type>
+
+              <syntax>string</syntax>
+
+            </parameter>
+            
+            <parameter>
+
+              <name>ReceiverOffHook</name>
+
+              <type>string(64)</type>
+
+              <syntax>string</syntax>
+
+            </parameter>
+            
+            <parameter>
+
+              <name>RingerEquivalency</name>
+
+              <type>string(64)</type>
+
+              <syntax>string</syntax>
+
+            </parameter>
+
+			      <parameter>
+
+				      <name>TriggerDiagnostics</name>
+
+				      <type>boolean</type>
+
+				      <syntax>bool</syntax>
+
+				      <writable>true</writable>
+
+			      </parameter>
+			            
+            <parameter>
+
+              <name>CAName</name>
+
+              <type>string(64)</type>
+
+              <syntax>string</syntax>
+
+            </parameter>
+			            
+            <parameter>
+
+              <name>CAPort</name>
+
+              <type>unsignedInt</type>
+
+              <syntax>uint32</syntax>
+
+            </parameter>
+			            
+            <parameter>
+
+              <name>MWD</name>
+
+              <type>unsignedInt</type>
+
+              <syntax>uint32</syntax>
+
+            </parameter>
+
+          </parameters>
+
+		  <objects>
+
+			<object>
+
+			  <name>CALLP</name>
+
+			  <objectType>object</objectType>
+
+			  <functions>
+
+				<func_GetParamStringValue>CALLP_GetParamStringValue</func_GetParamStringValue>
+
+		      </functions>
+
+			  <parameters>
+
+				<parameter>
+
+				  <name>LCState</name>
+
+				  <type>string(64)</type>
+
+				  <syntax>string</syntax>
+
+				</parameter>
+
+				<parameter>
+
+				  <name>CallPState</name>
+
+				  <type>string(64)</type>
+
+				  <syntax>string</syntax>
+
+				</parameter>
+
+				<parameter>
+
+				  <name>LoopCurrent</name>
+
+				  <type>string(64)</type>
+
+				  <syntax>string</syntax>
+
+				</parameter>
+
+			  </parameters>
+
+			</object>
+
+			<object>
+
+			  <name>VQM</name>
+
+			  <objectType>object</objectType>
+
+			  <functions>
+
+  			    <func_GetParamBoolValue>VQM_GetParamBoolValue</func_GetParamBoolValue>
+
+			    <func_SetParamBoolValue>VQM_SetParamBoolValue</func_SetParamBoolValue>
+
+                <func_Validate>VQM_Validate</func_Validate>
+
+                <func_Commit>VQM_Commit</func_Commit>
+
+                <func_Rollback>VQM_Rollback</func_Rollback>
+
+			  </functions>
+
+			  <parameters>
+
+			    <parameter>
+
+				  <name>ResetStats</name>
+
+				  <type>boolean</type>
+
+				  <syntax>bool</syntax>
+
+				  <writable>true</writable>
+
+				</parameter>
+
+				<parameter>
+
+				  <name>CallsNumberOfEntries</name>
+
+				  <type>unsignedInt</type>
+
+				  <syntax>uint32</syntax>
+
+				</parameter>
+
+			  </parameters>
+
+			  <objects>
+
+				<object>
+
+				  <name>Calls</name>
+
+				  <objectType>dynamicTable</objectType>
+
+				  <maxInstance>128</maxInstance>
+
+				  <functions>
+
+					<func_GetEntryCount>Calls_GetEntryCount</func_GetEntryCount>
+
+					<func_GetEntry>Calls_GetEntry</func_GetEntry>
+
+					<func_IsUpdated>Calls_IsUpdated</func_IsUpdated>
+
+					<func_Synchronize>Calls_Synchronize</func_Synchronize>
+
+					<func_GetParamBoolValue>Calls_GetParamBoolValue</func_GetParamBoolValue>
+
+					<func_GetParamIntValue>Calls_GetParamIntValue</func_GetParamIntValue>
+
+					<func_GetParamUlongValue>Calls_GetParamUlongValue</func_GetParamUlongValue>
+
+					<func_GetParamStringValue>Calls_GetParamStringValue</func_GetParamStringValue>
+
+				  </functions>
+
+				  <parameters>
+
+					<parameter>
+
+					  <name>Codec</name>
+
+					  <type>string(64)</type>
+
+					  <syntax>string</syntax>
+
+					</parameter>
+
+					<parameter>
+
+					  <name>RemoteCodec</name>
+
+					  <type>string(64)</type>
+
+					  <syntax>string</syntax>
+
+					</parameter>
+
+					<parameter>
+
+					  <name>CallEndTime</name>
+
+					  <type>string(64)</type>
+
+					  <syntax>string</syntax>
+
+					</parameter>
+
+					<parameter>
+
+					  <name>CallStartTime</name>
+
+					  <type>string(64)</type>
+
+					  <syntax>string</syntax>
+
+					</parameter>
+
+					<parameter>
+
+					  <name>CWErrorRate</name>
+
+					  <type>string(16)</type>
+
+					  <syntax>string</syntax>
+
+					</parameter>
+
+					<parameter>
+
+					  <name>PktLossConcealment</name>
+
+					  <type>string(16)</type>
+
+					  <syntax>string</syntax>
+
+					</parameter>
+
+					<parameter>
+
+					  <name>JitterBufferAdaptive</name>
+
+					  <type>boolean</type>
+
+					  <syntax>bool</syntax>
+
+					</parameter>
+
+					<parameter>
+
+					  <name>Originator</name>
+
+					  <type>boolean</type>
+
+					  <syntax>bool</syntax>
+
+					</parameter>
+
+					<parameter>
+
+					  <name>RemoteIPAddress</name>
+
+					  <type>string</type>
+
+					  <syntax>uint32/ip4_addr</syntax>
+
+					</parameter>
+
+					<parameter>
+
+					  <name>CallDuration</name>
+
+					  <type>unsignedInt</type>
+
+					  <syntax>uint32</syntax>
+
+					</parameter>
+
+					<parameter>
+
+					  <name>CWErrors</name>
+
+					  <type>string(16)</type>
+
+					  <syntax>string</syntax>
+
+					</parameter>
+
+					<parameter>
+
+					  <name>SNR</name>
+
+					  <type>string(16)</type>
+
+					  <syntax>string</syntax>
+
+					</parameter>
+
+					<parameter>
+
+					  <name>MicroReflections</name>
+
+					  <type>string(16)</type>
+
+					  <syntax>string</syntax>
+
+					</parameter>
+
+					<parameter>
+
+					  <name>DownstreamPower</name>
+
+					  <type>string(16)</type>
+
+					  <syntax>string</syntax>
+
+					</parameter>
+
+					<parameter>
+
+					  <name>UpstreamPower</name>
+
+					  <type>string(16)</type>
+
+					  <syntax>string</syntax>
+
+					</parameter>
+
+					<parameter>
+
+					  <name>EQIAverage</name>
+
+					  <type>string(16)</type>
+
+					  <syntax>string</syntax>
+
+					</parameter>
+
+					<parameter>
+
+					  <name>EQIMinimum</name>
+
+					  <type>string(16)</type>
+
+					  <syntax>string</syntax>
+
+					</parameter>
+
+					<parameter>
+
+					  <name>EQIMaximum</name>
+
+					  <type>string(16)</type>
+
+					  <syntax>string</syntax>
+
+					</parameter>
+
+					<parameter>
+
+					  <name>EQIInstantaneous</name>
+
+					  <type>string(16)</type>
+
+					  <syntax>string</syntax>
+
+					</parameter>
+
+					<parameter>
+
+					  <name>MOS-LQ</name>
+
+					  <type>string(16)</type>
+
+					  <syntax>string</syntax>
+
+					</parameter>
+
+					<parameter>
+
+					  <name>MOS-CQ</name>
+
+					  <type>string(16)</type>
+
+					  <syntax>string</syntax>
+
+					</parameter>
+
+					<parameter>
+
+					  <name>EchoReturnLoss</name>
+
+					  <type>string(16)</type>
+
+					  <syntax>string</syntax>
+
+					</parameter>
+
+					<parameter>
+
+					  <name>SignalLevel</name>
+
+					  <type>string(16)</type>
+
+					  <syntax>string</syntax>
+
+					</parameter>
+
+					<parameter>
+
+					  <name>NoiseLevel</name>
+
+					  <type>string(16)</type>
+
+					  <syntax>string</syntax>
+
+					</parameter>
+
+					<parameter>
+
+					  <name>LossRate</name>
+
+					  <type>string(16)</type>
+
+					  <syntax>string</syntax>
+
+					</parameter>
+
+					<parameter>
+
+					  <name>DiscardRate</name>
+
+					  <type>string(16)</type>
+
+					  <syntax>string</syntax>
+
+					</parameter>
+
+					<parameter>
+
+					  <name>BurstDensity</name>
+
+					  <type>string(16)</type>
+
+					  <syntax>string</syntax>
+
+					</parameter>
+
+					<parameter>
+
+					  <name>GapDensity</name>
+
+					  <type>string(16)</type>
+
+					  <syntax>string</syntax>
+
+					</parameter>
+
+					<parameter>
+
+					  <name>BurstDuration</name>
+
+					  <type>string(16)</type>
+
+					  <syntax>string</syntax>
+
+					</parameter>
+
+					<parameter>
+
+					  <name>GapDuration</name>
+
+					  <type>string(16)</type>
+
+					  <syntax>string</syntax>
+
+					</parameter>
+
+					<parameter>
+
+					  <name>RoundTripDelay</name>
+
+					  <type>string(16)</type>
+
+					  <syntax>string</syntax>
+
+					</parameter>
+
+					<parameter>
+
+					  <name>Gmin</name>
+
+					  <type>string(16)</type>
+
+					  <syntax>string</syntax>
+
+					</parameter>
+
+					<parameter>
+
+					  <name>RFactor</name>
+
+					  <type>string(16)</type>
+
+					  <syntax>string</syntax>
+
+					</parameter>
+
+					<parameter>
+
+					  <name>ExternalRFactor</name>
+
+					  <type>string(16)</type>
+
+					  <syntax>string</syntax>
+
+					</parameter>
+
+					<parameter>
+
+					  <name>JitterBufRate</name>
+
+					  <type>string(16)</type>
+
+					  <syntax>string</syntax>
+
+					</parameter>
+
+					<parameter>
+
+					  <name>JBNominalDelay</name>
+
+					  <type>string(16)</type>
+
+					  <syntax>string</syntax>
+
+					</parameter>
+
+					<parameter>
+
+					  <name>JBMaxDelay</name>
+
+					  <type>string(16)</type>
+
+					  <syntax>string</syntax>
+
+					</parameter>
+
+					<parameter>
+
+					  <name>JBAbsMaxDelay</name>
+
+					  <type>string(16)</type>
+
+					  <syntax>string</syntax>
+
+					</parameter>
+
+					<parameter>
+
+					  <name>RemoteMOS-LQ</name>
+
+					  <type>string(16)</type>
+
+					  <syntax>string</syntax>
+
+					</parameter>
+
+					<parameter>
+
+					  <name>RemoteMOS-CQ</name>
+
+					  <type>string(16)</type>
+
+					  <syntax>string</syntax>
+
+					</parameter>
+
+					<parameter>
+
+					  <name>RemoteEchoReturnLoss</name>
+
+					  <type>string(16)</type>
+
+					  <syntax>string</syntax>
+
+					</parameter>
+
+					<parameter>
+
+					  <name>RemoteSignalLevel</name>
+
+					  <type>string(16)</type>
+
+					  <syntax>string</syntax>
+
+					</parameter>
+
+					<parameter>
+
+					  <name>RemoteNoiseLevel</name>
+
+					  <type>string(16)</type>
+
+					  <syntax>string</syntax>
+
+					</parameter>
+
+					<parameter>
+
+					  <name>RemoteLossRate</name>
+
+					  <type>string(16)</type>
+
+					  <syntax>string</syntax>
+
+					</parameter>
+
+					<parameter>
+
+					  <name>RemotePktLossConcealment</name>
+
+					  <type>string(16)</type>
+
+					  <syntax>string</syntax>
+
+					</parameter>
+
+					<parameter>
+
+					  <name>RemoteDiscardRate</name>
+
+					  <type>string(16)</type>
+
+					  <syntax>string</syntax>
+
+					</parameter>
+
+					<parameter>
+
+					  <name>RemoteBurstDensity</name>
+
+					  <type>string(16)</type>
+
+					  <syntax>string</syntax>
+
+					</parameter>
+
+					<parameter>
+
+					  <name>RemoteGapDensity</name>
+
+					  <type>string(16)</type>
+
+					  <syntax>string</syntax>
+
+					</parameter>
+
+					<parameter>
+
+					  <name>RemoteBurstDuration</name>
+
+					  <type>string(16)</type>
+
+					  <syntax>string</syntax>
+
+					</parameter>
+
+					<parameter>
+
+					  <name>RemoteGapDuration</name>
+
+					  <type>string(16)</type>
+
+					  <syntax>string</syntax>
+
+					</parameter>
+
+					<parameter>
+
+					  <name>RemoteRoundTripDelay</name>
+
+					  <type>string(16)</type>
+
+					  <syntax>string</syntax>
+
+					</parameter>
+
+					<parameter>
+
+					  <name>RemoteGmin</name>
+
+					  <type>string(16)</type>
+
+					  <syntax>string</syntax>
+
+					</parameter>
+
+					<parameter>
+
+					  <name>RemoteRFactor</name>
+
+					  <type>string(16)</type>
+
+					  <syntax>string</syntax>
+
+					</parameter>
+
+					<parameter>
+
+					  <name>RemoteExternalRFactor</name>
+
+					  <type>string(16)</type>
+
+					  <syntax>string</syntax>
+
+					</parameter>
+
+					<parameter>
+
+					  <name>RemoteJitterBufferAdaptive</name>
+
+					  <type>boolean</type>
+
+					  <syntax>bool</syntax>
+
+					</parameter>
+
+					<parameter>
+
+					  <name>RemoteJitterBufRate</name>
+
+					  <type>string(16)</type>
+
+					  <syntax>string</syntax>
+
+					</parameter>
+
+					<parameter>
+
+					  <name>RemoteJBNominalDelay</name>
+
+					  <type>string(16)</type>
+
+					  <syntax>string</syntax>
+
+					</parameter>
+
+					<parameter>
+
+					  <name>RemoteJBMaxDelay</name>
+
+					  <type>string(16)</type>
+
+					  <syntax>string</syntax>
+
+					</parameter>
+
+					<parameter>
+
+					  <name>RemoteJBAbsMaxDelay</name>
+
+					  <type>string(16)</type>
+
+					  <syntax>string</syntax>
+
+					</parameter>
+
+					<parameter>
+
+					  <name>TxPackets</name>
+
+					  <type>string(16)</type>
+
+					  <syntax>string</syntax>
+
+					</parameter>
+
+					<parameter>
+
+					  <name>TxOctets</name>
+
+					  <type>string(16)</type>
+
+					  <syntax>string</syntax>
+
+					</parameter>
+
+					<parameter>
+
+					  <name>RxPackets</name>
+
+					  <type>string(16)</type>
+
+					  <syntax>string</syntax>
+
+					</parameter>
+
+					<parameter>
+
+					  <name>RxOctets</name>
+
+					  <type>string(16)</type>
+
+					  <syntax>string</syntax>
+
+					</parameter>
+
+					<parameter>
+
+					  <name>PacketLoss</name>
+
+					  <type>string(16)</type>
+
+					  <syntax>string</syntax>
+
+					</parameter>
+
+					<parameter>
+
+					  <name>IntervalJitter</name>
+
+					  <type>string(16)</type>
+
+					  <syntax>string</syntax>
+
+					</parameter>
+
+					<parameter>
+
+					  <name>RemoteIntervalJitter</name>
+
+					  <type>string(16)</type>
+
+					  <syntax>string</syntax>
+
+					</parameter>
+
+				  </parameters>
+
+				</object>
+
+			  </objects>
+
+			</object>
+
+		  </objects>
+
+        </object>
+
+		<object>
+
+		  <name>ServiceClass</name>
+
+		  <objectType>dynamicTable</objectType>
+
+		  <maxInstance>128</maxInstance>
+
+		  <functions>
+  
+            <func_GetEntryCount>ServiceClass_GetEntryCount</func_GetEntryCount>
+  
+            <func_GetEntry>ServiceClass_GetEntry</func_GetEntry>
+                  
+            <func_IsUpdated>ServiceClass_IsUpdated</func_IsUpdated>
+  
+            <func_Synchronize>ServiceClass_Synchronize</func_Synchronize>
+      
+            <func_GetParamStringValue>ServiceClass_GetParamStringValue</func_GetParamStringValue>
+
+          </functions>
+
+		  <parameters>
+
+			<parameter>
+
+              <name>ServiceClassName</name>
+
+              <type>string(64)</type>
+
+              <syntax>string</syntax>
+
+            </parameter>
+
+		  </parameters>
+
+		</object>
+        
+        <object>
+                
+          <name>ServiceFlow</name>
+             
+          <objectType>dynamicTable</objectType>
+             
+          <maxInstance>128</maxInstance>
+                
+          <functions>
+  
+            <func_GetEntryCount>ServiceFlow_GetEntryCount</func_GetEntryCount>
+  
+            <func_GetEntry>ServiceFlow_GetEntry</func_GetEntry>
+                  
+            <func_IsUpdated>ServiceFlow_IsUpdated</func_IsUpdated>
+  
+            <func_Synchronize>ServiceFlow_Synchronize</func_Synchronize>
+      
+            <func_GetParamUlongValue>ServiceFlow_GetParamUlongValue</func_GetParamUlongValue>
+
+			<func_GetParamStringValue>ServiceFlow_GetParamStringValue</func_GetParamStringValue>
+
+			<func_GetParamBoolValue>ServiceFlow_GetParamBoolValue</func_GetParamBoolValue>
+    
+          </functions>
+            
+          <parameters>
+            
+            <parameter>
+  
+              <name>SFID</name>
+  
+              <type>unsignedInt</type>
+                
+              <syntax>uint32</syntax>
+  
+            </parameter>
+
+			<parameter>
+
+              <name>ServiceClassName</name>
+
+              <type>string(256)</type>
+
+              <syntax>string</syntax>
+
+            </parameter>
+            
+            <parameter>
+  
+              <name>Direction</name>
+  
+              <type>string(16)</type>
+                
+              <syntax>string</syntax>
+  
+            </parameter>
+            
+            <parameter>
+  
+              <name>ScheduleType</name>
+  
+              <type>unsignedInt</type>
+                
+              <syntax>uint32</syntax>
+  
+            </parameter>
+
+			<parameter>
+              
+			  <name>DefaultFlow</name>
+              
+			  <type>boolean</type>
+              
+			  <syntax>bool</syntax>
+              
+			</parameter>
+            
+            <parameter>
+  
+              <name>NomGrantInterval</name>
+  
+              <type>unsignedInt</type>
+                
+              <syntax>uint32</syntax>
+  
+            </parameter>
+            
+            <parameter>
+  
+              <name>UnsolicitGrantSize</name>
+  
+              <type>unsignedInt</type>
+                
+              <syntax>uint32</syntax>
+  
+            </parameter>
+            
+            <parameter>
+  
+              <name>TolGrantJitter</name>
+  
+              <type>unsignedInt</type>
+                
+              <syntax>uint32</syntax>
+  
+            </parameter>
+            
+            <parameter>
+  
+              <name>NomPollInterval</name>
+  
+              <type>unsignedInt</type>
+                
+              <syntax>uint32</syntax>
+  
+            </parameter>
+            
+            <parameter>
+  
+              <name>MinReservedPkt</name>
+  
+              <type>unsignedInt</type>
+                
+              <syntax>uint32</syntax>
+  
+            </parameter>
+            
+            <parameter>
+  
+              <name>MaxTrafficRate</name>
+  
+              <type>unsignedInt</type>
+                
+              <syntax>uint32</syntax>
+  
+            </parameter>
+            
+            <parameter>
+  
+              <name>MinReservedRate</name>
+  
+              <type>unsignedInt</type>
+                
+              <syntax>uint32</syntax>
+  
+            </parameter>
+            
+            <parameter>
+  
+              <name>MaxTrafficBurst</name>
+  
+              <type>unsignedInt</type>
+                
+              <syntax>uint32</syntax>
+  
+            </parameter>
+
+            <parameter>
+  
+              <name>TrafficType</name>
+  
+              <type>string(64)</type>
+                
+              <syntax>string</syntax>
+  
+            </parameter>
+
+            <parameter>
+  
+              <name>NumberOfPackets</name>
+  
+              <type>unsignedInt</type>
+                
+              <syntax>uint32</syntax>
+  
+            </parameter>
+                              
+          </parameters>
+                         
+        </object>
+        
+        <object>
+
+          <name>Dect</name>
+
+          <objectType>object</objectType>
+
+          <maxInstance>128</maxInstance>
+
+          <functions>
+
+            <func_GetParamBoolValue>Dect_GetParamBoolValue</func_GetParamBoolValue>
+
+            <func_GetParamUlongValue>Dect_GetParamUlongValue</func_GetParamUlongValue>
+
+            <func_GetParamStringValue>Dect_GetParamStringValue</func_GetParamStringValue>
+
+			<func_SetParamBoolValue>Dect_SetParamBoolValue</func_SetParamBoolValue>
+		    
+			<func_SetParamUlongValue>Dect_SetParamUlongValue</func_SetParamUlongValue>
+		    
+			<func_SetParamStringValue>Dect_SetParamStringValue</func_SetParamStringValue>
+
+			<func_Validate>Dect_Validate</func_Validate>
+
+			<func_Commit>Dect_Commit</func_Commit>
+
+			<func_Rollback>Dect_Rollback</func_Rollback>
+
+          </functions>
+
+          <parameters>
+		              
+            <parameter>
+
+              <name>HardwareVersion</name>
+
+              <type>string(64)</type>
+
+              <syntax>string</syntax>
+
+            </parameter>
+					              
+            <parameter>
+
+              <name>RFPI</name>
+
+              <type>string(64)</type>
+
+              <syntax>string</syntax>
+
+            </parameter>
+					              
+            <parameter>
+
+              <name>SoftwareVersion</name>
+
+              <type>string(64)</type>
+
+              <syntax>string</syntax>
+
+            </parameter>
+            
+            <parameter>
+
+		      <name>RegistrationMode</name>
+		  
+		      <type>boolean</type>
+		  
+		      <syntax>bool</syntax>
+
+		      <writable>true</writable>
+
+		    </parameter>
+
+		    <parameter>
+
+              <name>RegisterDectHandset</name>
+
+              <type>unsignedInt</type>
+
+              <syntax>uint32</syntax>
+
+			  <writable>true</writable>
+
+            </parameter>
+
+		    <parameter>
+
+              <name>DeregisterDectHandset</name>
+
+              <type>unsignedInt</type>
+
+              <syntax>uint32</syntax>
+
+			  <writable>true</writable>
+
+            </parameter>
+
+            <parameter>
+
+		      <name>Enable</name>
+		  
+		      <type>boolean</type>
+		  
+		      <syntax>bool</syntax>
+
+		      <writable>true</writable>
+
+		    </parameter>
+		    
+            <parameter>
+
+                      <name>PIN</name>
+
+                      <type>string(64)</type>
+
+                      <syntax>string</syntax>
+
+                      <writable>true</writable>
+
+                    </parameter>
+
+          </parameters>
+
+		  <objects>
+          
+          <object>
+
+            <name>Handsets</name>
+
+            <objectType>dynamicTable</objectType>
+
+            <maxInstance>128</maxInstance>
+
+            <functions>
+
+              <func_GetEntryCount>Handsets_GetEntryCount</func_GetEntryCount>
+
+              <func_GetEntry>Handsets_GetEntry</func_GetEntry>
+
+              <func_IsUpdated>Handsets_IsUpdated</func_IsUpdated>
+
+              <func_Synchronize>Handsets_Synchronize</func_Synchronize>
+
+              <func_GetParamBoolValue>Handsets_GetParamBoolValue</func_GetParamBoolValue>
+
+              <func_GetParamStringValue>Handsets_GetParamStringValue</func_GetParamStringValue>
+
+              <func_SetParamStringValue>Handsets_SetParamStringValue</func_SetParamStringValue>
+
+              <func_Validate>Handsets_Validate</func_Validate>
+
+              <func_Commit>Handsets_Commit</func_Commit>
+
+              <func_Rollback>Handsets_Rollback</func_Rollback>
+
+            </functions>
+
+            <parameters>
+            
+            <parameter>
+
+		      <name>Status</name>
+		  
+		      <type>boolean</type>
+		  
+		      <syntax>bool</syntax>
+
+		    </parameter>
+            
+            <parameter>
+
+              <name>LastActiveTime</name>
+
+              <type>string(64)</type>
+
+              <syntax>string</syntax>
+
+            </parameter>
+            
+            <parameter>
+
+              <name>HandsetName</name>
+
+              <type>string(64)</type>
+
+              <syntax>string</syntax>
+
+            </parameter>
+            
+            <parameter>
+
+              <name>OperatingTN</name>
+
+              <type>string(64)</type>
+
+              <syntax>string</syntax>
+
+              <writable>true</writable>
+
+            </parameter>
+
+            <parameter>
+
+              <name>SupportedTN</name>
+
+              <type>string(64)</type>
+
+              <syntax>string</syntax>
+
+            </parameter>
+
+            <parameter>
+
+              <name>HandsetFirmware</name>
+
+              <type>string(64)</type>
+
+              <syntax>string</syntax>
+
+            </parameter>
+
+            </parameters>
+
+          </object>
+
+		      </objects>
+
+        </object>
+
+            <object>
+                
+             <name>MTALog</name>
+             
+             <objectType>dynamicTable</objectType>
+             
+             <maxInstance>128</maxInstance>
+                
+             <functions>
+  
+                <func_GetEntryCount>MTALog_GetEntryCount</func_GetEntryCount>
+  
+                <func_GetEntry>MTALog_GetEntry</func_GetEntry>
+                  
+                <func_IsUpdated>MTALog_IsUpdated</func_IsUpdated>
+  
+                <func_Synchronize>MTALog_Synchronize</func_Synchronize>
+      
+                <func_GetParamUlongValue>MTALog_GetParamUlongValue</func_GetParamUlongValue>
+  
+                <func_GetParamStringValue>MTALog_GetParamStringValue</func_GetParamStringValue>
+  
+             </functions>
+            
+             <parameters>
+            
+              <parameter>
+  
+                <name>Time</name>
+  
+                <type>string</type>
+  
+                <syntax>string</syntax>
+  
+              </parameter>
+  
+              <parameter>
+  
+                <name>Index</name>
+  
+                <type>unsignedInt</type>
+                
+                <syntax>uint32</syntax>
+  
+              </parameter>
+  
+              <parameter>
+  
+                <name>EventID</name>
+  
+                <type>unsignedInt</type>
+                
+                <syntax>uint32</syntax>
+  
+              </parameter>
+              
+              <parameter>
+  
+                <name>EventLevel</name>
+  
+                <type>string</type>
+                
+                <syntax>string</syntax>
+  
+              </parameter>
+  
+              <parameter>
+  
+                <name>Description</name>
+  
+                <type>string</type>
+                  
+                <syntax>string</syntax>                      
+  
+              </parameter>
+                
+             </parameters>
+                         
+            </object>
+            
+            <object>
+                
+             <name>DECTLog</name>
+             
+             <objectType>dynamicTable</objectType>
+             
+             <maxInstance>128</maxInstance>
+                
+             <functions>
+  
+                <func_GetEntryCount>DECTLog_GetEntryCount</func_GetEntryCount>
+  
+                <func_GetEntry>DECTLog_GetEntry</func_GetEntry>
+                  
+                <func_IsUpdated>DECTLog_IsUpdated</func_IsUpdated>
+  
+                <func_Synchronize>DECTLog_Synchronize</func_Synchronize>
+      
+                <func_GetParamUlongValue>DECTLog_GetParamUlongValue</func_GetParamUlongValue>
+  
+                <func_GetParamStringValue>DECTLog_GetParamStringValue</func_GetParamStringValue>
+  
+             </functions>
+            
+             <parameters>
+            
+              <parameter>
+  
+                <name>Time</name>
+
+                <type>string</type>
+  
+                <syntax>string</syntax>
+  
+              </parameter>
+  
+              <parameter>
+  
+                <name>Index</name>
+  
+                <type>unsignedInt</type>
+
+                <syntax>uint32</syntax>
+
+              </parameter>
+              
+              <parameter>
+  
+                <name>EventID</name>
+  
+                <type>unsignedInt</type>
+                
+                <syntax>uint32</syntax>
+  
+              </parameter>
+              
+              <parameter>
+
+                <name>EventLevel</name>
+  
+                <type>unsignedInt</type>
+                
+                <syntax>uint32</syntax>
+  
+              </parameter>
+  
+              <parameter>
+  
+                <name>Description</name>
+  
+                <type>string</type>
+                  
+                <syntax>string</syntax>                      
+  
+              </parameter>
+                
+             </parameters>
+                         
+            </object>                            
+
+            <object>
+
+              <name>Battery</name>
+
+              <objectType>object</objectType>
+
+              <functions>
+
+                <func_GetParamBoolValue>Battery_GetParamBoolValue</func_GetParamBoolValue>
+
+                <func_GetParamIntValue>Battery_GetParamIntValue</func_GetParamIntValue>
+
+                <func_GetParamUlongValue>Battery_GetParamUlongValue</func_GetParamUlongValue>
+
+                <func_GetParamStringValue>Battery_GetParamStringValue</func_GetParamStringValue>
+
+              </functions>
+
+              <parameters>
+              
+                <parameter>
+
+                  <name>Installed</name>
+                  
+                  <type>boolean</type>
+                  
+                  <syntax>bool</syntax>
+
+                </parameter>
+
+                <parameter>
+
+                  <name>PowerStatus</name>
+
+                  <type>string(16)</type>
+
+                  <syntax>string</syntax>
+
+                </parameter>
+
+                <parameter>
+
+                  <name>Condition</name>
+
+                  <type>string(16)</type>
+
+                  <syntax>string</syntax>
+
+                </parameter>
+
+                <parameter>
+
+                  <name>Status</name>
+
+                  <type>string(16)</type>
+
+                  <syntax>string</syntax>
+
+                </parameter>
+
+                <parameter>
+
+                  <name>Life</name>
+
+                  <type>string(32)</type>
+
+                  <syntax>string</syntax>
+
+                </parameter>
+                
+                <parameter>
+
+                  <name>TotalCapacity</name>
+
+                  <type>unsignedInt</type>
+
+                  <syntax>uint32</syntax>
+
+                </parameter>
+
+                <parameter>
+
+                  <name>ActualCapacity</name>
+
+                  <type>unsignedInt</type>
+
+                  <syntax>uint32</syntax>
+
+                </parameter>
+
+                <parameter>
+
+                  <name>RemainingCharge</name>
+
+                  <type>unsignedInt</type>
+
+                  <syntax>uint32</syntax>
+
+                </parameter>
+
+                <parameter>
+
+                  <name>RemainingTime</name>
+
+                  <type>unsignedInt</type>
+
+                  <syntax>uint32</syntax>
+
+                </parameter>
+                
+                <parameter>
+
+                  <name>NumberofCycles</name>
+
+                  <type>unsignedInt</type>
+
+                  <syntax>uint32</syntax>
+
+                </parameter>
+
+                <parameter>
+
+                  <name>ModelNumber</name>
+
+                  <type>string(32)</type>
+
+                  <syntax>string</syntax>
+
+                </parameter>
+
+                <parameter>
+
+                  <name>SerialNumber</name>
+
+                  <type>string(32)</type>
+
+                  <syntax>string</syntax>
+
+                </parameter>
+
+                <parameter>
+
+                  <name>PartNumber</name>
+
+                  <type>string(32)</type>
+
+                  <syntax>string</syntax>
+
+                </parameter>
+
+                <parameter>
+
+                  <name>ChargerFirmwareRevision</name>
+
+                  <type>string(32)</type>
+
+                  <syntax>string</syntax>
+
+                </parameter>
+
+            </parameters>
+
+            </object>                          
+          
+      </objects>
+      
+    </object>
+
+  </objects>
+
+  </dataModelInfo>

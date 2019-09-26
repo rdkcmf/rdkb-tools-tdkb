@@ -1,0 +1,254 @@
+<!--
+ If not stated otherwise in this file or this component's Licenses.txt file the
+ following copyright and licenses apply:
+
+ Copyright 2016 RDK Management
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+ http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+
+<?xml version="1.0" encoding="UTF-8"?><xml>
+  <module name="CosaMTA" testGroup="Component">
+    <primitiveTests>
+      <primitiveTest id=" " name="CosaMTA_Triggerdiagnostics" version="2">
+        <function>CosaMTA_Triggerdiagnostics</function>
+        <parameters>
+          <parameter name="index" value="0"/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest id=" " name="CosaMTA_BatteryGetStatus" version="2">
+        <function>CosaMTA_BatteryGetStatus</function>
+        <parameters>
+          <parameter name="handleType" value="0"/>
+          <parameter name="bufferType" value="0"/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest id=" " name="CosaMTA_GetResetCount" version="2">
+        <function>CosaMTA_GetResetCount</function>
+        <parameters>
+          <parameter name="handleType" value="0"/>
+          <parameter name="resetType" value="aa"/>
+          <parameter name="bufferType" value="0"/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest id=" " name="CosaMTA_GetDHCPInfo" version="2">
+        <function>CosaMTA_GetDHCPInfo</function>
+        <parameters>
+          <parameter name="handleType" value="0"/>
+          <parameter name="bufferType" value="0"/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest id=" " name="CosaMTA_BatteryGetPowerStatus" version="2">
+        <function>CosaMTA_BatteryGetPowerStatus</function>
+        <parameters>
+          <parameter name="handleType" value="0"/>
+          <parameter name="bufferType" value="0"/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest id=" " name="CosaMTA_LineTableGetNumberOfEntries" version="2">
+        <function>CosaMTA_LineTableGetNumberOfEntries</function>
+        <parameters>
+          <parameter name="handleType" value="0"/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest id=" " name="CosaMTA_LineTableGetEntry" version="2">
+        <function>CosaMTA_LineTableGetEntry</function>
+        <parameters>
+          <parameter name="bufferType" value="0"/>
+          <parameter name="handleType" value="0"/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest id=" " name="CosaMTA_BatteryGetInfo" version="2">
+        <function>CosaMTA_BatteryGetInfo</function>
+        <parameters>
+          <parameter name="handleType" value="0"/>
+          <parameter name="bufferType" value="0"/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest id=" " name="CosaMTA_GetServiceClass" version="2">
+        <function>CosaMTA_GetServiceClass</function>
+        <parameters>
+          <parameter name="handleType" value="0"/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest id=" " name="CosaMTA_DectGetEnable" version="2">
+        <function>CosaMTA_DectGetEnable</function>
+        <parameters>
+          <parameter name="handleType" value="0"/>
+          <parameter name="Value" value="0"/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest id=" " name="CosaMTA_DectSetEnable" version="1">
+        <function>CosaMTA_DectSetEnable</function>
+        <parameters>
+          <parameter name="handleType" value="0"/>
+          <parameter name="Value" value="0"/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest id=" " name="CosaMTA_DectGetRegistrationMode" version="1">
+        <function>CosaMTA_DectGetRegistrationMode</function>
+        <parameters>
+          <parameter name="handleType" value="0"/>
+          <parameter name="Value" value="0"/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest id=" " name="CosaMTA_DectSetRegistrationMode" version="1">
+        <function>CosaMTA_DectSetRegistrationMode</function>
+        <parameters>
+          <parameter name="handleType" value="0"/>
+          <parameter name="Value" value="0"/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest id=" " name="CosaMTA_GetDect" version="1">
+        <function>CosaMTA_GetDect</function>
+        <parameters>
+          <parameter name="bufferType" value="0"/>
+          <parameter name="handleType" value="0"/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest id=" " name="CosaMTA_GetDectPIN" version="1">
+        <function>CosaMTA_GetDectPIN</function>
+        <parameters>
+          <parameter name="bufferType" value="0"/>
+          <parameter name="handleType" value="0"/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest id=" " name="CosaMTA_SetDectPIN" version="3">
+        <function>CosaMTA_SetDectPIN</function>
+        <parameters>
+          <parameter name="handleType" value="0"/>
+          <parameter name="bufferType" value="0"/>
+          <parameter name="value" value="DectPin"/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest id=" " name="CosaMTA_GetDSXLogEnable" version="1">
+        <function>CosaMTA_GetDSXLogEnable</function>
+        <parameters>
+          <parameter name="handleType" value="0"/>
+          <parameter name="Value" value="0"/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest id=" " name="CosaMTA_SetDSXLogEnable" version="1">
+        <function>CosaMTA_SetDSXLogEnable</function>
+        <parameters>
+          <parameter name="handleType" value="0"/>
+          <parameter name="Value" value="0"/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest id=" " name="CosaMTA_ClearDSXLog" version="1">
+        <function>CosaMTA_ClearDSXLog</function>
+        <parameters>
+          <parameter name="handleType" value="0"/>
+          <parameter name="Value" value="0"/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest id=" " name="CosaMTA_GetCallSignallingLogEnable" version="1">
+        <function>CosaMTA_GetCallSignallingLogEnable</function>
+        <parameters>
+          <parameter name="handleType" value="0"/>
+          <parameter name="Value" value="0"/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest id=" " name="CosaMTA_SetCallSignallingLogEnable" version="1">
+        <function>CosaMTA_SetCallSignallingLogEnable</function>
+        <parameters>
+          <parameter name="handleType" value="0"/>
+          <parameter name="Value" value="0"/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest id=" " name="CosaMTA_ClearCallSignallingLog" version="1">
+        <function>CosaMTA_ClearCallSignallingLog</function>
+        <parameters>
+          <parameter name="handleType" value="0"/>
+          <parameter name="Value" value="0"/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest id=" " name="CosaMTA_BatteryGetNumberofCycles" version="1">
+        <function>CosaMTA_BatteryGetNumberofCycles</function>
+        <parameters>
+          <parameter name="handleType" value="0"/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest id=" " name="CosaMTA_BatteryGetLife" version="2">
+        <function>CosaMTA_BatteryGetLife</function>
+        <parameters>
+          <parameter name="handleType" value="0"/>
+          <parameter name="bufferType" value="0"/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest id=" " name="CosaMTA_BatteryGetCondition" version="1">
+        <function>CosaMTA_BatteryGetCondition</function>
+        <parameters>
+          <parameter name="bufferType" value="0"/>
+          <parameter name="handleType" value="0"/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest id=" " name="CosaMTA_BatteryGetRemainingTime" version="1">
+        <function>CosaMTA_BatteryGetRemainingTime</function>
+        <parameters>
+          <parameter name="handleType" value="0"/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest id=" " name="CosaMTA_GetServiceFlow" version="1">
+        <function>CosaMTA_GetServiceFlow</function>
+        <parameters>
+          <parameter name="handleType" value=""/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest id=" " name="CosaMTA_GetDSXLogs" version="1">
+        <function>CosaMTA_GetDSXLogs</function>
+        <parameters>
+          <parameter name="handleType" value=""/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest id=" " name="CosaMTA_GetMtaLog" version="1">
+        <function>CosaMTA_GetMtaLog</function>
+        <parameters>
+          <parameter name="handleType" value=""/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest id="" name="CosaMTA_GetDhcpStatus" version="1">
+        <function>CosaMTA_GetDhcpStatus</function>
+        <parameters/>
+      </primitiveTest>
+      <primitiveTest id="" name="CosaMTA_GetConfigFileStatus" version="1">
+        <function>CosaMTA_GetConfigFileStatus</function>
+        <parameters/>
+      </primitiveTest>
+      <primitiveTest id="" name="CosaMTA_GetLineRegisterStatus" version="1">
+        <function>CosaMTA_GetLineRegisterStatus</function>
+        <parameters/>
+      </primitiveTest>
+      <primitiveTest name="CosaMTA_GetParamUlongValue" id=" " version="1">
+        <function>CosaMTA_GetParamUlongValue</function>
+        <parameters>
+          <parameter name="handleType" value=""/>
+          <parameter name="paramName" value=""/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest id=" " name="CosaMTA_GetCalls" version="1">
+        <function>CosaMTA_GetCalls</function>
+        <parameters>
+          <parameter name="handleType" value=""/>
+          <parameter name="value" value=""/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest name="CosaMTA_GetHandsets" id=" " version="1">
+        <function>CosaMTA_GetHandsets</function>
+        <parameters>
+          <parameter name="handleType" value=""/>
+        </parameters>
+      </primitiveTest>
+    </primitiveTests>
+  </module>
+</xml>

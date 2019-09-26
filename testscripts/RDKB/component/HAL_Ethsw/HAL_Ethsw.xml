@@ -1,0 +1,81 @@
+<!--
+ Copyright 2016-2017 Intel Corporation
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+ http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+<?xml version="1.0" encoding="UTF-8"?><xml>
+  <module name="HAL_Ethsw" testGroup="Component">
+    <primitiveTests>
+      <primitiveTest id=" " name="ethsw_stub_hal_Get_Port_Admin_Status" version="3">
+        <function>ethsw_stub_hal_Get_Port_Admin_Status</function>
+        <parameters>
+          <parameter name="PortID" value="1"/>
+          <parameter name="flag" value="0"/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest id=" " name="ethsw_stub_hal_Get_Port_Cfg" version="2">
+        <function>ethsw_stub_hal_Get_Port_Cfg</function>
+        <parameters>
+          <parameter name="PortID" value="1"/>
+          <parameter name="flag" value="0"/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest id=" " name="ethsw_stub_hal_Get_Port_Status" version="4">
+        <function>ethsw_stub_hal_Get_Port_Status</function>
+        <parameters>
+          <parameter name="PortID" value="1"/>
+          <parameter name="flag" value="0"/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest id=" " name="ethsw_stub_hal_SetAgingSpeed" version="2">
+        <function>ethsw_stub_hal_SetAgingSpeed</function>
+        <parameters>
+          <parameter name="PortID" value="1"/>
+          <parameter name="AgingSpeed" value="0"/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest id=" " name="ethsw_stub_hal_SetPortAdminStatus" version="7">
+        <function>ethsw_stub_hal_SetPortAdminStatus</function>
+        <parameters>
+          <parameter name="PortID" value="1"/>
+          <parameter name="adminstatus" value="0"/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest id=" " name="ethsw_stub_hal_SetPortCfg" version="3">
+        <function>ethsw_stub_hal_SetPortCfg</function>
+        <parameters>
+          <parameter name="PortID" value="1"/>
+          <parameter name="linkrate" value="100"/>
+          <parameter name="mode" value="CCSP_HAL_ETHSW_DUPLEX_Half"/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest id=" " name="ethsw_stub_hal_LocatePort_By_MacAddress" version="4">
+        <function>ethsw_stub_hal_LocatePort_By_MacAddress</function>
+        <parameters>
+          <parameter name="macID" value="00:50:b6:02:e0:77"/>
+          <parameter name="flag" value="0"/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest id="" name="ethsw_stub_hal_Init" version="1">
+        <function>ethsw_stub_hal_Init</function>
+        <parameters/>
+      </primitiveTest>
+      <primitiveTest name="ethsw_stub_hal_Get_AssociatedDevice" id=" " version="2">
+        <function>ethsw_stub_hal_Get_AssociatedDevice</function>
+        <parameters>
+          <parameter name="flag" value="0"/>
+        </parameters>
+      </primitiveTest>
+    </primitiveTests>
+  </module>
+</xml>

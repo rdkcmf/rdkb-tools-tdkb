@@ -1,0 +1,109 @@
+<!--
+ If not stated otherwise in this file or this component's Licenses.txt file the
+ following copyright and licenses apply:
+
+ Copyright 2016 RDK Management
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+ http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+<?xml version="1.0" encoding="UTF-8"?>
+<xml>
+  <module name="MTA_Agent" testGroup="E2E">
+    <primitiveTests>
+      <primitiveTest id="" name="MTA_agent_SetParameterAttr" version="1">
+        <function>MTA_agent_SetParameterAttr</function>
+        <parameters>
+          <parameter name="AccessControl" value="A"/>
+          <parameter name="Notify" value="A"/>
+          <parameter name="ParamName" value="A"/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest id=" " name="MTA_agent_SetParameterValues" version="1">
+        <function>MTA_agent_SetParameterValues</function>
+        <parameters>
+          <parameter name="ParamName" value="A"/>
+          <parameter name="ParamValue" value="A"/>
+          <parameter name="Type" value="A"/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest id="" name="MTA_agent_Init" version="1">
+        <function>MTA_agent_Init</function>
+        <parameters/>
+      </primitiveTest>
+      <primitiveTest id="" name="MTA_agent_Terminate" version="1">
+        <function>MTA_agent_Terminate</function>
+        <parameters/>
+      </primitiveTest>
+      <primitiveTest id=" " name="MTA_agent_GetParameterValues" version="1">
+        <function>MTA_agent_GetParameterValues</function>
+        <parameters>
+          <parameter name="ParamName" value="A"/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest id=" " name="MTA_agent_GetParameterNames" version="1">
+        <function>MTA_agent_GetParameterNames</function>
+        <parameters>
+          <parameter name="ParamList" value="A"/>
+          <parameter name="ParamName" value="A"/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest id=" " name="MTA_agent_GetParameterAttr" version="1">
+        <function>MTA_agent_GetParameterAttr</function>
+        <parameters>
+          <parameter name="ParamName" value="A"/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest id=" " name="MTA_agent_Commit" version="3">
+        <function>MTA_agent_Commit</function>
+        <parameters>
+          <parameter name="ParamName" value="A"/>
+          <parameter name="ParamValue" value="A"/>
+          <parameter name="Type" value="A"/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest id=" " name="MTA_agent_GetParameterNames_NextLevel" version="1">
+        <function>MTA_agent_GetParameterNames_NextLevel</function>
+        <parameters>
+          <parameter name="ParamName" value="A"/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest id=" " name="MTA_agent_AddTbl" version="1">
+        <function>MTA_agent_AddTbl</function>
+        <parameters>
+          <parameter name="ParamName" value="A"/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest id=" " name="MTA_agent_DelTble" version="1">
+        <function>MTA_agent_DelTble</function>
+        <parameters>
+          <parameter name="ParamName" value="A"/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest id=" " name="MTA_agent_GetHealth" version="1">
+        <function>MTA_agent_GetHealth</function>
+        <parameters>
+          <parameter name="ParamName" value="A"/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest name="MTA_agent_SetSessionId" id=" " version="1">
+        <function>MTA_agent_SetSessionId</function>
+        <parameters>
+          <parameter name="sessionId" value="1"/>
+          <parameter name="pathname" value="Device.X_CISCO_COM_MTA."/>
+          <parameter name="override" value="0"/>
+          <parameter name="priority" value="0"/>
+        </parameters>
+      </primitiveTest>
+    </primitiveTests>
+  </module>
+</xml>

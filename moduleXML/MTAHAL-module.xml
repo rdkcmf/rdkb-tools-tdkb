@@ -1,0 +1,59 @@
+<!-- 
+  If not stated otherwise in this file or this component's Licenses.txt file the 
+  following copyright and licenses apply: 
+  Copyright 2018 RDK Management 
+  Licensed under the Apache License, Version 2.0 (the "License"); 
+  you may not use this file except in compliance with the License. 
+  You may obtain a copy of the License at 
+  http://www.apache.org/licenses/LICENSE-2.0 
+  Unless required by applicable law or agreed to in writing, software 
+  distributed under the License is distributed on an "AS IS" BASIS, 
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
+  See the License for the specific language governing permissions and 
+  limitations under the License. 
+-->
+<?xml version='1.0' encoding='utf-8'?>
+<xml>
+  <module>
+  <!-- Module Name  -->
+    <moduleName>MTAHAL</moduleName>
+  <!-- Category of the module  -->
+    <category>RDKB</category>
+  <!-- Excecution time out of module -->
+    <executionTimeOut>1</executionTimeOut>
+  <!-- Excecution time out of module -->
+    <testGroup>Component</testGroup>
+  <!-- Logs File Names of module -->
+    <logFileNames>[]</logFileNames>
+  <!-- Crash File Names of the module -->
+    <crashFileNames>[]</crashFileNames>
+  <!-- Total functions corresponding module  -->
+    <functions>
+      <function name='MTAHAL_GetParamCharValue' />
+      <function name='MTAHAL_GetParamUlongValue' />
+      <function name='MTAHAL_SetParamUlongValue' />
+      <function name='MTAHAL_GetDHCPInfo' />
+      <function name='MTAHAL_GetLineTableGetEntry' />
+      <function name='MTAHAL_GetServiceFlow' />
+      <function name='MTAHAL_TriggerDiagnostics' />
+      <function name='MTAHAL_GetCalls' />
+      <function name='MTAHAL_GetCALLP' />
+      <function name='MTAHAL_GetDSXLogs' />
+      <function name='MTAHAL_GetMtaLog' />
+      <function name='MTAHAL_GetDhcpStatus' />
+      <function name='MTAHAL_GetConfigFileStatus' />
+      <function name='MTAHAL_GetLineRegisterStatus' />
+    </functions>
+  <!-- Total parameters corresponding module  -->
+    <parameters>
+      <parameter funName='MTAHAL_GetParamCharValue' parameterName='paramName' parameterType='STRING' range='A-Z' />
+      <parameter funName='MTAHAL_GetParamUlongValue' parameterName='paramName' parameterType='STRING' range='A-Z' />
+      <parameter funName='MTAHAL_SetParamUlongValue' parameterName='paramName' parameterType='STRING' range='A-Z' />
+      <parameter funName='MTAHAL_SetParamUlongValue' parameterName='value' parameterType='INTEGER' range='0-7' />
+      <parameter funName='MTAHAL_GetLineTableGetEntry' parameterName='value' parameterType='INTEGER' range='0-7' />
+      <parameter funName='MTAHAL_TriggerDiagnostics' parameterName='value' parameterType='INTEGER' range='0-7' />
+      <parameter funName='MTAHAL_GetCalls' parameterName='value' parameterType='INTEGER' range='0-7' />
+      <parameter funName='MTAHAL_GetCALLP' parameterName='value' parameterType='INTEGER' range='0-7' />
+    </parameters>
+  </module>
+</xml>

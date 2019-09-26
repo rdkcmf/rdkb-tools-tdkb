@@ -1,0 +1,87 @@
+<!--
+ If not stated otherwise in this file or this component's Licenses.txt file the
+ following copyright and licenses apply:
+
+ Copyright 2018 RDK Management
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+ http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+<?xml version='1.0' encoding='utf-8'?>
+<xml>
+  <module>
+  <!-- Module Name  -->
+    <moduleName>WIFIHAL</moduleName>
+  <!-- Category of the module  -->
+    <category>RDKB</category>
+  <!-- Excecution time out of module -->
+    <executionTimeOut>1</executionTimeOut>
+  <!-- Excecution time out of module -->
+    <testGroup>Component</testGroup>
+  <!-- Logs File Names of module -->
+    <logFileNames>[]</logFileNames>
+  <!-- Crash File Names of the module -->
+    <crashFileNames>[]</crashFileNames>
+  <!-- Total functions corresponding module  -->
+    <functions>
+      <function name='WIFIHAL_GetOrSetParamBoolValue' />
+      <function name='WIFIHAL_GetOrSetParamULongValue' />
+      <function name='WIFIHAL_GetOrSetParamStringValue' />
+      <function name='WIFIHAL_GetOrSetParamIntValue' />
+      <function name='WIFIHAL_GetOrSetParamUIntValue' />
+      <function name='WIFIHAL_ApplySettings' />
+      <function name='WIFIHAL_GetIndexFromName' />
+      <function name='WIFIHAL_ClearRadioResetCount' />
+      <function name='WIFIHAL_Reset' />
+      <function name='WIFIHAL_GetOrSetSecurityRadiusServer' />
+      <function name='WIFIHAL_GetOrSetRadioStandard' />
+    </functions>
+  <!-- Total parameters corresponding module  -->
+    <parameters>
+      <parameter funName='WIFIHAL_GetOrSetParamBoolValue' parameterName='methodName' parameterType='STRING' range='A-Z' />
+      <parameter funName='WIFIHAL_GetOrSetParamBoolValue' parameterName='radioIndex' parameterType='INTEGER' range='1-2' />
+      <parameter funName='WIFIHAL_GetOrSetParamBoolValue' parameterName='param' parameterType='INTEGER' range='0-100' />
+      <parameter funName='WIFIHAL_GetOrSetParamBoolValue' parameterName='paramType' parameterType='STRING' range='A-Z' />
+      <parameter funName='WIFIHAL_GetOrSetParamULongValue' parameterName='methodName' parameterType='STRING' range='A-Z' />
+      <parameter funName='WIFIHAL_GetOrSetParamULongValue' parameterName='radioIndex' parameterType='INTEGER' range='1-2' />
+      <parameter funName='WIFIHAL_GetOrSetParamULongValue' parameterName='param' parameterType='INTEGER' range='1-100' />
+      <parameter funName='WIFIHAL_GetOrSetParamULongValue' parameterName='paramType' parameterType='STRING' range='A-Z' />
+      <parameter funName='WIFIHAL_GetOrSetParamStringValue' parameterName='methodName' parameterType='STRING' range='A-Z' />
+      <parameter funName='WIFIHAL_GetOrSetParamStringValue' parameterName='radioIndex' parameterType='INTEGER' range='1-2' />
+      <parameter funName='WIFIHAL_GetOrSetParamStringValue' parameterName='paramType' parameterType='STRING' range='A-Z' />
+      <parameter funName='WIFIHAL_GetOrSetParamStringValue' parameterName='param' parameterType='STRING' range='A-Z' />
+      <parameter funName='WIFIHAL_GetOrSetParamIntValue' parameterName='methodName' parameterType='STRING' range='A-Z' />
+      <parameter funName='WIFIHAL_GetOrSetParamIntValue' parameterName='radioIndex' parameterType='INTEGER' range='1-2' />
+      <parameter funName='WIFIHAL_GetOrSetParamIntValue' parameterName='paramType' parameterType='STRING' range='A-Z' />
+      <parameter funName='WIFIHAL_GetOrSetParamIntValue' parameterName='param' parameterType='INTEGER' range='1-10' />
+      <parameter funName='WIFIHAL_GetOrSetParamUIntValue' parameterName='methodName' parameterType='STRING' range='A-Z' />
+      <parameter funName='WIFIHAL_GetOrSetParamUIntValue' parameterName='param' parameterType='INTEGER' range='0-100' />
+      <parameter funName='WIFIHAL_GetOrSetParamUIntValue' parameterName='paramType' parameterType='STRING' range='A-Z' />
+      <parameter funName='WIFIHAL_GetOrSetParamUIntValue' parameterName='radioIndex' parameterType='INTEGER' range='1-2' />
+      <parameter funName='WIFIHAL_ApplySettings' parameterName='radioIndex' parameterType='INTEGER' range='0-2' />
+      <parameter funName='WIFIHAL_GetIndexFromName' parameterName='param' parameterType='STRING' range='A-Z' />
+      <parameter funName='WIFIHAL_GetOrSetSecurityRadiusServer' parameterName='port' parameterType='INTEGER' range='0-100' />
+      <parameter funName='WIFIHAL_GetOrSetSecurityRadiusServer' parameterName='methodName' parameterType='STRING' range='A-Z' />
+      <parameter funName='WIFIHAL_GetOrSetSecurityRadiusServer' parameterName='radioIndex' parameterType='INTEGER' range='0-1' />
+      <parameter funName='WIFIHAL_GetOrSetSecurityRadiusServer' parameterName='IPAddress' parameterType='STRING' range='A-Z' />
+      <parameter funName='WIFIHAL_GetOrSetSecurityRadiusServer' parameterName='RadiusSecret' parameterType='STRING' range='A-Z' />
+      <parameter funName='WIFIHAL_GetOrSetSecurityRadiusServer' parameterName='paramType' parameterType='STRING' range='A-Z' />
+      <parameter funName='WIFIHAL_GetOrSetRadioStandard' parameterName='methodName' parameterType='STRING' range='A-Z' />
+      <parameter funName='WIFIHAL_GetOrSetRadioStandard' parameterName='radioIndex' parameterType='INTEGER' range='0-1' />
+      <parameter funName='WIFIHAL_GetOrSetRadioStandard' parameterName='paramType' parameterType='STRING' range='A-Z' />
+      <parameter funName='WIFIHAL_GetOrSetRadioStandard' parameterName='param' parameterType='STRING' range='A-Z' />
+      <parameter funName='WIFIHAL_GetOrSetRadioStandard' parameterName='gOnly' parameterType='INTEGER' range='0-1' />
+      <parameter funName='WIFIHAL_GetOrSetRadioStandard' parameterName='nOnly' parameterType='INTEGER' range='0-1' />
+      <parameter funName='WIFIHAL_GetOrSetRadioStandard' parameterName='acOnly' parameterType='INTEGER' range='0-1' />
+    </parameters>
+  </module>
+</xml>

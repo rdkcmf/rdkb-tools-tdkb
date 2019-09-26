@@ -1,0 +1,154 @@
+<!--
+ If not stated otherwise in this file or this component's Licenses.txt file the
+ following copyright and licenses apply:
+
+ Copyright 2016 RDK Management
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+ http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+<?xml version="1.0" encoding="UTF-8"?><xml>
+  <module name="PAM" testGroup="Component">
+    <primitiveTests>
+      <primitiveTest id=" " name="pam_bridge_GetParamBoolValue" version="2">
+        <function>pam_bridge_GetParamBoolValue</function>
+        <parameters>
+          <parameter name="paramName" value="MaxBridgeEntries"/>
+          <parameter name="module" value="Bridging"/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest id=" " name="pam_bridge_GetParamUlongValue" version="1">
+        <function>pam_bridge_GetParamUlongValue</function>
+        <parameters>
+          <parameter name="module" value="Bridging"/>
+          <parameter name="paramName" value="MaxBridgeEntries"/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest id=" " name="pam_AddObject" version="1">
+        <function>pam_AddObject</function>
+        <parameters>
+          <parameter name="paramName" value="a"/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest id="" name="pam_CRRestart" version="1">
+        <function>pam_CRRestart</function>
+        <parameters/>
+      </primitiveTest>
+      <primitiveTest id=" " name="pam_DelObject" version="1">
+        <function>pam_DelObject</function>
+        <parameters>
+          <parameter name="paramName" value="a"/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest id=" " name="pam_GetParameterNames" version="1">
+        <function>pam_GetParameterNames</function>
+        <parameters>
+          <parameter name="brecursive" value="1"/>
+          <parameter name="ParamList" value="a"/>
+          <parameter name="ParamName" value="a"/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest id=" " name="pam_GetParameterValues" version="1">
+        <function>pam_GetParameterValues</function>
+        <parameters>
+          <parameter name="ParamName" value="a"/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest id=" " name="pam_SetParameterValues" version="2">
+        <function>pam_SetParameterValues</function>
+        <parameters>
+          <parameter name="Type" value="a"/>
+          <parameter name="ParamValue" value="a"/>
+          <parameter name="ParamName" value="a"/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest id="" name="pam_MTAAgentRestart" version="1">
+        <function>pam_MTAAgentRestart</function>
+        <parameters/>
+      </primitiveTest>
+      <primitiveTest id=" " name="pam_ExecCmd" version="1">
+        <function>pam_ExecCmd</function>
+        <parameters>
+          <parameter name="command" value="null"/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest id="" name="pam_Init" version="1">
+        <function>pam_Init</function>
+        <parameters/>
+      </primitiveTest>
+      <primitiveTest id=" " name="COSAPAM_DmlMlanGetParamValue" version="1">
+        <function>COSAPAM_DmlMlanGetParamValue</function>
+        <parameters>
+          <parameter name="MethodName" value=""/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest id=" " name="COSAPAM_DmlEthGetParamValue" version="1">
+        <function>COSAPAM_DmlEthGetParamValue</function>
+        <parameters>
+          <parameter name="MethodName" value=""/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest id=" " name="COSAPAM_DmlDiGetParamValue" version="1">
+        <function>COSAPAM_DmlDiGetParamValue</function>
+        <parameters>
+          <parameter name="MethodName" value=""/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest id=" " name="COSAPAM_UpnpEnable" version="2">
+        <function>COSAPAM_UpnpEnable</function>
+        <parameters>
+          <parameter name="MethodName" value=""/>
+          <parameter name="Value" value=""/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest id=" " name="COSAPAM_UpnpGetState" version="1">
+        <function>COSAPAM_UpnpGetState</function>
+        <parameters>
+          <parameter name="MethodName" value="null"/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest id=" " name="COSAPAM_DnsGet" version="1">
+        <function>COSAPAM_DnsGet</function>
+        <parameters>
+          <parameter name="MethodName" value="null"/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest id=" " name="COSAPAM_DnsEnable" version="1">
+        <function>COSAPAM_DnsEnable</function>
+        <parameters>
+          <parameter name="MethodName" value="null"/>
+          <parameter name="Value" value="0"/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest id=" " name="COSAPAM_DhcpGet" version="1">
+        <function>COSAPAM_DhcpGet</function>
+        <parameters>
+          <parameter name="MethodName" value="null"/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest name="COSAPAM_DhcpsEnable" id=" " version="1">
+        <function>COSAPAM_DhcpsEnable</function>
+        <parameters>
+          <parameter name="Value" value="0"/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest name="pam_Setparams" id=" " version="1">
+        <function>pam_Setparams</function>
+        <parameters>
+          <parameter name="ParamName" value="0"/>
+          <parameter name="ParamValue" value="0"/>
+          <parameter name="Type" value="0"/>
+        </parameters>
+      </primitiveTest>
+    </primitiveTests>
+  </module>
+</xml>

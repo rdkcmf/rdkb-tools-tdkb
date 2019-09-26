@@ -1,0 +1,132 @@
+<!--
+ If not stated otherwise in this file or this component's Licenses.txt file the
+ following copyright and licenses apply:
+
+ Copyright 2018 RDK Management
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+ http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+<?xml version='1.0' encoding='utf-8'?>
+<xml>
+  <module>
+  <!-- Module Name  -->
+    <moduleName>CosaCM</moduleName>
+  <!-- Category of the module  -->
+    <category>RDKB</category>
+  <!-- Excecution time out of module -->
+    <executionTimeOut>1</executionTimeOut>
+  <!-- Excecution time out of module -->
+    <testGroup>Component</testGroup>
+  <!-- Logs File Names of module -->
+    <logFileNames>[]</logFileNames>
+  <!-- Crash File Names of the module -->
+    <crashFileNames>[]</crashFileNames>
+  <!-- Total functions corresponding module  -->
+    <functions>
+      <function name='CosaCM_GetResetCount' />
+      <function name='COSACM_GetCMErrorCodewords' />
+      <function name='CosaCM_GetLoopDiagnosticsStart' />
+      <function name='CosaCM_GetLoopDiagnosticsDetails' />
+      <function name='COSACM_GetDHCPInfo' />
+      <function name='COSACM_GetDOCSISInfo' />
+      <function name='COSACM_GetLog' />
+      <function name='COSACM_SetLog' />
+      <function name='CosaCM_GetUpstreamChannelId' />
+      <function name='CosaCM_SetLoopDiagnosticsStart' />
+      <function name='CosaCM_SetUpstreamChannelId' />
+      <function name='CosaCM_GetStartDSFrequency' />
+      <function name='CosaCM_SetStartDSFrequency' />
+      <function name='COSACM_GetDocsisLog' />
+      <function name='COSACM_GetDownstreamChannel' />
+      <function name='COSACM_GetUpstreamChannel' />
+      <function name='CosaCM_GetProvType' />
+      <function name='CosaCM_GetIPv6DHCPInfo' />
+      <function name='COSACM_SetMDDIPOverride_ArgMemory_unalloc' />
+      <function name='COSACM_GetMDDIPOverride_ArgMemory_unalloc' />
+      <function name='COSACM_GetCMCert_ArgMemory_unalloc' />
+      <function name='COSACM_GetMarket' />
+      <function name='COSACM_GetCMCertStatus_InvalidArg' />
+      <function name='COSACM_GetCPEList_InvalidArg' />
+      <function name='COSACM_GetMDDIPOverride' />
+      <function name='COSACM_CableModemInitialize' />
+      <function name='COSACM_GetCMCert' />
+      <function name='COSACM_CableModemRemove' />
+      <function name='COSACM_CableModemCreate' />
+      <function name='COSACM_GetCMCertStatus' />
+      <function name='COSACM_GetCPEList' />
+      <function name='COSACM_GetMarket_ArgMemory_unalloc' />
+      <function name='COSACM_SetMDDIPOverride' />
+      <function name='CosaCM_GetTelephonyTftpStatus' />
+      <function name='CosaCM_GetTelephonyDHCPStatus' />
+      <function name='COSACM_GetCMErrorCodewords_InvalidArg' />
+      <function name='CosaCM_GetTelephonyRegistrationStatus' />
+      <function name='CosaCM_GetStatus' />
+      <function name='CMHal_GetUlongValues' />
+      <function name='CMHal_GetStructValues' />
+    </functions>
+  <!-- Total parameters corresponding module  -->
+    <parameters>
+      <parameter funName='CosaCM_GetResetCount' parameterName='handleType' parameterType='INTEGER' range='0-9' />
+      <parameter funName='CosaCM_GetResetCount' parameterName='resetType' parameterType='STRING' range='A-Z' />
+      <parameter funName='CosaCM_GetResetCount' parameterName='bufferType' parameterType='INTEGER' range='0-9' />
+      <parameter funName='COSACM_GetCMErrorCodewords' parameterName='handleType' parameterType='INTEGER' range='0-9' />
+      <parameter funName='CosaCM_GetLoopDiagnosticsStart' parameterName='handleType' parameterType='INTEGER' range='0-9' />
+      <parameter funName='CosaCM_GetLoopDiagnosticsStart' parameterName='boolValue' parameterType='INTEGER' range='0-1' />
+      <parameter funName='CosaCM_GetLoopDiagnosticsDetails' parameterName='handleType' parameterType='INTEGER' range='0-9' />
+      <parameter funName='CosaCM_GetLoopDiagnosticsDetails' parameterName='bufferType' parameterType='INTEGER' range='0-9' />
+      <parameter funName='COSACM_GetDHCPInfo' parameterName='handleType' parameterType='INTEGER' range='0-9' />
+      <parameter funName='COSACM_GetDHCPInfo' parameterName='bufferType' parameterType='INTEGER' range='0-9' />
+      <parameter funName='COSACM_GetDOCSISInfo' parameterName='handleType' parameterType='INTEGER' range='0-9' />
+      <parameter funName='COSACM_GetDOCSISInfo' parameterName='bufferType' parameterType='INTEGER' range='0-9' />
+      <parameter funName='COSACM_GetLog' parameterName='bufferType' parameterType='INTEGER' range='0-9' />
+      <parameter funName='COSACM_GetLog' parameterName='handleType' parameterType='INTEGER' range='0-9' />
+      <parameter funName='COSACM_SetLog' parameterName='handleType' parameterType='INTEGER' range='0-9' />
+      <parameter funName='COSACM_SetLog' parameterName='bufferType' parameterType='INTEGER' range='0-9' />
+      <parameter funName='CosaCM_GetUpstreamChannelId' parameterName='handleType' parameterType='INTEGER' range='0-9' />
+      <parameter funName='CosaCM_SetLoopDiagnosticsStart' parameterName='handleType' parameterType='INTEGER' range='0-9' />
+      <parameter funName='CosaCM_SetLoopDiagnosticsStart' parameterName='boolValue' parameterType='INTEGER' range='0-1' />
+      <parameter funName='CosaCM_SetUpstreamChannelId' parameterName='handleType' parameterType='INTEGER' range='0-9' />
+      <parameter funName='CosaCM_SetUpstreamChannelId' parameterName='paramType' parameterType='STRING' range='A-Z' />
+      <parameter funName='CosaCM_SetUpstreamChannelId' parameterName='channelId' parameterType='INTEGER' range='0-100' />
+      <parameter funName='CosaCM_GetStartDSFrequency' parameterName='handleType' parameterType='INTEGER' range='0-9' />
+      <parameter funName='CosaCM_SetStartDSFrequency' parameterName='handleType' parameterType='INTEGER' range='0-9' />
+      <parameter funName='CosaCM_SetStartDSFrequency' parameterName='paramType' parameterType='STRING' range='A-Z' />
+      <parameter funName='CosaCM_SetStartDSFrequency' parameterName='frequency' parameterType='INTEGER' range='0-100' />
+      <parameter funName='COSACM_GetDocsisLog' parameterName='handleType' parameterType='INTEGER' range='0-9' />
+      <parameter funName='COSACM_GetDocsisLog' parameterName='bufferType' parameterType='INTEGER' range='0-9' />
+      <parameter funName='COSACM_GetDownstreamChannel' parameterName='handleType' parameterType='INTEGER' range='0-9' />
+      <parameter funName='COSACM_GetDownstreamChannel' parameterName='bufferType' parameterType='INTEGER' range='0-9' />
+      <parameter funName='COSACM_GetUpstreamChannel' parameterName='handleType' parameterType='INTEGER' range='0-9' />
+      <parameter funName='COSACM_GetUpstreamChannel' parameterName='bufferType' parameterType='INTEGER' range='0-9' />
+      <parameter funName='CosaCM_GetProvType' parameterName='handleType' parameterType='INTEGER' range='0-9' />
+      <parameter funName='CosaCM_GetProvType' parameterName='bufferType' parameterType='INTEGER' range='0-9' />
+      <parameter funName='CosaCM_GetIPv6DHCPInfo' parameterName='handleType' parameterType='INTEGER' range='0-9' />
+      <parameter funName='CosaCM_GetIPv6DHCPInfo' parameterName='bufferType' parameterType='INTEGER' range='0-9' />
+      <parameter funName='COSACM_CableModemInitialize' parameterName='handleType' parameterType='INTEGER' range='0-1' />
+      <parameter funName='COSACM_CableModemRemove' parameterName='handleType' parameterType='INTEGER' range='0-1' />
+      <parameter funName='COSACM_SetMDDIPOverride' parameterName='valueType' parameterType='INTEGER' range='0-9' />
+      <parameter funName='COSACM_SetMDDIPOverride' parameterName='handleType' parameterType='INTEGER' range='0-9' />
+      <parameter funName='COSACM_SetMDDIPOverride' parameterName='value' parameterType='STRING' range='A-Z' />
+      <parameter funName='CosaCM_GetTelephonyTftpStatus' parameterName='handleType' parameterType='INTEGER' range='0-9' />
+      <parameter funName='CosaCM_GetTelephonyTftpStatus' parameterName='Value' parameterType='INTEGER' range='0-9' />
+      <parameter funName='CosaCM_GetTelephonyDHCPStatus' parameterName='handleType' parameterType='INTEGER' range='0-9' />
+      <parameter funName='CosaCM_GetTelephonyDHCPStatus' parameterName='Value' parameterType='INTEGER' range='0-9' />
+      <parameter funName='CosaCM_GetTelephonyRegistrationStatus' parameterName='handleType' parameterType='INTEGER' range='0-9' />
+      <parameter funName='CosaCM_GetTelephonyRegistrationStatus' parameterName='bufferType' parameterType='INTEGER' range='0-9' />
+      <parameter funName='CosaCM_GetStatus' parameterName='handleType' parameterType='INTEGER' range='0-9' />
+      <parameter funName='CosaCM_GetStatus' parameterName='Value' parameterType='STRING' range='0-9' />
+      <parameter funName='CMHal_GetUlongValues' parameterName='paramName' parameterType='STRING' range='A-Z' />
+      <parameter funName='CMHal_GetStructValues' parameterName='paramName' parameterType='STRING' range='A-Z' />
+    </parameters>
+  </module>
+</xml>

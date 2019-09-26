@@ -1,0 +1,181 @@
+##########################################################################
+# If not stated otherwise in this file or this component's Licenses.txt
+# file the following copyright and licenses apply:
+#
+# Copyright 2018 RDK Management
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+##########################################################################
+'''
+<?xml version='1.0' encoding='utf-8'?>
+<xml>
+  <id></id>
+  <!-- Do not edit id. This will be auto filled while exporting. If you are adding a new script keep the id empty -->
+  <version>1</version>
+  <!-- Do not edit version. This will be auto incremented while updating. If you are adding a new script you can keep the vresion as 1 -->
+  <name>TS_WIFIHAL_ClearRadioResetCount</name>
+  <!-- If you are adding a new script you can specify the script name. Script Name should be unique same as this file name with out .py extension -->
+  <primitive_test_id></primitive_test_id>
+  <!-- Do not change primitive_test_id if you are editing an existing script. -->
+  <primitive_test_name>WIFIHAL_ClearRadioResetCount</primitive_test_name>
+  <!--  -->
+  <primitive_test_version>1</primitive_test_version>
+  <!--  -->
+  <status>FREE</status>
+  <!--  -->
+  <synopsis>To clear the RadioResetCount and confirm that the reset count is 0 after clearing</synopsis>
+  <!--  -->
+  <groups_id />
+  <!--  -->
+  <execution_time>1</execution_time>
+  <!--  -->
+  <long_duration>false</long_duration>
+  <!--  -->
+  <advanced_script>false</advanced_script>
+  <!-- execution_time is the time out time for test execution -->
+  <remarks></remarks>
+  <!-- Reason for skipping the tests if marked to skip -->
+  <skip>false</skip>
+  <!--  -->
+  <box_types>
+    <box_type>Broadband</box_type>
+    <!--  -->
+  </box_types>
+  <rdk_versions />
+  <test_cases>
+    <test_case_id>TC_WIFIHAL_174</test_case_id>
+    <test_objective>To clear the radio rest count and confirm that the count is 0 after clearing</test_objective>
+    <test_type>Positive</test_type>
+    <test_setup>Broadband</test_setup>
+    <pre_requisite>1.Ccsp Components  should be in a running state else invoke cosa_start.sh manually that includes all the ccsp components and TDK Component
+2.TDK Agent should be in running state or invoke it through StartTdk.sh script</pre_requisite>
+    <api_or_interface_used>wifi_clearRadioResetCount()
+wifi_getRadioResetCount()</api_or_interface_used>
+    <input_parameters>methodName : getRadioResetCount
+methodName : clearRadioResetCount</input_parameters>
+    <automation_approch>1. Load wifihal module
+2. Using  WIFIHAL_ClearRadioResetCount invoke wifi_clearRadioResetCount()
+3. Using  WIFIHAL_GetOrSetParamULongValue invoke wifi_getRadioResetCount()
+4. Check if the value returned is 0
+5.Depending upon the value returned, return SUCCESS or FAILURE
+6. Unload wifihal module</automation_approch>
+    <except_output>Check point:
+1. wifi_clearRadioResetCount() call should return SUCCESS.
+2. Output of wifi_getRadioResetCount should be 0</except_output>
+    <priority>High</priority>
+    <test_stub_interface>WIFIHAL</test_stub_interface>
+    <test_script>TS_WIFIHAL_ClearRadioResetCount</test_script>
+    <skipped>No</skipped>
+    <release_version></release_version>
+    <remarks></remarks>
+  </test_cases>
+</xml>
+'''
+# use tdklib library,which provides a wrapper for tdk testcase script 
+import tdklib; 
+from wifiUtility import *;
+
+#Test component to be tested
+obj = tdklib.TDKScriptingLibrary("wifihal","1");
+
+#IP and Port of box, No need to change,
+#This will be replaced with correspoing Box Ip and port while executing script
+ip = <ipaddress>
+port = <port>
+obj.configureTestCase(ip,port,'TS_WIFIHAL_ClearRadioResetCount');
+
+#Get the result of connection with test component and STB
+loadmodulestatus =obj.getLoadModuleResult();
+print "[LIB LOAD STATUS]  :  %s" %loadmodulestatus
+
+if "SUCCESS" in loadmodulestatus.upper():
+    obj.setLoadModuleStatus("SUCCESS");
+
+    expectedresult="SUCCESS";
+    radioIndex = 0
+    getMethod = "getRadioResetCount"
+    primitive = 'WIFIHAL_GetOrSetParamULongValue'
+
+    #Calling the method to execute wifi_getRadioResetCount()
+    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, 0, getMethod)
+
+    if expectedresult in actualresult:
+        initCount = details.split(":")[1].strip()
+	if int(initCount) == 0:
+	    #if the count is already 0, reset once so that the count will be incremented
+            tdkTestObj = obj.createTestStep("WIFIHAL_Reset");
+            expectedresult="SUCCESS";
+            tdkTestObj.executeTestCase(expectedresult);
+            actualresult = tdkTestObj.getResult();
+            details = tdkTestObj.getResultDetails();
+            if expectedresult in actualresult:
+		tdkTestObj.setResultStatus("SUCCESS");
+                print "Reset operation SUCCESS and ResetCount incremented to 1"
+            else:
+                tdkTestObj.setResultStatus("FAILURE");
+                print "wifi_reset() call failed"
+
+        #Script to load the configuration file of the component
+        tdkTestObj = obj.createTestStep("WIFIHAL_ClearRadioResetCount");
+        expectedresult="SUCCESS";
+        tdkTestObj.executeTestCase(expectedresult);
+        actualresult = tdkTestObj.getResult();
+        details = tdkTestObj.getResultDetails();
+        if expectedresult in actualresult:
+            tdkTestObj.setResultStatus("SUCCESS");
+	    print "TEST STEP: Execute ClearRadioResetCount"
+	    print "EXPECTED RESULT: ClearRadioResetCount should return SUCCESS"
+	    print "ACTUAL RESULT: ClearRadioResetCount returned SUCCESS"
+	    print "TEST EXECUTION RESULT : SUCCESS"
+	
+    	    expectedresult="SUCCESS";
+	    radioIndex = 0
+	    getMethod = "getRadioResetCount"
+	    primitive = 'WIFIHAL_GetOrSetParamULongValue'
+
+            #Calling the method to execute wifi_getRadioResetCount()
+	    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, 0, getMethod)
+
+	    if expectedresult in actualresult:
+	        finalCount = details.split(":")[1].strip()
+	        if int(finalCount) == 0:
+	     	    tdkTestObj.setResultStatus("SUCCESS");
+		    print "TEST STEP: Check if the RadioResetCount is 0"
+		    print "EXPECTED RESULT: Get value should be 0 after clearing"
+		    print "ACTUAL RESULT: Get value is 0"
+		    print "TEST EXECUTION RESULT :SUCCESS"
+		else:
+		    tdkTestObj.setResultStatus("FAILURE");
+		    print "TEST STEP: Clear the RadioResetCount and then get it"
+		    print "EXPECTED RESULT: Get value should be 0 after clearing"
+		    print "ACTUAL RESULT: Get value is NOT 0"
+		    print "TEST EXECUTION RESULT :FAILURE"
+	    else:
+	        tdkTestObj.setResultStatus("FAILURE");
+	        print "wifi_getRadioResetCount() call failed after clearing"
+	else:
+	    tdkTestObj.setResultStatus("FAILURE");
+	    print "TEST STEP: Execute ClearRadioResetCount"
+	    print "EXPECTED RESULT: ClearRadioResetCount should return SUCCESS"
+	    print "ACTUAL RESULT: ClearRadioResetCount failed"
+	    print "TEST EXECUTION RESULT : FAILURE"
+    else:
+	tdkTestObj.setResultStatus("FAILURE");
+	print "wifi_getRadioResetCount() call failed"
+
+    obj.unloadModule("wifihal");
+else:
+    print "Failed to load the module";
+    obj.setLoadModuleStatus("FAILURE");
+    print "Module loading failed";
+

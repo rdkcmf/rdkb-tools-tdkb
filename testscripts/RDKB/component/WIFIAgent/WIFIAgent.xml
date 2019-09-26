@@ -1,0 +1,140 @@
+<!--
+ If not stated otherwise in this file or this component's Licenses.txt file the
+ following copyright and licenses apply:
+
+ Copyright 2016 RDK Management
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+ http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+<?xml version="1.0" encoding="UTF-8"?>
+<xml>
+  <module name="WIFIAgent" testGroup="E2E">
+    <primitiveTests>
+      <primitiveTest id="" name="WIFIAgent_Get" version="1">
+        <function>WIFIAgent_Get</function>
+        <parameters>
+          <parameter name="paramName" value="Device.WiFi."/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest id=" " name="WIFIAgent_AddObject" version="1">
+        <function>WIFIAgent_AddObject</function>
+        <parameters>
+          <parameter name="paramName" value="Device.WiFi."/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest id=" " name="WIFIAgent_DelObject" version="2">
+        <function>WIFIAgent_DelObject</function>
+        <parameters>
+          <parameter name="paramName" value="Device.WiFi."/>
+          <parameter name="apiTest" value="0"/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest id=" " name="WIFIAgent_GetAttr" version="1">
+        <function>WIFIAgent_GetAttr</function>
+        <parameters>
+          <parameter name="paramname" value="Device.WiFi."/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest id=" " name="WIFIAgent_SetSessionId" version="2">
+        <function>WIFIAgent_SetSessionId</function>
+        <parameters>
+          <parameter name="sessionId" value="1"/>
+          <parameter name="priority" value="0"/>
+          <parameter name="pathname" value="Device.WiFi."/>
+          <parameter name="override" value="0"/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest name="WIFIAgent_Set" id=" " version="2">
+        <function>WIFIAgent_Set</function>
+        <parameters>
+          <parameter name="paramName" value="Device.WiFi.AccessPoint.1.Security.X_CISCO_COM_EncryptionMethod"/>
+          <parameter name="paramValue" value="AES+TKIP"/>
+          <parameter name="paramType" value="string"/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest id=" " name="WIFIAgent_SetCommit" version="1">
+        <function>WIFIAgent_SetCommit</function>
+        <parameters>
+          <parameter name="paramName" value="Device.WiFi."/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest id=" " name="WIFIAgent_SetAttr" version="1">
+        <function>WIFIAgent_SetAttr</function>
+        <parameters>
+          <parameter name="accessControlChanged" value="Device.WiFi."/>
+          <parameter name="notification" value="passive"/>
+          <parameter name="paramname" value="anybody"/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest id=" " name="WIFIAgent_GetNames" version="1">
+        <function>WIFIAgent_GetNames</function>
+        <parameters>
+          <parameter name="brecursive" value="1"/>
+          <parameter name="pathname" value="Device.WiFi."/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest id=" " name="WIFIAgent_GetHealth" version="1">
+        <function>WIFIAgent_GetHealth</function>
+        <parameters>
+          <parameter name="paramName" value="Device.WiFi."/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest id=" " name="WIFIAgent_Set_Get" version="1">
+        <function>WIFIAgent_Set_Get</function>
+        <parameters>
+          <parameter name="paramName" value=""/>
+          <parameter name="paramType" value=""/>
+          <parameter name="paramValue" value=""/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest name="WIFIAgent_SetMultiple" id=" " version="1">
+        <function>WIFIAgent_SetMultiple</function>
+        <parameters>
+          <parameter name="paramList" value=""/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest id=" " name="WIFIHal_CallMethodForULong" version="1">
+        <function>WIFIHal_CallMethodForULong</function>
+        <parameters>
+          <parameter name="methodName" value=""/>
+          <parameter name="param" value=""/>
+          <parameter name="radioIndex" value=""/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest id=" " name="WIFIHal_CallMethodForBool" version="1">
+        <function>WIFIHal_CallMethodForBool</function>
+        <parameters>
+          <parameter name="methodName" value=""/>
+          <parameter name="param" value=""/>
+          <parameter name="radioIndex" value=""/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest name="WIFIHal_CallMethodForString" id=" " version="1">
+        <function>WIFIHal_CallMethodForString</function>
+        <parameters>
+          <parameter name="methodName" value=""/>
+          <parameter name="param" value=""/>
+          <parameter name="radioIndex" value=""/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest name="WIFIHal_CallMethodForInt" id=" " version="1">
+        <function>WIFIHal_CallMethodForInt</function>
+        <parameters>
+          <parameter name="methodName" value=""/>
+          <parameter name="param" value=""/>
+          <parameter name="radioIndex" value=""/>
+        </parameters>
+      </primitiveTest>
+    </primitiveTests>
+  </module>
+</xml>

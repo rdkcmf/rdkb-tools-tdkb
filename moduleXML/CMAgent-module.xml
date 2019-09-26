@@ -1,0 +1,76 @@
+<!--
+ If not stated otherwise in this file or this component's Licenses.txt file the
+ following copyright and licenses apply:
+
+ Copyright 2018 RDK Management
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+ http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+<?xml version='1.0' encoding='utf-8'?>
+<xml>
+  <module>
+  <!-- Module Name  -->
+    <moduleName>CMAgent</moduleName>
+  <!-- Category of the module  -->
+    <category>RDKB</category>
+  <!-- Excecution time out of module -->
+    <executionTimeOut>1</executionTimeOut>
+  <!-- Excecution time out of module -->
+    <testGroup>Component</testGroup>
+  <!-- Logs File Names of module -->
+    <logFileNames>[]</logFileNames>
+  <!-- Crash File Names of the module -->
+    <crashFileNames>[]</crashFileNames>
+  <!-- Total functions corresponding module  -->
+    <functions>
+      <function name='CMAgent_Get' />
+      <function name='CMAgent_AddObject' />
+      <function name='CMAgent_DelObject' />
+      <function name='CMAgent_GetAttr' />
+      <function name='CMAgent_GetNames' />
+      <function name='CMAgent_GetHealth' />
+      <function name='CMAgent_Set' />
+      <function name='CMAgent_SetAttr' />
+      <function name='CMAgent_SetCommit' />
+      <function name='CMAgent_SetSessionId' />
+      <function name='CMAgent_Set_Get' />
+    </functions>
+  <!-- Total parameters corresponding module  -->
+    <parameters>
+      <parameter funName='CMAgent_Get' parameterName='paramName' parameterType='STRING' range='A-Z' />
+      <parameter funName='CMAgent_AddObject' parameterName='paramName' parameterType='STRING' range='A-Z' />
+      <parameter funName='CMAgent_DelObject' parameterName='paramName' parameterType='STRING' range='A-Z' />
+      <parameter funName='CMAgent_DelObject' parameterName='apiTest' parameterType='INTEGER' range='0-1' />
+      <parameter funName='CMAgent_GetAttr' parameterName='paramname' parameterType='STRING' range='A-Z' />
+      <parameter funName='CMAgent_GetNames' parameterName='pathname' parameterType='STRING' range='A-Z' />
+      <parameter funName='CMAgent_GetNames' parameterName='brecursive' parameterType='INTEGER' range='0-1' />
+      <parameter funName='CMAgent_GetHealth' parameterName='paramName' parameterType='STRING' range='A-Z' />
+      <parameter funName='CMAgent_Set' parameterName='paramValue' parameterType='STRING' range='A-Z' />
+      <parameter funName='CMAgent_Set' parameterName='commit' parameterType='INTEGER' range='0-9' />
+      <parameter funName='CMAgent_Set' parameterName='paramName' parameterType='STRING' range='A-Z' />
+      <parameter funName='CMAgent_Set' parameterName='paramType' parameterType='STRING' range='A-Z' />
+      <parameter funName='CMAgent_SetAttr' parameterName='paramname' parameterType='STRING' range='A-Z' />
+      <parameter funName='CMAgent_SetAttr' parameterName='accessControlChanged' parameterType='STRING' range='A-Z' />
+      <parameter funName='CMAgent_SetAttr' parameterName='notification' parameterType='STRING' range='A-Z' />
+      <parameter funName='CMAgent_SetCommit' parameterName='paramName' parameterType='STRING' range='A-Z' />
+      <parameter funName='CMAgent_SetSessionId' parameterName='priority' parameterType='INTEGER' range='0-1' />
+      <parameter funName='CMAgent_SetSessionId' parameterName='override' parameterType='INTEGER' range='0-1' />
+      <parameter funName='CMAgent_SetSessionId' parameterName='sessionId' parameterType='INTEGER' range='0-1' />
+      <parameter funName='CMAgent_SetSessionId' parameterName='pathname' parameterType='STRING' range='A-Z' />
+      <parameter funName='CMAgent_Set_Get' parameterName='paramValue' parameterType='STRING' range='A-Z' />
+      <parameter funName='CMAgent_Set_Get' parameterName='paramName' parameterType='STRING' range='A-Z' />
+      <parameter funName='CMAgent_Set_Get' parameterName='paramType' parameterType='STRING' range='A-Z' />
+      <parameter funName='CMAgent_Set_Get' parameterName='commit' parameterType='INTEGER' range='0-9' />
+    </parameters>
+  </module>
+</xml>

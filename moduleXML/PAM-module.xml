@@ -1,0 +1,94 @@
+<!--
+ If not stated otherwise in this file or this component's Licenses.txt file the
+ following copyright and licenses apply:
+
+ Copyright 2018 RDK Management
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+ http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+<?xml version='1.0' encoding='utf-8'?>
+<xml>
+  <module>
+  <!-- Module Name  -->
+    <moduleName>PAM</moduleName>
+  <!-- Category of the module  -->
+    <category>RDKB</category>
+  <!-- Excecution time out of module -->
+    <executionTimeOut>1</executionTimeOut>
+  <!-- Excecution time out of module -->
+    <testGroup>Component</testGroup>
+  <!-- Logs File Names of module -->
+    <logFileNames>[]</logFileNames>
+  <!-- Crash File Names of the module -->
+    <crashFileNames>[]</crashFileNames>
+  <!-- Total functions corresponding module  -->
+    <functions>
+      <function name='pam_bridge_GetParamBoolValue' />
+      <function name='pam_bridge_GetParamUlongValue' />
+      <function name='pam_AddObject' />
+      <function name='pam_CRRestart' />
+      <function name='pam_DelObject' />
+      <function name='pam_GetParameterValues' />
+      <function name='pam_GetParameterNames' />
+      <function name='pam_SetParameterValues' />
+      <function name='pam_MTAAgentRestart' />
+      <function name='pam_DeviceInfo_GetParamStringValue' />
+      <function name='pam_Init' />
+      <function name='pam_ExecCmd' />
+      <function name='COSAPAM_DmlMlanGetParamValue' />
+      <function name='COSAPAM_DhcpsEnable' />
+      <function name='COSAPAM_DmlEthGetParamValue' />
+      <function name='COSAPAM_DmlDiGetParamValue' />
+      <function name='COSAPAM_UpnpEnable' />
+      <function name='COSAPAM_UpnpGetState' />
+      <function name='COSAPAM_DnsGet' />
+      <function name='COSAPAM_DnsEnable' />
+      <function name='COSAPAM_DhcpGet' />
+      <function name='COSAPAM_Test_Lm' />
+      <function name='pam_Setparams' />
+    </functions>
+  <!-- Total parameters corresponding module  -->
+    <parameters>
+      <parameter funName='pam_bridge_GetParamBoolValue' parameterName='paramName' parameterType='STRING' range='A-Z' />
+      <parameter funName='pam_bridge_GetParamBoolValue' parameterName='module' parameterType='STRING' range='A-Z' />
+      <parameter funName='pam_bridge_GetParamUlongValue' parameterName='paramName' parameterType='STRING' range='A-Z' />
+      <parameter funName='pam_bridge_GetParamUlongValue' parameterName='module' parameterType='STRING' range='A-Z' />
+      <parameter funName='pam_AddObject' parameterName='paramName' parameterType='STRING' range='A-Z' />
+      <parameter funName='pam_DelObject' parameterName='paramName' parameterType='STRING' range='A-Z' />
+      <parameter funName='pam_GetParameterValues' parameterName='ParamName' parameterType='STRING' range='A-Z' />
+      <parameter funName='pam_GetParameterNames' parameterName='ParamList' parameterType='STRING' range='A-Z' />
+      <parameter funName='pam_GetParameterNames' parameterName='ParamName' parameterType='STRING' range='A-Z' />
+      <parameter funName='pam_GetParameterNames' parameterName='brecursive' parameterType='STRING' range='A-Z' />
+      <parameter funName='pam_SetParameterValues' parameterName='Type' parameterType='STRING' range='A-Z' />
+      <parameter funName='pam_SetParameterValues' parameterName='ParamValue' parameterType='STRING' range='A-Z' />
+      <parameter funName='pam_SetParameterValues' parameterName='ParamName' parameterType='STRING' range='A-Z' />
+      <parameter funName='pam_DeviceInfo_GetParamStringValue' parameterName='paramName' parameterType='STRING' range='A-Z' />
+      <parameter funName='pam_DeviceInfo_GetParamStringValue' parameterName='module' parameterType='STRING' range='A-Z' />
+      <parameter funName='pam_ExecCmd' parameterName='command' parameterType='STRING' range='command to execute' />
+      <parameter funName='COSAPAM_DmlMlanGetParamValue' parameterName='MethodName' parameterType='STRING' range='A-Z' />
+      <parameter funName='COSAPAM_DhcpsEnable' parameterName='Value' parameterType='INTEGER' range='0-100' />
+      <parameter funName='COSAPAM_DmlEthGetParamValue' parameterName='MethodName' parameterType='STRING' range='A-Z' />
+      <parameter funName='COSAPAM_DmlDiGetParamValue' parameterName='MethodName' parameterType='STRING' range='A-Z' />
+      <parameter funName='COSAPAM_UpnpEnable' parameterName='MethodName' parameterType='STRING' range='A-Z' />
+      <parameter funName='COSAPAM_UpnpEnable' parameterName='Value' parameterType='INTEGER' range='0-100' />
+      <parameter funName='COSAPAM_UpnpGetState' parameterName='MethodName' parameterType='STRING' range='A-Z' />
+      <parameter funName='COSAPAM_DnsGet' parameterName='MethodName' parameterType='STRING' range='A-Z' />
+      <parameter funName='COSAPAM_DnsEnable' parameterName='MethodName' parameterType='STRING' range='A-Z' />
+      <parameter funName='COSAPAM_DnsEnable' parameterName='Value' parameterType='INTEGER' range='0-100' />
+      <parameter funName='COSAPAM_DhcpGet' parameterName='MethodName' parameterType='STRING' range='A-Z' />
+      <parameter funName='pam_Setparams' parameterName='ParamName' parameterType='STRING' range='A-Z' />
+      <parameter funName='pam_Setparams' parameterName='Type' parameterType='STRING' range='A-Z' />
+      <parameter funName='pam_Setparams' parameterName='ParamValue' parameterType='STRING' range='A-Z' />
+    </parameters>
+  </module>
+</xml>

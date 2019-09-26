@@ -1,0 +1,104 @@
+<!--
+ If not stated otherwise in this file or this component's Licenses.txt file the
+ following copyright and licenses apply:
+
+ Copyright 2016 RDK Management
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+ http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+<?xml version="1.0" encoding="UTF-8"?>
+<xml>
+  <module name="CMAgent" testGroup="E2E">
+    <primitiveTests>
+      <primitiveTest name="CMAgent_Get" id=" " version="2">
+        <function>CMAgent_Get</function>
+        <parameters>
+          <parameter name="paramName" value="Device.X_CISCO_COM_CableModem."/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest id=" " name="CMAgent_AddObject" version="1">
+        <function>CMAgent_AddObject</function>
+        <parameters>
+          <parameter name="paramName" value="Device.X_CISCO_COM_CableModem."/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest id=" " name="CMAgent_DelObject" version="2">
+        <function>CMAgent_DelObject</function>
+        <parameters>
+          <parameter name="paramName" value="Device.X_CISCO_COM_CableModem."/>
+          <parameter name="apiTest" value="1"/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest id=" " name="CMAgent_GetAttr" version="1">
+        <function>CMAgent_GetAttr</function>
+        <parameters>
+          <parameter name="paramname" value="Device.X_CISCO_COM_CableModem.LoopDiagnosticsDetails"/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest id=" " name="CMAgent_GetNames" version="1">
+        <function>CMAgent_GetNames</function>
+        <parameters>
+          <parameter name="brecursive" value="1"/>
+          <parameter name="pathname" value="Device.X_CISCO_COM_CableModem."/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest id=" " name="CMAgent_GetHealth" version="1">
+        <function>CMAgent_GetHealth</function>
+        <parameters>
+          <parameter name="paramName" value="Device.X_CISCO_COM_CableModem."/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest id=" " name="CMAgent_Set" version="3">
+        <function>CMAgent_Set</function>
+        <parameters>
+          <parameter name="paramName" value="Device.X_CISCO_COM_CableModem.DOCSISConfigFileName"/>
+          <parameter name="paramValue" value="string"/>
+          <parameter name="paramType" value="TDKTEST.cm"/>
+          <parameter name="commit" value="1"/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest id=" " name="CMAgent_SetAttr" version="1">
+        <function>CMAgent_SetAttr</function>
+        <parameters>
+          <parameter name="accessControlChanged" value="anybody"/>
+          <parameter name="notification" value="passive"/>
+          <parameter name="paramname" value="Device.X_CISCO_COM_CableModem.LoopDiagnosticsDetails"/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest id=" " name="CMAgent_SetCommit" version="1">
+        <function>CMAgent_SetCommit</function>
+        <parameters>
+          <parameter name="paramName" value="Device.X_CISCO_COM_CableModem."/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest id=" " name="CMAgent_SetSessionId" version="5">
+        <function>CMAgent_SetSessionId</function>
+        <parameters>
+          <parameter name="sessionId" value="1"/>
+          <parameter name="pathname" value="Device.X_CISCO_COM_CableModem."/>
+          <parameter name="override" value="0"/>
+          <parameter name="priority" value="0"/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest id=" " name="CMAgent_Set_Get" version="1">
+        <function>CMAgent_Set_Get</function>
+        <parameters>
+          <parameter name="commit" value=""/>
+          <parameter name="paramName" value=""/>
+          <parameter name="paramType" value=""/>
+          <parameter name="paramValue" value=""/>
+        </parameters>
+      </primitiveTest>
+    </primitiveTests>
+  </module>
+</xml>

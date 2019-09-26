@@ -1,0 +1,84 @@
+<!--
+ Copyright 2016-2018 Intel Corporation
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+ http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+<?xml version='1.0' encoding='utf-8'?>
+<xml>
+  <module>
+  <!-- Module Name  -->
+    <moduleName>HAL_Platform</moduleName>
+  <!-- Category of the module  -->
+    <category>RDKB</category>
+  <!-- Excecution time out of module -->
+    <executionTimeOut>1</executionTimeOut>
+  <!-- Excecution time out of module -->
+    <testGroup>Component</testGroup>
+  <!-- Logs File Names of module -->
+    <logFileNames>[]</logFileNames>
+  <!-- Crash File Names of the module -->
+    <crashFileNames>[]</crashFileNames>
+  <!-- Total functions corresponding module  -->
+    <functions>
+      <function name='platform_stub_hal_GetModelName' />
+      <function name='platform_stub_hal_DocsisParamsDBInit' />
+      <function name='platform_stub_hal_GetBaseMacAddress' />
+      <function name='platform_stub_hal_GetBootLoaderVersion' />
+      <function name='platform_stub_hal_GetDeviceConfigStatus' />
+      <function name='platform_stub_hal_GetFirmwareName' />
+      <function name='platform_stub_hal_GetFreeMemorySize' />
+      <function name='platform_stub_hal_GetHardware' />
+      <function name='platform_stub_hal_GetHardwareFree' />
+      <function name='platform_stub_hal_GetHardwareMemUsed' />
+      <function name='platform_stub_hal_GetHardwareVersion' />
+      <function name='platform_stub_hal_GetSerialNumber' />
+      <function name='platform_stub_hal_GetTelnetEnable' />
+      <function name='platform_stub_hal_GetTotalMemorySize' />
+      <function name='platform_stub_hal_GetUsedMemorySize' />
+      <function name='platform_stub_hal_GetWebUITimeout' />
+      <function name='platform_stub_hal_PandMDBInit' />
+      <function name='platform_stub_hal_SetSSHEnable' />
+      <function name='platform_stub_hal_SetWebUITimeout' />
+      <function name='platform_stub_hal_GetSSHEnable' />
+      <function name='platform_stub_hal_GetSNMPEnable' />
+      <function name='platform_stub_hal_GetSoftwareVersion' />
+      <function name='platform_stub_hal_SetTelnetEnable' />
+      <function name='platform_stub_hal_SetSNMPEnable' />
+    </functions>
+  <!-- Total parameters corresponding module  -->
+    <parameters>
+      <parameter funName='platform_stub_hal_GetModelName' parameterName='flag' parameterType='INTEGER' range='0-1' />
+      <parameter funName='platform_stub_hal_GetBaseMacAddress' parameterName='flag' parameterType='INTEGER' range='0-1' />
+      <parameter funName='platform_stub_hal_GetBootLoaderVersion' parameterName='flag' parameterType='INTEGER' range='0-1' />
+      <parameter funName='platform_stub_hal_GetDeviceConfigStatus' parameterName='flag' parameterType='INTEGER' range='0-1' />
+      <parameter funName='platform_stub_hal_GetFirmwareName' parameterName='flag' parameterType='INTEGER' range='0-1' />
+      <parameter funName='platform_stub_hal_GetFreeMemorySize' parameterName='flag' parameterType='INTEGER' range='0-1' />
+      <parameter funName='platform_stub_hal_GetHardware' parameterName='flag' parameterType='INTEGER' range='0-1' />
+      <parameter funName='platform_stub_hal_GetHardwareFree' parameterName='flag' parameterType='INTEGER' range='0-1' />
+      <parameter funName='platform_stub_hal_GetHardwareMemUsed' parameterName='flag' parameterType='INTEGER' range='0-1' />
+      <parameter funName='platform_stub_hal_GetHardwareVersion' parameterName='flag' parameterType='INTEGER' range='0-1' />
+      <parameter funName='platform_stub_hal_GetSerialNumber' parameterName='flag' parameterType='INTEGER' range='0-1' />
+      <parameter funName='platform_stub_hal_GetTelnetEnable' parameterName='flag' parameterType='INTEGER' range='0-1' />
+      <parameter funName='platform_stub_hal_GetTotalMemorySize' parameterName='flag' parameterType='INTEGER' range='0-1' />
+      <parameter funName='platform_stub_hal_GetUsedMemorySize' parameterName='flag' parameterType='INTEGER' range='0-1' />
+      <parameter funName='platform_stub_hal_GetWebUITimeout' parameterName='flag' parameterType='INTEGER' range='0-1' />
+      <parameter funName='platform_stub_hal_SetSSHEnable' parameterName='index' parameterType='INTEGER' range='0-10' />
+      <parameter funName='platform_stub_hal_SetWebUITimeout' parameterName='index' parameterType='INTEGER' range='0-100' />
+      <parameter funName='platform_stub_hal_GetSSHEnable' parameterName='flag' parameterType='INTEGER' range='0-1' />
+      <parameter funName='platform_stub_hal_GetSNMPEnable' parameterName='flag' parameterType='INTEGER' range='0-1' />
+      <parameter funName='platform_stub_hal_GetSoftwareVersion' parameterName='flag' parameterType='INTEGER' range='0-1' />
+      <parameter funName='platform_stub_hal_SetTelnetEnable' parameterName='index' parameterType='INTEGER' range='0-100' />
+      <parameter funName='platform_stub_hal_SetSNMPEnable' parameterName='index' parameterType='INTEGER' range='0-100' />
+    </parameters>
+  </module>
+</xml>

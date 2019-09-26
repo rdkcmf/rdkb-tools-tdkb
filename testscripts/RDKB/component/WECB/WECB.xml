@@ -1,0 +1,86 @@
+<!--
+ If not stated otherwise in this file or this component's Licenses.txt file the
+ following copyright and licenses apply:
+
+ Copyright 2016 RDK Management
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+ http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+<?xml version="1.0" encoding="UTF-8"?>
+<xml>
+  <module name="WECB" testGroup="Component">
+    <primitiveTests>
+      <primitiveTest id="" name="WECB_GetParamValues" version="1">
+        <function>WECB_GetParamValues</function>
+        <parameters>
+          <parameter name="paramName" value="Device.MoCA"/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest id=" " name="WECB_GetParamNames" version="3">
+        <function>WECB_GetParamNames</function>
+        <parameters>
+          <parameter name="paramName" value="Device.MoCA.X_CISCO_COM_ProvisioningServerAddress"/>
+          <parameter name="recursive" value="1"/>
+          <parameter name="paramList" value="Device.MoCA."/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest id=" " name="WECB_GetParamAttributes" version="1">
+        <function>WECB_GetParamAttributes</function>
+        <parameters>
+          <parameter name="paramName" value="Device.MoCA."/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest name="WECB_SetParamValues" id=" " version="2">
+        <function>WECB_SetParamValues</function>
+        <parameters>
+          <parameter name="paramName" value="Device.MoCA."/>
+          <parameter name="paramValue" value="Moca"/>
+          <parameter name="paramType" value="string"/>
+          <parameter name="commit" value="0"/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest id=" " name="WECB_SetParamAttribute" version="1">
+        <function>WECB_SetParamAttribute</function>
+        <parameters>
+          <parameter name="accessControl" value="anybody"/>
+          <parameter name="notify" value="active"/>
+          <parameter name="paramName" value="Device.MoCA."/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest id=" " name="WECB_SetSessionId" version="1">
+        <function>WECB_SetSessionId</function>
+        <parameters>
+          <parameter name="sessionId" value="1"/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest id=" " name="WECB_AddObject" version="1">
+        <function>WECB_AddObject</function>
+        <parameters>
+          <parameter name="paramName" value="Device.MoCA."/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest id=" " name="WECB_DelObject" version="1">
+        <function>WECB_DelObject</function>
+        <parameters>
+          <parameter name="paramName" value="Device.MoCA."/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest id=" " name="WECB_SetCommit" version="1">
+        <function>WECB_SetCommit</function>
+        <parameters>
+          <parameter name="paramName" value="Device.MoCA."/>
+        </parameters>
+      </primitiveTest>
+    </primitiveTests>
+  </module>
+</xml>
