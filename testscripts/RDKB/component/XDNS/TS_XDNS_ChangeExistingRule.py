@@ -155,7 +155,7 @@ if "SUCCESS" in loadmodulestatus.upper() and "SUCCESS" in sysloadmodulestatus.up
 
 			#Change the DNSIPV4 field of same mac address
 			tdkTestObj = obj.createTestStep("TDKB_TR181Stub_SetMultiple");
-			tdkTestObj.addParameter("paramList","Device.X_RDKCENTRAL-COM_XDNS.DNSMappingTable.%s.MacAddress|A:B:C:D|string|Device.X_RDKCENTRAL-COM_XDNS.DNSMappingTable.%s.DnsIPv4|d.n.s.i|string|Device.X_RDKCENTRAL-COM_XDNS.DNSMappingTable.%s.DnsIPv6|p:q:r:s|string|Device.X_RDKCENTRAL-COM_XDNS.DNSMappingTable.%s.Tag|Default|string" %(instance, instance, instance, instance));
+			tdkTestObj.addParameter("paramList","Device.X_RDKCENTRAL-COM_XDNS.DNSMappingTable.%s.DnsIPv4|d.n.s.i|string|Device.X_RDKCENTRAL-COM_XDNS.DNSMappingTable.%s.DnsIPv6|p:q:r:s|string|Device.X_RDKCENTRAL-COM_XDNS.DNSMappingTable.%s.Tag|Default|string" %( instance, instance, instance));
             		tdkTestObj.executeTestCase(expectedresult);
             		actualresult = tdkTestObj.getResult();
             		details = tdkTestObj.getResultDetails();
