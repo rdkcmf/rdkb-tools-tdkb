@@ -82,7 +82,7 @@ class MTAHAL : public RDKTestStubInterface,  public AbstractServer<MTAHAL>
         this->bindAndAddMethod(Procedure("MTAHAL_GetServiceFlow", PARAMS_BY_NAME, JSON_STRING, NULL), &MTAHAL::MTAHAL_GetServiceFlow);
         this->bindAndAddMethod(Procedure("MTAHAL_GetCalls", PARAMS_BY_NAME, JSON_STRING, "value", JSON_INTEGER, NULL), &MTAHAL::MTAHAL_GetCalls);
         this->bindAndAddMethod(Procedure("MTAHAL_GetCALLP", PARAMS_BY_NAME, JSON_STRING, "value", JSON_INTEGER, NULL), &MTAHAL::MTAHAL_GetCALLP);
-        this->bindAndAddMethod(Procedure("MTAHAL_GetDSXLogs", PARAMS_BY_NAME, JSON_STRING, NULL), &MTAHAL::MTAHAL_GetDSXLogs);
+        this->bindAndAddMethod(Procedure("MTAHAL_GetDSXLogs", PARAMS_BY_NAME, JSON_STRING,"paramType", JSON_STRING, NULL), &MTAHAL::MTAHAL_GetDSXLogs);
         this->bindAndAddMethod(Procedure("MTAHAL_GetMtaLog", PARAMS_BY_NAME, JSON_STRING, NULL), &MTAHAL::MTAHAL_GetMtaLog);
         this->bindAndAddMethod(Procedure("MTAHAL_GetDhcpStatus", PARAMS_BY_NAME, JSON_STRING, NULL), &MTAHAL::MTAHAL_GetDhcpStatus);
         this->bindAndAddMethod(Procedure("MTAHAL_GetConfigFileStatus", PARAMS_BY_NAME, JSON_STRING, NULL), &MTAHAL::MTAHAL_GetConfigFileStatus);
