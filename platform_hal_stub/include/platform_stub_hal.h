@@ -44,6 +44,7 @@ class platform_stub_hal : public RDKTestStubInterface, public AbstractServer<pla
                         this->bindAndAddMethod(Procedure("platform_stub_hal_DocsisParamsDBInit", PARAMS_BY_NAME, JSON_STRING, NULL), &platform_stub_hal::platform_stub_hal_DocsisParamsDBInit);
                         this->bindAndAddMethod(Procedure("platform_stub_hal_GetBootLoaderVersion", PARAMS_BY_NAME, JSON_STRING, "flag", JSON_INTEGER, NULL), &platform_stub_hal::platform_stub_hal_GetBootLoaderVersion);
                         this->bindAndAddMethod(Procedure("platform_stub_hal_GetDeviceConfigStatus", PARAMS_BY_NAME, JSON_STRING, "flag", JSON_INTEGER, NULL), &platform_stub_hal::platform_stub_hal_GetDeviceConfigStatus);
+                        this->bindAndAddMethod(Procedure("platform_stub_hal_getFactoryPartnerId", PARAMS_BY_NAME, JSON_STRING, "flag", JSON_INTEGER, NULL), &platform_stub_hal::platform_stub_hal_getFactoryPartnerId);
                         this->bindAndAddMethod(Procedure("platform_stub_hal_GetFreeMemorySize", PARAMS_BY_NAME, JSON_STRING, "flag", JSON_INTEGER, NULL), &platform_stub_hal::platform_stub_hal_GetFreeMemorySize);
                         this->bindAndAddMethod(Procedure("platform_stub_hal_GetHardware", PARAMS_BY_NAME, JSON_STRING, "flag", JSON_INTEGER, NULL), &platform_stub_hal::platform_stub_hal_GetHardware);
                         this->bindAndAddMethod(Procedure("platform_stub_hal_GetFirmwareName", PARAMS_BY_NAME, JSON_STRING, "flag", JSON_INTEGER, NULL), &platform_stub_hal::platform_stub_hal_GetFirmwareName);
@@ -82,6 +83,7 @@ class platform_stub_hal : public RDKTestStubInterface, public AbstractServer<pla
 		void platform_stub_hal_DocsisParamsDBInit(IN const Json::Value& req, OUT Json::Value& response);
 		void platform_stub_hal_GetBootLoaderVersion(IN const Json::Value& req, OUT Json::Value& response);
 		void platform_stub_hal_GetDeviceConfigStatus(IN const Json::Value& req, OUT Json::Value& response);
+                void platform_stub_hal_getFactoryPartnerId(IN const Json::Value& req, OUT Json::Value& response);
 		void platform_stub_hal_GetFreeMemorySize(IN const Json::Value& req, OUT Json::Value& response);
 		void platform_stub_hal_GetHardware(IN const Json::Value& req, OUT Json::Value& response);
 		void platform_stub_hal_GetFirmwareName(IN const Json::Value& req, OUT Json::Value& response);
