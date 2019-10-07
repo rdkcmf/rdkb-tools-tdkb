@@ -29,6 +29,7 @@
         <function>MTAHAL_GetParamUlongValue</function>
         <parameters>
           <parameter name="paramName" value="0"/>
+          <parameter name="paramType" value=""/>
         </parameters>
       </primitiveTest>
       <primitiveTest id=" " name="MTAHAL_SetParamUlongValue" version="2">
@@ -40,17 +41,22 @@
       </primitiveTest>
       <primitiveTest id="" name="MTAHAL_GetDHCPInfo" version="1">
         <function>MTAHAL_GetDHCPInfo</function>
-        <parameters/>
+        <parameters>
+          <parameter name="paramType" value=""/>
+        </parameters>
       </primitiveTest>
       <primitiveTest id=" " name="MTAHAL_GetLineTableGetEntry" version="2">
         <function>MTAHAL_GetLineTableGetEntry</function>
         <parameters>
           <parameter name="value" value="0"/>
+          <parameter name="paramType" value=""/>
         </parameters>
       </primitiveTest>
       <primitiveTest id="" name="MTAHAL_GetServiceFlow" version="1">
         <function>MTAHAL_GetServiceFlow</function>
-        <parameters/>
+        <parameters>
+          <parameter name="paramType" value=""/>
+        </parameters>
       </primitiveTest>
       <primitiveTest id=" " name="MTAHAL_TriggerDiagnostics" version="1">
         <function>MTAHAL_TriggerDiagnostics</function>
@@ -68,15 +74,20 @@
         <function>MTAHAL_GetCALLP</function>
         <parameters>
           <parameter name="value" value="0"/>
+          <parameter name="paramType" value=""/>
         </parameters>
       </primitiveTest>
       <primitiveTest id="" name="MTAHAL_GetDSXLogs" version="1">
         <function>MTAHAL_GetDSXLogs</function>
-        <parameters/>
+        <parameters>
+          <parameter name="paramType" value=""/>
+        </parameters>
       </primitiveTest>
       <primitiveTest id="" name="MTAHAL_GetMtaLog" version="1">
         <function>MTAHAL_GetMtaLog</function>
-        <parameters/>
+        <parameters>
+          <parameter name="paramType" value=""/>
+        </parameters>
       </primitiveTest>
       <primitiveTest id="" name="MTAHAL_GetDhcpStatus" version="1">
         <function>MTAHAL_GetDhcpStatus</function>
