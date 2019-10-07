@@ -284,7 +284,8 @@ int ssp_WIFIHALGetOrSetParamULongValue(int radioIndex, unsigned long *uLongVar, 
 {
     printf("\n ssp_WIFIHALGetOrSetParamULongValue-----> Entry\n");
     printf("Radio index:%d\n",radioIndex);
-    printf("GetorSetParam: %lu\n" , *uLongVar);
+    if(uLongVar)
+        printf("GetorSetParam: %lu\n" , *uLongVar);
     printf("MethodName: %s\n", method);
     int return_status = 0;
 
@@ -324,7 +325,9 @@ int ssp_WIFIHALGetOrSetParamULongValue(int radioIndex, unsigned long *uLongVar, 
         printf("\n ssp_WiFiHalCallMethodForULong: Invalid methodName\n");
     }
 
-    printf("ssp_WiFiHalCallMethodForULong:: return value is %lu, ret:status %d\n", *uLongVar,return_status);
+    if(uLongVar)
+        printf("ssp_WiFiHalCallMethodForULong:: return value is %lu\n", *uLongVar);
+    printf("ssp_WiFiHalCallMethodForULong::  ret:status %d\n", return_status);
     printf("\n ssp_WiFiHalCallMethodForULong---> Exit\n");
     return return_status;
 }
