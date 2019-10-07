@@ -35,6 +35,9 @@
 #define TEST_SUCCESS true
 #define TEST_FAILURE false
 
+#define     MAX_BSR 32
+#define     MAX_RU_ALLOCATIONS  74
+
 typedef struct _wifi_radius_setting_t
 {
     int RadiusServerRetries;
@@ -157,7 +160,203 @@ typedef struct _wifi_channelStats {
         unsigned long long ch_utilization_busy_rx;
         unsigned long long ch_utilization_busy_self;
         unsigned long long ch_utilization_busy_ext;
-} wifi_channelStats_t;   
+} wifi_channelStats_t;
+
+typedef unsigned char mac_address_t[6];
+
+typedef struct _wifi_rssi_snapshot {
+        unsigned char  rssi[4];
+        unsigned char  time_s[4];
+        unsigned short count;
+} wifi_rssi_snapshot_t;
+
+
+typedef struct _wifi_associated_dev_rate_info_tx_stats {
+        unsigned char nss;
+        unsigned char mcs;
+        unsigned short bw;
+        unsigned long long flags;
+        unsigned long long bytes;
+        unsigned long long msdus;
+        unsigned long long mpdus;
+        unsigned long long ppdus;
+        unsigned long long retries;
+        unsigned long long attempts;
+}wifi_associated_dev_rate_info_tx_stats_t;
+
+typedef enum
+{
+    WIFI_RADIO_SCAN_MODE_NONE = 0,
+    WIFI_RADIO_SCAN_MODE_FULL,
+    WIFI_RADIO_SCAN_MODE_ONCHAN,
+    WIFI_RADIO_SCAN_MODE_OFFCHAN,
+    WIFI_RADIO_SCAN_MODE_SURVEY
+} wifi_neighborScanMode_t;
+
+typedef struct _wifi_associated_dev_rate_info_rx_stats {
+        unsigned char nss;
+        unsigned char mcs;
+        unsigned short bw;
+        unsigned long long flags;
+        unsigned long long bytes;
+        unsigned long long msdus;
+        unsigned long long mpdus;
+        unsigned long long ppdus;
+        unsigned long long retries;
+        unsigned char rssi_combined;
+        unsigned char rssi_array[8][4];
+}wifi_associated_dev_rate_info_rx_stats_t;
+
+typedef struct _wifi_associated_dev_stats {
+        unsigned long long  cli_rx_bytes;
+        unsigned long long  cli_tx_bytes;
+        unsigned long long  cli_rx_frames;
+        unsigned long long  cli_tx_frames;
+        unsigned long long  cli_rx_retries;
+        unsigned long long  cli_tx_retries;
+        unsigned long long  cli_rx_errors;
+        unsigned long long  cli_tx_errors;
+        double  cli_rx_rate;
+        double  cli_tx_rate;
+        wifi_rssi_snapshot_t cli_rssi_bcn;
+        wifi_rssi_snapshot_t cli_rssi_ack;
+} wifi_associated_dev_stats_t;
+
+typedef struct {
+       unsigned int    wake_time;
+    unsigned int    wake_interval;
+    unsigned int    min_wake_duration;
+    unsigned int    channel;
+} wifi_twt_individual_params_t;
+
+typedef struct {
+       unsigned int    traget_beacon;
+    unsigned int    listen_interval;
+} wifi_twt_broadcast_params_t;
+
+typedef enum {
+       wifi_twt_agreement_type_individual,
+       wifi_twt_agreement_type_broadcast,
+} wifi_twt_agreement_type_t;
+
+typedef struct {
+       bool    implicit;
+       bool    announced;
+       bool    trigger_enabled;
+} wifi_twt_operation_t;
+
+typedef struct {
+       wifi_twt_agreement_type_t       agreement;
+       wifi_twt_operation_t    operation;
+       union {
+               wifi_twt_individual_params_t    individual;
+               wifi_twt_broadcast_params_t     broadcast;
+       } patams;
+} wifi_twt_params_t;
+
+typedef enum {
+    WIFI_DL_MU_TYPE_NONE,
+    WIFI_DL_MU_TYPE_HE,
+    WIFI_DL_MU_TYPE_MIMO,
+    WIFI_DL_MU_TYPE_HE_MIMO
+} wifi_dl_mu_type_t;
+
+typedef enum {
+    wifi_access_category_background,
+    wifi_access_category_best_effort,
+    wifi_access_category_video,
+    wifi_access_category_voice,
+} wifi_access_category_t;
+
+typedef struct {
+    wifi_access_category_t  access_category;
+    unsigned int        queue_size;
+} wifi_bsr_t;
+
+typedef enum {
+    WIFI_RU_TYPE_26,
+    WIFI_RU_TYPE_52,
+    WIFI_RU_TYPE_106,
+    WIFI_RU_TYPE_242,
+    WIFI_RU_TYPE_484,
+    WIFI_RU_TYPE_996,
+    WIFI_RU_TYPE_1024,
+} wifi_ru_type_t;
+
+typedef struct {
+    unsigned char   subchannels;
+    wifi_ru_type_t  type;
+} wifi_ru_allocation_t;
+
+typedef struct {
+    wifi_dl_mu_type_t   cli_DownlinkMuType;
+    wifi_bsr_t              cli_BufferStatus[MAX_BSR];
+    unsigned char           cli_AllocatedDownlinkRuNum;
+    wifi_ru_allocation_t    cli_DownlinkRuAllocations[MAX_RU_ALLOCATIONS];
+} wifi_dl_mu_stats_t;
+
+
+typedef enum {
+    WIFI_UL_MU_TYPE_NONE,
+    WIFI_UL_MU_TYPE_HE,
+} wifi_ul_mu_type_t;
+
+typedef struct {
+    wifi_ul_mu_type_t   cli_UpinkMuType;
+    unsigned char                   cli_ChannelStateInformation;
+    wifi_bsr_t              cli_BufferStatus[MAX_BSR];
+    unsigned char                   cli_AllocatedUplinkRuNum;
+    wifi_ru_allocation_t    cli_UplinkRuAllocations[MAX_RU_ALLOCATIONS];
+} wifi_ul_mu_stats_t;
+
+typedef struct _wifi_associated_dev3
+{
+        mac_address_t cli_MACAddress;
+        char  cli_IPAddress[64];
+        bool  cli_AuthenticationState;
+        unsigned int  cli_LastDataDownlinkRate;
+        unsigned int  cli_LastDataUplinkRate;
+        int   cli_SignalStrength;
+        unsigned int  cli_Retransmissions;
+        bool  cli_Active;
+        char  cli_OperatingStandard[64];
+        char  cli_OperatingChannelBandwidth[64];
+        int   cli_SNR;
+        char  cli_interferenceSources[64];
+        unsigned long cli_DataFramesSentAck;
+        unsigned long cli_DataFramesSentNoAck;
+        unsigned long cli_BytesSent;
+        unsigned long cli_BytesReceived;
+        int   cli_RSSI;
+        int   cli_MinRSSI;
+        int   cli_MaxRSSI;
+        unsigned int  cli_Disassociations;
+        unsigned int  cli_AuthenticationFailures;
+        unsigned long long   cli_Associations;
+        unsigned long cli_PacketsSent;
+        unsigned long cli_PacketsReceived;
+        unsigned long cli_ErrorsSent;
+        unsigned long cli_RetransCount;
+        unsigned long cli_FailedRetransCount;
+        unsigned long cli_RetryCount;
+        unsigned long cli_MultipleRetryCount;
+        unsigned int  cli_MaxDownlinkRate;
+        unsigned int  cli_MaxUplinkRate;
+        wifi_ul_mu_stats_t  cli_DownlinkMuStats;
+        wifi_dl_mu_stats_t  cli_UplinkMuStats;
+        wifi_twt_params_t      cli_TwtParams;
+} wifi_associated_dev3_t;
+
+typedef struct _wifi_channelStats2 {
+        unsigned int    ch_Frequency;
+        int     ch_NoiseFloor;
+        int     ch_Non80211Noise;
+        int     ch_Max80211Rssi;
+        unsigned int    ch_ObssUtil;
+        unsigned int    ch_SelfBssUtil;
+} wifi_channelStats2_t;
+
+
 /* To provide external linkage to C Functions defined in TDKB Component folder */
 extern "C"
 {
@@ -193,6 +392,17 @@ extern "C"
     int ssp_WIFIHALParamApIndex(int apIndex, char* method);
     int ssp_WIFIHALGetApAssociatedDevice(int apIndex, char* associated_dev , unsigned int output_array_size);
     int ssp_WIFIHALGetApDeviceRSSI(int ap_index, char *MAC, int *output_RSSI, char* method);
+    int ssp_WIFIHAL_CreateAp(int apIndex, int radioIndex, char *essid, unsigned char hideSsid);
+    int ssp_WIFIHALDelApAclDevices(int apIndex);
+    int ssp_WIFIHALGetApAclDevices(int apIndex, char *mac_addr, unsigned int output_array_size);
+    int ssp_WIFIHALStartNeighborScan(int apIndex, wifi_neighborScanMode_t scan_mode, int dwell_time, unsigned int chan_num, unsigned int* chan_list);
+    int ssp_WIFIHALGetRadioChannelStats2(int radioIndex, wifi_channelStats2_t *outputChannelStats2);
+    int ssp_WIFIHALGetApDeviceTxRxRate(int apIndex, char *MAC, int *output_TxRxMb, char* method);
+    int ssp_WIFIHALSetApScanFilter(int apIndex, int mode, char* essid, char *method);
+    int ssp_WIFIHALGetApAssociatedDeviceTxStatsResult(int radioIndex, mac_address_t *clientMacAddress, wifi_associated_dev_rate_info_tx_stats_t **stats_array, unsigned int *output_array_size, unsigned long long *handle);
+    int ssp_WIFIHALGetApAssociatedDeviceRxStatsResult(int radioIndex, mac_address_t *clientMacAddress, wifi_associated_dev_rate_info_rx_stats_t **stats_array, unsigned int *output_array_size, unsigned long long *handle);
+    int ssp_WIFIHALGetApAssociatedDeviceStats(int apIndex, mac_address_t *clientMacAddress, wifi_associated_dev_stats_t *associated_dev_stats, unsigned long long *handle);
+    int ssp_WIFIHALGetApAssociatedDeviceDiagnosticResult3(int apIndex, wifi_associated_dev3_t **associated_dev_array, unsigned int *output_array_size);
 };
 
 class RDKTestAgent;
@@ -232,6 +442,19 @@ class WIFIHAL : public RDKTestStubInterface, public AbstractServer<WIFIHAL>
 		  this->bindAndAddMethod(Procedure("WIFIHAL_ParamApIndex", PARAMS_BY_NAME, JSON_STRING, "methodName", JSON_STRING, "apIndex", JSON_INTEGER,NULL), &WIFIHAL::WIFIHAL_ParamApIndex);
 		  this->bindAndAddMethod(Procedure("WIFIHAL_GetApAssociatedDevice", PARAMS_BY_NAME, JSON_STRING,"apIndex", JSON_INTEGER,NULL), &WIFIHAL::WIFIHAL_GetApAssociatedDevice);
 		  this->bindAndAddMethod(Procedure("WIFIHAL_GetApDeviceRSSI", PARAMS_BY_NAME, JSON_STRING, "methodName", JSON_STRING, "apIndex", JSON_INTEGER, "MAC", JSON_STRING,NULL), &WIFIHAL::WIFIHAL_GetApDeviceRSSI);
+                  this->bindAndAddMethod(Procedure("WIFIHAL_DelApAclDevices", PARAMS_BY_NAME, JSON_STRING,"apIndex", JSON_INTEGER,NULL), &WIFIHAL::WIFIHAL_DelApAclDevices);
+                 this->bindAndAddMethod(Procedure("WIFIHAL_GetApAclDevices", PARAMS_BY_NAME, JSON_STRING,"apIndex", JSON_INTEGER,NULL), &WIFIHAL::WIFIHAL_GetApAclDevices);
+                  this->bindAndAddMethod(Procedure("WIFIHAL_CreateAp", PARAMS_BY_NAME, JSON_STRING, "apIndex", JSON_INTEGER, "radioIndex", JSON_INTEGER, "essid", JSON_STRING, "hideSsid", JSON_INTEGER,NULL), &WIFIHAL::WIFIHAL_CreateAp);
+
+                 this->bindAndAddMethod(Procedure("WIFIHAL_GetApAssociatedDeviceStats",PARAMS_BY_NAME, JSON_STRING, "apIndex",JSON_INTEGER, "MAC", JSON_STRING, NULL), &WIFIHAL::WIFIHAL_GetApAssociatedDeviceStats);
+
+                  this->bindAndAddMethod(Procedure("WIFIHAL_StartNeighborScan", PARAMS_BY_NAME, JSON_STRING,"apIndex", JSON_INTEGER,"scan_mode", JSON_INTEGER,"dwell_time", JSON_INTEGER, NULL), &WIFIHAL::WIFIHAL_StartNeighborScan);
+                 this->bindAndAddMethod(Procedure("WIFIHAL_GetApAssociatedDeviceTxStatsResult",PARAMS_BY_NAME, JSON_STRING, "radioIndex",JSON_INTEGER, "MAC", JSON_STRING, NULL), &WIFIHAL::WIFIHAL_GetApAssociatedDeviceTxStatsResult);
+                 this->bindAndAddMethod(Procedure("WIFIHAL_GetApAssociatedDeviceRxStatsResult",PARAMS_BY_NAME, JSON_STRING, "radioIndex",JSON_INTEGER, "MAC", JSON_STRING, NULL), &WIFIHAL::WIFIHAL_GetApAssociatedDeviceRxStatsResult);
+                  this->bindAndAddMethod(Procedure("WIFIHAL_GetApDeviceTxRxRate", PARAMS_BY_NAME, JSON_STRING, "methodName", JSON_STRING, "apIndex", JSON_INTEGER, "MAC", JSON_STRING,NULL), &WIFIHAL::WIFIHAL_GetApDeviceTxRxRate);
+                  this->bindAndAddMethod(Procedure("WIFIHAL_SetApScanFilter", PARAMS_BY_NAME, JSON_STRING, "methodName", JSON_STRING, "apIndex", JSON_INTEGER, "essid", JSON_STRING,"mode", JSON_INTEGER, NULL), &WIFIHAL::WIFIHAL_SetApScanFilter);
+                  this->bindAndAddMethod(Procedure("WIFIHAL_GetApAssociatedDeviceDiagnosticResult3",PARAMS_BY_NAME, JSON_STRING, "apIndex",JSON_INTEGER,NULL), &WIFIHAL::WIFIHAL_GetApAssociatedDeviceDiagnosticResult3);
+                  this->bindAndAddMethod(Procedure("WIFIHAL_GetRadioChannelStats2",PARAMS_BY_NAME, JSON_STRING, "radioIndex",JSON_INTEGER,NULL), &WIFIHAL::WIFIHAL_GetRadioChannelStats2);
                 }
         /*inherited functions*/
         bool initialize(IN const char* szVersion);
@@ -271,6 +494,17 @@ class WIFIHAL : public RDKTestStubInterface, public AbstractServer<WIFIHAL>
 	void WIFIHAL_ParamApIndex(IN const Json::Value& req, OUT Json::Value& response);
 	void WIFIHAL_GetApAssociatedDevice(IN const Json::Value& req, OUT Json::Value& response);
 	void WIFIHAL_GetApDeviceRSSI(IN const Json::Value& req, OUT Json::Value& response);
+        void WIFIHAL_DelApAclDevices(IN const Json::Value& req, OUT Json::Value& response);
+        void WIFIHAL_GetApAclDevices(IN const Json::Value& req, OUT Json::Value& response);
+        void WIFIHAL_GetRadioChannelStats2 (IN const Json::Value& req, OUT Json::Value& response);
+        void WIFIHAL_GetApAssociatedDeviceTxStatsResult(IN const Json::Value& req, OUT Json::Value& response);
+        void WIFIHAL_GetApAssociatedDeviceRxStatsResult(IN const Json::Value& req, OUT Json::Value& response);
+        void WIFIHAL_GetApDeviceTxRxRate(IN const Json::Value& req, OUT Json::Value& response);
+        void WIFIHAL_GetApAssociatedDeviceStats(IN const Json::Value& req, OUT Json::Value& response);
+        void WIFIHAL_SetApScanFilter(IN const Json::Value& req, OUT Json::Value& response);
+        void WIFIHAL_CreateAp(IN const Json::Value& req, OUT Json::Value& response);
+        void WIFIHAL_GetApAssociatedDeviceDiagnosticResult3(IN const Json::Value& req, OUT Json::Value& response);
+        void WIFIHAL_StartNeighborScan(IN const Json::Value& req, OUT Json::Value& response);
 };
 #endif //__WIFIHAL_STUB_H__
 

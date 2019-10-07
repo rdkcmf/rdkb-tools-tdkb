@@ -252,6 +252,67 @@
           <parameter name="apIndex" value="0"/>
         </parameters>
       </primitiveTest>
+      <primitiveTest id=" " name="WIFIHAL_DelApAclDevices" version="1">
+        <function>WIFIHAL_DelApAclDevices</function>
+        <parameters>
+          <parameter name="apIndex" value=""/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest id=" " name="WIFIHAL_GetApAclDevices" version="1">
+        <function>WIFIHAL_GetApAclDevices</function>
+        <parameters>
+          <parameter name="apIndex" value=""/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest id=" " name="WIFIHAL_GetApAssociatedDeviceDiagnosticResult3" version="1">
+        <function>WIFIHAL_GetApAssociatedDeviceDiagnosticResult3</function>
+        <parameters>
+          <parameter name="apIndex" value=""/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest id=" " name="WIFIHAL_GetApAssociatedDeviceRxStatsResult" version="1">
+        <function>WIFIHAL_GetApAssociatedDeviceRxStatsResult</function>
+        <parameters>
+          <parameter name="MAC" value=""/>
+          <parameter name="radioIndex" value=""/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest id=" " name="WIFIHAL_GetApAssociatedDeviceTxStatsResult" version="1">
+        <function>WIFIHAL_GetApAssociatedDeviceTxStatsResult</function>
+        <parameters>
+          <parameter name="MAC" value=""/>
+          <parameter name="radioIndex" value=""/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest id=" " name="WIFIHAL_GetApAssociatedDeviceStats" version="1">
+        <function>WIFIHAL_GetApAssociatedDeviceStats</function>
+        <parameters>
+          <parameter name="apIndex" value=""/>
+          <parameter name="MAC" value=""/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest id=" " name="WIFIHAL_GetApDeviceTxRxRate" version="1">
+        <function>WIFIHAL_GetApDeviceTxRxRate</function>
+        <parameters>
+          <parameter name="apIndex" value=""/>
+          <parameter name="MAC" value=""/>
+          <parameter name="methodName" value=""/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest id=" " name="WIFIHAL_GetRadioChannelStats2" version="1">
+        <function>WIFIHAL_GetRadioChannelStats2</function>
+        <parameters>
+          <parameter name="radioIndex" value=""/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest name="WIFIHAL_StartNeighborScan" id=" " version="1">
+        <function>WIFIHAL_StartNeighborScan</function>
+        <parameters>
+          <parameter name="apIndex" value=""/>
+          <parameter name="dwell_time" value=""/>
+          <parameter name="scan_mode" value=""/>
+        </parameters>
+      </primitiveTest>
     </primitiveTests>
   </module>
 </xml>
