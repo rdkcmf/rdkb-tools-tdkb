@@ -110,59 +110,59 @@ if "SUCCESS" in loadmodulestatus.upper():
     expectedresult="SUCCESS";
     tdkTestObj.executeTestCase(expectedresult);
     actualresult = tdkTestObj.getResult();
-    details1 = tdkTestObj.getResultDetails();
+    details1 = tdkTestObj.getResultDetails().upper();
     if expectedresult in actualresult and details1 != "":
-       #Set the result status of execution
-       tdkTestObj.setResultStatus("SUCCESS");
-       print "TEST STEP 1: Get the value of Device.IP.Diagnostics.X_RDKCENTRAL-COM_PingTest.ecmMAC ";
-       print "EXPECTED RESULT 1: Should get the value of Device.IP.Diagnostics.X_RDKCENTRAL-COM_PingTest.ecmMAC";
-       print "ACTUAL RESULT 1: %s" %details1;
-       #Get the result of execution
-       print "[TEST EXECUTION RESULT] : SUCCESS";
-       tdkTestObj = obj.createTestStep('TADstub_Get');
-       tdkTestObj.addParameter("paramName","Device.DeviceInfo.X_CISCO_COM_BaseMacAddress");
-       expectedresult="SUCCESS";
-       tdkTestObj.executeTestCase(expectedresult);
-       actualresult = tdkTestObj.getResult();
-       details2 = tdkTestObj.getResultDetails();
-       if expectedresult in actualresult and details2 != "":
-         #Set the result status of execution
-         tdkTestObj.setResultStatus("SUCCESS");
-         print "TEST STEP 2: Get the value of Device.DeviceInfo.X_CISCO_COM_BaseMacAddress";
-         print "EXPECTED RESULT 2: Should get the value of Device.DeviceInfo.X_CISCO_COM_BaseMacAddress";
-         print "ACTUAL RESULT 2: %s" %details2;
-         #Get the result of execution
-         print "[TEST EXECUTION RESULT] : SUCCESS";
-         if details1 == details2:
-           #Set the result status of execution
-           tdkTestObj.setResultStatus("SUCCESS");
-           print "TEST STEP 3: Device.IP.Diagnostics.X_RDKCENTRAL-COM_PingTest.ecmMAC and Device.DeviceInfo.X_CISCO_COM_BaseMacAddress should be same ";
-           print "EXPECTED RESULT 3:Device.IP.Diagnostics.X_RDKCENTRAL-COM_PingTest.ecmMAC and Device.DeviceInfo.X_CISCO_COM_BaseMacAddressare same ";
-           #Get the result of execution
-           print "[TEST EXECUTION RESULT] : SUCCESS";
-         else:
-           #Set the result status of execution
-           tdkTestObj.setResultStatus("FAILURE");
-           print "TEST STEP 3: Device.IP.Diagnostics.X_RDKCENTRAL-COM_PingTest.ecmMAC and Device.DeviceInfo.X_CISCO_COM_BaseMacAddressshould be same ";
-           print "EXPECTED RESULT 3:Device.IP.Diagnostics.X_RDKCENTRAL-COM_PingTest.ecmMAC and Device.DeviceInfo.X_CISCO_COM_BaseMacAddress are not same ";
-           #Get the result of execution
-           print "[TEST EXECUTION RESULT] : FAILURE";
-       else:
-         #Set the result status of execution
-         tdkTestObj.setResultStatus("FAILURE");
-         print "TEST STEP 2: Get the value of Device.DeviceInfo.X_CISCO_COM_BaseMacAddress";
-         print "EXPECTED RESULT 2: Should get the value of Device.DeviceInfo.X_CISCO_COM_BaseMacAddress";
-         print "ACTUAL RESULT 2: %s" %details2;
-         #Get the result of execution
-         print "[TEST EXECUTION RESULT] : FAILURE";
+        #Set the result status of execution
+        tdkTestObj.setResultStatus("SUCCESS");
+        print "TEST STEP 1: Get the value of Device.IP.Diagnostics.X_RDKCENTRAL-COM_PingTest.ecmMAC ";
+        print "EXPECTED RESULT 1: Should get the value of Device.IP.Diagnostics.X_RDKCENTRAL-COM_PingTest.ecmMAC";
+        print "ACTUAL RESULT 1: %s" %details1;
+        #Get the result of execution
+        print "[TEST EXECUTION RESULT] : SUCCESS";
+        tdkTestObj = obj.createTestStep('TADstub_Get');
+        tdkTestObj.addParameter("paramName","Device.DeviceInfo.X_CISCO_COM_BaseMacAddress");
+        expectedresult="SUCCESS";
+        tdkTestObj.executeTestCase(expectedresult);
+        actualresult = tdkTestObj.getResult();
+        details2 = tdkTestObj.getResultDetails().upper();
+        if expectedresult in actualresult and details2 != "":
+            #Set the result status of execution
+            tdkTestObj.setResultStatus("SUCCESS");
+            print "TEST STEP 2: Get the value of Device.DeviceInfo.X_CISCO_COM_BaseMacAddress";
+            print "EXPECTED RESULT 2: Should get the value of Device.DeviceInfo.X_CISCO_COM_BaseMacAddress";
+            print "ACTUAL RESULT 2: %s" %details2;
+            #Get the result of execution
+            print "[TEST EXECUTION RESULT] : SUCCESS";
+            if details1 == details2:
+                #Set the result status of execution
+                tdkTestObj.setResultStatus("SUCCESS");
+                print "TEST STEP 3: Device.IP.Diagnostics.X_RDKCENTRAL-COM_PingTest.ecmMAC and Device.DeviceInfo.X_CISCO_COM_BaseMacAddress should be same ";
+                print "EXPECTED RESULT 3:Device.IP.Diagnostics.X_RDKCENTRAL-COM_PingTest.ecmMAC and Device.DeviceInfo.X_CISCO_COM_BaseMacAddressare same ";
+                #Get the result of execution
+                print "[TEST EXECUTION RESULT] : SUCCESS";
+            else:
+                #Set the result status of execution
+                tdkTestObj.setResultStatus("FAILURE");
+                print "TEST STEP 3: Device.IP.Diagnostics.X_RDKCENTRAL-COM_PingTest.ecmMAC and Device.DeviceInfo.X_CISCO_COM_BaseMacAddressshould be same ";
+                print "EXPECTED RESULT 3:Device.IP.Diagnostics.X_RDKCENTRAL-COM_PingTest.ecmMAC and Device.DeviceInfo.X_CISCO_COM_BaseMacAddress are not same ";
+                #Get the result of execution
+                print "[TEST EXECUTION RESULT] : FAILURE";
+        else:
+             #Set the result status of execution
+             tdkTestObj.setResultStatus("FAILURE");
+             print "TEST STEP 2: Get the value of Device.DeviceInfo.X_CISCO_COM_BaseMacAddress";
+             print "EXPECTED RESULT 2: Should get the value of Device.DeviceInfo.X_CISCO_COM_BaseMacAddress";
+             print "ACTUAL RESULT 2: %s" %details2;
+             #Get the result of execution
+             print "[TEST EXECUTION RESULT] : FAILURE";
     else:
-       #Set the result status of execution
-       tdkTestObj.setResultStatus("FAILURE");
-       print "TEST STEP 1:Get the value of Device.IP.Diagnostics.X_RDKCENTRAL-COM_PingTest.ecmMAC";
-       print "EXPECTED RESULT 1: Should get the value of Device.IP.Diagnostics.X_RDKCENTRAL-COM_PingTest.ecmMAC";
-       print "ACTUAL RESULT 1: %s" %details1;
-       #Get the result of execution
-       print "[TEST EXECUTION RESULT] : FAILURE";
+        #Set the result status of execution
+        tdkTestObj.setResultStatus("FAILURE");
+        print "TEST STEP 1:Get the value of Device.IP.Diagnostics.X_RDKCENTRAL-COM_PingTest.ecmMAC";
+        print "EXPECTED RESULT 1: Should get the value of Device.IP.Diagnostics.X_RDKCENTRAL-COM_PingTest.ecmMAC";
+        print "ACTUAL RESULT 1: %s" %details1;
+        #Get the result of execution
+        print "[TEST EXECUTION RESULT] : FAILURE";
     obj.unloadModule("tad");
 
 else:
