@@ -163,12 +163,12 @@ if "SUCCESS" in loadmodulestatus.upper():
             print "ACTUAL RESULT 3:  %s" %details;
             #Get the result of execution
             print "[TEST EXECUTION RESULT] : SUCCESS";
+	    time.sleep(sleepoutvalue)
             tdkTestObj = obj.createTestStep('TADstub_Get');
             tdkTestObj.addParameter("paramName","Device.IP.Diagnostics.IPPing.DiagnosticsState");
             tdkTestObj.executeTestCase(expectedresult);
             actualresult = tdkTestObj.getResult();
             details = tdkTestObj.getResultDetails();
-	    time.sleep(sleepoutvalue)
             if expectedresult in actualresult and details == "Complete":
                #Set the result status of execution
                tdkTestObj.setResultStatus("SUCCESS");
