@@ -99,7 +99,7 @@ if "SUCCESS" in loadmodulestatus.upper():
     tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, "0", getMethod)
     initialGuardInt = details.split(":")[1].strip()
 
-    if expectedresult in actualresult and initialGuardInt in possibleGuardInt:
+    if expectedresult in actualresult and initialGuardInt == "Auto" or 100 <= int(initialGuardInt.strip("nsec")) <= 800 :
         tdkTestObj.setResultStatus("SUCCESS");
 
         for setGuardInt in possibleGuardInt:
@@ -166,4 +166,3 @@ else:
         print "Failed to load the module";
         obj.setLoadModuleStatus("FAILURE");
         print "Module loading failed";
-
