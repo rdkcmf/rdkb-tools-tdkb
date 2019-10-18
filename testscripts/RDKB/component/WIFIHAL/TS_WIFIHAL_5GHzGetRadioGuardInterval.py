@@ -85,7 +85,6 @@ print "[LIB LOAD STATUS]  :  %s" %loadmodulestatus
 if "SUCCESS" in loadmodulestatus.upper():
     obj.setLoadModuleStatus("SUCCESS");
 
-    intervalList = "400nsec, 800nsec, Auto"
     expectedresult="SUCCESS";
     radioIndex = 1
     getMethod = "getRadioGuardInterval"
@@ -93,12 +92,13 @@ if "SUCCESS" in loadmodulestatus.upper():
     tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, "0", getMethod)
 
     if expectedresult in actualresult :
-        interval = details.split(":")[1].strip()
+        interval = details.split(":")[1].strip("nsec")
 
-        if interval in intervalList:
-            print "OperatingChannelBandwidth is from the list %s"%intervalList
+        if interval == "Auto" or 100 <= int(interval) <= 800 :
+            print "RadioGuardInterval is from the valid range";
+            tdkTestObj.setResultStatus("SUCCESS");
         else:
-            print "OperatingChannelBandwidth is not from the list %s"%intervalList
+            print "RadioGuardInterval is not from the valid range";
             tdkTestObj.setResultStatus("FAILURE");
     else:
         print "getRadioGuardInterval() failed"
@@ -108,4 +108,3 @@ if "SUCCESS" in loadmodulestatus.upper():
 else:
     print "Failed to load wifi module";
     obj.setLoadModuleStatus("FAILURE");
-

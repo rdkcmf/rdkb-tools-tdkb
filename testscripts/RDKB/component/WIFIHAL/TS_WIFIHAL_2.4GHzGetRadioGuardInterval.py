@@ -95,8 +95,8 @@ if "SUCCESS" in loadmodulestatus.upper():
     tdkTestObj.executeTestCase(expectedresult);
     actualresult = tdkTestObj.getResult();
     details = tdkTestObj.getResultDetails();
-    ExpectedList = ["400nsec", "800nsec", "Auto"];
-    if expectedresult in actualresult and details.split(":")[1] in ExpectedList:
+    interval = details.split(":")[1].strip("nsec");
+    if expectedresult in actualresult and interval == "Auto" or 100 <= int(interval) <= 800 :
         #Set the result status of execution
         tdkTestObj.setResultStatus("SUCCESS");
         print "TEST STEP 1: Get the Radio Guard Interval for 2.4GHz";
