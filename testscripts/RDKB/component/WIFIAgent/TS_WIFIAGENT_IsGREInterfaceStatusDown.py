@@ -26,7 +26,7 @@
   <primitive_test_name>WIFIAgent_Get</primitive_test_name>
   <primitive_test_version>1</primitive_test_version>
   <status>FREE</status>
-  <synopsis>Set Device.X_COMCAST_COM_GRE.Interface.1.Enable to false and check whether the status is Down or not</synopsis>
+  <synopsis>Set Device.X_COMCAST_COM_GRE.Interface.1.Enable to false and check whether the status is Down or Error</synopsis>
   <groups_id/>
   <execution_time>4</execution_time>
   <long_duration>false</long_duration>
@@ -43,7 +43,7 @@
   </rdk_versions>
   <test_cases>
     <test_case_id>TC_WIFIAGENT_58</test_case_id>
-    <test_objective>Set Device.X_COMCAST_COM_GRE.Interface.1.Enable to false and check whether the status is Down or not</test_objective>
+    <test_objective>Set Device.X_COMCAST_COM_GRE.Interface.1.Enable to false and check whether the status is Down or Error</test_objective>
     <test_type>Positive</test_type>
     <test_setup>Broadband, Emulator, RPI</test_setup>
     <pre_requisite>1.Ccsp Components in DUT should be in a running state that includes component under test Cable Modem
@@ -56,7 +56,7 @@
 3.Set Device.X_COMCAST_COM_GRE.Interface.1.Enable as false
 3. Using WIFIAgent_Get, get Device.X_COMCAST_COM_GRE.Interface.1.Status
 6. Restore value of Device.X_COMCAST_COM_GRE.Interface.1.Enable</automation_approch>
-    <except_output>Device.X_COMCAST_COM_GRE.Interface.1.Status should be down</except_output>
+    <except_output>Device.X_COMCAST_COM_GRE.Interface.1.Status should be down or Error</except_output>
     <priority>High</priority>
     <test_stub_interface>WifiAgent</test_stub_interface>
     <test_script>TS_WIFIAGENT_IsGREInterfaceStatusDown</test_script>
@@ -70,6 +70,7 @@
 '''
 # use tdklib library,which provides a wrapper for tdk testcase script 
 import tdklib; 
+import time;
 from time import sleep;
 from xfinityWiFiLib import *
 
@@ -143,6 +144,7 @@ if "SUCCESS" in loadmodulestatus.upper():
                     #Get the result of execution
                     print "[TEST EXECUTION RESULT] : SUCCESS";
 
+                    time.sleep(60);
                     #check if interface status is down or not
                     tdkTestObj = obj.createTestStep('WIFIAgent_Get');
                     tdkTestObj.addParameter("paramName","Device.X_COMCAST_COM_GRE.Interface.1.Status")
@@ -151,17 +153,17 @@ if "SUCCESS" in loadmodulestatus.upper():
                     details = tdkTestObj.getResultDetails();
                     status = details.split("VALUE:")[1].split(' ')[0];
 
-                    if expectedresult in actualresult and "Down" in status:
+                    if expectedresult in actualresult and "Down" in status or "Error" in status:
                         tdkTestObj.setResultStatus("SUCCESS");
-                        print "TEST STEP 5: Check if interface staus is Down";
-                        print "EXPECTED RESULT 5: Interface staus should be Down";
+                        print "TEST STEP 5: Check if interface staus is Down or Error";
+                        print "EXPECTED RESULT 5: Interface staus should be Down or Error";
                         print "ACTUAL RESULT 5: Status is %s" %status;
                         #Get the result of execution
                         print "[TEST EXECUTION RESULT] : SUCCESS";
                     else:
                         tdkTestObj.setResultStatus("FAILURE");
-                        print "TEST STEP 5: Check if interface status is Down";
-                        print "EXPECTED RESULT 5: Interface status should be Down";
+                        print "TEST STEP 5: Check if interface status is Down or Error";
+                        print "EXPECTED RESULT 5: Interface status should be Down or Error";
                         print "ACTUAL RESULT 5: Status is %s" %status;
                         #Get the result of execution
                         print "[TEST EXECUTION RESULT] : FAILURE";

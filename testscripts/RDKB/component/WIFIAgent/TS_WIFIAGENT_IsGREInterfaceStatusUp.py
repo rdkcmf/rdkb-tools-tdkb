@@ -69,7 +69,8 @@
 
 '''
 # use tdklib library,which provides a wrapper for tdk testcase script 
-import tdklib; 
+import tdklib;
+import time; 
 from time import sleep;
 from xfinityWiFiLib import *
 
@@ -143,6 +144,7 @@ if "SUCCESS" in loadmodulestatus.upper():
                     #Get the result of execution
                     print "[TEST EXECUTION RESULT] : SUCCESS";
 
+                    time.sleep(60);
                     #check if interface status is up or not
                     tdkTestObj = obj.createTestStep('WIFIAgent_Get');
                     tdkTestObj.addParameter("paramName","Device.X_COMCAST_COM_GRE.Interface.1.Status")
