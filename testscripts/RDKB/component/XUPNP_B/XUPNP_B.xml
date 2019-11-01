@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?><xml>
+  <module name="XUPNP_B" testGroup="Component">
+    <primitiveTests>
+      <primitiveTest id="" name="XUPNPStub_ReadXDiscOutputFile" version="1">
+        <function>XUPNPStub_ReadXDiscOutputFile</function>
+        <parameters>
+          <parameter name="paramName" value="0"/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest name="XUPNPStub_CheckXDiscOutputFile" id="" version="1">
+        <function>XUPNPStub_CheckXDiscOutputFile</function>
+        <parameters/>
+      </primitiveTest>
+    </primitiveTests>
+  </module>
+</xml>
+
