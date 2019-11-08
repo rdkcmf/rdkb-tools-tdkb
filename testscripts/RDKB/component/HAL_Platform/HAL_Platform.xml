@@ -196,6 +196,12 @@
           <parameter name="index" value=""/>
         </parameters>
       </primitiveTest>
+      <primitiveTest name="platform_stub_hal_getFactoryPartnerId" id=" " version="1">
+        <function>platform_stub_hal_getFactoryPartnerId</function>
+        <parameters>
+          <parameter name="flag" value="0"/>
+        </parameters>
+      </primitiveTest>
     </primitiveTests>
   </module>
 </xml>
