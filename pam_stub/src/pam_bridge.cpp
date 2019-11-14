@@ -36,7 +36,6 @@ void free_Memory_Names(int size,GETPARAMNAMES *Freestruct);
 void free_Memory_val(int size,GETPARAMVALUES *Freestruct);
 void free_Memory_Attr(int size,GETPARAMATTR *Freestruct);
 int ssp_pam_Bridging_GetParamUlongValue(char* paramName,unsigned long* ulongValue, char* module);
-int ssp_DmlMlanInit();
 int ssp_DmlMlanGetParamValue(char*, char*, unsigned long*);
 int ssp_DmlEthGetParamValue(char*);
 int ssp_DmlDiGetParamValue(char*, char*, unsigned long*);
@@ -81,30 +80,24 @@ std::string pam::testmodulepre_requisites()
         return "TEST_FAILURE";
     }
 
-    returnValue = ssp_DmlMlanInit();
+    returnValue = ssp_CosaDmlUpnpInit();
     if(0 != returnValue)
     {
-        DEBUG_PRINT(DEBUG_TRACE,"\n testmodulepre_requisites: Failed to initialize the COSA PAM DML\n");
+        DEBUG_PRINT(DEBUG_TRACE,"\n testmodulepre_requisites: Failed to initialize the COSA UPNP DML\n");
         return "TEST_FAILURE";
     }
-     returnValue = ssp_CosaDmlUpnpInit();
-     if(0 != returnValue)
-     {
-         DEBUG_PRINT(DEBUG_TRACE,"\n testmodulepre_requisites: Failed to initialize the COSA UPNP DML\n");
-         return "TEST_FAILURE";
-     }
-     returnValue = ssp_CosaDmlDhcpInit();
-     if(0 != returnValue)
-     {
-         DEBUG_PRINT(DEBUG_TRACE,"\n testmodulepre_requisites: Failed to initialize the COSA DHCP DML\n");
-         return "TEST_FAILURE";
-     }
-     returnValue = ssp_CosaDmlDnsInit();
-     if(0 != returnValue)
-     {
-         DEBUG_PRINT(DEBUG_TRACE,"\n testmodulepre_requisites: Failed to initialize the COSA DNS DML\n");
-         return "TEST_FAILURE";
-     }
+    returnValue = ssp_CosaDmlDhcpInit();
+    if(0 != returnValue)
+    {
+        DEBUG_PRINT(DEBUG_TRACE,"\n testmodulepre_requisites: Failed to initialize the COSA DHCP DML\n");
+        return "TEST_FAILURE";
+    }
+    returnValue = ssp_CosaDmlDnsInit();
+    if(0 != returnValue)
+    {
+        DEBUG_PRINT(DEBUG_TRACE,"\n testmodulepre_requisites: Failed to initialize the COSA DNS DML\n");
+        return "TEST_FAILURE";
+    }
 
     DEBUG_PRINT(DEBUG_TRACE,"\n testmodulepre_requisites:initialized the COSA PAM DML\n");
 
