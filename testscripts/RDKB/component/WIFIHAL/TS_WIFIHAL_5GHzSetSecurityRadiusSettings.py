@@ -71,6 +71,9 @@ radioIndex : 1</input_parameters>
 '''
 # use tdklib library,which provides a wrapper for tdk testcase script
 import tdklib;
+from wifiUtility import *
+
+radio = "5G"
 
 #Test component to be tested
 obj = tdklib.TDKScriptingLibrary("wifihal","1");
@@ -110,124 +113,131 @@ print "[LIB LOAD STATUS]  :  %s" %loadmodulestatus
 if "SUCCESS" in loadmodulestatus.upper():
     obj.setLoadModuleStatus("SUCCESS");
 
-    expectedresult = "SUCCESS";
-    radioIndex = 1
-    getMethod = "getApSecurityRadiusSettings"
-    primitive = "WIFIHAL_GetOrSetSecurityRadiusSettings"
-
-    #Calling the method to execute wifi_getApSecurityRadiusSettings()
-    tdkTestObj, actualresult, details = GetorSetApSecurityRadiusSettings(obj, primitive, radioIndex, 0,0,0,0,0,0,0,0,0, getMethod)
-
-    if expectedresult in actualresult:
-        output  = details.split(":")[1].strip()
-        initDetails = output.split(",")
-        initValues = [i.split("=",1)[1] for i in initDetails]
-        #Checking if all the output values are non emtpy
-        if all(initValues):
-            print "TEST STEP 1: Get the ApSecurityRadiusSettings details"
-            print "EXPECTED RESULT 1: Should get the ApSecurityRadiusSettings parameters as non empty values"
-            print "ACTUAL RESULT 1: Obtained the ApSecurityRadiusSettings parameters as a NON EMPTY values"
-            print "Initial ApSecurityRadiusSettings details : "
-            for values in initDetails:
-                print values
-
-            tdkTestObj.setResultStatus("SUCCESS");
-
-            expectedresult = "SUCCESS";
-            radioIndex = 1
-            setMethod = "setApSecurityRadiusSettings"
-            primitive = "WIFIHAL_GetOrSetSecurityRadiusSettings"
-            RadiusServerRetries = 0
-            RadiusServerRequestTimeout = 0
-            PMKLifetime = 1900
-            PMKCaching = 1
-            PMKCacheInterval = 0
-            MaxAuthenticationAttempts = 0
-            BlacklistTableTimeout = 0
-            IdentityRequestRetryInterval = 0
-            QuietPeriodAfterFailedAuthentication = 0
-
-
-            #Calling the method to execute wifi_setApSecurityRadiusSettings()
-            tdkTestObj, actualresult, details = GetorSetApSecurityRadiusSettings(obj, primitive, radioIndex, RadiusServerRetries, RadiusServerRequestTimeout, PMKLifetime, PMKCaching, PMKCacheInterval, MaxAuthenticationAttempts, BlacklistTableTimeout, IdentityRequestRetryInterval, QuietPeriodAfterFailedAuthentication, setMethod)
-
-            if expectedresult in actualresult:
-                tdkTestObj.setResultStatus("SUCCESS");
-                print "TEST STEP 2: Set the ApSecurityRadiusSettings details"
-                print "EXPECTED RESULT 2: Should set the ApSecurityRadiusSettings parameters"
-                print "ACTUAL RESULT 2: Successfully sets the ApSecurityRadiusSettings parameters"
-
-                expectedresult = "SUCCESS";
-                radioIndex = 1
-                getMethod = "getApSecurityRadiusSettings"
-                primitive = "WIFIHAL_GetOrSetSecurityRadiusSettings"
-
-                #Calling the method to execute wifi_getApSecurityRadiusSettings()
-                tdkTestObj, actualresult, details = GetorSetApSecurityRadiusSettings(obj, primitive, radioIndex, 0,0,0,0,0,0,0,0,0, getMethod)
-
-                if expectedresult in actualresult:
-                    output  = details.split(":")[1].strip()
-                    outputDetails = output.split(",")
-                    outputValues = [int(i.split("=",1)[1]) for i in outputDetails]
-                    if outputValues == [RadiusServerRetries,RadiusServerRequestTimeout,PMKLifetime,PMKCaching,PMKCacheInterval,MaxAuthenticationAttempts,BlacklistTableTimeout,IdentityRequestRetryInterval,QuietPeriodAfterFailedAuthentication]:
-                        tdkTestObj.setResultStatus("SUCCESS");
-                        print "TEST STEP 3: Comparing the set and get values of ApSecurityRadiusSettings details"
-                        print "EXPECTED RESULT 3: Set and get values should be the same"
-                        print "ACTUAL RESULT 3: Set and get values are the same"
-                        print "Set values: RadiusServerRetries = %s\nRadiusServerRequestTimeout = %s\nPMKLifetime = %s\nPMKCaching =%s\nPMKCacheInterval=%s\nMaxAuthenticationAttempts =%s\nBlacklistTableTimeout=%s\nIdentityRequestRetryInterval=%s\nQuietPeriodAfterFailedAuthentication=%s\n"%(RadiusServerRetries,RadiusServerRequestTimeout,PMKLifetime,PMKCaching,PMKCacheInterval,MaxAuthenticationAttempts,BlacklistTableTimeout,IdentityRequestRetryInterval,QuietPeriodAfterFailedAuthentication)
-                        print "Get values: RadiusServerRetries = %s\nRadiusServerRequestTimeout = %s\nPMKLifetime = %s\nPMKCaching =%s\nPMKCacheInterval=%s\nMaxAuthenticationAttempts =%s\nBlacklistTableTimeout=%s\nIdentityRequestRetryInterval=%s\nQuietPeriodAfterFailedAuthentication=%s\n"%(outputValues[0],outputValues[1],outputValues[2],outputValues[3],outputValues[4],outputValues[5],outputValues[6],outputValues[7],outputValues[8]);
-
-                    else:
-                        tdkTestObj.setResultStatus("FAILURE");
-                        print "TEST STEP 3: Comparing the set and get values of ApSecurityRadiusSettings details"
-                        print "EXPECTED RESULT 3: Set and get values should be the same"
-                        print "ACTUAL RESULT 3: Set and get values are NOT the same"
-                        print "Set values: RadiusServerRetries = %s\nRadiusServerRequestTimeout = %s\nPMKLifetime = %s\nPMKCaching =%s\nPMKCacheInterval=%s\nMaxAuthenticationAttempts =%s\nBlacklistTableTimeout=%s\nIdentityRequestRetryInterval=%s\nQuietPeriodAfterFailedAuthentication=%s\n"%(RadiusServerRetries,RadiusServerRequestTimeout,PMKLifetime,PMKCaching,PMKCacheInterval,MaxAuthenticationAttempts,BlacklistTableTimeout,IdentityRequestRetryInterval,QuietPeriodAfterFailedAuthentication)
-                        print "Get values: RadiusServerRetries = %s\nRadiusServerRequestTimeout = %s\nPMKLifetime = %s\nPMKCaching =%s\nPMKCacheInterval=%s\nMaxAuthenticationAttempts =%s\nBlacklistTableTimeout=%s\nIdentityRequestRetryInterval=%s\nQuietPeriodAfterFailedAuthentication=%s\n"%(outputValues[0],outputValues[1],outputValues[2],outputValues[3],outputValues[4],outputValues[5],outputValues[6],outputValues[7],outputValues[8]);
-
-                else:
-                    tdkTestObj.setResultStatus("FAILURE");
-                    print "wifi_getApSecurityRadiusSettings() call failed"
-
-                #Reverting the values to previous value
-                expectedresult = "SUCCESS";
-                radioIndex = 1
-                setMethod = "setApSecurityRadiusSettings"
-                primitive = "WIFIHAL_GetOrSetSecurityRadiusSettings"
-                RadiusServerRetries = int(initValues[0]);
-                RadiusServerRequestTimeout = int(initValues[1]);
-                PMKLifetime = int(initValues[2]);
-                PMKCaching = int(initValues[3]);
-                PMKCacheInterval = int(initValues[4]);
-                MaxAuthenticationAttempts = int(initValues[5]);
-                BlacklistTableTimeout = int(initValues[6]);
-                IdentityRequestRetryInterval = int(initValues[7]);
-                QuietPeriodAfterFailedAuthentication = int(initValues[8]);
-
-                #Calling the method to execute wifi_setApSecurityRadiusSettings()
-                tdkTestObj, actualresult, details = GetorSetApSecurityRadiusSettings(obj, primitive, radioIndex, RadiusServerRetries, RadiusServerRequestTimeout, PMKLifetime, PMKCaching, PMKCacheInterval, MaxAuthenticationAttempts, BlacklistTableTimeout, IdentityRequestRetryInterval, QuietPeriodAfterFailedAuthentication, setMethod)
-
-                if expectedresult in actualresult:
-                    print "Successfully reverted to initial values"
-                    tdkTestObj.setResultStatus("SUCCESS");
-                else:
-                    print " Unable to revert to initial value"
-                    tdkTestObj.setResultStatus("FAILURE");
-            else:
-                tdkTestObj.setResultStatus("FAILURE");
-                print "TEST STEP 2: Set the ApSecurityRadiusSettings details"
-                print "EXPECTED RESULT 2: Should set the ApSecurityRadiusSettings parameters"
-                print "ACTUAL RESULT 2: Successfully sets the ApSecurityRadiusSettings parameters"
-        else:
-            print "TEST STEP 1: Get the ApSecurityRadiusSettings details"
-            print "EXPECTED RESULT 1: Should get the ApSecurityRadiusSettings parameters as non empty values"
-            print "ACTUAL RESULT 1: Obtained the ApSecurityRadiusSettings parameters as a NON EMPTY values"
-            print "ApSecurityRadiusSettings details : %s"%output
-            tdkTestObj.setResultStatus("FAILURE");
-
+    tdkTestObjTemp, idx = getIndex(obj, radio);
+    ## Check if a invalid index is returned
+    if idx == -1:
+        print "Failed to get radio index for radio %s\n" %radio;
+        tdkTestObjTemp.setResultStatus("FAILURE");
     else:
-        tdkTestObj.setResultStatus("FAILURE");
-        print "wifi_getApSecurityRadiusSettings() call failed"
+
+	    expectedresult = "SUCCESS";
+	    radioIndex = idx
+	    getMethod = "getApSecurityRadiusSettings"
+	    primitive = "WIFIHAL_GetOrSetSecurityRadiusSettings"
+
+	    #Calling the method to execute wifi_getApSecurityRadiusSettings()
+	    tdkTestObj, actualresult, details = GetorSetApSecurityRadiusSettings(obj, primitive, radioIndex, 0,0,0,0,0,0,0,0,0, getMethod)
+
+	    if expectedresult in actualresult:
+		output  = details.split(":")[1].strip()
+		initDetails = output.split(",")
+		initValues = [i.split("=",1)[1] for i in initDetails]
+		#Checking if all the output values are non emtpy
+		if all(initValues):
+		    print "TEST STEP 1: Get the ApSecurityRadiusSettings details"
+		    print "EXPECTED RESULT 1: Should get the ApSecurityRadiusSettings parameters as non empty values"
+		    print "ACTUAL RESULT 1: Obtained the ApSecurityRadiusSettings parameters as a NON EMPTY values"
+		    print "Initial ApSecurityRadiusSettings details : "
+		    for values in initDetails:
+			print values
+
+		    tdkTestObj.setResultStatus("SUCCESS");
+
+		    expectedresult = "SUCCESS";
+		    radioIndex = idx
+		    setMethod = "setApSecurityRadiusSettings"
+		    primitive = "WIFIHAL_GetOrSetSecurityRadiusSettings"
+		    RadiusServerRetries = 0
+		    RadiusServerRequestTimeout = 0
+		    PMKLifetime = 1900
+		    PMKCaching = 1
+		    PMKCacheInterval = 0
+		    MaxAuthenticationAttempts = 0
+		    BlacklistTableTimeout = 0
+		    IdentityRequestRetryInterval = 0
+		    QuietPeriodAfterFailedAuthentication = 0
+
+
+		    #Calling the method to execute wifi_setApSecurityRadiusSettings()
+		    tdkTestObj, actualresult, details = GetorSetApSecurityRadiusSettings(obj, primitive, radioIndex, RadiusServerRetries, RadiusServerRequestTimeout, PMKLifetime, PMKCaching, PMKCacheInterval, MaxAuthenticationAttempts, BlacklistTableTimeout, IdentityRequestRetryInterval, QuietPeriodAfterFailedAuthentication, setMethod)
+
+		    if expectedresult in actualresult:
+			tdkTestObj.setResultStatus("SUCCESS");
+			print "TEST STEP 2: Set the ApSecurityRadiusSettings details"
+			print "EXPECTED RESULT 2: Should set the ApSecurityRadiusSettings parameters"
+			print "ACTUAL RESULT 2: Successfully sets the ApSecurityRadiusSettings parameters"
+
+			expectedresult = "SUCCESS";
+			radioIndex = idx
+			getMethod = "getApSecurityRadiusSettings"
+			primitive = "WIFIHAL_GetOrSetSecurityRadiusSettings"
+
+			#Calling the method to execute wifi_getApSecurityRadiusSettings()
+			tdkTestObj, actualresult, details = GetorSetApSecurityRadiusSettings(obj, primitive, radioIndex, 0,0,0,0,0,0,0,0,0, getMethod)
+
+			if expectedresult in actualresult:
+			    output  = details.split(":")[1].strip()
+			    outputDetails = output.split(",")
+			    outputValues = [int(i.split("=",1)[1]) for i in outputDetails]
+			    if outputValues == [RadiusServerRetries,RadiusServerRequestTimeout,PMKLifetime,PMKCaching,PMKCacheInterval,MaxAuthenticationAttempts,BlacklistTableTimeout,IdentityRequestRetryInterval,QuietPeriodAfterFailedAuthentication]:
+				tdkTestObj.setResultStatus("SUCCESS");
+				print "TEST STEP 3: Comparing the set and get values of ApSecurityRadiusSettings details"
+				print "EXPECTED RESULT 3: Set and get values should be the same"
+				print "ACTUAL RESULT 3: Set and get values are the same"
+				print "Set values: RadiusServerRetries = %s\nRadiusServerRequestTimeout = %s\nPMKLifetime = %s\nPMKCaching =%s\nPMKCacheInterval=%s\nMaxAuthenticationAttempts =%s\nBlacklistTableTimeout=%s\nIdentityRequestRetryInterval=%s\nQuietPeriodAfterFailedAuthentication=%s\n"%(RadiusServerRetries,RadiusServerRequestTimeout,PMKLifetime,PMKCaching,PMKCacheInterval,MaxAuthenticationAttempts,BlacklistTableTimeout,IdentityRequestRetryInterval,QuietPeriodAfterFailedAuthentication)
+				print "Get values: RadiusServerRetries = %s\nRadiusServerRequestTimeout = %s\nPMKLifetime = %s\nPMKCaching =%s\nPMKCacheInterval=%s\nMaxAuthenticationAttempts =%s\nBlacklistTableTimeout=%s\nIdentityRequestRetryInterval=%s\nQuietPeriodAfterFailedAuthentication=%s\n"%(outputValues[0],outputValues[1],outputValues[2],outputValues[3],outputValues[4],outputValues[5],outputValues[6],outputValues[7],outputValues[8]);
+
+			    else:
+				tdkTestObj.setResultStatus("FAILURE");
+				print "TEST STEP 3: Comparing the set and get values of ApSecurityRadiusSettings details"
+				print "EXPECTED RESULT 3: Set and get values should be the same"
+				print "ACTUAL RESULT 3: Set and get values are NOT the same"
+				print "Set values: RadiusServerRetries = %s\nRadiusServerRequestTimeout = %s\nPMKLifetime = %s\nPMKCaching =%s\nPMKCacheInterval=%s\nMaxAuthenticationAttempts =%s\nBlacklistTableTimeout=%s\nIdentityRequestRetryInterval=%s\nQuietPeriodAfterFailedAuthentication=%s\n"%(RadiusServerRetries,RadiusServerRequestTimeout,PMKLifetime,PMKCaching,PMKCacheInterval,MaxAuthenticationAttempts,BlacklistTableTimeout,IdentityRequestRetryInterval,QuietPeriodAfterFailedAuthentication)
+				print "Get values: RadiusServerRetries = %s\nRadiusServerRequestTimeout = %s\nPMKLifetime = %s\nPMKCaching =%s\nPMKCacheInterval=%s\nMaxAuthenticationAttempts =%s\nBlacklistTableTimeout=%s\nIdentityRequestRetryInterval=%s\nQuietPeriodAfterFailedAuthentication=%s\n"%(outputValues[0],outputValues[1],outputValues[2],outputValues[3],outputValues[4],outputValues[5],outputValues[6],outputValues[7],outputValues[8]);
+
+			else:
+			    tdkTestObj.setResultStatus("FAILURE");
+			    print "wifi_getApSecurityRadiusSettings() call failed"
+
+			#Reverting the values to previous value
+			expectedresult = "SUCCESS";
+			radioIndex = idx
+			setMethod = "setApSecurityRadiusSettings"
+			primitive = "WIFIHAL_GetOrSetSecurityRadiusSettings"
+			RadiusServerRetries = int(initValues[0]);
+			RadiusServerRequestTimeout = int(initValues[1]);
+			PMKLifetime = int(initValues[2]);
+			PMKCaching = int(initValues[3]);
+			PMKCacheInterval = int(initValues[4]);
+			MaxAuthenticationAttempts = int(initValues[5]);
+			BlacklistTableTimeout = int(initValues[6]);
+			IdentityRequestRetryInterval = int(initValues[7]);
+			QuietPeriodAfterFailedAuthentication = int(initValues[8]);
+
+			#Calling the method to execute wifi_setApSecurityRadiusSettings()
+			tdkTestObj, actualresult, details = GetorSetApSecurityRadiusSettings(obj, primitive, radioIndex, RadiusServerRetries, RadiusServerRequestTimeout, PMKLifetime, PMKCaching, PMKCacheInterval, MaxAuthenticationAttempts, BlacklistTableTimeout, IdentityRequestRetryInterval, QuietPeriodAfterFailedAuthentication, setMethod)
+
+			if expectedresult in actualresult:
+			    print "Successfully reverted to initial values"
+			    tdkTestObj.setResultStatus("SUCCESS");
+			else:
+			    print " Unable to revert to initial value"
+			    tdkTestObj.setResultStatus("FAILURE");
+		    else:
+			tdkTestObj.setResultStatus("FAILURE");
+			print "TEST STEP 2: Set the ApSecurityRadiusSettings details"
+			print "EXPECTED RESULT 2: Should set the ApSecurityRadiusSettings parameters"
+			print "ACTUAL RESULT 2: Successfully sets the ApSecurityRadiusSettings parameters"
+		else:
+		    print "TEST STEP 1: Get the ApSecurityRadiusSettings details"
+		    print "EXPECTED RESULT 1: Should get the ApSecurityRadiusSettings parameters as non empty values"
+		    print "ACTUAL RESULT 1: Obtained the ApSecurityRadiusSettings parameters as a NON EMPTY values"
+		    print "ApSecurityRadiusSettings details : %s"%output
+		    tdkTestObj.setResultStatus("FAILURE");
+
+	    else:
+		tdkTestObj.setResultStatus("FAILURE");
+		print "wifi_getApSecurityRadiusSettings() call failed"
 
     obj.unloadModule("wifihal");
 else:
