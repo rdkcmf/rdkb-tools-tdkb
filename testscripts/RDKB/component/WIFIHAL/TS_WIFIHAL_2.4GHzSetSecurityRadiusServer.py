@@ -80,6 +80,8 @@ ApIndex : 0</input_parameters>
 import tdklib; 
 from wifiUtility import *;
 
+radio = "2.4G"
+
 #Test component to be tested
 obj = tdklib.TDKScriptingLibrary("wifihal","1");
 
@@ -105,9 +107,9 @@ def GetorSetApSecurityRadiusServer(obj, primitive, radioIndex, IPAddress, port, 
 
     return (tdkTestObj, actualresult, details);
 
-def checkApSecurityRadiusServer():
+def checkApSecurityRadiusServer(index):
     expectedresult = "SUCCESS";
-    radioIndex = 0
+    radioIndex = index;
     getMethod = "getApSecurityRadiusServer"
     primitive = "WIFIHAL_GetOrSetSecurityRadiusServer"
 
@@ -127,7 +129,7 @@ def checkApSecurityRadiusServer():
 	    tdkTestObj.setResultStatus("SUCCESS");
 
 	    expectedresult = "SUCCESS";
-	    radioIndex = 0
+	    radioIndex = index;
 	    setMethod = "setApSecurityRadiusServer"
   	    primitive = "WIFIHAL_GetOrSetSecurityRadiusServer"
 	    IPAddress = "1.1.2.2"
@@ -145,7 +147,7 @@ def checkApSecurityRadiusServer():
 		print "Set values: IPAddress = 1.1.2.2, port = 1234, RadiusSecret = 12345"
 
 		expectedresult = "SUCCESS";
-	        radioIndex = 0
+	        radioIndex = index;
 	        getMethod = "getApSecurityRadiusServer"
 	        primitive = "WIFIHAL_GetOrSetSecurityRadiusServer"
 
@@ -176,7 +178,7 @@ def checkApSecurityRadiusServer():
 
 		#Reverting the values to previous value
 	  	expectedresult = "SUCCESS";
-                radioIndex = 0
+                radioIndex = index;
                 setMethod = "setApSecurityRadiusServer"
                 primitive = "WIFIHAL_GetOrSetSecurityRadiusServer"
                 IPAddress = initValues[0];
@@ -214,60 +216,67 @@ print "[LIB LOAD STATUS]  :  %s" %loadmodulestatus
 if "SUCCESS" in loadmodulestatus.upper():
     obj.setLoadModuleStatus("SUCCESS");
 
-    compatibleModes = ["WPA-Enterprise", "WPA2-Enterprise", "WPA-WPA2-Enterprise"]
+    tdkTestObjTemp, idx = getIndex(obj, radio);
+    ## Check if a invalid index is returned
+    if idx == -1:
+        print "Failed to get radio index for radio %s\n" %radio;
+        tdkTestObjTemp.setResultStatus("FAILURE");
+    else:
 
-    expectedresult="SUCCESS";
-    apIndex = 0
-    getMethod = "getApSecurityModeEnabled"
-    primitive = 'WIFIHAL_GetOrSetParamStringValue'
+	    compatibleModes = ["WPA-Enterprise", "WPA2-Enterprise", "WPA-WPA2-Enterprise"]
 
-    #Calling the method to execute wifi_getApSecurityModeEnabled()
-    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, "0", getMethod)
+	    expectedresult="SUCCESS";
+	    apIndex = idx;
+	    getMethod = "getApSecurityModeEnabled"
+	    primitive = 'WIFIHAL_GetOrSetParamStringValue'
 
-    if expectedresult in actualresult:
-        initMode = details.split(":")[1].strip()
-        if initMode not in compatibleModes:
-            expectedresult="SUCCESS";
-            apIndex = 0
-            setMethod = "setApSecurityModeEnabled"
-            primitive = 'WIFIHAL_GetOrSetParamStringValue'
-            setMode = compatibleModes[0]
+	    #Calling the method to execute wifi_getApSecurityModeEnabled()
+	    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, "0", getMethod)
 
-            #Calling the method to execute wifi_setApSecurityModeEnabled()
-            tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, setMode, setMethod)
-	    
 	    if expectedresult in actualresult:
-		tdkTestObj.setResultStatus("SUCCESS");
-		print "ModeEnabled is changed to an Enterprise type"
+		initMode = details.split(":")[1].strip()
+		if initMode not in compatibleModes:
+		    expectedresult="SUCCESS";
+		    apIndex = idx;
+		    setMethod = "setApSecurityModeEnabled"
+		    primitive = 'WIFIHAL_GetOrSetParamStringValue'
+		    setMode = compatibleModes[0]
 
-                #Calling the function to perform the settings and getting and verification of SecurityRadiusServer
-		checkApSecurityRadiusServer();
+		    #Calling the method to execute wifi_setApSecurityModeEnabled()
+		    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, setMode, setMethod)
+		    
+		    if expectedresult in actualresult:
+			tdkTestObj.setResultStatus("SUCCESS");
+			print "ModeEnabled is changed to an Enterprise type"
 
-		#Revert to initial mode
-                apIndex = 0
-                setMethod = "setApSecurityModeEnabled"
-                primitive = 'WIFIHAL_GetOrSetParamStringValue'
-                setMode = initMode
+			#Calling the function to perform the settings and getting and verification of SecurityRadiusServer
+			checkApSecurityRadiusServer(idx);
 
-		#Calling the method to execute wifi_setApSecurityModeEnabled()
-                tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, setMode, setMethod)
-	
-		if expectedresult in actualresult:
-		    print "Successfully reverted the SecurityMode to initial value"
-		    tdkTestObj.setResultStatus("SUCCESS");
+			#Revert to initial mode
+			apIndex = idx;
+			setMethod = "setApSecurityModeEnabled"
+			primitive = 'WIFIHAL_GetOrSetParamStringValue'
+			setMode = initMode
+
+			#Calling the method to execute wifi_setApSecurityModeEnabled()
+			tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, setMode, setMethod)
+		
+			if expectedresult in actualresult:
+			    print "Successfully reverted the SecurityMode to initial value"
+			    tdkTestObj.setResultStatus("SUCCESS");
+			else:
+			    print "Unable to revert the SecurityMode to initial value"
+			    tdkTestObj.setResultStatus("FAILURE");
+		    else:
+			tdkTestObj.setResultStatus("FAILURE");
+			print "Unable to change ModeEnabled to Enterprise type"
 		else:
-		    print "Unable to revert the SecurityMode to initial value"
-		    tdkTestObj.setResultStatus("FAILURE");
+		    #Calling the function to perform the settings and getting and verification of SecurityRadiusServer
+		    checkApSecurityRadiusServer(idx);
 	    else:
 		tdkTestObj.setResultStatus("FAILURE");
-		print "Unable to change ModeEnabled to Enterprise type"
-	else:
-            #Calling the function to perform the settings and getting and verification of SecurityRadiusServer
-	    checkApSecurityRadiusServer();
-    else:
-	tdkTestObj.setResultStatus("FAILURE");
-	print "wifi_getApSecurityModeEnabled()call failed"
-	    
+		print "wifi_getApSecurityModeEnabled()call failed"
+		    
     obj.unloadModule("wifihal");
 else:
     print "Failed to load the module";
