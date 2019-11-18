@@ -126,13 +126,13 @@ ANSC_STATUS
     {
         AnscCopyString(PsmName, CCSP_DBUS_PSM);
     }
-
+#if 0
 /* waitConditionReady call is not required for Puma7 platform which has systemd support */
-#if !defined(INTEL_PUMA7)
+#if !defined(INTEL_PUMA7) 
     /* Wait for PSM */
     waitConditionReady(bus_handle, PsmName, CCSP_DBUS_PATH_PSM, component_id);
 #endif
-
+#endif
     CcspTraceInfo(("!!! Connected to message bus... bus_handle: 0x%08X !!!\n", bus_handle));
 
     CCSP_Msg_SleepInMilliSeconds(1000);
