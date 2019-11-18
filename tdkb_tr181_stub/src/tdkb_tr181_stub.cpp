@@ -129,10 +129,35 @@ void TDKB_TR181Stub::TDKB_TR181Stub_Set(IN const Json::Value& req, OUT Json::Val
     string ParamName=req["ParamName"].asCString();
     string ParamValue=req["ParamValue"].asCString();
     string Type=req["Type"].asCString();
-    GETPARAMVALUES *DataParamValue1;
+    GETPARAMVALUES *DataParamValue1 = NULL;
+    int apRet = 0;
+    int commit = 1;
+
     setResult=ssp_setParameterValue(&ParamName[0],&ParamValue[0],&Type[0],1);
     if(setResult==0)
     {
+        if ((!ParamName.compare(0, 20, "Device.WiFi.Radio.1.")) || (!ParamName.compare(0, 26, "Device.WiFi.AccessPoint.1.")) || (!ParamName.compare(0,19,"Device.WiFi.SSID.1.")))
+        {
+            printf("Apply the wifi settings for 2.4GHZ\n");
+            apRet = ssp_setParameterValue("Device.WiFi.Radio.1.X_CISCO_COM_ApplySetting","true","boolean",commit);
+        }
+        else if ((!ParamName.compare(0, 20, "Device.WiFi.Radio.2.")) || (!ParamName.compare(0, 26, "Device.WiFi.AccessPoint.2.")) || (!ParamName.compare(0,19,"Device.WiFi.SSID.2.")))
+        {
+            printf("Apply the wifi settings for 5GHZ\n");
+            apRet = ssp_setParameterValue("Device.WiFi.Radio.2.X_CISCO_COM_ApplySetting","true","boolean",commit);
+        }
+       if(apRet == 0)
+       {
+            DEBUG_PRINT(DEBUG_TRACE,"Parameter Values have been set.Needs to cross be checked with Get Parameter Names\n");
+            DataParamValue1=ssp_getParameterValue(&ParamName[0],&size_ret);
+       }
+       else
+       {
+            sprintf(Details,"FAILURE : WiFi Applysetting failed. Set returns failure with errorcode :%d", setResult);
+            response["result"] = "FAILURE";
+            response["details"] = Details;
+            return;
+        }
         DEBUG_PRINT(DEBUG_TRACE,"Parameter Values have been set.Needs to cross be checked with Get Parameter Names\n");
         DataParamValue1=ssp_getParameterValue(&ParamName[0],&size_ret);
     }
