@@ -25,7 +25,7 @@
   <primitive_test_name>EthWAN_DoNothing</primitive_test_name>
   <primitive_test_version>1</primitive_test_version>
   <status>FREE</status>
-  <synopsis>CMAgent process should not be running in ethwan mode</synopsis>
+  <synopsis>CMAgent process should  be running in ethwan mode</synopsis>
   <groups_id/>
   <execution_time>5</execution_time>
   <long_duration>false</long_duration>
@@ -40,7 +40,7 @@
   </rdk_versions>
   <test_cases>
     <test_case_id>TC_ETHWAN_08</test_case_id>
-    <test_objective>CMAgent process should not be running in ethwan mode</test_objective>
+    <test_objective>CMAgent process should  be running in ethwan mode</test_objective>
     <test_type>Positive</test_type>
     <test_setup>Broadband</test_setup>
     <pre_requisite>1. The broadband device should be in ETHWAN setup
@@ -52,7 +52,7 @@
 2. Get the ethwan mode and check if it is true or not
 3. If ethwan is enabled, check if CMAgent process is running or not
 4. Unload module</automation_approch>
-    <except_output>The CMAgent process should not run in ethwan mode</except_output>
+    <except_output>The CMAgent process should run in ethwan mode</except_output>
     <priority>High</priority>
     <test_stub_interface>ETHWAN</test_stub_interface>
     <test_script>TS_ETHWAN_CheckCMAgentProcess</test_script>
@@ -117,16 +117,16 @@ if "SUCCESS" in loadmodulestatus.upper() and "SUCCESS" in loadmodulestatus1.uppe
 	    tdkTestObj.executeTestCase(expectedresult);
             actualresult = tdkTestObj.getResult();
             pid = tdkTestObj.getResultDetails().strip().replace("\\n","");
-            if expectedresult in actualresult and pid == "":
+            if expectedresult in actualresult and pid != "":
 		tdkTestObj.setResultStatus("SUCCESS");
 		print "TEST STEP 2: Check if the CMAgent process is running";
-        	print "EXPECTED RESULT 2: CMAgent process should not run in ethwan mode";
+        	print "EXPECTED RESULT 2: CMAgent process should  run in ethwan mode";
         	#Get the result of execution
         	print "[TEST EXECUTION RESULT] : SUCCESS";
 	    else:
 		tdkTestObj.setResultStatus("FAILURE");
                 print "TEST STEP 2: Check if the CMAgent process is running";
-                print "EXPECTED RESULT 2: CMAgent process should not run in ethwan mode";
+                print "EXPECTED RESULT 2: CMAgent process should  run in ethwan mode";
                 #Get the result of execution
                 print "[TEST EXECUTION RESULT] : FAILURE";
 	else:
