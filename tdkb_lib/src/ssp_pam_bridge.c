@@ -217,17 +217,6 @@ int ssp_pam_Init()
        }
 }
 
-int ssp_DmlMlanInit()
-{
-    int return_status = 0;
-    return_status = CosaDmlMTAInit(NULL,(PANSC_HANDLE)bus_handle_client);
-    if ( return_status != 0)
-    {
-        printf("ssp_CosaDmlMtaInit:Failed to Initialize \n");
-        return 1;
-    }
-    return 0;
-}
 
 /*******************************************************************************************
  *
