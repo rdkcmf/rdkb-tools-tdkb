@@ -25,7 +25,7 @@
   <primitive_test_name>EthWAN_DoNothing</primitive_test_name>
   <primitive_test_version>1</primitive_test_version>
   <status>FREE</status>
-  <synopsis>CM IP must not be available in ETHWAN Mode</synopsis>
+  <synopsis>CM IP queried from PAM module should  be available in ETHWAN Mode</synopsis>
   <groups_id/>
   <execution_time>5</execution_time>
   <long_duration>false</long_duration>
@@ -40,7 +40,7 @@
   </rdk_versions>
   <test_cases>
     <test_case_id>TC_ETHWAN_07</test_case_id>
-    <test_objective>CM IP must not be available in ETHWAN Mode</test_objective>
+    <test_objective>CM IP queried from PAM module should  be available in ETHWAN Mode</test_objective>
     <test_type>Positive</test_type>
     <test_setup>Broadband</test_setup>
     <pre_requisite>1. The broadband device should be in ETHWAN setup
@@ -53,7 +53,7 @@ Device.X_CISCO_COM_CableModem.IPv6Address</input_parameters>
 2. Get the ethwan mode and check if it is true or not
 3. If ethwan is enabled, get CMIP of the device
 4. Unload module</automation_approch>
-    <except_output>The CM IP should not be available in Ethwan mode.</except_output>
+    <except_output>The CM IP queried from PAM module should be available in Ethwan mode.</except_output>
     <priority>High</priority>
     <test_stub_interface>ETHWAN</test_stub_interface>
     <test_script>TS_ETHWAN_GetCMIP</test_script>
@@ -106,29 +106,56 @@ if "SUCCESS" in loadmodulestatus.upper():
             print "The device is in ethwan mode."
 
 	    tdkTestObj.addParameter("ParamName","Device.X_CISCO_COM_CableModem.IPv6Address");
-    	    expectedresult="FAILURE";
+    	    expectedresult="SUCCESS";
 
     	    #Execute the test case in DUT
     	    tdkTestObj.executeTestCase(expectedresult);
     	    actualresult = tdkTestObj.getResult();
     	    details = tdkTestObj.getResultDetails();
 
-    	    if expectedresult in actualresult:
+    	    if expectedresult in actualresult and details == "":
     	        #Set the result status of execution
     	        tdkTestObj.setResultStatus("SUCCESS");
-    	        print "TEST STEP 2: Get the CM IP of device";
-    	        print "EXPECTED RESULT 2: CM IP must not available in ethwan mode";
+    	        print "TEST STEP 2: Get the CM IP from the CM module";
+    	        print "EXPECTED RESULT 2: CM IP must be blank in ethwan mode";
     	        print "ACTUAL RESULT 2: %s" %details;
+
     	        #Get the result of execution
     	        print "[TEST EXECUTION RESULT] : SUCCESS";
+		tdkTestObj.addParameter("ParamName","Device.DeviceInfo.X_COMCAST-COM_CM_IP");
+                expectedresult="SUCCESS";
+
+                #Execute the test case in DUT
+                tdkTestObj.executeTestCase(expectedresult);
+                actualresult = tdkTestObj.getResult();
+                details = tdkTestObj.getResultDetails();
+
+                if expectedresult in actualresult and details != "":
+                   #Set the result status of execution
+                   tdkTestObj.setResultStatus("SUCCESS");
+                   print "TEST STEP 3: Get the CM IP from the PAM module";
+                   print "EXPECTED RESULT 3: CM IP must be available in ethwan mode";
+                   print "ACTUAL RESULT 3: %s" %details;
+                   #Get the result of execution
+                   print "[TEST EXECUTION RESULT] : SUCCESS";
+                else:
+                    #Set the result status of execution
+                    tdkTestObj.setResultStatus("FAILURE");
+                    print "TEST STEP 3: Get the CM IP from the PAM module";
+                    print "EXPECTED RESULT 3: CM IP must be available in ethwan mode";
+                    print "ACTUAL RESULT 3: %s" %details;
+                    #Get the result of execution
+                    print "[TEST EXECUTION RESULT] : FAILURE";
+
 	    else:
-		#Set the result status of execution
+	 	#Set the result status of execution
                 tdkTestObj.setResultStatus("FAILURE");
-                print "TEST STEP 2: Get the CM IP of device";
-                print "EXPECTED RESULT 2: CM IP must not available in ethwan mode";
+                print "TEST STEP 2: Get the CM IP from the CM module";
+                print "EXPECTED RESULT 2: CM IP must be blank in ethwan mode";
                 print "ACTUAL RESULT 2: %s" %details;
                 #Get the result of execution
                 print "[TEST EXECUTION RESULT] : FAILURE";
+
 
 	else:
 	    tdkTestObj.setResultStatus("FAILURE");
@@ -147,3 +174,6 @@ else:
     print "Failed to load module";
     obj.setLoadModuleStatus("FAILURE");
     print "Module loading failed";
+
+
+
