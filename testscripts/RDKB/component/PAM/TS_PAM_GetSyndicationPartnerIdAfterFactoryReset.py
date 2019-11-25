@@ -116,13 +116,13 @@ if "SUCCESS" in loadmodulestatus.upper() and "SUCCESS" in loadmodulestatus1.uppe
     #Execute the test case in STB
     tdkTestObj.executeTestCase(expectedresult);
     actualresult = tdkTestObj.getResult();
-    details = tdkTestObj.getResultDetails();
+    orgValue = tdkTestObj.getResultDetails();
 
     if expectedresult in actualresult:
         #Set the result status of execution
         tdkTestObj.setResultStatus("SUCCESS");
         print "TEST STEP 1: Get the value of Syndication PartnerId";
-        print "ACTUAL RESULT 1: Syndication PartnerId :%s" %details;
+        print "ACTUAL RESULT 1: Syndication PartnerId :%s" %orgValue;
         #Get the result of execution
         print "[TEST EXECUTION RESULT] : SUCCESS"
 
