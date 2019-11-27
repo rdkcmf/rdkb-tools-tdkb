@@ -88,6 +88,7 @@ apIndex      :   1</input_parameters>
 import tdklib;
 from wifiUtility import *;
 
+radio = "5G"
 #Test component to be tested
 obj = tdklib.TDKScriptingLibrary("wifihal","1");
 
@@ -104,27 +105,33 @@ print "[LIB LOAD STATUS]  :  %s" %loadmodulestatus
 if "SUCCESS" in loadmodulestatus.upper():
     obj.setLoadModuleStatus("SUCCESS");
 
-    expectedresult="SUCCESS";
-    getMethod = "getApAssociatedDevicesHighWatermark"
-    primitive = 'WIFIHAL_GetOrSetParamUIntValue'
-    radioIndex = 1
-    #Calling the method to execute wifi_getApApAssociatedDevicesHighWatermark()
-    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, 0, getMethod)
-
-    if expectedresult in actualresult:
-        outputValue = details.split(":")[1].strip()
-        print "TEST STEP: Get the ApAssociatedDevicesHighWatermark"
-        print "EXPECTED RESULT: Should get the number of times the current total number of associated device has reached the HighWatermarkThreshold value"
-        print "ACTUAL RESULT : Received the ApAssociatedDevicesHighWatermark as ",outputValue
-        print "ApAssociatedDevicesHighWatermark",outputValue
-        print "TEST EXECUTION RESULT :SUCCESS"
-        tdkTestObj.setResultStatus("SUCCESS");
-    else:
-        print "TEST STEP: Get the ApAssociatedDevicesHighWatermark"
-        print "EXPECTED RESULT: Should get the number of times the current total number of associated device has reached the HighWatermarkThreshold value"
-        print "ACTUAL RESULT : wifi_getApApAssociatedDevicesHighWatermark() call failed"
-        print "TEST EXECUTION RESULT :FAILURE"
-        tdkTestObj.setResultStatus("FAILURE");
+    tdkTestObjTemp, idx = getIndex(obj, radio);
+    ## Check if a invalid index is returned
+    if idx == -1:
+        print "Failed to get radio index for radio %s\n" %radio;
+        tdkTestObjTemp.setResultStatus("FAILURE");
+    else:  
+	    expectedresult="SUCCESS";
+	    getMethod = "getApAssociatedDevicesHighWatermark"
+	    primitive = 'WIFIHAL_GetOrSetParamUIntValue'
+	    radioIndex = idx
+	    #Calling the method to execute wifi_getApApAssociatedDevicesHighWatermark()
+	    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, 0, getMethod)
+	
+	    if expectedresult in actualresult:
+		outputValue = details.split(":")[1].strip()
+		print "TEST STEP: Get the ApAssociatedDevicesHighWatermark"
+		print "EXPECTED RESULT: Should get the number of times the current total number of associated device has reached the HighWatermarkThreshold value"
+		print "ACTUAL RESULT : Received the ApAssociatedDevicesHighWatermark as ",outputValue
+		print "ApAssociatedDevicesHighWatermark",outputValue
+		print "TEST EXECUTION RESULT :SUCCESS"
+		tdkTestObj.setResultStatus("SUCCESS");
+	    else:
+		print "TEST STEP: Get the ApAssociatedDevicesHighWatermark"
+		print "EXPECTED RESULT: Should get the number of times the current total number of associated device has reached the HighWatermarkThreshold value"
+		print "ACTUAL RESULT : wifi_getApApAssociatedDevicesHighWatermark() call failed"
+		print "TEST EXECUTION RESULT :FAILURE"
+		tdkTestObj.setResultStatus("FAILURE");
     obj.unloadModule("wifihal");
 
 else:
