@@ -70,6 +70,8 @@ import tdklib;
 from wifiUtility import *;
 import time;
 
+radio = "2.4G"
+
 #Test component to be tested
 obj = tdklib.TDKScriptingLibrary("wifihal","1");
 
@@ -79,10 +81,10 @@ ip = <ipaddress>
 port = <port>
 obj.configureTestCase(ip,port,'TS_WIFIHAL_2.4GHzCancelApWPS');
 
-def cancelWPS():
+def cancelWPS(idx):
     #Prmitive test case which associated to this Script
     tdkTestObj = obj.createTestStep('WIFIHAL_ParamRadioIndex');
-    tdkTestObj.addParameter("radioIndex", 0);
+    tdkTestObj.addParameter("radioIndex", idx);
     tdkTestObj.addParameter("methodName", "cancelApWPS");
     expectedresult="SUCCESS";
 
@@ -114,63 +116,70 @@ print "[LIB LOAD STATUS]  :  %s" %loadmodulestatus
 if "SUCCESS" in loadmodulestatus.upper():
     obj.setLoadModuleStatus("SUCCESS");
 
-    expectedresult="SUCCESS";
-    apIndex = 0
-    getMethod = "getApWpsEnable"
-    primitive = 'WIFIHAL_GetOrSetParamBoolValue'
-    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, 0, getMethod)
-
-    if expectedresult in actualresult :
-        tdkTestObj.setResultStatus("SUCCESS");
-        enable = details.split(":")[1].strip()
-        if "Enabled" in enable:
-            print "Access point WPS is enabled"
-            cancelWPS();
-        else:
-            print "Access point WPS is Disabled"
-            oldEnable = 0
-            newEnable = 1
-            setMethod = "setApWpsEnable"
-            print "Invoke setApWpsEnable() to enable WPS"
-            #Toggle the enable status using set
-            tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, newEnable, setMethod)
-
-            if expectedresult in actualresult :
-                tdkTestObj.setResultStatus("SUCCESS");
-                print "Access point WPS is enabled"
-                time.sleep(20);
-                getMethod = "getApWpsEnable"
-                primitive = 'WIFIHAL_GetOrSetParamBoolValue'
-                print "Invoke getApWpsEnable() to get WPS"
-                tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, 0, getMethod)
-
-                if expectedresult in actualresult :
-                    tdkTestObj.setResultStatus("SUCCESS");
-                    enable = details.split(":")[1].strip()
-                    print "AP WPS Status:",enable;
-                    if "Enabled" in enable:
-                        print "Access point WPS is enabled"
-                        cancelWPS();
-                    else:
-                        print "setApWpsEnable has returned false success"
-                        tdkTestObj.setResultStatus("FAILURE");
-                else:
-                    print "getApWpsEnable operation failed"
-                    tdkTestObj.setResultStatus("FAILURE");
-                #revert the WPS to initial value
-                tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, oldEnable, setMethod)
-                if expectedresult in actualresult :
-                    print "WPS is reverted back to initial value"
-                    tdkTestObj.setResultStatus("SUCCESS");
-                else:
-                    print "Unable to revert WPS to initial value"
-                    tdkTestObj.setResultStatus("FAILURE");
-            else:
-                tdkTestObj.setResultStatus("FAILURE");
-                print "Unable to enable WPS"
+    tdkTestObjTemp, idx = getIndex(obj, radio);
+    ## Check if a invalid index is returned
+    if idx == -1:
+        print "Failed to get radio index for radio %s\n" %radio;
+        tdkTestObjTemp.setResultStatus("FAILURE");
     else:
-        print "getApWpsEnable operation failed"
-        tdkTestObj.setResultStatus("FAILURE");
+
+	    expectedresult="SUCCESS";
+	    apIndex = idx
+	    getMethod = "getApWpsEnable"
+	    primitive = 'WIFIHAL_GetOrSetParamBoolValue'
+	    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, 0, getMethod)
+
+	    if expectedresult in actualresult :
+		tdkTestObj.setResultStatus("SUCCESS");
+		enable = details.split(":")[1].strip()
+		if "Enabled" in enable:
+		    print "Access point WPS is enabled"
+		    cancelWPS(apIndex);
+		else:
+		    print "Access point WPS is Disabled"
+		    oldEnable = 0
+		    newEnable = 1
+		    setMethod = "setApWpsEnable"
+		    print "Invoke setApWpsEnable() to enable WPS"
+		    #Toggle the enable status using set
+		    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, newEnable, setMethod)
+
+		    if expectedresult in actualresult :
+			tdkTestObj.setResultStatus("SUCCESS");
+			print "Access point WPS is enabled"
+			time.sleep(20);
+			getMethod = "getApWpsEnable"
+			primitive = 'WIFIHAL_GetOrSetParamBoolValue'
+			print "Invoke getApWpsEnable() to get WPS"
+			tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, 0, getMethod)
+
+			if expectedresult in actualresult :
+			    tdkTestObj.setResultStatus("SUCCESS");
+			    enable = details.split(":")[1].strip()
+			    print "AP WPS Status:",enable;
+			    if "Enabled" in enable:
+				print "Access point WPS is enabled"
+				cancelWPS(apIndex);
+			    else:
+				print "setApWpsEnable has returned false success"
+				tdkTestObj.setResultStatus("FAILURE");
+			else:
+			    print "getApWpsEnable operation failed"
+			    tdkTestObj.setResultStatus("FAILURE");
+			#revert the WPS to initial value
+			tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, oldEnable, setMethod)
+			if expectedresult in actualresult :
+			    print "WPS is reverted back to initial value"
+			    tdkTestObj.setResultStatus("SUCCESS");
+			else:
+			    print "Unable to revert WPS to initial value"
+			    tdkTestObj.setResultStatus("FAILURE");
+		    else:
+			tdkTestObj.setResultStatus("FAILURE");
+			print "Unable to enable WPS"
+	    else:
+		print "getApWpsEnable operation failed"
+		tdkTestObj.setResultStatus("FAILURE");
     obj.unloadModule("wifihal");
 else:
     print "Failed to load the module";
