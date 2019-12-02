@@ -77,6 +77,8 @@ DeviceMacAddress : 7A:36:76:41:9A:5F</input_parameters>
 import tdklib;
 from wifiUtility import *;
 
+radio = "5G"
+
 #Test component to be tested
 obj = tdklib.TDKScriptingLibrary("wifihal","1");
 
@@ -93,88 +95,95 @@ print "[LIB LOAD STATUS]  :  %s" %loadmodulestatus
 
 if "SUCCESS" in loadmodulestatus.upper():
     obj.setLoadModuleStatus("SUCCESS");
-    expectedresult = "SUCCESS"
-    radioIndex = 1
-    getMethod = "getApAclDeviceNum"
-    primitive = 'WIFIHAL_GetOrSetParamUIntValue'
-    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, 0, getMethod)
-    if expectedresult in actualresult:
-        tdkTestObj.setResultStatus("SUCCESS");
-        deviceNum = int(details.split(":")[1].strip());
-        print"Number of ApAcl devices initially for 5GHz=",deviceNum;
-        #Primitive test case which associated to this Script
-        tdkTestObj = obj.createTestStep('WIFIHAL_AddorDelApAclDevice');
-        #Giving the method name to invoke the api wifi_addApAclDevice()
-        tdkTestObj.addParameter("methodName","addApAclDevice");
-        #Ap index is 0 for 2.4GHz and 1 for 5GHz
-        tdkTestObj.addParameter("apIndex",1);
-        tdkTestObj.addParameter("DeviceMacAddress","7A:36:76:41:9A:5F");
-        expectedresult="SUCCESS";
-        tdkTestObj.executeTestCase(expectedresult);
-        actualresult = tdkTestObj.getResult();
-        details = tdkTestObj.getResultDetails();
-        print"details",details;
-        if expectedresult in actualresult:
-            tdkTestObj.setResultStatus("SUCCESS");
-            expectedresult = "SUCCESS"
-            radioIndex = 1
-            getMethod = "getApAclDeviceNum"
-            primitive = 'WIFIHAL_GetOrSetParamUIntValue'
-            tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, 0, getMethod)
-            deviceNum_add = int(details.split(":")[1].strip());
-            deviceNum_new = deviceNum_add - deviceNum;
-            if expectedresult in actualresult:
-                if deviceNum_new == 1:
-                    tdkTestObj.setResultStatus("SUCCESS");
-                    print"Number of ApAcl devices after adding for 5GHz =",deviceNum_add;
-                    #Primitive test case which associated to this Script
-                    tdkTestObj = obj.createTestStep('WIFIHAL_AddorDelApAclDevice');
-                    #Giving the method name to invoke the api wifi_delApAclDevice
-                    tdkTestObj.addParameter("methodName","delApAclDevice");
-                   #Ap index is 0 for 2.4GHz and 1 for 5GHz
-                    tdkTestObj.addParameter("apIndex",1);
-                    tdkTestObj.addParameter("DeviceMacAddress","7A:36:76:41:9A:5F");
-                    expectedresult="SUCCESS";
-                    tdkTestObj.executeTestCase(expectedresult);
-                    actualresult = tdkTestObj.getResult();
-                    details = tdkTestObj.getResultDetails();
-                    print"details",details;
-                    if expectedresult in actualresult:
-                        tdkTestObj.setResultStatus("SUCCESS");
-                        print"ApAclDevice is successfully deleted";
-                        expectedresult = "SUCCESS"
-                        radioIndex = 1
-                        getMethod = "getApAclDeviceNum"
-                        primitive = 'WIFIHAL_GetOrSetParamUIntValue'
-                        tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, 0, getMethod)
-                        if expectedresult in actualresult:
-                            tdkTestObj.setResultStatus("SUCCESS");
-                            deviceNum_del = int(details.split(":")[1].strip());
-                            print"Number of ApAcl devices after deleting for 5GHz =",deviceNum_del;
-                            if deviceNum ==deviceNum_del:
-                                tdkTestObj.setResultStatus("SUCCESS");
-                                print"Number of ApAcl devices after deleting are equal to number of ApAcl devices initially";
-                            else:
-                                tdkTestObj.setResultStatus("FAILURE");
-                                print"Number of ApAcl devices after deleting are not equal to number of ApAcl devices initially";
-                        else:
-                            tdkTestObj.setResultStatus("FAILURE");
-                            print"wifi_getApAclDeviceNum() operation failed after delete operation";
-                    else:
-                        tdkTestObj.setResultStatus("FAILURE");
-                        print"ApAclDevice is not deleted";
-                else:
-                    tdkTestObj.setResultStatus("FAILURE");
-                    print "Number of ApAclDevices not incremented after add operation";
-            else:
-                tdkTestObj.setResultStatus("FAILURE");
-                print"wifi_getApAclDeviceNum() operation failed after add operation";
-        else:
-            tdkTestObj.setResultStatus("FAILURE");
-            print"wifi_addApAclDevice() operation failed";
+
+    tdkTestObjTemp, idx = getIndex(obj, radio);
+    ## Check if a invalid index is returned
+    if idx == -1:
+        print "Failed to get radio index for radio %s\n" %radio;
+        tdkTestObjTemp.setResultStatus("FAILURE");
     else:
-        tdkTestObj.setResultStatus("FAILURE");
-        print"wifi_getApAclDeviceNum() operation failed";
+	    expectedresult = "SUCCESS"
+	    radioIndex = idx
+	    getMethod = "getApAclDeviceNum"
+	    primitive = 'WIFIHAL_GetOrSetParamUIntValue'
+	    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, 0, getMethod)
+	    if expectedresult in actualresult:
+		tdkTestObj.setResultStatus("SUCCESS");
+		deviceNum = int(details.split(":")[1].strip());
+		print"Number of ApAcl devices initially for 5GHz=",deviceNum;
+		#Primitive test case which associated to this Script
+		tdkTestObj = obj.createTestStep('WIFIHAL_AddorDelApAclDevice');
+		#Giving the method name to invoke the api wifi_addApAclDevice()
+		tdkTestObj.addParameter("methodName","addApAclDevice");
+		#Ap index is 0 for 2.4GHz and 1 for 5GHz
+		tdkTestObj.addParameter("apIndex",1);
+		tdkTestObj.addParameter("DeviceMacAddress","7A:36:76:41:9A:5F");
+		expectedresult="SUCCESS";
+		tdkTestObj.executeTestCase(expectedresult);
+		actualresult = tdkTestObj.getResult();
+		details = tdkTestObj.getResultDetails();
+		print"details",details;
+		if expectedresult in actualresult:
+		    tdkTestObj.setResultStatus("SUCCESS");
+		    expectedresult = "SUCCESS"
+		    radioIndex = idx
+		    getMethod = "getApAclDeviceNum"
+		    primitive = 'WIFIHAL_GetOrSetParamUIntValue'
+		    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, 0, getMethod)
+		    deviceNum_add = int(details.split(":")[1].strip());
+		    deviceNum_new = deviceNum_add - deviceNum;
+		    if expectedresult in actualresult:
+			if deviceNum_new == 1:
+			    tdkTestObj.setResultStatus("SUCCESS");
+			    print"Number of ApAcl devices after adding for 5GHz =",deviceNum_add;
+			    #Primitive test case which associated to this Script
+			    tdkTestObj = obj.createTestStep('WIFIHAL_AddorDelApAclDevice');
+			    #Giving the method name to invoke the api wifi_delApAclDevice
+			    tdkTestObj.addParameter("methodName","delApAclDevice");
+			   #Ap index is 0 for 2.4GHz and 1 for 5GHz
+			    tdkTestObj.addParameter("apIndex",1);
+			    tdkTestObj.addParameter("DeviceMacAddress","7A:36:76:41:9A:5F");
+			    expectedresult="SUCCESS";
+			    tdkTestObj.executeTestCase(expectedresult);
+			    actualresult = tdkTestObj.getResult();
+			    details = tdkTestObj.getResultDetails();
+			    print"details",details;
+			    if expectedresult in actualresult:
+				tdkTestObj.setResultStatus("SUCCESS");
+				print"ApAclDevice is successfully deleted";
+				expectedresult = "SUCCESS"
+				radioIndex = idx
+				getMethod = "getApAclDeviceNum"
+				primitive = 'WIFIHAL_GetOrSetParamUIntValue'
+				tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, 0, getMethod)
+				if expectedresult in actualresult:
+				    tdkTestObj.setResultStatus("SUCCESS");
+				    deviceNum_del = int(details.split(":")[1].strip());
+				    print"Number of ApAcl devices after deleting for 5GHz =",deviceNum_del;
+				    if deviceNum ==deviceNum_del:
+					tdkTestObj.setResultStatus("SUCCESS");
+					print"Number of ApAcl devices after deleting are equal to number of ApAcl devices initially";
+				    else:
+					tdkTestObj.setResultStatus("FAILURE");
+					print"Number of ApAcl devices after deleting are not equal to number of ApAcl devices initially";
+				else:
+				    tdkTestObj.setResultStatus("FAILURE");
+				    print"wifi_getApAclDeviceNum() operation failed after delete operation";
+			    else:
+				tdkTestObj.setResultStatus("FAILURE");
+				print"ApAclDevice is not deleted";
+			else:
+			    tdkTestObj.setResultStatus("FAILURE");
+			    print "Number of ApAclDevices not incremented after add operation";
+		    else:
+			tdkTestObj.setResultStatus("FAILURE");
+			print"wifi_getApAclDeviceNum() operation failed after add operation";
+		else:
+		    tdkTestObj.setResultStatus("FAILURE");
+		    print"wifi_addApAclDevice() operation failed";
+	    else:
+		tdkTestObj.setResultStatus("FAILURE");
+		print"wifi_getApAclDeviceNum() operation failed";
     obj.unloadModule("wifihal");
 else:
     print "Failed to load the module";
