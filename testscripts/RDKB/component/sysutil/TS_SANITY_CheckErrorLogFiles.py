@@ -23,7 +23,7 @@
   <!-- Do not edit id. This will be auto filled while exporting. If you are adding a new script keep the id empty -->
   <version>2</version>
   <!-- Do not edit version. This will be auto incremented while updating. If you are adding a new script you can keep the vresion as 1 -->
-  <name>TS_SANITY_CheckLogFiles</name>
+  <name>TS_SANITY_CheckErrorLogFiles</name>
   <!-- If you are adding a new script you can specify the script name. Script Name should be unique same as this file name with out .py extension -->
   <primitive_test_id></primitive_test_id>
   <!-- Do not change primitive_test_id if you are editing an existing script. -->
@@ -60,7 +60,7 @@
     <!--  -->
   </rdk_versions>
   <test_cases>
-    <test_case_id>TC_PAM_165</test_case_id>
+    <test_case_id>TC_SYSUTIL_30</test_case_id>
     <test_objective>Check for error messages in log files once device is up</test_objective>
     <test_type>Positive</test_type>
     <test_setup>Broadband,RPI,Emulator</test_setup>
@@ -74,8 +74,8 @@
 4.Unload module</automation_approch>
     <expected_output>Error logs should not be present in log files</expected_output>
     <priority>High</priority>
-    <test_stub_interface>PAM</test_stub_interface>
-    <test_script>TS_SANITY_CheckLogFiles</test_script>
+    <test_stub_interface>sysutil</test_stub_interface>
+    <test_script>TS_SANITY_CheckErrorLogFiles</test_script>
     <skipped>No</skipped>
     <release_version>M71</release_version>
     <remarks>None</remarks>
@@ -93,7 +93,8 @@ sysObj = tdklib.TDKScriptingLibrary("sysutil","RDKB");
 #This will be replaced with correspoing Box Ip and port while executing script
 ip = <ipaddress>
 port = <port>
-sysObj.configureTestCase(ip,port,'TS_SANITY_CheckLogFiles');
+sysObj.configureTestCase(ip,port,'TS_SANITY_CheckErrorLogFiles');
+count = 0;
 
 #Get the result of connection with test component and DUT
 loadmodulestatus1 =sysObj.getLoadModuleResult();
@@ -107,7 +108,7 @@ if "SUCCESS" in loadmodulestatus1.upper():
     time.sleep(300);
 
     tdkTestObj = sysObj.createTestStep('ExecuteCmd');
-    tdkTestObj.addParameter("command", "grep -lir error /rdklogs/logs/ | tr \"\n\" \" \"");
+    tdkTestObj.addParameter("command", "grep -lir lvl=ERROR /rdklogs/logs/ | tr \"\n\" \" \"");
     expectedresult="SUCCESS";
 
     #Execute the test case in DUT
@@ -115,7 +116,20 @@ if "SUCCESS" in loadmodulestatus1.upper():
     actualresult = tdkTestObj.getResult();
     details = tdkTestObj.getResultDetails().strip().replace(" ",",");
 
-    if expectedresult in actualresult and details == "":
+    ErrorlogfileCount = details.count(",") + 1
+    list = details.split(",")
+    for i in list:
+        tdkTestObj = sysObj.createTestStep('ExecuteCmd');
+        command = "tail %s | grep -i lvl=ERROR" %i
+        tdkTestObj.addParameter("command", command);
+        tdkTestObj.executeTestCase(expectedresult);
+        actualresult = tdkTestObj.getResult();
+        errordetails = tdkTestObj.getResultDetails().strip().replace("\\n","");
+        if expectedresult in actualresult and errordetails != "":
+            print "Error logs in %s" %i
+            print errordetails
+            count =count + 1;
+    if count == 0:
         #Set the result status of execution
         tdkTestObj.setResultStatus("SUCCESS");
         print "TEST STEP 1: Check if log files have error"
@@ -125,7 +139,7 @@ if "SUCCESS" in loadmodulestatus1.upper():
     else:
         tdkTestObj.setResultStatus("FAILURE");
         print "TEST STEP 1: Check if log files have error"
-        print "ACTUAL RESULT 1: Log files with error logs are %s" %details;
+        print "ACTUAL RESULT 1: Log files has error logs ";
         print "[TEST EXECUTION RESULT] : FAILURE";
     sysObj.unloadModule("sysutil");
 
