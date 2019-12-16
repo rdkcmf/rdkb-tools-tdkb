@@ -70,8 +70,8 @@ radioIndex : 1</input_parameters>
 </xml>
 
 '''
-# use tdklib library,which provides a wrapper for tdk testcase script 
-import tdklib; 
+# use tdklib library,which provides a wrapper for tdk testcase script
+import tdklib;
 from wifiUtility import *
 
 radio="5G"
@@ -97,41 +97,51 @@ if "SUCCESS" in loadmodulestatus.upper():
         print "Failed to get radio index for radio %s\n" %radio;
         tdkTestObjTemp.setResultStatus("FAILURE");
     else:
+        expectedresult="SUCCESS";
+        radioIndex = idx;
+        getMethod = "getSSIDEnable"
+        primitive = 'WIFIHAL_GetOrSetParamBoolValue'
+        tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, 0, getMethod)
 
-	    expectedresult="SUCCESS";
-	    radioIndex = idx;
-	    getMethod = "getSSIDEnable"
-	    primitive = 'WIFIHAL_GetOrSetParamBoolValue'
-	    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, 0, getMethod)
+        if expectedresult in actualresult :
+            tdkTestObj.setResultStatus("SUCCESS");
+            enable = details.split(":")[1].strip()
+            if "Enabled" in enable:
+                oldEnable = 1
+                newEnable = 0
+            else:
+                oldEnable = 0
+                newEnable = 1
 
-	    if expectedresult in actualresult :
-		enable = details.split(":")[1].strip()
-		if "Enabled" in enable:
-		    oldEnable = 1
-		    newEnable = 0
-		else:
-		    oldEnable = 0
-		    newEnable = 1
+            setMethod = "setSSIDEnable"
+            tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, newEnable, setMethod)
 
-		setMethod = "setSSIDEnable"
-		tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, newEnable, setMethod)
+            if expectedresult in actualresult :
+                tdkTestObj.setResultStatus("SUCCESS");   
+                print "Enable state toggled using set"
+                tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, 0, getMethod)
+             
+                if expectedresult in actualresult and enable not in details.split(":")[1].strip():
+                    print "SetEnable Success, verified with getEnable() api"
+                    tdkTestObj.setResultStatus("SUCCESS");
+                else:
+                    print "Set and get values are not same"
+                    tdkTestObj.setResultStatus("FAILURE");
 
-		if expectedresult in actualresult :
-		    print "Enable state toggled using set"
-		    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, 0, getMethod)
+                tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, oldEnable, setMethod)
 
-		    if expectedresult in actualresult and enable not in details.split(":")[1].strip():
-			print "SetEnable Success, verified with getEnable() api"
-			tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, oldEnable, setMethod)
-
-			if expectedresult in actualresult :
-			    print "Enable status reverted back";
-			else:
-			    print "Couldn't revert enable status"
-		    else:
-			print "Set validation with get api failed"
-			tdkTestObj.setResultStatus("FAILURE");
-
+                if expectedresult in actualresult :
+                    print "Enable status reverted back";
+                    tdkTestObj.setResultStatus("SUCCESS");
+                else:
+                    print "Couldn't revert enable status"
+                    tdkTestObj.setResultStatus("FAILURE");
+            else:
+                print "setSSIDEnable operation failed"
+                tdkTestObj.setResultStatus("FAILURE");
+        else:
+            print "getSSIDEnable operation failed"
+            tdkTestObj.setResultStatus("FAILURE");
     obj.unloadModule("wifihal");
 
 else:
