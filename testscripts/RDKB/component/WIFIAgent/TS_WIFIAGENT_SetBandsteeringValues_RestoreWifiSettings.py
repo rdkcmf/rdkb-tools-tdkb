@@ -184,7 +184,7 @@ if "SUCCESS" in loadmodulestatus1.upper() and  "SUCCESS" in loadmodulestatus2.up
                         print "ACTUAL RESULT 5: %s" %details;
                         #Get the result of execution
                         print "[TEST EXECUTION RESULT] : SUCCESS";
-                        sleep(150);
+                        sleep(200);
                         tdkTestObj = obj.createTestStep('TADstub_Get');
 
                         paramList=["Device.WiFi.X_RDKCENTRAL-COM_BandSteering.BandSetting.1.UtilizationThreshold" ,"Device.WiFi.X_RDKCENTRAL-COM_BandSteering.BandSetting.1.RSSIThreshold", "Device.WiFi.X_RDKCENTRAL-COM_BandSteering.BandSetting.1.PhyRateThreshold", "Device.WiFi.X_RDKCENTRAL-COM_BandSteering.BandSetting.2.UtilizationThreshold", "Device.WiFi.X_RDKCENTRAL-COM_BandSteering.BandSetting.2.RSSIThreshold", "Device.WiFi.X_RDKCENTRAL-COM_BandSteering.BandSetting.2.PhyRateThreshold"]
