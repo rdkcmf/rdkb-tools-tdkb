@@ -181,7 +181,7 @@ if "SUCCESS" in loadmodulestatus.upper():
                 print "[TEST EXECUTION RESULT] : FAILURE";
         elif "IPV4" in IPType.upper():
             tdkTestObj = obj.createTestStep("CMHAL_GetParamUlongValue");
-            tdkTestObj.addParameter("paramName","Ipv4DhcpLeaseTimeRemaining");
+            tdkTestObj.addParameter("paramName","LeaseTimeRemaining");
             tdkTestObj.executeTestCase(expectedresult);
             actualresult = tdkTestObj.getResult();
             Ipv4DhcpLeaseTimeRemaining = tdkTestObj.getResultDetails().strip().replace("\\n", "");
@@ -195,7 +195,7 @@ if "SUCCESS" in loadmodulestatus.upper():
                 print "[TEST EXECUTION RESULT] : SUCCESS";
 
                 tdkTestObj = obj.createTestStep("CMHAL_GetParamCharValue");
-                tdkTestObj.addParameter("paramName","Ipv4DhcpRebindTimeRemaining");
+                tdkTestObj.addParameter("paramName","RebindTimeRemaining");
                 tdkTestObj.executeTestCase(expectedresult);
                 actualresult = tdkTestObj.getResult();
                 Ipv4DhcpRebindTimeRemaining = tdkTestObj.getResultDetails().strip().replace("\\n", "");
@@ -209,7 +209,7 @@ if "SUCCESS" in loadmodulestatus.upper():
                     print "[TEST EXECUTION RESULT] : SUCCESS";
 
                     tdkTestObj = obj.createTestStep("CMHAL_GetParamCharValue");
-                    tdkTestObj.addParameter("paramName","Ipv4DhcpRenewTimeRemaining");
+                    tdkTestObj.addParameter("paramName","RenewTimeRemaining");
                     tdkTestObj.executeTestCase(expectedresult);
                     actualresult = tdkTestObj.getResult();
                     Ipv4DhcpRenewTimeRemaining = tdkTestObj.getResultDetails().strip().replace("\\n", "");
