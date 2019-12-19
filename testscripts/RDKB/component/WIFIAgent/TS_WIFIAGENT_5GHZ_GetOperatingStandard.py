@@ -25,7 +25,7 @@
   <primitive_test_name>WIFIAgent_Get</primitive_test_name>
   <primitive_test_version>1</primitive_test_version>
   <status>FREE</status>
-  <synopsis>Check if Device.WiFi.Radio.2.OperatingStandards is a subset of a, n, ac</synopsis>
+  <synopsis>Check if Device.WiFi.Radio.2.OperatingStandards is a subset of a, n, ac, ax</synopsis>
   <groups_id/>
   <execution_time>10</execution_time>
   <long_duration>false</long_duration>
@@ -42,7 +42,7 @@
   </rdk_versions>
   <test_cases>
     <test_case_id>TC_WIFIAGENT_26</test_case_id>
-    <test_objective>Check if Device.WiFi.Radio.2.OperatingStandards is a subset of a, n, ac</test_objective>
+    <test_objective>Check if Device.WiFi.Radio.2.OperatingStandards is a subset of a, n, ac, ax</test_objective>
     <test_type>Positive</test_type>
     <test_setup>XB3, Emulator, Rpi</test_setup>
     <pre_requisite>1.Ccsp Components in DUT should be in a running state that includes component under test Cable Modem
@@ -51,9 +51,9 @@
     <input_parameters>Device.WiFi.Radio.2.OperatingStandards</input_parameters>
     <automation_approch>1. Load wifiagent module
 2. Using WIFIAgent_Get, get and save Device.WiFi.Radio.2.OperatingStandards value
-3.Check if supported standard value is from the list a, n, ac
+3.Check if supported standard value is from the list a, n, ac, ax
 4. Unload wifiagent module</automation_approch>
-    <except_output>Device.WiFi.Radio.2.OperatingStandards is a subset of a, n, ac</except_output>
+    <except_output>Device.WiFi.Radio.2.OperatingStandards is a subset of a, n, ac, ax</except_output>
     <priority>High</priority>
     <test_stub_interface>WifiAgent</test_stub_interface>
     <test_script>TS_WIFIAGENT_5GHZ_GetOperatingStandard</test_script>
@@ -64,8 +64,8 @@
 </xml>
 
 '''
-# use tdklib library,which provides a wrapper for tdk testcase script 
-import tdklib; 
+# use tdklib library,which provides a wrapper for tdk testcase script
+import tdklib;
 
 #Test component to be tested
 obj = tdklib.TDKScriptingLibrary("wifiagent","1");
@@ -91,7 +91,7 @@ if "SUCCESS" in loadmodulestatus.upper():
     tdkTestObj.executeTestCase(expectedresult);
     actualresult = tdkTestObj.getResult();
     details = tdkTestObj.getResultDetails();
-    expectedBand = "a, n, ac"
+    expectedBand = "a, n, ac, ax"
     band = details.split("VALUE:")[1].split(' ')[0].split(',')
     flag = 1;
 
@@ -119,7 +119,8 @@ if "SUCCESS" in loadmodulestatus.upper():
     obj.unloadModule("wifiagent");
 
 else:
-        print "Failed to load wifi module";
-        obj.setLoadModuleStatus("FAILURE");
-        print "Module loading failed";
+    print "Failed to load wifi module";
+    obj.setLoadModuleStatus("FAILURE");
+    print "Module loading failed";
+
 

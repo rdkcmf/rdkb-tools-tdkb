@@ -55,7 +55,7 @@ radioIndex : 0</input_parameters>
 3.Check if the value returned is valid or not
 4. If not, return failure
 5.Unload wifihal module</automation_approch>
-    <except_output>Supported Standards should be a sub list of [ b, g, n ] for 2.4GHz</except_output>
+    <except_output>Supported Standards should be a sub list of [ b, g, n, ax ] for 2.4GHz</except_output>
     <priority>High</priority>
     <test_stub_interface>WIFIHAL</test_stub_interface>
     <test_script>TS_WIFIHAL_2.4GHzGetRadioSupportedStandards</test_script>
@@ -104,7 +104,7 @@ if "SUCCESS" in loadmodulestatus.upper():
         #Get the result of execution
         print "[TEST EXECUTION RESULT] : SUCCESS";
 	
-	ExpectedStdList = ['b','g','n'];
+	ExpectedStdList = ['b','g','n','ax'];
         for item in ActualList:
             if item in ExpectedStdList:
                 returnStatus = "0";
@@ -115,7 +115,7 @@ if "SUCCESS" in loadmodulestatus.upper():
             #Set the result status of execution
             tdkTestObj.setResultStatus("SUCCESS");
             print "TEST STEP 2: Validate the Supported standards with operating Freq";
-            print "EXPECTED RESULT 2: Supported standards should be in ['b','g','n'] when radioIndex is 0";
+            print "EXPECTED RESULT 2: Supported standards should be in ['b','g','n','ax'] when radioIndex is 0";
             print "ACTUAL RESULT 2: Supported standards : ", ActualList;
             #Get the result of execution
             print "[TEST EXECUTION RESULT] : SUCCESS";
@@ -123,7 +123,7 @@ if "SUCCESS" in loadmodulestatus.upper():
             #Set the result status of execution
             tdkTestObj.setResultStatus("FAILURE");
             print "TEST STEP 2: Validate the Supported standards with operating Freq";
-            print "EXPECTED RESULT 2: Supported standards should be in ['b','g','n'] when radioIndex is 0";
+            print "EXPECTED RESULT 2: Supported standards should be in ['b','g','n','ax'] when radioIndex is 0";
             print "ACTUAL RESULT 2: Supported standards : ", ActualList;
             #Get the result of execution
             print "[TEST EXECUTION RESULT] : FAILURE";
@@ -137,6 +137,7 @@ if "SUCCESS" in loadmodulestatus.upper():
         print "[TEST EXECUTION RESULT] : FAILURE";
     obj.unloadModule("wifihal");
 else:
-        print "Failed to load the module";
-        obj.setLoadModuleStatus("FAILURE");
-        print "Module loading failed";
+    print "Failed to load the module";
+    obj.setLoadModuleStatus("FAILURE");
+    print "Module loading failed";
+
