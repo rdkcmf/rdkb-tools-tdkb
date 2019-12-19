@@ -74,6 +74,8 @@ import tdklib;
 from wifiUtility import *;
 import random;
 
+radio = "2.4G"
+
 #Test component to be tested
 obj = tdklib.TDKScriptingLibrary("wifihal","1");
 
@@ -90,86 +92,93 @@ print "[LIB LOAD STATUS]  :  %s" %loadmodulestatus ;
 if "SUCCESS" in loadmodulestatus.upper():
     obj.setLoadModuleStatus("SUCCESS");
 
-    expectedresult="SUCCESS";
-    radioIndex = 0
-    getMethod = "getRadioRxChainMask"
-    primitive = 'WIFIHAL_GetOrSetParamIntValue'
-
-    #Calling the method from wifiUtility to execute test case and set result status for the test.
-    #wifi_getRadioRxChainMask outputs the number of Rx streams
-    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, 0, getMethod)
-
-    if expectedresult in actualresult :
-        initMask = int(details.split(":")[1].strip());
-        print "initMask:",initMask
-        tdkTestObj.setResultStatus("SUCCESS");
-
-        expectedresult="SUCCESS";
-        radioIndex = 0
-        setMethod = "setRadioRxChainMask"
-        r = range(1,initMask) + range(initMask+1, 32)
-        setMask = random.choice(r)
-        primitive = 'WIFIHAL_GetOrSetParamIntValue'
-        print "Set RadioRxChainMask = ",setMask
-
-        #Calling the method from wifiUtility to execute test case and set result status for the test.
-        tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, setMask, setMethod)
-
-        if expectedresult in actualresult :
-            expectedresult="SUCCESS";
-            radioIndex = 0
-            getMethod = "getRadioRxChainMask"
-            primitive = 'WIFIHAL_GetOrSetParamIntValue'
-
-            #Calling the method from wifiUtility to execute test case and set result status for the test.
-            tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, 0, getMethod)
-
-            if expectedresult in actualresult :
-                finalMask= int(details.split(":")[1]);
-                if setMask == finalMask:
-                    print "TEST STEP : Comparing the set and get values of RadioRxChainMask"
-                    print "EXPECTED RESULT : Set and get values should be the same"
-                    print "ACTUAL RESULT : Set and get values are the same"
-                    print "Set RadioRxChainMask = ",setMask
-                    print "Get RadioRxChainMask =",finalMask;
-                    #Get the result of execution
-                    print "[TEST EXECUTION RESULT] : SUCCESS";
-                    tdkTestObj.setResultStatus("SUCCESS");
-                    tdkTestObj.setResultStatus("SUCCESS");
-
-                else:
-                    print "TEST STEP : Comparing the set and get values of RadioRxChainMask"
-                    print "EXPECTED RESULT : Set and get values should be the same"
-                    print "ACTUAL RESULT : Set and get values are NOT the same"
-                    print "Set RadioRxChainMask = ",setMask
-                    print "Get RadioRxChainMask =",finalMask;
-                    #Get the result of execution
-                    print "[TEST EXECUTION RESULT] : FAILURE";
-                    tdkTestObj.setResultStatus("FAILURE");
-            else:
-                tdkTestObj.setResultStatus("FAILURE");
-                print "wifi_getRadioRxChainMask function failed after set operation"
-
-            #Revert to initial RxChainMask
-            primitive = 'WIFIHAL_GetOrSetParamIntValue'
-            setMethod = "setRadioRxChainMask"
-            setMask = initMask
-
-            #Calling the method from wifiUtility to execute test case and set result status for the test.
-            tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, setMask, setMethod)
-
-            if expectedresult in actualresult :
-                print "Successfully reverted to initial value"
-                tdkTestObj.setResultStatus("SUCCESS");
-            else:
-                print "Unable  to revert to initial value"
-                tdkTestObj.setResultStatus("FAILURE");
-        else:
-            tdkTestObj.setResultStatus("FAILURE");
-            print "wifi_setRadioRxChainMask() function failed"
+    tdkTestObjTemp, idx = getIndex(obj, radio);
+    ## Check if a invalid index is returned
+    if idx == -1:
+        print "Failed to get radio index for radio %s\n" %radio;
+        tdkTestObjTemp.setResultStatus("FAILURE");
     else:
-        print "wifi_getRadioRxChainMask() call failed"
-        tdkTestObj.setResultStatus("FAILURE");
+
+	    expectedresult="SUCCESS";
+	    radioIndex = idx;
+	    getMethod = "getRadioRxChainMask"
+	    primitive = 'WIFIHAL_GetOrSetParamIntValue'
+
+	    #Calling the method from wifiUtility to execute test case and set result status for the test.
+	    #wifi_getRadioRxChainMask outputs the number of Rx streams
+	    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, 0, getMethod)
+
+	    if expectedresult in actualresult :
+		initMask = int(details.split(":")[1].strip());
+		print "initMask:",initMask
+		tdkTestObj.setResultStatus("SUCCESS");
+
+		expectedresult="SUCCESS";
+		radioIndex = idx;
+		setMethod = "setRadioRxChainMask"
+		r = range(1,initMask) + range(initMask+1, 32)
+		setMask = random.choice(r)
+		primitive = 'WIFIHAL_GetOrSetParamIntValue'
+		print "Set RadioRxChainMask = ",setMask
+
+		#Calling the method from wifiUtility to execute test case and set result status for the test.
+		tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, setMask, setMethod)
+
+		if expectedresult in actualresult :
+		    expectedresult="SUCCESS";
+		    radioIndex = idx;
+		    getMethod = "getRadioRxChainMask"
+		    primitive = 'WIFIHAL_GetOrSetParamIntValue'
+
+		    #Calling the method from wifiUtility to execute test case and set result status for the test.
+		    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, 0, getMethod)
+
+		    if expectedresult in actualresult :
+			finalMask= int(details.split(":")[1]);
+			if setMask == finalMask:
+			    print "TEST STEP : Comparing the set and get values of RadioRxChainMask"
+			    print "EXPECTED RESULT : Set and get values should be the same"
+			    print "ACTUAL RESULT : Set and get values are the same"
+			    print "Set RadioRxChainMask = ",setMask
+			    print "Get RadioRxChainMask =",finalMask;
+			    #Get the result of execution
+			    print "[TEST EXECUTION RESULT] : SUCCESS";
+			    tdkTestObj.setResultStatus("SUCCESS");
+			    tdkTestObj.setResultStatus("SUCCESS");
+
+			else:
+			    print "TEST STEP : Comparing the set and get values of RadioRxChainMask"
+			    print "EXPECTED RESULT : Set and get values should be the same"
+			    print "ACTUAL RESULT : Set and get values are NOT the same"
+			    print "Set RadioRxChainMask = ",setMask
+			    print "Get RadioRxChainMask =",finalMask;
+			    #Get the result of execution
+			    print "[TEST EXECUTION RESULT] : FAILURE";
+			    tdkTestObj.setResultStatus("FAILURE");
+		    else:
+			tdkTestObj.setResultStatus("FAILURE");
+			print "wifi_getRadioRxChainMask function failed after set operation"
+
+		    #Revert to initial RxChainMask
+		    primitive = 'WIFIHAL_GetOrSetParamIntValue'
+		    setMethod = "setRadioRxChainMask"
+		    setMask = initMask
+
+		    #Calling the method from wifiUtility to execute test case and set result status for the test.
+		    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, setMask, setMethod)
+
+		    if expectedresult in actualresult :
+			print "Successfully reverted to initial value"
+			tdkTestObj.setResultStatus("SUCCESS");
+		    else:
+			print "Unable  to revert to initial value"
+			tdkTestObj.setResultStatus("FAILURE");
+		else:
+		    tdkTestObj.setResultStatus("FAILURE");
+		    print "wifi_setRadioRxChainMask() function failed"
+	    else:
+		print "wifi_getRadioRxChainMask() call failed"
+		tdkTestObj.setResultStatus("FAILURE");
     obj.unloadModule("wifihal");
 else:
         print "Failed to load the module";
