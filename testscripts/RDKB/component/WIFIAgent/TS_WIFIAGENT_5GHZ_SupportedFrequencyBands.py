@@ -84,8 +84,8 @@
   <script_tags />
 </xml>
 '''
-# use tdklib library,which provides a wrapper for tdk testcase script 
-import tdklib; 
+# use tdklib library,which provides a wrapper for tdk testcase script
+import tdklib;
 
 #Test component to be tested
 obj = tdklib.TDKScriptingLibrary("wifiagent","1");
@@ -112,7 +112,7 @@ if "SUCCESS" in loadmodulestatus.upper():
     tdkTestObj.executeTestCase(expectedresult);
     actualresult = tdkTestObj.getResult();
     details = tdkTestObj.getResultDetails();
-    expectedBand = "5GHz,2.4GHZ"
+    expectedBand = "5GHz,2.4GHz"
     band = details.split("VALUE:")[1].split(' ')[0];
 
     if expectedresult in actualresult and band in expectedBand:
@@ -135,7 +135,8 @@ if "SUCCESS" in loadmodulestatus.upper():
     obj.unloadModule("wifiagent");
 
 else:
-        print "Failed to load wifi module";
-        obj.setLoadModuleStatus("FAILURE");
-        print "Module loading failed";
+    print "Failed to load wifi module";
+    obj.setLoadModuleStatus("FAILURE");
+    print "Module loading failed";
+
 
