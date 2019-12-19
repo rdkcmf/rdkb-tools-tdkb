@@ -64,18 +64,18 @@
 2.TDK Agent should be in running state or invoke it through StartTdk.sh script</pre_requisite>
     <api_or_interface_used>wifi_getRadioAutoChannelEnable()
 wifi_getRadioGuardInterval()
-wifi_setRadioAutoChannelEnable()
+wifi_getRadioOperatingChannelBandwidth
 wifi_setRadioGuardInterval()
 wifi_factoryResetRadio()</api_or_interface_used>
-    <input_parameters>methodName : getAutoChannelEnable
+    <input_parameters>methodName : getChannelBandwidth
 methodName : getRadioGuardInterval
-methodName : setAutoChannelEnable
+methodName : setChannelBandwidth
 methodName : setRadioGuardInterval
 methodName : factoryResetRadio
 radioIndex : 0</input_parameters>
     <automation_approch>1.Load the module.
-2.Get the auto channel enable and radio guard interval using wifi_getRadioAutoChannelEnable() and wifi_getRadioGuardInterval() apis respectively.
-3.Set these two values to other values using wifi_setRadioAutoChannelEnable()
+2.Get the  channel bandwidth  and radio guard interval using wifi_getRadioOperatingChannelBandwidth  and wifi_getRadioGuardInterval() apis respectively.
+3.Set these two values to other values using wifi_setRadioOperatingChannelBandwidth
 wifi_setRadioGuardInterval() apis respectively.
 4.Invoke the wifi_factoryResetRadio() api.
 5.Get the values after reset.
@@ -97,17 +97,23 @@ wifi_setRadioGuardInterval() apis respectively.
 import tdklib;
 from wifiUtility import *;
 import time;
+from tdkbVariables import *;
 
+defaultValues=None;
 #Test component to be tested
 obj = tdklib.TDKScriptingLibrary("wifihal","1");
-
+sysobj = tdklib.TDKScriptingLibrary("sysutil","1");
 #IP and Port of box, No need to change,
 #This will be replaced with correspoing Box Ip and port while executing script
 ip = <ipaddress>
 port = <port>
 obj.configureTestCase(ip,port,'TS_WIFIHAL_5GHzFactoryResetRadio');
+sysobj.configureTestCase(ip,port,'TS_WIFIHAL_5GHzSetApSecurityReset');
 #Get the result of connection with test component and DUT
-loadmodulestatus =obj.getLoadModuleResult();
+loadmodulestatus =obj.getLoadModuleResult()
+sysloadmodulestatus =sysobj.getLoadModuleResult();
+
+print "[LIB LOAD STATUS]  :  %s" %sysloadmodulestatus ;
 print "[LIB LOAD STATUS]  :  %s" %loadmodulestatus ;
 def InvokeGetSetMethod(primitive,Value,MethodName):
     expectedresult="SUCCESS";
@@ -119,26 +125,23 @@ def InvokeGetSetMethod(primitive,Value,MethodName):
     else:
 	tdkTestObj.setResultStatus("FAILURE");
 
-if "SUCCESS" in loadmodulestatus.upper():
+if "SUCCESS" in loadmodulestatus.upper() and  "SUCCESS" in sysloadmodulestatus.upper():
     obj.setLoadModuleStatus("SUCCESS");
-    details_Enable = InvokeGetSetMethod('WIFIHAL_GetOrSetParamBoolValue',0,"getAutoChannelEnable");
-    AutoChannelEnable_initial = details_Enable.split(":")[1].strip(" ");
+    sysobj.setLoadModuleStatus("SUCCESS");
+    details_Enable = InvokeGetSetMethod('WIFIHAL_GetOrSetParamStringValue',"0","getChannelBandwidth");
+    ChannelBandwidth_initial = details_Enable.split(":")[1].strip(" ");
     details_interval = InvokeGetSetMethod('WIFIHAL_GetOrSetParamStringValue',"0","getRadioGuardInterval");
     GuardInterval_initial = details_interval.split(":")[1].strip(" ");
-    if "Enabled" in AutoChannelEnable_initial:
-        oldEnable = 1
-        newEnable = 0
-    else:
-        oldEnable = 0
-        newEnable = 1
-    InvokeGetSetMethod('WIFIHAL_GetOrSetParamBoolValue',newEnable,"setAutoChannelEnable");
+
+    InvokeGetSetMethod('WIFIHAL_GetOrSetParamStringValue',"160MHz","setChannelBandwidth");
     InvokeGetSetMethod('WIFIHAL_GetOrSetParamStringValue',"800nsec","setRadioGuardInterval");
     time.sleep(5);
-    InvokeGetSetMethod('WIFIHAL_GetOrSetParamBoolValue',0,"getAutoChannelEnable");
+    InvokeGetSetMethod('WIFIHAL_GetOrSetParamStringValue',"0","getChannelBandwidth");
     InvokeGetSetMethod('WIFIHAL_GetOrSetParamStringValue',"0","getRadioGuardInterval");
     #call the factory reset radio api
     #Primitive test case which associated to this Script
     tdkTestObj = obj.createTestStep('WIFIHAL_ParamRadioIndex');
+
     #Giving the method name to invoke the api wifi_factoryResetRadio()
     tdkTestObj.addParameter("methodName","factoryResetRadio");
     #Radio index is 0 for 2.4GHz and 1 for 5GHz
@@ -150,44 +153,67 @@ if "SUCCESS" in loadmodulestatus.upper():
     if expectedresult in actualresult:
 	tdkTestObj.setResultStatus("SUCCESS");
 	time.sleep(5);
-        details_Enable_reset = InvokeGetSetMethod('WIFIHAL_GetOrSetParamBoolValue',0,"getAutoChannelEnable");
-        AutoChannelEnable_reset = details_Enable_reset.split(":")[1].strip(" ");
-        if AutoChannelEnable_reset == "Enabled" :
+        ChannelBandwidth_details_reset = InvokeGetSetMethod('WIFIHAL_GetOrSetParamStringValue',"0","getChannelBandwidth");
+        ChannelBandwidth_reset = ChannelBandwidth_details_reset.split(":")[1].strip(" ");
+
+        tdkTestObj = sysobj.createTestStep('ExecuteCmd');
+        expectedresult="SUCCESS";
+        defaults= "sh %s/tdk_utility.sh parseConfigFile DEFAULT_CHANNEL_BANDWIDTH" %TDK_PATH;
+        print defaults;
+        expectedresult="SUCCESS";
+        tdkTestObj.addParameter("command", defaults);
+        tdkTestObj.executeTestCase(expectedresult);
+        actualresult = tdkTestObj.getResult();
+        defaultValues = tdkTestObj.getResultDetails().strip().replace("\\n", "");
+        if expectedresult in actualresult and defaultValues!= "":
+           tdkTestObj.setResultStatus("SUCCESS");
+           print "TEST STEP 7: Should get the values from properties file"
+           print "ACTUAL RESULT 7:Default values from properties file:%s" %defaultValues;
+           #Get the result of execution
+           print "[TEST EXECUTION RESULT] : SUCCESS";
+           List= defaultValues.split(",");
+           print List[1]
+
+        if ChannelBandwidth_reset == List[1] :
             tdkTestObj.setResultStatus("SUCCESS");
-            print"TEST STEP 1:To invoke wifi_factoryResetRadio() api and check whether the Auto Channel Enable is Enabled for 5GHz";
-            print"EXPECTED RESULT 1:Auto Channel Enable should be ENABLED for 5GHz";
-            print"ACTUAL RESULT 1:Auto Channel Enable is ENABLED for 5GHz";
-            print"[TEST EXECUTION RESULT 1]:SUCCESS";
+            print"TEST STEP 1:To invoke wifi_factoryResetRadio() api and check whether the ChannelBandwidth  for 5GHz has default values";
+	    print"EXPECTED RESULT 1: ChannelBandwidth  for 5GHz must have default values";
+	    print"ACTUAL RESULT 1:ChannelBandwidth  for 5GHz has default values";
+	    print"[TEST EXECUTION RESULT 1]:SUCCESS";
         else:
             tdkTestObj.setResultStatus("FAILURE");
-            print"TEST STEP 1:To invoke wifi_factoryResetRadio() api and check whether the Auto Channel Enable is Enabled for 5GHz";
-            print"EXPECTED RESULT 1:Auto Channel Enable should be ENABLED for 5GHz";
-            print"ACTUAL RESULT 1:Auto Channel Enable is NOT ENABLED for 5GHz";
+            print"TEST STEP 1:To invoke wifi_factoryResetRadio() api and check whether the ChannelBandwidth  for 5GHz has default values";
+            print"EXPECTED RESULT 1:ChannelBandwidth  for 5GHz must have default values";
+            print"ACTUAL RESULT 1:ChannelBandwidth  for 5GHz does not have default values";
             print"[TEST EXECUTION RESULT 1]:FAILURE";
-        #Reverting the values back to initial values
-        print "REVERTING AUTO CHANNEL ENABLE TO INITIAL VALUE";
-        InvokeGetSetMethod('WIFIHAL_GetOrSetParamBoolValue',oldEnable,"setAutoChannelEnable");
+	#Reverting the values back to initial values
+        print "REVERTING CHANNEL BANDWITH TO INITIAL VALUE";
+	InvokeGetSetMethod('WIFIHAL_GetOrSetParamStringValue',ChannelBandwidth_initial,"setChannelBandwidth");
+
         details_interval_reset = InvokeGetSetMethod('WIFIHAL_GetOrSetParamStringValue',"0","getRadioGuardInterval");
         GuardInterval = details_interval_reset.split(":")[1].strip(" ");
         if GuardInterval == "Auto" :
             tdkTestObj.setResultStatus("SUCCESS");
-            print"TEST STEP 2:To invoke wifi_factoryResetRadio() api and check whether the GuardInterval is Auto for 5GHz";
-            print"EXPECTED RESULT 2:GuardInterval should be Auto for 5GHz";
-            print"ACTUAL RESULT 2:GuardInterval value is Auto for 5GHz";
-            print"[TEST EXECUTION RESULT 2]:SUCCESS";
+            print"TEST STEP 2:To invoke wifi_factoryResetRadio() api and check whether the GuardInterval is Auto for 2.4GHz";
+	    print"EXPECTED RESULT 2:GuardInterval should be Auto for 5GHz";
+	    print"ACTUAL RESULT 2:GuardInterval value is Auto for 5GHz";
+	    print"[TEST EXECUTION RESULT 2]:SUCCESS";
         else:
             tdkTestObj.setResultStatus("FAILURE");
-            print"TEST STEP 2:To invoke wifi_factoryResetRadio() api and check whether the GuardInterval is Auto for 5GHz";
+            print"TEST STEP 2:To invoke wifi_factoryResetRadio() api and check whether the GuardInterval is Auto for 2.4GHz";
             print"EXPECTED RESULT 2:GuardInterval should be Auto for 5GHz";
             print"ACTUAL RESULT 2:GuardInterval value is NOT Auto for 5GHz";
             print"[TEST EXECUTION RESULT 2]:FAILURE";
-        #Reverting the values back to initial values
+	#Reverting the values back to initial values
         print "REVERTING GUARDINTERVAL TO INITIAL VALUE";
-        InvokeGetSetMethod('WIFIHAL_GetOrSetParamStringValue',GuardInterval_initial,"setRadioGuardInterval");
+	InvokeGetSetMethod('WIFIHAL_GetOrSetParamStringValue',GuardInterval_initial,"setRadioGuardInterval");
     else:
         tdkTestObj.setResultStatus("FAILURE");
         print"wifi_factoryResetRadio() operation failed for 5GHz";
     obj.unloadModule("wifihal");
+    obj.unloadModule("sysutil");
+
 else:
     print "Failed to load wifi module";
     obj.setLoadModuleStatus("FAILURE");
+
