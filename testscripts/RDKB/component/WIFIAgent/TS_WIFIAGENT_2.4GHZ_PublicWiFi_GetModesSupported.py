@@ -66,8 +66,8 @@
 </xml>
 
 '''
-# use tdklib library,which provides a wrapper for tdk testcase script 
-import tdklib; 
+# use tdklib library,which provides a wrapper for tdk testcase script
+import tdklib;
 
 #Test component to be tested
 obj = tdklib.TDKScriptingLibrary("wifiagent","1");
@@ -93,7 +93,7 @@ if "SUCCESS" in loadmodulestatus.upper():
    actualresult = tdkTestObj.getResult();
    details = tdkTestObj.getResultDetails();
    Mode = details.split("VALUE:")[1].split(' ')[0].split(',');
-   expectedModes = ["None", "WEP-64", "WEP-128", "WPA-Personal","WPA2-Personal","WPA-WPA2-Personal","WPA-Enterprise","WPA2-Enterprise","WPA-WPA2-Enterprise"]
+   expectedModes = ["None", "WEP-64", "WEP-128", "WPA-Personal","WPA2-Personal","WPA-WPA2-Personal","WPA-Enterprise","WPA2-Enterprise","WPA-WPA2-Enterprise","WPA3-Personal","WPA3-Enterprise"]
 
    #Check if the get modes are all available in expectedModes
    result =  all(elem in expectedModes for elem in Mode)
@@ -105,7 +105,7 @@ if "SUCCESS" in loadmodulestatus.upper():
         #Get the result of execution
         print "[TEST EXECUTION RESULT] : SUCCESS";
    else:
-	tdkTestObj.setResultStatus("FAILURE");
+        tdkTestObj.setResultStatus("FAILURE");
         print "TEST STEP 3: Get the modes supported";
         print "EXPECTED RESULT 3: Should get the supported Modes";
         print "ACTUAL RESULT 3: Supported Mode is %s" %Mode;
@@ -114,6 +114,8 @@ if "SUCCESS" in loadmodulestatus.upper():
    obj.unloadModule("wifiagent");
 
 else:
-        print "Failed to load wifi module";
-        obj.setLoadModuleStatus("FAILURE");
-        print "Module loading failed";
+   print "Failed to load wifi module";
+   obj.setLoadModuleStatus("FAILURE");
+   print "Module loading failed";
+
+
