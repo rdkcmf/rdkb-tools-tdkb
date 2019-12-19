@@ -90,6 +90,8 @@ import tdklib;
 from wifiUtility import *;
 import random;
 
+radio = "5G"
+
 #Test component to be tested
 obj = tdklib.TDKScriptingLibrary("wifihal","1");
 
@@ -106,79 +108,86 @@ print "[LIB LOAD STATUS]  :  %s" %loadmodulestatus ;
 if "SUCCESS" in loadmodulestatus.upper():
     obj.setLoadModuleStatus("SUCCESS");
 
-    expectedresult="SUCCESS";
-    radioIndex = 1
-    getMethod = "getRadioMCS"
-    primitive = 'WIFIHAL_GetOrSetParamIntValue'
-
-    #Calling the method from wifiUtility to execute test case and set result status for the test.
-    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, 0, getMethod)
-    initialMCS= int(details.split(":")[1]);
-
-    if expectedresult in actualresult :
-        expectedresult="SUCCESS";
-        radioIndex = 1
-        setMethod = "setRadioMCS"
-        r = range(-1,initialMCS) + range(initialMCS+1, 16)
-        setMCS = random.choice(r)
-        primitive = 'WIFIHAL_GetOrSetParamIntValue'
-        print "Set Radio MCS = ",setMCS;
-
-        #Calling the method from wifiUtility to execute test case and set result status for the test.
-        tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, setMCS, setMethod)
-
-        if expectedresult in actualresult :
-            expectedresult="SUCCESS";
-            radioIndex = 1
-            getMethod = "getRadioMCS"
-            primitive = 'WIFIHAL_GetOrSetParamIntValue'
-
-            #Calling the method from wifiUtility to execute test case and set result status for the test.
-            tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, 0, getMethod)
-            finalMCS= int(details.split(":")[1]);
-            print "Get Radio MCS = ",finalMCS;
-
-            if expectedresult in actualresult :
-                if setMCS == finalMCS:
-                    print "TEST STEP : Comparing the set and get values of Radio MCS"
-                    print "EXPECTED RESULT : Set and get values should be the same"
-                    print "ACTUAL RESULT : Set and get values are the same"
-                    #Get the result of execution
-                    print "[TEST EXECUTION RESULT] : SUCCESS";
-                    tdkTestObj.setResultStatus("SUCCESS");
-
-                else:
-                    print "TEST STEP : Comparing the set and get values of Radio MCS"
-                    print "EXPECTED RESULT : Set and get values should be the same"
-                    print "ACTUAL RESULT : Set and get values are NOT the same"
-                    #Get the result of execution
-                    print "[TEST EXECUTION RESULT] : FAILURE";
-                    tdkTestObj.setResultStatus("FAILURE");
-            else:
-                tdkTestObj.setResultStatus("FAILURE");
-                print "getRadioMCS function failed after set operation"
-
-            #Revert to initial MCS
-            primitive = 'WIFIHAL_GetOrSetParamIntValue'
-            setMethod = "setRadioMCS"
-            setMCS = initialMCS
-
-            #Calling the method from wifiUtility to execute test case and set result status for the test.
-            tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, setMCS, setMethod)
-
-            if expectedresult in actualresult :
-                print "Successfully reverted to initial value"
-                tdkTestObj.setResultStatus("SUCCESS");
-            else:
-                print "Unable  to revert to initial value"
-                tdkTestObj.setResultStatus("FAILURE");
-        else:
-            tdkTestObj.setResultStatus("FAILURE");
-            print "setRadioMCS function failed"
+    tdkTestObjTemp, idx = getIndex(obj, radio);
+    ## Check if a invalid index is returned
+    if idx == -1:
+        print "Failed to get radio index for radio %s\n" %radio;
+        tdkTestObjTemp.setResultStatus("FAILURE");
     else:
-        #Set the result status of execution
-        tdkTestObj.setResultStatus("FAILURE");
-        print "getRadioMCS function failed"
+
+	    expectedresult="SUCCESS";
+	    radioIndex = idx;
+	    getMethod = "getRadioMCS"
+	    primitive = 'WIFIHAL_GetOrSetParamIntValue'
+
+	    #Calling the method from wifiUtility to execute test case and set result status for the test.
+	    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, 0, getMethod)
+	    initialMCS= int(details.split(":")[1]);
+
+	    if expectedresult in actualresult :
+		expectedresult="SUCCESS";
+		radioIndex = idx;
+		setMethod = "setRadioMCS"
+		r = range(-1,initialMCS) + range(initialMCS+1, 16)
+		setMCS = random.choice(r)
+		primitive = 'WIFIHAL_GetOrSetParamIntValue'
+		print "Set Radio MCS = ",setMCS;
+
+		#Calling the method from wifiUtility to execute test case and set result status for the test.
+		tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, setMCS, setMethod)
+
+		if expectedresult in actualresult :
+		    expectedresult="SUCCESS";
+		    radioIndex = idx;
+		    getMethod = "getRadioMCS"
+		    primitive = 'WIFIHAL_GetOrSetParamIntValue'
+
+		    #Calling the method from wifiUtility to execute test case and set result status for the test.
+		    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, 0, getMethod)
+		    finalMCS= int(details.split(":")[1]);
+		    print "Get Radio MCS = ",finalMCS;
+
+		    if expectedresult in actualresult :
+			if setMCS == finalMCS:
+			    print "TEST STEP : Comparing the set and get values of Radio MCS"
+			    print "EXPECTED RESULT : Set and get values should be the same"
+			    print "ACTUAL RESULT : Set and get values are the same"
+			    #Get the result of execution
+			    print "[TEST EXECUTION RESULT] : SUCCESS";
+			    tdkTestObj.setResultStatus("SUCCESS");
+
+			else:
+			    print "TEST STEP : Comparing the set and get values of Radio MCS"
+			    print "EXPECTED RESULT : Set and get values should be the same"
+			    print "ACTUAL RESULT : Set and get values are NOT the same"
+			    #Get the result of execution
+			    print "[TEST EXECUTION RESULT] : FAILURE";
+			    tdkTestObj.setResultStatus("FAILURE");
+		    else:
+			tdkTestObj.setResultStatus("FAILURE");
+			print "getRadioMCS function failed after set operation"
+
+		    #Revert to initial MCS
+		    primitive = 'WIFIHAL_GetOrSetParamIntValue'
+		    setMethod = "setRadioMCS"
+		    setMCS = initialMCS
+
+		    #Calling the method from wifiUtility to execute test case and set result status for the test.
+		    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, setMCS, setMethod)
+
+		    if expectedresult in actualresult :
+			print "Successfully reverted to initial value"
+			tdkTestObj.setResultStatus("SUCCESS");
+		    else:
+			print "Unable  to revert to initial value"
+			tdkTestObj.setResultStatus("FAILURE");
+		else:
+		    tdkTestObj.setResultStatus("FAILURE");
+		    print "setRadioMCS function failed"
+	    else:
+		#Set the result status of execution
+		tdkTestObj.setResultStatus("FAILURE");
+		print "getRadioMCS function failed"
 
     obj.unloadModule("wifihal");
 else:
