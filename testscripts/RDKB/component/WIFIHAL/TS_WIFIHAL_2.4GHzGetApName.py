@@ -66,58 +66,78 @@ ApIndex : 0</input_parameters>
 </xml>
 
 '''
-# use tdklib library,which provides a wrapper for tdk testcase script 
-import tdklib; 
+# use tdklib library,which provides a wrapper for tdk testcase script
+import tdklib;
 from wifiUtility import *;
+from tdkbVariables import *;
 
 #Test component to be tested
 obj = tdklib.TDKScriptingLibrary("wifihal","1");
+sysobj = tdklib.TDKScriptingLibrary("sysutil","1");
 
 #IP and Port of box, No need to change,
 #This will be replaced with correspoing Box Ip and port while executing script
 ip = <ipaddress>
 port = <port>
 obj.configureTestCase(ip,port,'TS_WIFIHAL_2.4GHzGetApName');
+sysobj.configureTestCase(ip,port,'TS_WIFIHAL_2.4GHzGetApName');
 
 #Get the result of connection with test component and DUT
 loadmodulestatus =obj.getLoadModuleResult();
+sysloadmodulestatus =sysobj.getLoadModuleResult();
+
+print "[LIB LOAD STATUS]  :  %s" %sysloadmodulestatus ;
 print "[LIB LOAD STATUS]  :  %s" %loadmodulestatus ;
 
-if "SUCCESS" in loadmodulestatus.upper():
+if "SUCCESS" in loadmodulestatus.upper() and "SUCCESS" in sysloadmodulestatus.upper():
     obj.setLoadModuleStatus("SUCCESS");
 
-    #List of possible SSID Names
-    possibleList = ['ath0','wl0']
-
+    tdkTestObj = sysobj.createTestStep('ExecuteCmd');
     expectedresult="SUCCESS";
-    getMethod = "getApName"
-    apIndex = 0
-    primitive = 'WIFIHAL_GetOrSetParamStringValue'
+    accesspointname = "sh %s/tdk_utility.sh parseConfigFile AP_IF_NAME_2G" %TDK_PATH;
+    print "query:%s" %accesspointname
+    tdkTestObj.addParameter("command", accesspointname);
+    tdkTestObj.executeTestCase(expectedresult);
+    actualresult = tdkTestObj.getResult();
+    accesspointname= tdkTestObj.getResultDetails().strip().replace("\\n", "");
+    if expectedresult in actualresult and accesspointname != "":
+        #Set the result status of execution
+        tdkTestObj.setResultStatus("SUCCESS");
+        print "TEST STEP 1: Get the 2.4GHZ Access Point name from properties file";
+        print "ACTUAL RESULT 1: %s" %accesspointname;
+        #Get the result of execution
+        print "[TEST EXECUTION RESULT] : SUCCESS";
 
-    #Calling the method from wifiUtility to execute test case and set result status for the test.
-    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, "0", getMethod)
+        getMethod = "getApName"
+        apIndex = 0
+        primitive = 'WIFIHAL_GetOrSetParamStringValue'
 
-    if expectedresult in actualresult:
-	apName = details.split(":")[1].strip()
-	if apName in possibleList:
-            print "wifi_getApName function called successfully and %s"%details
+        #Calling the method from wifiUtility to execute test case and set result status for the test.
+        tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, "0", getMethod)
+        apName = details.split(":")[1].strip()
+        if expectedresult in actualresult and accesspointname == apName:
+            #Set the result status of execution
             tdkTestObj.setResultStatus("SUCCESS");
-            print "Access point name received: %s"%apName;
+            print "TEST STEP 2: Get the 2.4GHZ Access Point name";
+            print "ACTUAL RESULT 2: %s" %apName;
+            #Get the result of execution
             print "[TEST EXECUTION RESULT] : SUCCESS";
         else:
-            print "wifi_getApName function called successfully and %s"%details
+            #Set the result status of execution
             tdkTestObj.setResultStatus("FAILURE");
-            print "Access point name received: %s"%apName;
+            print "TEST STEP 2: Get the 2.4GHZ Access Point name";
+            print "ACTUAL RESULT 2: %s" %apName;
+            #Get the result of execution
             print "[TEST EXECUTION RESULT] : FAILURE";
     else:
-        print "wifi_getApName function call failed";
         tdkTestObj.setResultStatus("FAILURE");
+        print "FAILURE: Failed to get the value of 2.4 GHZ access point name from tdk_platform.properties file"
+
     obj.unloadModule("wifihal");
+    sysobj.unloadModule("sysutil");
 
 else:
     print "Failed to load wifi module";
     obj.setLoadModuleStatus("FAILURE");
-
-	
 
 
