@@ -90,6 +90,8 @@ from wifiUtility import *;
 import random;
 from tdkbVariables import *;
 
+radio = "5G"
+
 #Test component to be tested
 obj = tdklib.TDKScriptingLibrary("wifihal","1");
 sysobj = tdklib.TDKScriptingLibrary("sysutil","1");
@@ -111,54 +113,61 @@ if "SUCCESS" in loadmodulestatus.upper() and "SUCCESS" in sysloadmodulestatus.up
     obj.setLoadModuleStatus("SUCCESS");
     sysobj.setLoadModuleStatus("SUCCESS");
 
-    tdkTestObj = sysobj.createTestStep('ExecuteCmd');
-    expectedresult="SUCCESS";
-    FragmentationThresholdRange = "sh %s/tdk_utility.sh parseConfigFile FRAGMENTATION_THRESHOLD_RANGE" %TDK_PATH;
-    tdkTestObj.addParameter("command", FragmentationThresholdRange);
-    tdkTestObj.executeTestCase(expectedresult);
-    actualresult = tdkTestObj.getResult();
-    FragmentationThresholdRange = tdkTestObj.getResultDetails().strip().replace("\\n", "");
-    FragmentationThresholdRangeList= FragmentationThresholdRange.split("-");
+    tdkTestObjTemp, idx = getIndex(obj, radio);
+    ## Check if a invalid index is returned
+    if idx == -1:
+        print "Failed to get radio index for radio %s\n" %radio;
+        tdkTestObjTemp.setResultStatus("FAILURE");
+    else:
 
-    if FragmentationThresholdRange and expectedresult in actualresult:
-        tdkTestObj.setResultStatus("SUCCESS");
-        print "TEST STEP : Get the FragmentationThresholdRange to be set from /etc/tdk_platform.properties file";
-        print "EXPECTED RESULT : Should get the FragmentationThresholdRange to be set";
-        print "ACTUAL RESULT : Got the FragmentationThresholdRange as %s" %FragmentationThresholdRange;
-        #Get the result of execution
-        print "[TEST EXECUTION RESULT] : SUCCESS";
+	    tdkTestObj = sysobj.createTestStep('ExecuteCmd');
+	    expectedresult="SUCCESS";
+	    FragmentationThresholdRange = "sh %s/tdk_utility.sh parseConfigFile FRAGMENTATION_THRESHOLD_RANGE" %TDK_PATH;
+	    tdkTestObj.addParameter("command", FragmentationThresholdRange);
+	    tdkTestObj.executeTestCase(expectedresult);
+	    actualresult = tdkTestObj.getResult();
+	    FragmentationThresholdRange = tdkTestObj.getResultDetails().strip().replace("\\n", "");
+	    FragmentationThresholdRangeList= FragmentationThresholdRange.split("-");
 
-        mini = int(FragmentationThresholdRangeList[0]);
-        maxi = int(FragmentationThresholdRangeList[1]);
-        expectedresult="SUCCESS";
-        radioIndex = 1
-        setMethod = "setRadioFragmentationThreshold"
-        primitive = 'WIFIHAL_GetOrSetParamUIntValue'
-        setThreshold = random.randint(mini,maxi);
-        #Calling the method from wifiUtility to execute test case and set result status for the test.
-        tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, setThreshold, setMethod)
+	    if FragmentationThresholdRange and expectedresult in actualresult:
+		tdkTestObj.setResultStatus("SUCCESS");
+		print "TEST STEP : Get the FragmentationThresholdRange to be set from /etc/tdk_platform.properties file";
+		print "EXPECTED RESULT : Should get the FragmentationThresholdRange to be set";
+		print "ACTUAL RESULT : Got the FragmentationThresholdRange as %s" %FragmentationThresholdRange;
+		#Get the result of execution
+		print "[TEST EXECUTION RESULT] : SUCCESS";
 
-        if expectedresult in actualresult:
-            print "setRadioFragmentationThreshold function successful: %s"%details
-            tdkTestObj.setResultStatus("SUCCESS");
-            print "TEST STEP 1: Set the Radio Fragmentation Threshold value for 5GHz";
-            print "EXPECTED RESULT 1: Function Should set a Radio Fragmentation Threshold value";
-            print "ACTUAL RESULT 1: Radio Fragmentation Threshold value set Successfully: %d"%setThreshold;
-            print "[TEST EXECUTION RESULT] : SUCCESS";
-        else:
-            print "setRadioFragmentationThreshold function failed: %s"%details
-            tdkTestObj.setResultStatus("FAILURE");
-            print "TEST STEP 1: Set the Radio Fragmentation Threshold value for 5GHz";
-            print "EXPECTED RESULT 1: Function Should set a Radio Fragmentation Threshold value";
-            print "ACTUAL RESULT 1: Failed to set Radio Fragmentation Threshold value: %d"%setThreshold;
-            print "[TEST EXECUTION RESULT] : FAILURE";
-    else :
-        tdkTestObj.setResultStatus("FAILURE");
-        print "TEST STEP : Get the FragmentationThresholdRange to be set from /etc/tdk_platform.properties file";
-        print "EXPECTED RESULT : Should get the FragmentationThresholdRange to be set";
-        print "ACTUAL RESULT : Failed to get the FragmentationThresholdRange from /etc/tdk_platform.properties file";
-        #Get the result of execution
-        print "[TEST EXECUTION RESULT] : FAILURE";
+		mini = int(FragmentationThresholdRangeList[0]);
+		maxi = int(FragmentationThresholdRangeList[1]);
+		expectedresult="SUCCESS";
+		radioIndex = idx;
+		setMethod = "setRadioFragmentationThreshold"
+		primitive = 'WIFIHAL_GetOrSetParamUIntValue'
+		setThreshold = random.randint(mini,maxi);
+		#Calling the method from wifiUtility to execute test case and set result status for the test.
+		tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, setThreshold, setMethod)
+
+		if expectedresult in actualresult:
+		    print "setRadioFragmentationThreshold function successful: %s"%details
+		    tdkTestObj.setResultStatus("SUCCESS");
+		    print "TEST STEP 1: Set the Radio Fragmentation Threshold value for 5GHz";
+		    print "EXPECTED RESULT 1: Function Should set a Radio Fragmentation Threshold value";
+		    print "ACTUAL RESULT 1: Radio Fragmentation Threshold value set Successfully: %d"%setThreshold;
+		    print "[TEST EXECUTION RESULT] : SUCCESS";
+		else:
+		    print "setRadioFragmentationThreshold function failed: %s"%details
+		    tdkTestObj.setResultStatus("FAILURE");
+		    print "TEST STEP 1: Set the Radio Fragmentation Threshold value for 5GHz";
+		    print "EXPECTED RESULT 1: Function Should set a Radio Fragmentation Threshold value";
+		    print "ACTUAL RESULT 1: Failed to set Radio Fragmentation Threshold value: %d"%setThreshold;
+		    print "[TEST EXECUTION RESULT] : FAILURE";
+	    else :
+		tdkTestObj.setResultStatus("FAILURE");
+		print "TEST STEP : Get the FragmentationThresholdRange to be set from /etc/tdk_platform.properties file";
+		print "EXPECTED RESULT : Should get the FragmentationThresholdRange to be set";
+		print "ACTUAL RESULT : Failed to get the FragmentationThresholdRange from /etc/tdk_platform.properties file";
+		#Get the result of execution
+		print "[TEST EXECUTION RESULT] : FAILURE";
 
     obj.unloadModule("wifihal");
     sysobj.unloadModule("sysutil");
