@@ -103,9 +103,11 @@ if "SUCCESS" in loadmodulestatus.upper():
 
     #Pattern to match
     pattern = "^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})"
-    BSSID = details.split("Value returned is :")[1].strip();
-    result = re.match(pattern,BSSID);
+  
     if expectedresult in actualresult:
+        BSSID = details.split("Value returned is :")[1].strip();
+        result = re.match(pattern,BSSID);
+ 
         if result:
             print "getBaseBSSID function successful, %s"%details
             tdkTestObj.setResultStatus("SUCCESS");
