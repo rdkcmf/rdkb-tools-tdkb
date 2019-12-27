@@ -73,6 +73,8 @@ radioIndex : 0</input_parameters>
 import tdklib; 
 from wifiUtility import *;
 
+radio = "2.4G"
+
 #Test component to be tested
 obj = tdklib.TDKScriptingLibrary("wifihal","1");
 
@@ -89,78 +91,85 @@ print "[LIB LOAD STATUS]  :  %s" %loadmodulestatus ;
 if "SUCCESS" in loadmodulestatus.upper():
     obj.setLoadModuleStatus("SUCCESS");
 
-    possibleGuardInt = ["400nsec", "800nsec", "Auto"];
-
-    expectedresult="SUCCESS";
-    radioIndex = 0
-    getMethod = "getRadioGuardInterval"
-    primitive = 'WIFIHAL_GetOrSetParamStringValue'
-
-    #Calling the method to execute wifi_getRadioGuardInterval()
-    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, "0", getMethod)
-    initialGuardInt = details.split(":")[1].strip()
-
-    if expectedresult in actualresult and initialGuardInt == "Auto" or 100 <= int(initialGuardInt.strip("nsec")) <= 800 :
-	tdkTestObj.setResultStatus("SUCCESS");
-	
-        for setGuardInt in possibleGuardInt:
-            if initialGuardInt == setGuardInt:
-                continue;
-            else:
-                expectedresult = "SUCCESS";
-                radioIndex = 0
-                setMethod = "setRadioGuardInterval"
-                primitive = 'WIFIHAL_GetOrSetParamStringValue'
-	
-
-                #Calling the method to execute wifi_setRadioGuardInterval()
-                tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, setGuardInt, setMethod)
-		if expectedresult in actualresult:
-		    expectedresult="SUCCESS";
-		    radioIndex = 0
-		    getMethod = "getRadioGuardInterval"
-		    primitive = 'WIFIHAL_GetOrSetParamStringValue'
-
-   	            #Calling the method to execute wifi_getRadioGuardInterval()
-		    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, "0", getMethod)
-		    finalGuardInt = details.split(":")[1].strip()
-		
-		    if expectedresult in actualresult:
-		        if finalGuardInt == setGuardInt:
-		            tdkTestObj.setResultStatus("SUCCESS");
-		            print "TEST STEP: Compare the set and get valus of RadioGuardInterval"
-		            print "EXPECTED RESULT: Set and get values of RadioGuardInterval should be same"
-		            print "ACTUAL RESULT: Set and get values of RadioGuardInterval are the same"
-		            print "setGuardInterval = ",setGuardInt
-		            print "getGuardInterval = ",finalGuardInt
-		            print "TEST EXECUTION RESULT : SUCCESS"
-		        else:
-		            tdkTestObj.setResultStatus("FAILURE");
-		            print "TEST STEP: Compare the set and get valus of RadioGuardInterval"
-		            print "EXPECTED RESULT: Set and get values of RadioGuardInterval should be same"
-		            print "ACTUAL RESULT: Set and get values of RadioGuardInterval are NOT the same"
-		            print "setGuardInterval = ",setGuardInt
-		            print "getGuardInterval = ",finalGuardInt
-		            print "TEST EXECUTION RESULT : FAILURE"
-		    else:
-		        print "wifi_getRadioGuardInterval() call failed"
-			tdkTestObj.setResultStatus("FAILURE");
-		    
-		    #Revert the guard interval back to initial value
-		    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, initialGuardInt, setMethod)
-		    if expectedresult in actualresult:
-		        print "Successfully reverted back to initial value"
-			tdkTestObj.setResultStatus("SUCCESS");
-		    else:
-			print "Unable to revert to initial value"
-			tdkTestObj.setResultStatus("FAILURE");
-		else:
-		    print "wifi_setRadioGuardInterval() call failed"
-		    tdkTestObj.setResultStatus("FAILURE");
-		break;
+    tdkTestObjTemp, idx = getIndex(obj, radio);
+    ## Check if a invalid index is returned
+    if idx == -1:
+        print "Failed to get radio index for radio %s\n" %radio;
+        tdkTestObjTemp.setResultStatus("FAILURE");
     else:
-	tdkTestObj.setResultStatus("FAILURE");
-	print "wifi_getRadioGuardInterval() call failed"
+
+	    possibleGuardInt = ["400nsec", "800nsec", "Auto"];
+
+	    expectedresult="SUCCESS";
+	    radioIndex = idx;
+	    getMethod = "getRadioGuardInterval"
+	    primitive = 'WIFIHAL_GetOrSetParamStringValue'
+
+	    #Calling the method to execute wifi_getRadioGuardInterval()
+	    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, "0", getMethod)
+	    initialGuardInt = details.split(":")[1].strip()
+
+	    if expectedresult in actualresult and initialGuardInt == "Auto" or 100 <= int(initialGuardInt.strip("nsec")) <= 800 :
+		tdkTestObj.setResultStatus("SUCCESS");
+		
+		for setGuardInt in possibleGuardInt:
+		    if initialGuardInt == setGuardInt:
+			continue;
+		    else:
+			expectedresult = "SUCCESS";
+			radioIndex = idx;
+			setMethod = "setRadioGuardInterval"
+			primitive = 'WIFIHAL_GetOrSetParamStringValue'
+		
+
+			#Calling the method to execute wifi_setRadioGuardInterval()
+			tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, setGuardInt, setMethod)
+			if expectedresult in actualresult:
+			    expectedresult="SUCCESS";
+			    radioIndex = idx;
+			    getMethod = "getRadioGuardInterval"
+			    primitive = 'WIFIHAL_GetOrSetParamStringValue'
+
+			    #Calling the method to execute wifi_getRadioGuardInterval()
+			    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, "0", getMethod)
+			    finalGuardInt = details.split(":")[1].strip()
+			
+			    if expectedresult in actualresult:
+				if finalGuardInt == setGuardInt:
+				    tdkTestObj.setResultStatus("SUCCESS");
+				    print "TEST STEP: Compare the set and get valus of RadioGuardInterval"
+				    print "EXPECTED RESULT: Set and get values of RadioGuardInterval should be same"
+				    print "ACTUAL RESULT: Set and get values of RadioGuardInterval are the same"
+				    print "setGuardInterval = ",setGuardInt
+				    print "getGuardInterval = ",finalGuardInt
+				    print "TEST EXECUTION RESULT : SUCCESS"
+				else:
+				    tdkTestObj.setResultStatus("FAILURE");
+				    print "TEST STEP: Compare the set and get valus of RadioGuardInterval"
+				    print "EXPECTED RESULT: Set and get values of RadioGuardInterval should be same"
+				    print "ACTUAL RESULT: Set and get values of RadioGuardInterval are NOT the same"
+				    print "setGuardInterval = ",setGuardInt
+				    print "getGuardInterval = ",finalGuardInt
+				    print "TEST EXECUTION RESULT : FAILURE"
+			    else:
+				print "wifi_getRadioGuardInterval() call failed"
+				tdkTestObj.setResultStatus("FAILURE");
+			    
+			    #Revert the guard interval back to initial value
+			    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, initialGuardInt, setMethod)
+			    if expectedresult in actualresult:
+				print "Successfully reverted back to initial value"
+				tdkTestObj.setResultStatus("SUCCESS");
+			    else:
+				print "Unable to revert to initial value"
+				tdkTestObj.setResultStatus("FAILURE");
+			else:
+			    print "wifi_setRadioGuardInterval() call failed"
+			    tdkTestObj.setResultStatus("FAILURE");
+			break;
+	    else:
+		tdkTestObj.setResultStatus("FAILURE");
+		print "wifi_getRadioGuardInterval() call failed"
 
     obj.unloadModule("wifihal");
 else:
