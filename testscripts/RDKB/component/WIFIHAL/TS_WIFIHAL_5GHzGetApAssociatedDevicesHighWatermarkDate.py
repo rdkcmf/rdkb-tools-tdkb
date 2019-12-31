@@ -84,7 +84,8 @@ apIndex      :   1</input_parameters>
 import tdklib;
 from wifiUtility import *;
 import re;
-
+from datetime import datetime
+import time;
 #Test component to be tested
 obj = tdklib.TDKScriptingLibrary("wifihal","1");
 
@@ -99,38 +100,124 @@ loadmodulestatus =obj.getLoadModuleResult();
 print "[LIB LOAD STATUS]  :  %s" %loadmodulestatus
 
 if "SUCCESS" in loadmodulestatus.upper():
+    apIndex = 1
     obj.setLoadModuleStatus("SUCCESS");
-
+    #Prmitive test case which is associated to this Script
+    tdkTestObj = obj.createTestStep('WIFIHAL_GetApAssociatedDeviceDiagnosticResult');
+    tdkTestObj.addParameter("radioIndex", 1);
     expectedresult="SUCCESS";
-    getMethod = "getApAssociatedDevicesHighWatermarkDate"
-    primitive = 'WIFIHAL_GetOrSetParamULongValue'
-    radioIndex = 1
-    #Calling the method to execute wifi_getApAssociatedDevicesHighWatermarkDate()
-    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, 0, getMethod)
+    tdkTestObj.executeTestCase(expectedresult);
+    actualresult = tdkTestObj.getResult();
+    details = tdkTestObj.getResultDetails();
 
-    if expectedresult in actualresult:
-        date = details.split(":")[1].strip()
-        utc = re.compile(r'^\d{4}-\d{2}-\d{2}[ T]\d{2}:\d{2}:\d{2}[+-]\d{2}:\d{2}$')
-        dateOutput = bool(utc.search(date))
-        if dateOutput:
-            print "TEST STEP: Get the AssociatedDevicesHighWatermarkDate"
-            print "EXPECTED RESULT: Should get the date in UTC format"
-            print "ACTUAL RESULT : Received the date in UTC format"
-            print "AssociatedDevicesHighWatermarkDate :",date
-            print "TEST EXECUTION RESULT :SUCCESS"
+
+    if expectedresult in actualresult :
+        tdkTestObj.setResultStatus("SUCCESS");
+        print "wifi_getApAssociatedDeviceDiagnosticResult() call to get STA details is SUCCESS";
+        details = details.split(":")[1].strip();
+        output_array_size = details.split("=")[1].strip();
+        noOfClients = int(output_array_size);
+        if noOfClients  > 0 :
             tdkTestObj.setResultStatus("SUCCESS");
+            print "**********STA Associated with DUT**********";
+            print "TEST EXECUTION RESULT :SUCCESS"
+            print "no of Clients:",noOfClients
+
+            #getting maxAssociatedDevice
+            getMethodToCheck = "getApMaxAssociatedDevices"
+            primitive = 'WIFIHAL_GetOrSetParamUIntValue'
+            #Calling the method from wifiUtility to execute test case and set result status for the test.
+            tdkTestObj, actualresult, maxDevice = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, 0, getMethodToCheck)
+            maxDevice =  int(maxDevice.split(":")[1])
+            print "maxDevice: ",maxDevice
+            if expectedresult in actualresult :
+               if noOfClients < maxDevice:
+
+                  # getting the initial value of getApAssociatedDevicesHighWatermarkThreshold
+                  expectedresult="SUCCESS";
+                  getMethod = "getApAssociatedDevicesHighWatermarkThreshold"
+                  primitive = 'WIFIHAL_GetOrSetParamUIntValue'
+
+                  #Calling the method from wifiUtility to execute test case and set result status for the test.
+                  tdkTestObj, actualresult, initial  = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, 0, getMethod)
+
+                  if expectedresult in actualresult:
+                     setThreshold = noOfClients+1
+                     expectedresult="SUCCESS"
+                     setMethod = "setApAssociatedDevicesHighWatermarkThreshold"
+                     primitive = 'WIFIHAL_GetOrSetParamUIntValue'
+                     #Calling the method from wifiUtility to execute test case and set result status for the test.
+                     tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, setThreshold, setMethod)
+                     if expectedresult in actualresult:
+                        #now get the HighWatermarkDate
+                        expectedresult="SUCCESS";
+                        getMethod = "getApAssociatedDevicesHighWatermarkDate"
+                        primitive = 'WIFIHAL_GetOrSetParamULongValue'
+                        #Calling the method to execute wifi_getApAssociatedDevicesHighWatermarkDate()
+                        tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, 0, getMethod)
+                        date_in_seconds  = float(details.split(":")[1])
+
+                        if expectedresult in actualresult and date_in_seconds != 0:
+                           #converting seconds to utc format
+                           date_in_utc  =  datetime.fromtimestamp(date_in_seconds).strftime("%A, %B %d, %Y %I:%M:%S")
+                           print "The seconds converted to utc format :",date_in_utc
+
+                           print "TEST STEP: Get the AssociatedDevicesHighWatermarkDate"
+                           print "EXPECTED RESULT: Should get the date in seconds"
+                           print "ACTUAL RESULT : Received the date in seconds"
+                           print "AssociatedDevicesHighWatermarkDate :",date_in_seconds
+                           print "TEST EXECUTION RESULT :SUCCESS"
+                           tdkTestObj.setResultStatus("SUCCESS");
+                        else:
+                            print "TEST STEP: Get the AssociatedDevicesHighWatermarkDate"
+                            print "EXPECTED RESULT: Should get the date in seconds"
+                            print "AssociatedDevicesHighWatermarkDate :",date_in_seconds
+                            print "TEST EXECUTION RESULT :FAILURE"
+                            tdkTestObj.setResultStatus("FAILURE");
+
+                        #Revert back to the initial
+                        expectedresult="SUCCESS"
+                        setMethod = "setApAssociatedDevicesHighWatermarkThreshold"
+                        primitive = 'WIFIHAL_GetOrSetParamUIntValue'
+                        initial = int(initial.split(":")[1])
+                        #Calling the method from wifiUtility to execute test case and set result status for the test.
+                        tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, setThreshold, setMethod)
+
+                        if expectedresult in actualresult :
+                           tdkTestObj.setResultStatus("SUCCESS");
+                           print "TEST STEP: Revert  back the HighWatermarkThreshold to initial"
+                           print "EXPECTED RESULT:Should revert the value successfully"
+                           print "ACTUAL RESULT : Reverted the value successfully"
+                           print "TEST EXECUTION RESULT :SUCCESS"
+                        else:
+                            tdkTestObj.setResultStatus("FAILURE");
+                            print "TEST STEP: Revert  back the HighWatermarkThreshold to initial"
+                            print "EXPECTED RESULT:Should revert the value successfully"
+                            print "ACTUAL RESULT : Could not revert the value"
+                            print "TEST EXECUTION RESULT :FAILURE"
+                     else:
+                         tdkTestObj.setResultStatus("FAILURE");
+                         print"wifi_setApAssociatedDevicesHighWatermarkThreshold() failed"
+                  else:
+                      tdkTestObj.setResultStatus("FAILURE");
+                      print "wifi_getApAssociatedDevicesHighWatermarkThreshold() call failed"
+
+               else:
+	           tdkTestObj.setResultStatus("FAILURE");
+	           print "wifi_getApAssociatedDevicesHighWatermarkDate() call failed"
+            else:
+                tdkTestObj.setResultStatus("FAILURE");
+                print "wifi_getApMaxAssociatedDevices() call failed"
+
+
         else:
-            print "TEST STEP: Get the AssociatedDevicesHighWatermarkDate"
-            print "EXPECTED RESULT: Should get the date in UTC format"
-            print "ACTUAL RESULT : Received the date in INVALID format"
-            print "AssociatedDevicesHighWatermarkDate :",date
-            print "TEST EXECUTION RESULT :FAILURE"
             tdkTestObj.setResultStatus("FAILURE");
-    else:
-        tdkTestObj.setResultStatus("FAILURE");
-        print "wifi_getApAssociatedDevicesHighWatermarkDate() call failed"
-    obj.unloadModule("wifihal");
+            print "**********STA NOT Associated with DUT**********";
+            print "TEST EXECUTION RESULT :FAILURE"
+        obj.unloadModule("wifihal");
 
 else:
-    print "Failed to load wifi module";
-    obj.setLoadModuleStatus("FAILURE");
+     print "Failed to load wifi module";
+     obj.setLoadModuleStatus("FAILURE");
+
+
