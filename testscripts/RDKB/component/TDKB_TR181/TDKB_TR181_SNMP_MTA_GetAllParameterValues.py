@@ -20,12 +20,12 @@
 <?xml version="1.0" encoding="UTF-8"?><xml>
   <id/>
   <version>1</version>
-  <name>TDKB_TR181_MOCA_SetAllParameterValues</name>
+  <name>TDKB_TR181_SNMP_MTA_GetAllParameterValues</name>
   <primitive_test_id/>
   <primitive_test_name>TDKB_TR181Stub_Get</primitive_test_name>
   <primitive_test_version>1</primitive_test_version>
   <status>FREE</status>
-  <synopsis>To set all tr181 parameters in MOCA module</synopsis>
+  <synopsis>Get all tr181 parameters of MTA module using SNMP</synopsis>
   <groups_id/>
   <execution_time>30</execution_time>
   <long_duration>false</long_duration>
@@ -34,28 +34,30 @@
   <skip>false</skip>
   <box_types>
     <box_type>Broadband</box_type>
+    <box_type>Emulator</box_type>
+    <box_type>RPI</box_type>
   </box_types>
   <rdk_versions>
     <rdk_version>RDKB</rdk_version>
   </rdk_versions>
   <test_cases>
-    <test_case_id>TC_TDKB_TR181_31</test_case_id>
-    <test_objective>To set all tr181 parameters in MOCA module</test_objective>
+    <test_case_id>TC_TDKB_TR181_60</test_case_id>
+    <test_objective>Get all tr181 parameters of MTA module using SNMP</test_objective>
     <test_type>Positive</test_type>
     <test_setup>Broadband,RPI,Emulator</test_setup>
     <pre_requisite>TDK test agent should be running
-MOCA module's parameter xml should be available</pre_requisite>
+MTA module's parameter xml should be available</pre_requisite>
     <api_or_interface_used>None</api_or_interface_used>
     <input_parameters>None</input_parameters>
     <automation_approch>1. Load tdkbtr181 module and sysutil module
-2. Set the validation type as TDK
-3. Invoke setAllParams() by passing MOCA as module name
-4. Display the final status of set and the list of failed parameters, if any
+2. Set the validation type as SNMP and factoryReset flag as false
+3. Invoke getAllParams() by passing MTA as module name
+4. Display the final status of get and the list of failed parameters, if any
 5. Unload modules</automation_approch>
-    <expected_output>Set operation on all MOCA parameters should be success</expected_output>
+    <expected_output>Get operation on all MTA parameters via SNMP should be success</expected_output>
     <priority>High</priority>
     <test_stub_interface>tdkbtr181</test_stub_interface>
-    <test_script>TDKB_TR181_MOCA_SetAllParameterValues</test_script>
+    <test_script>TDKB_TR181_SNMP_MTA_GetAllParameterValues</test_script>
     <skipped>No</skipped>
     <release_version>M72</release_version>
     <remarks>None</remarks>
@@ -73,13 +75,15 @@ obj = tdklib.TDKScriptingLibrary("tdkbtr181","1");
 obj1 = tdklib.TDKScriptingLibrary("sysutil","1");
 
 #IP and Port of box, No need to change,
-#This will be replaced with corresponding Box Ip and port while executing script
+#This will be replaced with correspoing Box Ip and port while executing script
 ip = <ipaddress>
 port = <port>
-obj.configureTestCase(ip,port,'TDKB_TR181_MOCA_SetAllParameterValues');
-obj1.configureTestCase(ip,port,'TDKB_TR181_MOCA_SetAllParameterValues');
+obj.configureTestCase(ip,port,'TDKB_TR181_SNMP_MTA_GetAllParameterValues');
+obj1.configureTestCase(ip,port,'TDKB_TR181_SNMP_MTA_GetAllParameterValues');
 
-#Get the result of connection with test component and DUT
+loadmodulestatus=obj.getLoadModuleResult();
+loadmodulestatus1=obj1.getLoadModuleResult();
+
 loadmodulestatus=obj.getLoadModuleResult();
 loadmodulestatus1=obj1.getLoadModuleResult();
 
@@ -87,21 +91,22 @@ if "SUCCESS" in loadmodulestatus.upper() :
     #Set the result status of execution
     obj.setLoadModuleStatus("SUCCESS")
     obj1.setLoadModuleStatus("SUCCESS")
-
-    expectedresult="SUCCESS";
     tdkTestObj = obj1.createTestStep('ExecuteCmd');
+    expectedresult="SUCCESS";
     tdkTestObj.executeTestCase(expectedresult);
 
-    print "The modules to test is: MOCA ";
-    setup_type = "TDK"
+    print "The module to test is: MTA ";
 
-    #Invoke the utility function to set and validate the values for all configured tr181 params
-    moduleStatus,failedParams = tdkbSetAllParams.setAllParams("MOCA", setup_type, obj, obj1);
+    setup_type = "SNMP"
+    factoryReset = "false"
 
-    print "Status of MOCA validation is ", moduleStatus, "\n";
+    #Invoke the utility function to get and validate the values for all configured tr181 params
+    moduleStatus,failedParams = tdkbSetAllParams.getAllParams("MTA", setup_type, factoryReset, obj, obj1);
+
+    print "Status of MTA validation is ", moduleStatus, "\n";
     if moduleStatus == "FAILURE":
         print "The failed params are ", failedParams, "\n";
-	tdkTestObj.setResultStatus("FAILURE");
+        tdkTestObj.setResultStatus("FAILURE");
 
     obj.unloadModule("tdkbtr181");
     obj1.unloadModule("sysutil");

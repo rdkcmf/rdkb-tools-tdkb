@@ -80,10 +80,10 @@ TDM module's parameter xml should be available</pre_requisite>
   <script_tags />
 </xml>
 '''
-# use tdklib library,which provides a wrapper for tdk testcase script 
+# use tdklib library,which provides a wrapper for tdk testcase script
 import tdklib;
 import tdkbSetAllParams
-from tdkbVariables import *;  
+from tdkbVariables import *;
 
 #Test component to be tested
 obj = tdklib.TDKScriptingLibrary("tdkbtr181","1");

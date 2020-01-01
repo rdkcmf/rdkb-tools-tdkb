@@ -80,7 +80,7 @@ CM module's parameter xml should be available</pre_requisite>
   <script_tags />
 </xml>
 '''
-# use tdklib library,which provides a wrapper for tdk testcase script 
+# use tdklib library,which provides a wrapper for tdk testcase script
 import tdklib;
 import tdkbSetAllParams
 from tdkbVariables import *;
@@ -114,7 +114,7 @@ if "SUCCESS" in loadmodulestatus.upper() :
 
     #Invoke the utility function to set and validate the values for all configured tr181 params
     moduleStatus,failedParams = tdkbSetAllParams.setAllParams("CM", setup_type, obj, obj1);
-        
+
     print "Status of CM validation is ", moduleStatus, "\n";
     if moduleStatus == "FAILURE":
         print "The failed params are ", failedParams, "\n";

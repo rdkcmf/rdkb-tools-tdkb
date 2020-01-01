@@ -21,9 +21,9 @@
 <xml>
   <id></id>
   <!-- Do not edit id. This will be auto filled while exporting. If you are adding a new script keep the id empty -->
-  <version>7</version>
+  <version>2</version>
   <!-- Do not edit version. This will be auto incremented while updating. If you are adding a new script you can keep the vresion as 1 -->
-  <name>TDKB_TR181_PAM_GetAllDefaultParameterValues</name>
+  <name>TDKB_TR181_SNMP_MTA_GetAllDefaultParameterValues</name>
   <!-- If you are adding a new script you can specify the script name. Script Name should be unique same as this file name with out .py extension -->
   <primitive_test_id></primitive_test_id>
   <!-- Do not change primitive_test_id if you are editing an existing script. -->
@@ -33,7 +33,7 @@
   <!--  -->
   <status>FREE</status>
   <!--  -->
-  <synopsis>Check if all tr181 parameters of PAM are having the default values after factory reset</synopsis>
+  <synopsis>Check via SNMP, whether all tr181 parameters of MTA are having the default values after factory reset</synopsis>
   <!--  -->
   <groups_id />
   <!--  -->
@@ -60,28 +60,28 @@
     <!--  -->
   </rdk_versions>
   <test_cases>
-    <test_case_id>TC_TDKB_TR181_08</test_case_id>
-    <test_objective>Check if all tr181 parameters of PAM are having the default values after factory reset</test_objective>
+    <test_case_id>TC_TDKB_TR181_59</test_case_id>
+    <test_objective>Check via SNMP, whether all tr181 parameters of MTA are having the default values after factory reset</test_objective>
     <test_type>Positive</test_type>
     <test_setup>Broadband,RPI,Emulator</test_setup>
     <pre_requisite>TDK test agent should be running
-PAM module's parameter xml should be available</pre_requisite>
+MTA module's parameter xml should be available</pre_requisite>
     <api_or_interface_used>None</api_or_interface_used>
     <input_parameters>None</input_parameters>
     <automation_approch>1. Load tdkbtr181 module and sysutil module
-2. Set the validation type as TDK
+2. Set the validation type as SNMP
 3. Set the factoryReset flag as true
-4. do the factory reset of device
-5. Invoke getAllParams() by passing PAM as module name
+4. Do the factory reset of device via SNMP
+5. Invoke getAllParams() by passing MTA as module name
 6. Check if all parameters are having their default values
 7. Display the final status of get and the list of failed parameters, if any
 8. Unload modules</automation_approch>
-    <expected_output>Get operation for default values on all PAM parameters should be success</expected_output>
+    <expected_output>Get operation for default values on all MTA parameters via SNMP should be success</expected_output>
     <priority>High</priority>
-    <test_stub_interface>tdktr181</test_stub_interface>
-    <test_script>TDKB_TR181_PAM_GetAllDefaultParameterValues</test_script>
+    <test_stub_interface>tdkbtr181</test_stub_interface>
+    <test_script>TDKB_TR181_SNMP_MTA_GetAllDefaultParameterValues</test_script>
     <skipped>No</skipped>
-    <release_version>M71</release_version>
+    <release_version>M72</release_version>
     <remarks>None</remarks>
   </test_cases>
   <script_tags />
@@ -91,80 +91,67 @@ PAM module's parameter xml should be available</pre_requisite>
 import tdklib;
 import tdkbSetAllParams
 from tdkbVariables import *;
+import snmplib;
 
 #Test component to be tested
 obj = tdklib.TDKScriptingLibrary("tdkbtr181","1");
 obj1 = tdklib.TDKScriptingLibrary("sysutil","1");
-obj2 = tdklib.TDKScriptingLibrary("wifiagent","1");
 
 #IP and Port of box, No need to change,
 #This will be replaced with correspoing Box Ip and port while executing script
 ip = <ipaddress>
 port = <port>
-obj.configureTestCase(ip,port,'TDKB_TR181_PAM_GetAllDefaultParameterValues');
-obj1.configureTestCase(ip,port,'TDKB_TR181_PAM_GetAllDefaultParameterValues');
-obj2.configureTestCase(ip,port,'TDKB_TR181_PAM_GetAllDefaultParameterValues');
+obj.configureTestCase(ip,port,'TDKB_TR181_SNMP_MTA_GetAllDefaultParameterValues');
+obj1.configureTestCase(ip,port,'TDKB_TR181_SNMP_MTA_GetAllDefaultParameterValues');
 
 #Get the result of connection with test component and DUT
 loadmodulestatus=obj.getLoadModuleResult();
 loadmodulestatus1=obj1.getLoadModuleResult();
-loadmodulestatus2=obj2.getLoadModuleResult();
 
-if "SUCCESS" in loadmodulestatus.upper() and "SUCCESS" in loadmodulestatus1.upper() and "SUCCESS" in loadmodulestatus2.upper():
+if "SUCCESS" in loadmodulestatus.upper() and "SUCCESS" in loadmodulestatus1.upper():
     #Set the result status of execution
     obj.setLoadModuleStatus("SUCCESS")
     obj1.setLoadModuleStatus("SUCCESS")
-    obj2.setLoadModuleStatus("SUCCESS")
 
-    print "The modules to test is: PAM ";
-
-    setup_type = "TDK"
-    factoryReset = "true"
+    tdkTestObj = obj1.createTestStep('ExecuteCmd');
+    expectedresult="SUCCESS";
+    tdkTestObj.executeTestCase(expectedresult);
 
     #save device's current state before it goes for reboot
-    obj.saveCurrentState();
+    obj1.saveCurrentState();
+    tdkTestObj.setResultStatus("SUCCESS");
+    print "TEST STEP : Initiate factory reset ";
+    print "EXPECTED RESULT : Should initiate factory reset";
 
-    #Initiate Factory reset before checking the default value
-    expectedresult="SUCCESS";
-    tdkTestObj = obj2.createTestStep('WIFIAgent_Set');
-    tdkTestObj.addParameter("paramName","Device.X_CISCO_COM_DeviceControl.FactoryReset");
-    tdkTestObj.addParameter("paramValue","Router,Wifi,VoIP,Dect,MoCA");
-    tdkTestObj.addParameter("paramType","string");
-    tdkTestObj.executeTestCase(expectedresult);
-    actualresult = tdkTestObj.getResult();
-    details = tdkTestObj.getResultDetails();
-
-    if expectedresult in actualresult:
-        #Set the result status of execution
-        tdkTestObj.setResultStatus("SUCCESS");
-        print "TEST STEP 2: Initiate factory reset ";
-        print "EXPECTED RESULT 2: Should initiate factory reset";
-        print "ACTUAL RESULT 2: %s" %details;
-        #Get the result of execution
-        print "[TEST EXECUTION RESULT] : SUCCESS";
-
+    # Resetting device using snmp command
+    #Get the Community String
+    communityString = snmplib.getCommunityString(obj1,"snmpset");
+    #Get the IP Address
+    ipaddress = snmplib.getIPAddress(obj1);
+    ########## Script to Execute the snmp command ###########
+    actResponse =snmplib.SnmpExecuteCmd("snmpset", communityString, "-v 2c", "1.3.6.1.4.1.17270.50.2.1.1.1002.0 i 1", ipaddress);
+    if "INTEGER" in actResponse:
+        print "Factory reset : SUCCESS";
         #Restore the device state saved before reboot
-        obj.restorePreviousStateAfterReboot();
+        obj1.restorePreviousStateAfterReboot();
+
+        setup_type = "SNMP"
+        factoryReset = "true"
 
         #Invoke the utility function to get and validate the values for all configured tr181 params
-        moduleStatus,failedParams = tdkbSetAllParams.getAllParams("PAM", setup_type, factoryReset, obj, obj1);
+        moduleStatus,failedParams = tdkbSetAllParams.getAllParams("MTA", setup_type, factoryReset, obj, obj1);
 
-        print "Status of PAM validation is ", moduleStatus, "\n";
+        print "Status of MTA validation is ", moduleStatus, "\n";
         if moduleStatus == "FAILURE":
             print "The failed params are ", failedParams, "\n";
             tdkTestObj.setResultStatus("FAILURE");
     else:
         #Set the result status of execution
         tdkTestObj.setResultStatus("FAILURE");
-        print "TEST STEP 2: Initiate factory reset ";
-        print "EXPECTED RESULT 2: Should initiate factory reset";
-        print "ACTUAL RESULT 2: %s" %details;
-        #Get the result of execution
-        print "[TEST EXECUTION RESULT] : FAILURE";
+        print "[Factory Reset] : FAILURE";
 
     obj.unloadModule("tdkbtr181");
     obj1.unloadModule("sysutil");
-    obj2.unloadModule("wifiagent");
 else:
     print "Failed to load module";
     obj.setLoadModuleStatus("FAILURE");
