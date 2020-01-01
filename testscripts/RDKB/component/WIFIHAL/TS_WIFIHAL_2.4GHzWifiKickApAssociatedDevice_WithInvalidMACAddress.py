@@ -25,7 +25,7 @@
   <primitive_test_name>WIFIHAL_GetOrSetParamStringValue</primitive_test_name>
   <primitive_test_version>1</primitive_test_version>
   <status>FREE</status>
-  <synopsis>To take the action to remove the existing wifi client connection for 2.4GHz</synopsis>
+  <synopsis>To take the action to remove the existing wifi client connection for 2.4GHz by passing invalid MAC Address to wifi_kickApAssociatedDevice()</synopsis>
   <groups_id/>
   <execution_time>1</execution_time>
   <long_duration>false</long_duration>
@@ -40,7 +40,7 @@
   </rdk_versions>
   <test_cases>
     <test_case_id>TC_WIFIHAL_286</test_case_id>
-    <test_objective>To take the action to remove the existing wifi client connection for 2.4GHz</test_objective>
+    <test_objective>To take the action to remove the existing wifi client connection for 2.4GHz by passing invalid MAC Address to wifi_kickApAssociatedDevice()</test_objective>
     <test_type>Negative</test_type>
     <test_setup>Broadband</test_setup>
     <pre_requisite>1.As this is a functional scenario and have limitation to validate via HAL APIs, we are validating this API by passing an dummy/invalid client MAC address and expecting the API to return failure
