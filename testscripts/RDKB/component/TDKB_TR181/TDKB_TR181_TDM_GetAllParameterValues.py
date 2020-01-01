@@ -65,7 +65,7 @@ TDM module's parameter xml should be available</pre_requisite>
 </xml>
 
 '''
-# use tdklib library,which provides a wrapper for tdk testcase script 
+# use tdklib library,which provides a wrapper for tdk testcase script
 import tdklib;
 import tdkbSetAllParams
 from tdkbVariables import *;
@@ -100,7 +100,7 @@ if "SUCCESS" in loadmodulestatus.upper() :
 
     #Invoke the utility function to get and validate the values for all configured tr181 params
     moduleStatus,failedParams = tdkbSetAllParams.getAllParams("TDM", setup_type, factoryReset, obj, obj1);
-        
+
     print "Status of TDM validation is ", moduleStatus, "\n";
     if moduleStatus == "FAILURE":
         print "The failed params are ", failedParams, "\n";

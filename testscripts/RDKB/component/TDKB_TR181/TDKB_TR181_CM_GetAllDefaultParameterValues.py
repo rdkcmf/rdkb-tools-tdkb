@@ -83,7 +83,7 @@ CM module's parameter xml should be available</pre_requisite>
   <script_tags />
 </xml>
 '''
-# use tdklib library,which provides a wrapper for tdk testcase script 
+# use tdklib library,which provides a wrapper for tdk testcase script
 import tdklib;
 import tdkbSetAllParams
 from tdkbVariables import *;
