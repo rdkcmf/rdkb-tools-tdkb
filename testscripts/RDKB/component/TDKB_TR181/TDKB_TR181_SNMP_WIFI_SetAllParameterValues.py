@@ -50,7 +50,6 @@
   <box_types>
     <box_type>Broadband</box_type>
     <box_type>Emulator</box_type>
-    <box_type>RPI</box_type>
     <!--  -->
   </box_types>
   <rdk_versions>
@@ -61,7 +60,7 @@
     <test_case_id>TC_TDKB_TR181_18</test_case_id>
     <test_objective>To set all tr181 parameters of WiFi module</test_objective>
     <test_type>Positive</test_type>
-    <test_setup>Broadband,RPI,Emulator</test_setup>
+    <test_setup>Broadband,Emulator</test_setup>
     <pre_requisite>TDK test agent should be running
 WIFI module's parameter xml should be available</pre_requisite>
     <api_or_interface_used>None</api_or_interface_used>

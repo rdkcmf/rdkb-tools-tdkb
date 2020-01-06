@@ -42,7 +42,7 @@
     <test_case_id>TC_TDKB_TR181_33</test_case_id>
     <test_objective>Get all tr181 parameters of MOCA module using SNMP</test_objective>
     <test_type>Positive</test_type>
-    <test_setup>Broadband,RPI,Emulator</test_setup>
+    <test_setup>Broadband</test_setup>
     <pre_requisite>TDK test agent should be running
 MOCA module's parameter xml should be available</pre_requisite>
     <api_or_interface_used>None</api_or_interface_used>
