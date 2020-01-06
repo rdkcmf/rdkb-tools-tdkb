@@ -20,7 +20,7 @@
 <?xml version="1.0" encoding="UTF-8"?><xml>
   <id/>
   <version>1</version>
-  <name>TS_WIFIHAL_2.4GHzWifiKickApAssociatedDevice</name>
+  <name>TS_WIFIHAL_2.4GHzWifiKickApAssociatedDevice_WithInvalidMACAddress</name>
   <primitive_test_id/>
   <primitive_test_name>WIFIHAL_GetOrSetParamStringValue</primitive_test_name>
   <primitive_test_version>1</primitive_test_version>
@@ -57,7 +57,7 @@ param : 00:aa:bb:cc:dd:ee</input_parameters>
     <except_output>Since we are passing the invalid MAC address value, the API is expected to return failure</except_output>
     <priority>High</priority>
     <test_stub_interface>WIFIHAL</test_stub_interface>
-    <test_script>TS_WIFIHAL_2.4GHzWifiKickApAssociatedDevice</test_script>
+    <test_script>TS_WIFIHAL_2.4GHzWifiKickApAssociatedDevice_WithInvalidMACAddress</test_script>
     <skipped>No</skipped>
     <release_version/>
     <remarks/>
@@ -78,7 +78,7 @@ obj = tdklib.TDKScriptingLibrary("wifihal","1");
 #This will be replaced with correspoing Box Ip and port while executing script
 ip = <ipaddress>
 port = <port>
-obj.configureTestCase(ip,port,'TS_WIFIHAL_2.4GHzWifiKickApAssociatedDevice');
+obj.configureTestCase(ip,port,'TS_WIFIHAL_2.4GHzWifiKickApAssociatedDevice_WithInvalidMACAddress');
 loadmodulestatus = obj.getLoadModuleResult();
 print "[LIB LOAD STATUS]  :  %s" %loadmodulestatus;
 
