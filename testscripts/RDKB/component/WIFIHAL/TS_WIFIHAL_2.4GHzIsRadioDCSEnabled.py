@@ -77,6 +77,8 @@ wifi_getRadioDCSEnable() and wifi_setRadioDCSEnable()
 import tdklib; 
 from wifiUtility import *;
 
+radio = "2.4G"
+
 #Test component to be tested
 obj = tdklib.TDKScriptingLibrary("wifihal","1");
 
@@ -92,54 +94,61 @@ print "[LIB LOAD STATUS]  :  %s" %loadmodulestatus
 if "SUCCESS" in loadmodulestatus.upper():
     obj.setLoadModuleStatus("SUCCESS");
 
-    expectedresult="SUCCESS";
-    radioIndex = 0
-    getMethod = "getRadioDCSEnable"
-    primitive = 'WIFIHAL_GetOrSetParamBoolValue'
-    #Getting the default enable mode
-    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, 0, getMethod)
-
-    if expectedresult in actualresult :
-        tdkTestObj.setResultStatus("SUCCESS");
-        enable = details.split(":")[1].strip()
-        if "Enabled" in enable:
-            print "DCS is Enabled for Radio 2.4GHZ"
-            oldEnable = 1
-            newEnable = 0
-        else:
-            print "DCS is Disabled for Radio 2.4GHZ"
-            oldEnable = 0
-            newEnable = 1
-
-        setMethod = "setRadioDCSEnable"
-        #Toggle the enable status using set
-        tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, newEnable, setMethod)
-
-        if expectedresult in actualresult :
-            print "Enable state toggled using set"
-            #Get the New enable status
-            tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, 0, getMethod)
-
-            if expectedresult in actualresult and enable not in details.split(":")[1].strip():
-                print "getRadioDCSEnable Success, verified along with setRadioDCSEnable() api"
-                #Revert back to original Enable status
-                tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, oldEnable, setMethod)
-
-                if expectedresult in actualresult :
-                    print "Enable status reverted back";
-                else:
-                    print "Couldn't revert enable status"
-                    tdkTestObj.setResultStatus("FAILURE");
-            else:
-                print "getRadioDCSEnable() failed after set function"
-		tdkTestObj.setResultStatus("FAILURE");
-        else:
-	    print "setRadioDCSEnable() failed"
-            tdkTestObj.setResultStatus("FAILURE"); 
+    tdkTestObjTemp, idx = getIndex(obj, radio);
+    ## Check if a invalid index is returned
+    if idx == -1:
+        print "Failed to get radio index for radio %s\n" %radio;
+        tdkTestObjTemp.setResultStatus("FAILURE");
     else:
-	print "getRadioDCSEnable() failed"
-        tdkTestObj.setResultStatus("FAILURE");
-    
+
+	    expectedresult="SUCCESS";
+	    radioIndex = idx;
+	    getMethod = "getRadioDCSEnable"
+	    primitive = 'WIFIHAL_GetOrSetParamBoolValue'
+	    #Getting the default enable mode
+	    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, 0, getMethod)
+
+	    if expectedresult in actualresult :
+		tdkTestObj.setResultStatus("SUCCESS");
+		enable = details.split(":")[1].strip()
+		if "Enabled" in enable:
+		    print "DCS is Enabled for Radio 2.4GHZ"
+		    oldEnable = 1
+		    newEnable = 0
+		else:
+		    print "DCS is Disabled for Radio 2.4GHZ"
+		    oldEnable = 0
+		    newEnable = 1
+
+		setMethod = "setRadioDCSEnable"
+		#Toggle the enable status using set
+		tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, newEnable, setMethod)
+
+		if expectedresult in actualresult :
+		    print "Enable state toggled using set"
+		    #Get the New enable status
+		    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, 0, getMethod)
+
+		    if expectedresult in actualresult and enable not in details.split(":")[1].strip():
+			print "getRadioDCSEnable Success, verified along with setRadioDCSEnable() api"
+			#Revert back to original Enable status
+			tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, oldEnable, setMethod)
+
+			if expectedresult in actualresult :
+			    print "Enable status reverted back";
+			else:
+			    print "Couldn't revert enable status"
+			    tdkTestObj.setResultStatus("FAILURE");
+		    else:
+			print "getRadioDCSEnable() failed after set function"
+			tdkTestObj.setResultStatus("FAILURE");
+		else:
+		    print "setRadioDCSEnable() failed"
+		    tdkTestObj.setResultStatus("FAILURE"); 
+	    else:
+		print "getRadioDCSEnable() failed"
+		tdkTestObj.setResultStatus("FAILURE");
+	    
     obj.unloadModule("wifihal");
 
 else:

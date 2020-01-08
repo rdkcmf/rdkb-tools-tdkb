@@ -68,6 +68,9 @@ param = 20</input_parameters>
 '''
 # use tdklib library,which provides a wrapper for tdk testcase script
 import tdklib;
+from wifiUtility import *;
+
+radio = "5G"
 
 #Test component to be tested
 obj = tdklib.TDKScriptingLibrary("wifihal","1");
@@ -84,108 +87,116 @@ print "[LIB LOAD STATUS]  :  %s" %loadmodulestatus ;
 
 if "SUCCESS" in loadmodulestatus.upper():
     obj.setLoadModuleStatus("SUCCESS");
-    #Script to load the configuration file of the component
-    tdkTestObj = obj.createTestStep("WIFIHAL_GetOrSetParamIntValue");
-    tdkTestObj.addParameter("methodName","getRadioDcsDwelltime");
-    tdkTestObj.addParameter("radioIndex",1);
-    expectedresult="SUCCESS";
-    tdkTestObj.executeTestCase(expectedresult);
-    actualresult = tdkTestObj.getResult();
-    currTime = tdkTestObj.getResultDetails();
-    if expectedresult in actualresult:
-        #Set the result status of execution
-        tdkTestObj.setResultStatus("SUCCESS");
-        print "TEST STEP 1: Get the current dwell time for 5GHz";
-        print "EXPECTED RESULT 1: Should get current dwell time for 5GHz";
-        print "ACTUAL RESULT 1: %s" %currTime;
-        #Get the result of execution
-        print "[TEST EXECUTION RESULT] : SUCCESS";
-	currTime = currTime.split(":")[1];
-        if int(currTime) == 30:
-            newTime = 40;
-        else:
-            newTime = 30;
-        tdkTestObj.addParameter("methodName","setRadioDcsDwelltime");
-        tdkTestObj.addParameter("radioIndex",1);
-        tdkTestObj.addParameter("param",newTime);
-        expectedresult="SUCCESS";
-        tdkTestObj.executeTestCase(expectedresult);
-        actualresult = tdkTestObj.getResult();
-        details = tdkTestObj.getResultDetails();
-        if expectedresult in actualresult:
-            #Set the result status of execution
-            tdkTestObj.setResultStatus("SUCCESS");
-            print "TEST STEP 2: Set the dwell time for 5GHz";
-            print "EXPECTED RESULT 2: Should set the dwell time for 5GHz";
-            print "ACTUAL RESULT 2: %s" %details;
-            #Get the result of execution
-            print "[TEST EXECUTION RESULT] : SUCCESS"
 
-            tdkTestObj = obj.createTestStep("WIFIHAL_GetOrSetParamIntValue");
-            tdkTestObj.addParameter("methodName","getRadioDcsDwelltime");
-            tdkTestObj.addParameter("radioIndex",1);
-            expectedresult="SUCCESS";
-            tdkTestObj.executeTestCase(expectedresult);
-            actualresult = tdkTestObj.getResult();
-            details = tdkTestObj.getResultDetails();
-	    details = details.split(":")[1];
-            if expectedresult in actualresult and int(details) == newTime:
-                #Set the result status of execution
-                tdkTestObj.setResultStatus("SUCCESS");
-                print "TEST STEP 3: Get the current dwell time for 5GHz";
-                print "EXPECTED RESULT 3: Should get current dwell time for 5GHz";
-                print "ACTUAL RESULT 3: %s" %details;
-                #Get the result of execution
-                print "[TEST EXECUTION RESULT] : SUCCESS";
-            else:
-                #Set the result status of execution
-                tdkTestObj.setResultStatus("FAILURE");
-                print "TEST STEP 3: Get the current dwell time for 5GHz";
-                print "EXPECTED RESULT 3: Should get current dwell time for 5GHz";
-                print "ACTUAL RESULT 3: %s" %details;
-                #Get the result of execution
-                print "[TEST EXECUTION RESULT] : FAILURE";
-            #Revert the value
-            tdkTestObj.addParameter("methodName","setRadioDcsDwelltime");
-            tdkTestObj.addParameter("radioIndex",1);
-            tdkTestObj.addParameter("param",int(currTime));
-            expectedresult="SUCCESS";
-            tdkTestObj.executeTestCase(expectedresult);
-            actualresult = tdkTestObj.getResult();
-            details = tdkTestObj.getResultDetails();
-            if expectedresult in actualresult:
-                #Set the result status of execution
-                tdkTestObj.setResultStatus("SUCCESS");
-                print "TEST STEP : Set the dwell time for 5GHz";
-                print "EXPECTED RESULT 2: Should set the dwell time for 5GHz";
-                print "ACTUAL RESULT : %s" %details;
-                #Get the result of execution
-                print "[TEST EXECUTION RESULT] : SUCCESS"
-            else:
-                #Set the result status of execution
-                tdkTestObj.setResultStatus("FAILURE");
-                print "TEST STEP : Set the dwell time for 5GHz";
-                print "EXPECTED RESULT : Should set the dwell time for 5GHz";
-                print "ACTUAL RESULT : %s" %details;
-                #Get the result of execution
-                print "[TEST EXECUTION RESULT] : FAILURE"
-
-        else:
-            #Set the result status of execution
-            tdkTestObj.setResultStatus("FAILURE");
-            print "TEST STEP  2: Set the dwell time for 5GHz";
-            print "EXPECTED RESULT 2: Should set the dwell time for 5GHz";
-            print "ACTUAL RESULT 2: %s" %details;
-            #Get the result of execution
-            print "[TEST EXECUTION RESULT] : FAILURE"
+tdkTestObjTemp, idx = getIndex(obj, radio);
+    ## Check if a invalid index is returned
+    if idx == -1:
+        print "Failed to get radio index for radio %s\n" %radio;
+        tdkTestObjTemp.setResultStatus("FAILURE");
     else:
-        #Set the result status of execution
-        tdkTestObj.setResultStatus("FAILURE");
-        print "TEST STEP 1: Get the current dwell time for 5GHz";
-        print "EXPECTED RESULT 1: Should Get the current dwell time for 5GHz";
-        print "ACTUAL RESULT 1: %s" %currTime;
-        #Get the result of execution
-        print "[TEST EXECUTION RESULT] : FAILURE";
+
+	    #Script to load the configuration file of the component
+	    tdkTestObj = obj.createTestStep("WIFIHAL_GetOrSetParamIntValue");
+	    tdkTestObj.addParameter("methodName","getRadioDcsDwelltime");
+	    tdkTestObj.addParameter("radioIndex",idx);
+	    expectedresult="SUCCESS";
+	    tdkTestObj.executeTestCase(expectedresult);
+	    actualresult = tdkTestObj.getResult();
+	    currTime = tdkTestObj.getResultDetails();
+	    if expectedresult in actualresult:
+		#Set the result status of execution
+		tdkTestObj.setResultStatus("SUCCESS");
+		print "TEST STEP 1: Get the current dwell time for 5GHz";
+		print "EXPECTED RESULT 1: Should get current dwell time for 5GHz";
+		print "ACTUAL RESULT 1: %s" %currTime;
+		#Get the result of execution
+		print "[TEST EXECUTION RESULT] : SUCCESS";
+		currTime = currTime.split(":")[1];
+		if int(currTime) == 30:
+		    newTime = 40;
+		else:
+		    newTime = 30;
+		tdkTestObj.addParameter("methodName","setRadioDcsDwelltime");
+		tdkTestObj.addParameter("radioIndex",idx);
+		tdkTestObj.addParameter("param",newTime);
+		expectedresult="SUCCESS";
+		tdkTestObj.executeTestCase(expectedresult);
+		actualresult = tdkTestObj.getResult();
+		details = tdkTestObj.getResultDetails();
+		if expectedresult in actualresult:
+		    #Set the result status of execution
+		    tdkTestObj.setResultStatus("SUCCESS");
+		    print "TEST STEP 2: Set the dwell time for 5GHz";
+		    print "EXPECTED RESULT 2: Should set the dwell time for 5GHz";
+		    print "ACTUAL RESULT 2: %s" %details;
+		    #Get the result of execution
+		    print "[TEST EXECUTION RESULT] : SUCCESS"
+
+		    tdkTestObj = obj.createTestStep("WIFIHAL_GetOrSetParamIntValue");
+		    tdkTestObj.addParameter("methodName","getRadioDcsDwelltime");
+		    tdkTestObj.addParameter("radioIndex",idx);
+		    expectedresult="SUCCESS";
+		    tdkTestObj.executeTestCase(expectedresult);
+		    actualresult = tdkTestObj.getResult();
+		    details = tdkTestObj.getResultDetails();
+		    details = details.split(":")[1];
+		    if expectedresult in actualresult and int(details) == newTime:
+			#Set the result status of execution
+			tdkTestObj.setResultStatus("SUCCESS");
+			print "TEST STEP 3: Get the current dwell time for 5GHz";
+			print "EXPECTED RESULT 3: Should get current dwell time for 5GHz";
+			print "ACTUAL RESULT 3: %s" %details;
+			#Get the result of execution
+			print "[TEST EXECUTION RESULT] : SUCCESS";
+		    else:
+			#Set the result status of execution
+			tdkTestObj.setResultStatus("FAILURE");
+			print "TEST STEP 3: Get the current dwell time for 5GHz";
+			print "EXPECTED RESULT 3: Should get current dwell time for 5GHz";
+			print "ACTUAL RESULT 3: %s" %details;
+			#Get the result of execution
+			print "[TEST EXECUTION RESULT] : FAILURE";
+		    #Revert the value
+		    tdkTestObj.addParameter("methodName","setRadioDcsDwelltime");
+		    tdkTestObj.addParameter("radioIndex",idx);
+		    tdkTestObj.addParameter("param",int(currTime));
+		    expectedresult="SUCCESS";
+		    tdkTestObj.executeTestCase(expectedresult);
+		    actualresult = tdkTestObj.getResult();
+		    details = tdkTestObj.getResultDetails();
+		    if expectedresult in actualresult:
+			#Set the result status of execution
+			tdkTestObj.setResultStatus("SUCCESS");
+			print "TEST STEP : Set the dwell time for 5GHz";
+			print "EXPECTED RESULT 2: Should set the dwell time for 5GHz";
+			print "ACTUAL RESULT : %s" %details;
+			#Get the result of execution
+			print "[TEST EXECUTION RESULT] : SUCCESS"
+		    else:
+			#Set the result status of execution
+			tdkTestObj.setResultStatus("FAILURE");
+			print "TEST STEP : Set the dwell time for 5GHz";
+			print "EXPECTED RESULT : Should set the dwell time for 5GHz";
+			print "ACTUAL RESULT : %s" %details;
+			#Get the result of execution
+			print "[TEST EXECUTION RESULT] : FAILURE"
+
+		else:
+		    #Set the result status of execution
+		    tdkTestObj.setResultStatus("FAILURE");
+		    print "TEST STEP  2: Set the dwell time for 5GHz";
+		    print "EXPECTED RESULT 2: Should set the dwell time for 5GHz";
+		    print "ACTUAL RESULT 2: %s" %details;
+		    #Get the result of execution
+		    print "[TEST EXECUTION RESULT] : FAILURE"
+	    else:
+		#Set the result status of execution
+		tdkTestObj.setResultStatus("FAILURE");
+		print "TEST STEP 1: Get the current dwell time for 5GHz";
+		print "EXPECTED RESULT 1: Should Get the current dwell time for 5GHz";
+		print "ACTUAL RESULT 1: %s" %currTime;
+		#Get the result of execution
+		print "[TEST EXECUTION RESULT] : FAILURE";
     obj.unloadModule("wifihal");
 else:
         print "Failed to load the module";

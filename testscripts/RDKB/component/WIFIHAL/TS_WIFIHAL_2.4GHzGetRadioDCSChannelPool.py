@@ -77,6 +77,8 @@ radioIndex   :   0</input_parameters>
 import tdklib;
 from wifiUtility import *;
 
+radio = "2.4G"
+
 #Test component to be tested
 obj = tdklib.TDKScriptingLibrary("wifihal","1");
 
@@ -92,32 +94,39 @@ print "[LIB LOAD STATUS]  :  %s" %loadmodulestatus
 if "SUCCESS" in loadmodulestatus.upper():
     obj.setLoadModuleStatus("SUCCESS");
 
-    expectedresult="SUCCESS";
-    radioIndex = 0
-    getMethod = "getRadioDCSChannelPool"
-    primitive = 'WIFIHAL_GetOrSetParamStringValue'
-
-    #Calling the method from wifiUtility to execute test case and set result status for the test.
-    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, "0", getMethod)
-    if expectedresult in actualresult:
-       dcsChannelNumber = details.split(":")[1].strip()
-       if len(dcsChannelNumber) <= 256:
-           print "Wifi_getRadioDCSChannelPool() function called successfully and %s"%details
-           tdkTestObj.setResultStatus("SUCCESS");
-           print "TEST STEP 1: Validate the wifi_getRadioDCSChannelPool Function";
-           print "EXPECTED RESULT 1: wifi_getRadioDCSChannelPool should return a string value";
-           print "ACTUAL RESULT 1: DCS channel Pool string received: %s"%dcsChannelNumber;
-           print "[TEST EXECUTION RESULT] : SUCCESS";
-       else:
-           print "Wifi_getRadioDCSChannelPool() failed %s"%details
-           tdkTestObj.setResultStatus("FAILURE");
-           print "TEST STEP 1: Validate the wifi_getRadioDCSChannelPool Function";
-           print "EXPECTED RESULT 1: wifi_getRadioDCSChannelPool should return a string value";
-           print "ACTUAL RESULT 1: Failed to get DCS Channel pool value: %s"%dcsChannelNumber;
-           print "[TEST EXECUTION RESULT] : FAILURE";
+    tdkTestObjTemp, idx = getIndex(obj, radio);
+    ## Check if a invalid index is returned
+    if idx == -1:
+        print "Failed to get radio index for radio %s\n" %radio;
+        tdkTestObjTemp.setResultStatus("FAILURE");
     else:
-        print "Wifi_getRadioDCSChannelPool() failed";
-        tdkTestObj.setResultStatus("FAILURE");
+
+	    expectedresult="SUCCESS";
+	    radioIndex = idx;
+	    getMethod = "getRadioDCSChannelPool"
+	    primitive = 'WIFIHAL_GetOrSetParamStringValue'
+
+	    #Calling the method from wifiUtility to execute test case and set result status for the test.
+	    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, "0", getMethod)
+	    if expectedresult in actualresult:
+	       dcsChannelNumber = details.split(":")[1].strip()
+	       if len(dcsChannelNumber) <= 256:
+		   print "Wifi_getRadioDCSChannelPool() function called successfully and %s"%details
+		   tdkTestObj.setResultStatus("SUCCESS");
+		   print "TEST STEP 1: Validate the wifi_getRadioDCSChannelPool Function";
+		   print "EXPECTED RESULT 1: wifi_getRadioDCSChannelPool should return a string value";
+		   print "ACTUAL RESULT 1: DCS channel Pool string received: %s"%dcsChannelNumber;
+		   print "[TEST EXECUTION RESULT] : SUCCESS";
+	       else:
+		   print "Wifi_getRadioDCSChannelPool() failed %s"%details
+		   tdkTestObj.setResultStatus("FAILURE");
+		   print "TEST STEP 1: Validate the wifi_getRadioDCSChannelPool Function";
+		   print "EXPECTED RESULT 1: wifi_getRadioDCSChannelPool should return a string value";
+		   print "ACTUAL RESULT 1: Failed to get DCS Channel pool value: %s"%dcsChannelNumber;
+		   print "[TEST EXECUTION RESULT] : FAILURE";
+	    else:
+		print "Wifi_getRadioDCSChannelPool() failed";
+		tdkTestObj.setResultStatus("FAILURE");
     obj.unloadModule("wifihal");
 
 else:
