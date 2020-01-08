@@ -93,6 +93,8 @@ import tdklib;
 import time;
 from wifiUtility import *;
 
+radio = "5G"
+
 #Test component to be tested
 obj = tdklib.TDKScriptingLibrary("wifihal","1");
 
@@ -102,14 +104,14 @@ ip = <ipaddress>
 port = <port>
 obj.configureTestCase(ip,port,'TS_WIFIHAL_5GHzSetRadioDfsRefreshPeriod');
 
-def setandgetDfsChannelRefreshPeriod():
+def setandgetDfsChannelRefreshPeriod(radioIndex):
 
     #Giving the method name to invoke the api wifi_getRadioAutoChannelRefreshPeriodSupported()
     print "*********************************************************";
     primitive = 'WIFIHAL_GetOrSetParamBoolValue'
     getMethod = "getAutoChannelRefreshPeriodSupported"
     expectedresult="SUCCESS";
-    radioIndex = 1
+    #radioIndex = 1
     tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, 0, getMethod)
 
     enable = details.split(":")[1].strip();
@@ -120,7 +122,7 @@ def setandgetDfsChannelRefreshPeriod():
         primitive = 'WIFIHAL_GetOrSetParamULongValue'
         getMethod = "getAutoChannelRefreshPeriod"
         expectedresult="SUCCESS";
-        radioIndex = 1
+        #radioIndex = 1
         tdkTestObj ,actualresult ,details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, 0, getMethod)
         initialRefreshPeriod = details.split(":")[1];
         if expectedresult in actualresult:
@@ -135,7 +137,7 @@ def setandgetDfsChannelRefreshPeriod():
                 primitive = 'WIFIHAL_GetOrSetParamULongValue'
                 getMethod = "getRadioChannel"
                 expectedresult="SUCCESS";
-                radioIndex = 1
+                #radioIndex = 1
                 tdkTestObj ,actualresult ,details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, 0, getMethod)
                 initialRadioChannel = details.split(":")[1].strip();
                 print "InitialRadioChannel = ",initialRadioChannel;
@@ -145,7 +147,7 @@ def setandgetDfsChannelRefreshPeriod():
                 primitive = 'WIFIHAL_GetOrSetParamULongValue'
                 setMethod = "setRadioDfsRefreshPeriod"
                 expectedresult="SUCCESS";
-                radioIndex = 1
+                #radioIndex = 1
                 setRefreshPeriod = 60;
                 tdkTestObj ,actualresult ,details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, setRefreshPeriod, setMethod)
 
@@ -157,7 +159,7 @@ def setandgetDfsChannelRefreshPeriod():
                         primitive = 'WIFIHAL_GetOrSetParamULongValue'
                         getMethod = "getAutoChannelRefreshPeriod"
                         expectedresult="SUCCESS";
-                        radioIndex = 1
+                        #radioIndex = 1
                         tdkTestObj ,actualresult ,details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, 0, getMethod)
                         getRefreshPeriod = details.split(":")[1].strip();
                         print "getRefreshPeriod = " ,getRefreshPeriod;
@@ -183,7 +185,7 @@ def setandgetDfsChannelRefreshPeriod():
                         primitive = 'WIFIHAL_GetOrSetParamULongValue'
                         getMethod = "getRadioChannel"
                         expectedresult="SUCCESS";
-                        radioIndex = 1
+                        #radioIndex = 1
                         tdkTestObj ,actualresult ,details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, 0, getMethod)
                         finalRadioChannel = details.split(":")[1].strip();
                         print "finalRadioChannel =",finalRadioChannel;
@@ -201,7 +203,7 @@ def setandgetDfsChannelRefreshPeriod():
                             primitive = 'WIFIHAL_GetOrSetParamULongValue'
                             setMethod = "setRadioChannel"
                             expectedresult="SUCCESS";
-                            radioIndex = 1
+                            #radioIndex = 1
                             setRadioCh = int(initialRadioChannel)
                             tdkTestObj ,actualresult ,details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, setRadioCh, setMethod)
                             if expectedresult in actualresult:
@@ -223,7 +225,7 @@ def setandgetDfsChannelRefreshPeriod():
                         setMethod = "setRadioDfsRefreshPeriod"
                         expectedresult="SUCCESS";
                         setRefreshPeriod = int(initialRefreshPeriod);
-                        radioIndex = 1
+                        #radioIndex = 1
                         tdkTestObj ,actualresult ,details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, setRefreshPeriod, setMethod)
                         if expectedresult in actualresult:
                             print "Successfully reverted the auto channel refresh period back to initialRefreshPeriod";
@@ -253,103 +255,110 @@ print "[LIB LOAD STATUS]  :  %s" %loadmodulestatus
 if "SUCCESS" in loadmodulestatus.upper():
     obj.setLoadModuleStatus("SUCCESS");
 
-    #Giving the method name to invoke the api wifi_getRadioAutoChannelSupported()
-    print "*********************************************************";
-    primitive = 'WIFIHAL_GetOrSetParamBoolValue'
-    getMethod = "getAutoChannelSupported"
-    expectedresult="SUCCESS";
-    radioIndex = 1
-    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, 0, getMethod)
-    autoChannelSupport = details.split(":")[1].strip();
-    print "AutoChannelSupport =" ,autoChannelSupport;
-    if expectedresult in actualresult and "Disabled" in autoChannelSupport:
-        #Set the result status of execution
-        tdkTestObj.setResultStatus("FAILURE");
-        print "Automatic channel selection is not supported by this radio";
-
-        #Giving the method name to invoke the api wifi_getRadioAutoChannelEnable()
-        print "*********************************************************";
-        primitive = 'WIFIHAL_GetOrSetParamBoolValue'
-        getMethod = "getAutoChannelEnable"
-        expectedresult="SUCCESS";
-        radioIndex = 1
-        tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, 0, getMethod)
-        enable = details.split(":")[1].strip();
-        print "Auto channel enable status = " ,enable
-        if expectedresult in actualresult and "Disabled" in enable:
-            #Set the result status of execution
-            tdkTestObj.setResultStatus("SUCCESS");
-            print "Auto channel enable returns false as AutoChannelSupported is false"
-        else:
-            #Set the result status of execution
-            tdkTestObj.setResultStatus("FAILURE");
-            print "Auto channel enable returned true instead of false"
-
-    elif expectedresult in actualresult and "Enabled" in autoChannelSupport:
-        tdkTestObj.setResultStatus("SUCCESS");
-        print "Automatic channel selection is supported by this radio";
-
-        #Giving the method name to invoke the api wifi_getRadioAutoChannelEnable()
-        print "*********************************************************";
-        primitive = 'WIFIHAL_GetOrSetParamBoolValue'
-        getMethod = "getAutoChannelEnable"
-        expectedresult="SUCCESS";
-        radioIndex = 1
-        tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, 0, getMethod)
-        enable = details.split(":")[1].strip();
-        print "Auto channel enable status = " ,enable
-        if expectedresult in actualresult and "Enabled" in enable:
-            #Set the result status of execution
-            tdkTestObj.setResultStatus("SUCCESS");
-            print "Auto channel enable returned true"
-
-            setandgetDfsChannelRefreshPeriod();
-
-        elif expectedresult in actualresult and "Disabled" in enable:
-            #Set the result status of execution
-            tdkTestObj.setResultStatus("SUCCESS");
-            print "Auto channel enable returned false"
-
-            print "*********************************************************";
-            #Giving the method name to invoke the api to set auto channel enable. ie,wifi_setRadioAutoChannelEnable()
-            primitive = 'WIFIHAL_GetOrSetParamBoolValue'
-            setMethod = "setAutoChannelEnable"
-            expectedresult="SUCCESS";
-            radioIndex = 1
-            tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, 1, setMethod)
-            if expectedresult in actualresult:
-                print "Auto channel enable set as true for 2.4GHz";
-
-                #Giving the method name to invoke the api wifi_getRadioAutoChannelEnable()
-                print "*********************************************************";
-                primitive = 'WIFIHAL_GetOrSetParamBoolValue'
-                getMethod = "getAutoChannelEnable"
-                expectedresult="SUCCESS";
-                radioIndex = 1
-                tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, 0, getMethod)
-                enable = details.split(":")[1].strip();
-                if expectedresult in actualresult and "Enabled" in enable:
-                    print "Auto channel Enabled"
-                    tdkTestObj.setResultStatus("SUCCESS");
-
-                    setandgetDfsChannelRefreshPeriod();
-
-                else:
-                    print "Unable to enable Auto channel"
-                    tdkTestObj.setResultStatus("FAILURE");
-
-            else:
-                print "Unable to set auto channel enable as true for 2.4GHz";
-                tdkTestObj.setResultStatus("FAILURE");
-
+    tdkTestObjTemp, idx = getIndex(obj, radio);
+    ## Check if a invalid index is returned
+    if idx == -1:
+        print "Failed to get radio index for radio %s\n" %radio;
+        tdkTestObjTemp.setResultStatus("FAILURE");
     else:
-        #Set the result status of execution
-        tdkTestObj.setResultStatus("FAILURE");
-        print "getAutoChannelSupported() failed";
+
+	    #Giving the method name to invoke the api wifi_getRadioAutoChannelSupported()
+	    print "*********************************************************";
+	    primitive = 'WIFIHAL_GetOrSetParamBoolValue'
+	    getMethod = "getAutoChannelSupported"
+	    expectedresult="SUCCESS";
+	    radioIndex = idx;
+	    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, 0, getMethod)
+	    autoChannelSupport = details.split(":")[1].strip();
+	    print "AutoChannelSupport =" ,autoChannelSupport;
+	    if expectedresult in actualresult and "Disabled" in autoChannelSupport:
+		#Set the result status of execution
+		tdkTestObj.setResultStatus("FAILURE");
+		print "Automatic channel selection is not supported by this radio";
+
+		#Giving the method name to invoke the api wifi_getRadioAutoChannelEnable()
+		print "*********************************************************";
+		primitive = 'WIFIHAL_GetOrSetParamBoolValue'
+		getMethod = "getAutoChannelEnable"
+		expectedresult="SUCCESS";
+		radioIndex = idx;
+		tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, 0, getMethod)
+		enable = details.split(":")[1].strip();
+		print "Auto channel enable status = " ,enable
+		if expectedresult in actualresult and "Disabled" in enable:
+		    #Set the result status of execution
+		    tdkTestObj.setResultStatus("SUCCESS");
+		    print "Auto channel enable returns false as AutoChannelSupported is false"
+		else:
+		    #Set the result status of execution
+		    tdkTestObj.setResultStatus("FAILURE");
+		    print "Auto channel enable returned true instead of false"
+
+	    elif expectedresult in actualresult and "Enabled" in autoChannelSupport:
+		tdkTestObj.setResultStatus("SUCCESS");
+		print "Automatic channel selection is supported by this radio";
+
+		#Giving the method name to invoke the api wifi_getRadioAutoChannelEnable()
+		print "*********************************************************";
+		primitive = 'WIFIHAL_GetOrSetParamBoolValue'
+		getMethod = "getAutoChannelEnable"
+		expectedresult="SUCCESS";
+		radioIndex = idx;
+		tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, 0, getMethod)
+		enable = details.split(":")[1].strip();
+		print "Auto channel enable status = " ,enable
+		if expectedresult in actualresult and "Enabled" in enable:
+		    #Set the result status of execution
+		    tdkTestObj.setResultStatus("SUCCESS");
+		    print "Auto channel enable returned true"
+
+		    setandgetDfsChannelRefreshPeriod(idx);
+
+		elif expectedresult in actualresult and "Disabled" in enable:
+		    #Set the result status of execution
+		    tdkTestObj.setResultStatus("SUCCESS");
+		    print "Auto channel enable returned false"
+
+		    print "*********************************************************";
+		    #Giving the method name to invoke the api to set auto channel enable. ie,wifi_setRadioAutoChannelEnable()
+		    primitive = 'WIFIHAL_GetOrSetParamBoolValue'
+		    setMethod = "setAutoChannelEnable"
+		    expectedresult="SUCCESS";
+		    radioIndex = idx;
+		    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, 1, setMethod)
+		    if expectedresult in actualresult:
+			print "Auto channel enable set as true for 2.4GHz";
+
+			#Giving the method name to invoke the api wifi_getRadioAutoChannelEnable()
+			print "*********************************************************";
+			primitive = 'WIFIHAL_GetOrSetParamBoolValue'
+			getMethod = "getAutoChannelEnable"
+			expectedresult="SUCCESS";
+			radioIndex = idx;
+			tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, 0, getMethod)
+			enable = details.split(":")[1].strip();
+			if expectedresult in actualresult and "Enabled" in enable:
+			    print "Auto channel Enabled"
+			    tdkTestObj.setResultStatus("SUCCESS");
+
+			    setandgetDfsChannelRefreshPeriod(idx);
+
+			else:
+			    print "Unable to enable Auto channel"
+			    tdkTestObj.setResultStatus("FAILURE");
+
+		    else:
+			print "Unable to set auto channel enable as true for 2.4GHz";
+			tdkTestObj.setResultStatus("FAILURE");
+
+	    else:
+		#Set the result status of execution
+		tdkTestObj.setResultStatus("FAILURE");
+		print "getAutoChannelSupported() failed";
 
     obj.unloadModule("wifihal");
-else:
-        print "Failed to load the module";
-        obj.setLoadModuleStatus("FAILURE");
-        print "Module loading failed";
+	else:
+		print "Failed to load the module";
+		obj.setLoadModuleStatus("FAILURE");
+		print "Module loading failed";
 
