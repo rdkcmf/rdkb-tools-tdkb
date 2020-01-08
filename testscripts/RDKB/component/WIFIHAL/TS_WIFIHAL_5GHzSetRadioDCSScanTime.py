@@ -89,6 +89,9 @@ radioIndex : 1</input_parameters>
 # use tdklib library,which provides a wrapper for tdk testcase script
 import tdklib;
 import random;
+from wifiUtility import *;
+
+radio = "5G"
 
 #Test component to be tested
 obj = tdklib.TDKScriptingLibrary("wifihal","1");
@@ -106,119 +109,126 @@ print "[LIB LOAD STATUS]  :  %s" %loadmodulestatus
 if "SUCCESS" in loadmodulestatus.upper():
     obj.setLoadModuleStatus("SUCCESS");
 
-    #Primitive test case which associated to this Script
-    tdkTestObj = obj.createTestStep('WIFIHAL_GetOrSetRadioDCSScanTime');
-    #Giving the method name to invoke the api wifi_getRadioDCSScanTime()
-    tdkTestObj.addParameter("methodName","getRadioDCSScanTime");
-    #Radio index is 0 for 2.4GHz and 1 for 5GHz
-    tdkTestObj.addParameter("radioIndex",1);
-    expectedresult="SUCCESS";
-    tdkTestObj.executeTestCase(expectedresult);
-    actualresult = tdkTestObj.getResult();
-    details = tdkTestObj.getResultDetails();
-    if expectedresult in actualresult:
-	tdkTestObj.setResultStatus("SUCCESS");
-        print "TEST STEP 1: Get the DCS Scan Time for 5GHz";
-        print "EXPECTED RESULT 1: Should get the DCS Scan Time for 5GHz";
-        print "ACTUAL RESULT 1: %s" %details;
-        output_interval_seconds = int(details.split(",")[0].split("=")[1]);
-        output_dwell_milliseconds = int(details.split(",")[1].split("=")[1]);
-        print "output_interval_seconds",output_interval_seconds;
-        print "output_dwell_milliseconds",output_dwell_milliseconds;
-        #Get the result of execution
-        print "[TEST EXECUTION RESULT] : SUCCESS";
-
-        #Primitive test case which associated to this Script
-        tdkTestObj = obj.createTestStep('WIFIHAL_GetOrSetRadioDCSScanTime');
-        #Giving the method name to invoke the api wifi_setRadioDCSScanTime()
-        tdkTestObj.addParameter("methodName","setRadioDCSScanTime");
-        output_interval_seconds_set = random.randint(1,900);
-        output_dwell_milliseconds_set = random.randint(0,500);
-        print "output_interval_seconds_set",output_interval_seconds_set;
-        print "output_dwell_milliseconds_set",output_dwell_milliseconds_set;
-        #Radio index is 0 for 2.4GHz and 1 for 5GHz
-        tdkTestObj.addParameter("radioIndex",1);
-        tdkTestObj.addParameter("output_interval_seconds",output_interval_seconds_set);
-        tdkTestObj.addParameter("output_dwell_milliseconds",output_dwell_milliseconds_set);
-        expectedresult="SUCCESS";
-        tdkTestObj.executeTestCase(expectedresult);
-        actualresult = tdkTestObj.getResult();
-        details = tdkTestObj.getResultDetails();
-        if expectedresult in actualresult:
-            tdkTestObj.setResultStatus("SUCCESS");
-            print "TEST STEP 2: Set the DCS Scan Time for 5GHz";
-            print "EXPECTED RESULT 2: Should set the DCS Scan Time for 5GHz";
-            print "ACTUAL RESULT 2: %s" %details;
-            #Get the result of execution
-            print "[TEST EXECUTION RESULT] : SUCCESS";
+tdkTestObjTemp, idx = getIndex(obj, radio);
+    ## Check if a invalid index is returned
+    if idx == -1:
+        print "Failed to get radio index for radio %s\n" %radio;
+        tdkTestObjTemp.setResultStatus("FAILURE");
+    else:
 
 	    #Primitive test case which associated to this Script
 	    tdkTestObj = obj.createTestStep('WIFIHAL_GetOrSetRadioDCSScanTime');
-    	    #Giving the method name to invoke the api wifi_getRadioDCSScanTime()
+	    #Giving the method name to invoke the api wifi_getRadioDCSScanTime()
 	    tdkTestObj.addParameter("methodName","getRadioDCSScanTime");
 	    #Radio index is 0 for 2.4GHz and 1 for 5GHz
-	    tdkTestObj.addParameter("radioIndex",1);
+	    tdkTestObj.addParameter("radioIndex",idx);
 	    expectedresult="SUCCESS";
 	    tdkTestObj.executeTestCase(expectedresult);
 	    actualresult = tdkTestObj.getResult();
 	    details = tdkTestObj.getResultDetails();
-            print "details: %s"%details;
 	    if expectedresult in actualresult:
-                output_interval_seconds_get = int(details.split(",")[0].split("=")[1]);
-                output_dwell_milliseconds_get = int(details.split(",")[1].split("=")[1]);
-                print "output_interval_seconds_get",output_interval_seconds_get;
-                print "output_dwell_milliseconds_get",output_dwell_milliseconds_get;
-                if output_interval_seconds_set == output_interval_seconds_get and output_dwell_milliseconds_set == output_dwell_milliseconds_get:
-        	    tdkTestObj.setResultStatus("SUCCESS");
-	            print "TEST STEP 3: Get the previously set DCS Scan Time for 5GHz";
-	            print "EXPECTED RESULT 3: Should get the previously set DCS Scan Time for 5GHz";
-	            print "ACTUAL RESULT 3: Set and Get values are equal" ;
-                    print "details",details;
-	            #Get the result of execution
-	            print "[TEST EXECUTION RESULT] : SUCCESS";
-	        else:
-        	    tdkTestObj.setResultStatus("FAILURE");
-	            print "TEST STEP 3: Get the previously set DCS Scan Time for 5GHz";
-	            print "EXPECTED RESULT 3: Should get the previously set DCS Scan Time for 5GHz";
-	            print "ACTUAL RESULT 3: Set and Get values are not equal";
-                    print "details",details;
-	            #Get the result of execution
-	            print "[TEST EXECUTION RESULT] : FAILURE";
-
-            #Reverting back to initial value
-            tdkTestObj = obj.createTestStep('WIFIHAL_GetOrSetRadioDCSScanTime');
-    	    #Giving the method name to invoke the api wifi_setRadioDCSScanTime()
-            tdkTestObj.addParameter("methodName","setRadioDCSScanTime");
-            #Radio index is 0 for 2.4GHz and 1 for 5GHz
-            tdkTestObj.addParameter("radioIndex",1);
-            tdkTestObj.addParameter("output_interval_seconds",output_interval_seconds);
-            tdkTestObj.addParameter("output_dwell_milliseconds",output_dwell_milliseconds);
-            expectedresult="SUCCESS";
-            tdkTestObj.executeTestCase(expectedresult);
-            actualresult = tdkTestObj.getResult();
-            details = tdkTestObj.getResultDetails();
-            if expectedresult in actualresult:
 		tdkTestObj.setResultStatus("SUCCESS");
-		print "Successfully reverted to initial values"
-                print "output_interval_seconds",output_interval_seconds;
-                print "output_dwell_milliseconds",output_dwell_milliseconds;
+		print "TEST STEP 1: Get the DCS Scan Time for 5GHz";
+		print "EXPECTED RESULT 1: Should get the DCS Scan Time for 5GHz";
+		print "ACTUAL RESULT 1: %s" %details;
+		output_interval_seconds = int(details.split(",")[0].split("=")[1]);
+		output_dwell_milliseconds = int(details.split(",")[1].split("=")[1]);
+		print "output_interval_seconds",output_interval_seconds;
+		print "output_dwell_milliseconds",output_dwell_milliseconds;
+		#Get the result of execution
+		print "[TEST EXECUTION RESULT] : SUCCESS";
+
+		#Primitive test case which associated to this Script
+		tdkTestObj = obj.createTestStep('WIFIHAL_GetOrSetRadioDCSScanTime');
+		#Giving the method name to invoke the api wifi_setRadioDCSScanTime()
+		tdkTestObj.addParameter("methodName","setRadioDCSScanTime");
+		output_interval_seconds_set = random.randint(1,900);
+		output_dwell_milliseconds_set = random.randint(0,500);
+		print "output_interval_seconds_set",output_interval_seconds_set;
+		print "output_dwell_milliseconds_set",output_dwell_milliseconds_set;
+		#Radio index is 0 for 2.4GHz and 1 for 5GHz
+		tdkTestObj.addParameter("radioIndex",idx);
+		tdkTestObj.addParameter("output_interval_seconds",output_interval_seconds_set);
+		tdkTestObj.addParameter("output_dwell_milliseconds",output_dwell_milliseconds_set);
+		expectedresult="SUCCESS";
+		tdkTestObj.executeTestCase(expectedresult);
+		actualresult = tdkTestObj.getResult();
+		details = tdkTestObj.getResultDetails();
+		if expectedresult in actualresult:
+		    tdkTestObj.setResultStatus("SUCCESS");
+		    print "TEST STEP 2: Set the DCS Scan Time for 5GHz";
+		    print "EXPECTED RESULT 2: Should set the DCS Scan Time for 5GHz";
+		    print "ACTUAL RESULT 2: %s" %details;
+		    #Get the result of execution
+		    print "[TEST EXECUTION RESULT] : SUCCESS";
+
+		    #Primitive test case which associated to this Script
+		    tdkTestObj = obj.createTestStep('WIFIHAL_GetOrSetRadioDCSScanTime');
+		    #Giving the method name to invoke the api wifi_getRadioDCSScanTime()
+		    tdkTestObj.addParameter("methodName","getRadioDCSScanTime");
+		    #Radio index is 0 for 2.4GHz and 1 for 5GHz
+		    tdkTestObj.addParameter("radioIndex",idx);
+		    expectedresult="SUCCESS";
+		    tdkTestObj.executeTestCase(expectedresult);
+		    actualresult = tdkTestObj.getResult();
+		    details = tdkTestObj.getResultDetails();
+		    print "details: %s"%details;
+		    if expectedresult in actualresult:
+			output_interval_seconds_get = int(details.split(",")[0].split("=")[1]);
+			output_dwell_milliseconds_get = int(details.split(",")[1].split("=")[1]);
+			print "output_interval_seconds_get",output_interval_seconds_get;
+			print "output_dwell_milliseconds_get",output_dwell_milliseconds_get;
+			if output_interval_seconds_set == output_interval_seconds_get and output_dwell_milliseconds_set == output_dwell_milliseconds_get:
+			    tdkTestObj.setResultStatus("SUCCESS");
+			    print "TEST STEP 3: Get the previously set DCS Scan Time for 5GHz";
+			    print "EXPECTED RESULT 3: Should get the previously set DCS Scan Time for 5GHz";
+			    print "ACTUAL RESULT 3: Set and Get values are equal" ;
+			    print "details",details;
+			    #Get the result of execution
+			    print "[TEST EXECUTION RESULT] : SUCCESS";
+			else:
+			    tdkTestObj.setResultStatus("FAILURE");
+			    print "TEST STEP 3: Get the previously set DCS Scan Time for 5GHz";
+			    print "EXPECTED RESULT 3: Should get the previously set DCS Scan Time for 5GHz";
+			    print "ACTUAL RESULT 3: Set and Get values are not equal";
+			    print "details",details;
+			    #Get the result of execution
+			    print "[TEST EXECUTION RESULT] : FAILURE";
+
+		    #Reverting back to initial value
+		    tdkTestObj = obj.createTestStep('WIFIHAL_GetOrSetRadioDCSScanTime');
+		    #Giving the method name to invoke the api wifi_setRadioDCSScanTime()
+		    tdkTestObj.addParameter("methodName","setRadioDCSScanTime");
+		    #Radio index is 0 for 2.4GHz and 1 for 5GHz
+		    tdkTestObj.addParameter("radioIndex",idx);
+		    tdkTestObj.addParameter("output_interval_seconds",output_interval_seconds);
+		    tdkTestObj.addParameter("output_dwell_milliseconds",output_dwell_milliseconds);
+		    expectedresult="SUCCESS";
+		    tdkTestObj.executeTestCase(expectedresult);
+		    actualresult = tdkTestObj.getResult();
+		    details = tdkTestObj.getResultDetails();
+		    if expectedresult in actualresult:
+			tdkTestObj.setResultStatus("SUCCESS");
+			print "Successfully reverted to initial values"
+			print "output_interval_seconds",output_interval_seconds;
+			print "output_dwell_milliseconds",output_dwell_milliseconds;
+		    else:
+			tdkTestObj.setResultStatus("FAILURE");
+			print "Unable to revert to initial value"
+		else:
+		    tdkTestObj.setResultStatus("FAILURE");
+		    print "TEST STEP 2: Set the DCS Scan Time for 5GHz";
+		    print "EXPECTED RESULT 2: Should set the DCS Scan Time for 5GHz";
+		    print "ACTUAL RESULT 2: %s" %details;
+		    #Get the result of execution
+		    print "[TEST EXECUTION RESULT] : FAILURE";
 	    else:
 		tdkTestObj.setResultStatus("FAILURE");
-		print "Unable to revert to initial value"
-	else:
-            tdkTestObj.setResultStatus("FAILURE");
-            print "TEST STEP 2: Set the DCS Scan Time for 5GHz";
-            print "EXPECTED RESULT 2: Should set the DCS Scan Time for 5GHz";
-            print "ACTUAL RESULT 2: %s" %details;
-            #Get the result of execution
-            print "[TEST EXECUTION RESULT] : FAILURE";
-    else:
-	tdkTestObj.setResultStatus("FAILURE");
-        print "TEST STEP 1: Get the DCS Scan Time for 5GHz";
-        print "EXPECTED RESULT 1: Should get the DCS Scan Time for 5GHz";
-        print "ACTUAL RESULT 1: %s" %details;
-        #Get the result of execution
-        print "[TEST EXECUTION RESULT] : FAILURE";
+		print "TEST STEP 1: Get the DCS Scan Time for 5GHz";
+		print "EXPECTED RESULT 1: Should get the DCS Scan Time for 5GHz";
+		print "ACTUAL RESULT 1: %s" %details;
+		#Get the result of execution
+		print "[TEST EXECUTION RESULT] : FAILURE";
     obj.unloadModule("wifihal");
 else:
         print "Failed to load the module";
