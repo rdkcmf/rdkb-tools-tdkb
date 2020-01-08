@@ -72,6 +72,8 @@ radioIndex        :    1</input_parameters>
 import tdklib; 
 from wifiUtility import *;
 
+radio = "5G"
+
 #Test component to be tested
 obj = tdklib.TDKScriptingLibrary("wifihal","1");
 
@@ -87,45 +89,52 @@ print "[LIB LOAD STATUS]  :  %s" %loadmodulestatus
 if "SUCCESS" in loadmodulestatus.upper():
     obj.setLoadModuleStatus("SUCCESS");
 
-    expectedresult="SUCCESS";
-    radioIndex = 1
-    getMethod = "getRadioDFSEnable"
-    primitive = 'WIFIHAL_GetOrSetParamBoolValue'
-    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, 0, getMethod)
-
-    if expectedresult in actualresult :
-        enable = details.split(":")[1].strip()
-        if "Enabled" in enable:
-            oldEnable = 1
-            newEnable = 0
-        else:
-            oldEnable = 0
-            newEnable = 1
-
-        setMethod = "setRadioDFSEnable"
-        tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, newEnable, setMethod)
-
-        if expectedresult in actualresult :
-            print "Enable state toggled using set"
-            tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, 0, getMethod)
-
-            if expectedresult in actualresult and enable not in details.split(":")[1].strip():
-                print "SetEnable Success, verified with getEnable() api"
-                tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, oldEnable, setMethod)
-
-                if expectedresult in actualresult :
-                    print "Enable status reverted back";
-                else:
-                    print "Couldn't revert enable status"
-            else:
-                print "Set validation with get api failed"
-                tdkTestObj.setResultStatus("FAILURE");
-	else:
-	    print "wifi_setRadioDFSEnable() call failed"
-            tdkTestObj.setResultStatus("FAILURE");
+tdkTestObjTemp, idx = getIndex(obj, radio);
+    ## Check if a invalid index is returned
+    if idx == -1:
+        print "Failed to get radio index for radio %s\n" %radio;
+        tdkTestObjTemp.setResultStatus("FAILURE");
     else:
-        print "wifi_getRadioDFSEnable() call failed"
-        tdkTestObj.setResultStatus("FAILURE");
+
+	    expectedresult="SUCCESS";
+	    radioIndex = idx;
+	    getMethod = "getRadioDFSEnable"
+	    primitive = 'WIFIHAL_GetOrSetParamBoolValue'
+	    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, 0, getMethod)
+
+	    if expectedresult in actualresult :
+		enable = details.split(":")[1].strip()
+		if "Enabled" in enable:
+		    oldEnable = 1
+		    newEnable = 0
+		else:
+		    oldEnable = 0
+		    newEnable = 1
+
+		setMethod = "setRadioDFSEnable"
+		tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, newEnable, setMethod)
+
+		if expectedresult in actualresult :
+		    print "Enable state toggled using set"
+		    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, 0, getMethod)
+
+		    if expectedresult in actualresult and enable not in details.split(":")[1].strip():
+			print "SetEnable Success, verified with getEnable() api"
+			tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, oldEnable, setMethod)
+
+			if expectedresult in actualresult :
+			    print "Enable status reverted back";
+			else:
+			    print "Couldn't revert enable status"
+		    else:
+			print "Set validation with get api failed"
+			tdkTestObj.setResultStatus("FAILURE");
+		else:
+		    print "wifi_setRadioDFSEnable() call failed"
+		    tdkTestObj.setResultStatus("FAILURE");
+	    else:
+		print "wifi_getRadioDFSEnable() call failed"
+		tdkTestObj.setResultStatus("FAILURE");
 
     obj.unloadModule("wifihal");
 
