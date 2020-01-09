@@ -77,6 +77,8 @@ import tdklib;
 from wifiUtility import *;
 import random;
 
+radio = "5G"
+
 #Test component to be tested
 obj = tdklib.TDKScriptingLibrary("wifihal","1");
 
@@ -92,87 +94,94 @@ print "[LIB LOAD STATUS]  :  %s" %loadmodulestatus
 if "SUCCESS" in loadmodulestatus.upper():
     obj.setLoadModuleStatus("SUCCESS");
 
-    expectedresult="SUCCESS";
-    getMethod = "getBandSteeringCapability"
-    primitive = 'WIFIHAL_GetOrSetParamBoolValue'
-    radioIndex = 1
-    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, 0, getMethod)
-
-    if expectedresult in actualresult:
-        enable = details.split(":")[1].strip()
-        tdkTestObj.setResultStatus("SUCCESS");
-        if "Enabled" in enable:
-
-            getMethod = "getBandSteeringRSSIThreshold"
-            primitive = 'WIFIHAL_GetOrSetParamIntValue'
-            radioIndex = 1
-            tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, 0, getMethod)
-            initGetValue = details.split(":")[1].strip()
-
-            if expectedresult in actualresult:
-                tdkTestObj.setResultStatus("SUCCESS");
-                setMethod = "setBandSteeringRSSIThreshold"
-                radioIndex = 1
-                primitive = 'WIFIHAL_GetOrSetParamIntValue'
-                r = range(0,int(initGetValue)) + range(int(initGetValue)+1, 100)
-                setValue = random.choice(r)
-                tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, setValue, setMethod)
-
-                if expectedresult in actualresult:
-                    getMethod = "getBandSteeringRSSIThreshold"
-                    radioIndex = 1
-                    primitive = 'WIFIHAL_GetOrSetParamIntValue'
-                    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, 0, getMethod)
-
-                    if expectedresult in actualresult:
-                        tdkTestObj.setResultStatus("SUCCESS");
-                        finalGetValue = details.split(":")[1].strip()
-
-                        if setValue == int(finalGetValue):
-                            print "TEST STEP: Comparing set and get values of BandSteeringRSSIThreshold"
-                            print "EXPECTED RESULT: Set and get values should be the same"
-                            print "ACTUAL RESULT : Set and get values are the same"
-                            print "Set value: %s"%setValue
-                            print "Get value: %s"%finalGetValue
-                            print "TEST EXECUTION RESULT :SUCCESS"
-                            tdkTestObj.setResultStatus("SUCCESS");
-                        else:
-                            print "TEST STEP: Comparing set and get values of BandSteeringRSSIThreshold"
-                            print "EXPECTED RESULT: Set and get values should be the same"
-                            print "ACTUAL RESULT : Set and get values are NOT the same"
-                            print "Set value: %s"%setValue
-                            print "Get value: %s"%finalGetValue
-                            print "TEST EXECUTION RESULT :FAILURE"
-                            tdkTestObj.setResultStatus("FAILURE");
-                    else:
-                        tdkTestObj.setResultStatus("FAILURE");
-                        print "getBandSteeringRSSIThreshold() call failed after set operation"
-
-                    #Revert back to initial value
-                    setMethod = "setBandSteeringRSSIThreshold"
-                    primitive = 'WIFIHAL_GetOrSetParamIntValue'
-                    setValue = int(initGetValue)
-                    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, setValue, setMethod)
-
-                    if expectedresult in actualresult:
-                        tdkTestObj.setResultStatus("SUCCESS");
-                        print "Successfully reverted back to inital value"
-                    else:
-                        tdkTestObj.setResultStatus("FAILURE");
-                        print "Unable to revert to initial value"
-                else:
-                    tdkTestObj.setResultStatus("FAILURE");
-                    print "setBandSteeringRSSIThreshold() call failed"
-            else:
-                tdkTestObj.setResultStatus("FAILURE");
-                print "getBandSteeringRSSIThreshold() call failed"
-        else:
-            tdkTestObj.setResultStatus("SUCCESS");
-            print "BandSteeringCapability is disabled"
+    tdkTestObjTemp, idx = getIndex(obj, radio);
+    ## Check if a invalid index is returned
+    if idx == -1:
+        print "Failed to get radio index for radio %s\n" %radio;
+        tdkTestObjTemp.setResultStatus("FAILURE");
     else:
-        tdkTestObj.setResultStatus("FAILURE");
-        print "getBandSteeringCapability() call failed"
-    obj.unloadModule("wifihal");
+
+	    expectedresult="SUCCESS";
+	    getMethod = "getBandSteeringCapability"
+	    primitive = 'WIFIHAL_GetOrSetParamBoolValue'
+	    radioIndex = idx;
+	    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, 0, getMethod)
+
+	    if expectedresult in actualresult:
+		enable = details.split(":")[1].strip()
+		tdkTestObj.setResultStatus("SUCCESS");
+		if "Enabled" in enable:
+
+		    getMethod = "getBandSteeringRSSIThreshold"
+		    primitive = 'WIFIHAL_GetOrSetParamIntValue'
+		    radioIndex = idx;
+		    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, 0, getMethod)
+		    initGetValue = details.split(":")[1].strip()
+
+		    if expectedresult in actualresult:
+			tdkTestObj.setResultStatus("SUCCESS");
+			setMethod = "setBandSteeringRSSIThreshold"
+			radioIndex = idx;
+			primitive = 'WIFIHAL_GetOrSetParamIntValue'
+			r = range(0,int(initGetValue)) + range(int(initGetValue)+1, 100)
+			setValue = random.choice(r)
+			tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, setValue, setMethod)
+
+			if expectedresult in actualresult:
+			    getMethod = "getBandSteeringRSSIThreshold"
+			    radioIndex = idx;
+			    primitive = 'WIFIHAL_GetOrSetParamIntValue'
+			    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, 0, getMethod)
+
+			    if expectedresult in actualresult:
+				tdkTestObj.setResultStatus("SUCCESS");
+				finalGetValue = details.split(":")[1].strip()
+
+				if setValue == int(finalGetValue):
+				    print "TEST STEP: Comparing set and get values of BandSteeringRSSIThreshold"
+				    print "EXPECTED RESULT: Set and get values should be the same"
+				    print "ACTUAL RESULT : Set and get values are the same"
+				    print "Set value: %s"%setValue
+				    print "Get value: %s"%finalGetValue
+				    print "TEST EXECUTION RESULT :SUCCESS"
+				    tdkTestObj.setResultStatus("SUCCESS");
+				else:
+				    print "TEST STEP: Comparing set and get values of BandSteeringRSSIThreshold"
+				    print "EXPECTED RESULT: Set and get values should be the same"
+				    print "ACTUAL RESULT : Set and get values are NOT the same"
+				    print "Set value: %s"%setValue
+				    print "Get value: %s"%finalGetValue
+				    print "TEST EXECUTION RESULT :FAILURE"
+				    tdkTestObj.setResultStatus("FAILURE");
+			    else:
+				tdkTestObj.setResultStatus("FAILURE");
+				print "getBandSteeringRSSIThreshold() call failed after set operation"
+
+			    #Revert back to initial value
+			    setMethod = "setBandSteeringRSSIThreshold"
+			    primitive = 'WIFIHAL_GetOrSetParamIntValue'
+			    setValue = int(initGetValue)
+			    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, setValue, setMethod)
+
+			    if expectedresult in actualresult:
+				tdkTestObj.setResultStatus("SUCCESS");
+				print "Successfully reverted back to inital value"
+			    else:
+				tdkTestObj.setResultStatus("FAILURE");
+				print "Unable to revert to initial value"
+			else:
+			    tdkTestObj.setResultStatus("FAILURE");
+			    print "setBandSteeringRSSIThreshold() call failed"
+		    else:
+			tdkTestObj.setResultStatus("FAILURE");
+			print "getBandSteeringRSSIThreshold() call failed"
+		else:
+		    tdkTestObj.setResultStatus("SUCCESS");
+		    print "BandSteeringCapability is disabled"
+	    else:
+		tdkTestObj.setResultStatus("FAILURE");
+		print "getBandSteeringCapability() call failed"
+	    obj.unloadModule("wifihal");
 
 else:
     print "Failed to load wifi module";
