@@ -109,7 +109,7 @@ sysobj = tdklib.TDKScriptingLibrary("sysutil","1");
 ip = <ipaddress>
 port = <port>
 obj.configureTestCase(ip,port,'TS_WIFIHAL_2.4GHzFactoryResetRadio');
-sysobj.configureTestCase(ip,port,'TS_WIFIHAL_2.4GHzSetApSecurityReset');
+sysobj.configureTestCase(ip,port,'TS_WIFIHAL_2.4GHzFactoryResetRadio');
 #Get the result of connection with test component and DUT
 loadmodulestatus =obj.getLoadModuleResult()
 sysloadmodulestatus =sysobj.getLoadModuleResult();
