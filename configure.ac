@@ -143,5 +143,6 @@ AC_CONFIG_FILES([Makefile
 	 tdkb_tr181_stub/Makefile
 	 MoCAHAL_Stub/Makefile
 	 MTAHAL_Stub/Makefile
-         XUPNP_Stub/Makefile])
+         XUPNP_Stub/Makefile
+         EPONHAL_Stub/Makefile])
 AC_OUTPUT
