@@ -41,8 +41,6 @@
 
 char subsystem_prefix[32]={0};
 extern  PDSLH_CPE_CONTROLLER_OBJECT     pDslhCpeController;
-unsigned int    g_PingTest_WriteID;
-unsigned int    g_TracerouteTest_WriteID;
 GETPARAMNAMES *GetNames;
 GETPARAMVALUES *GetValues;
 GETPARAMATTR *GetAttr;
