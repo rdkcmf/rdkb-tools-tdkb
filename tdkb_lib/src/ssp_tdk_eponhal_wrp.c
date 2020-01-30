@@ -76,3 +76,89 @@ int ssp_EPONHAL_GetParamUlongValue(char* paramName, unsigned long* value)
 
     return return_status;
 }
+/*******************************************************************************************
+ *
+ * Function Name        : ssp_EPONHAL_GetManufacturerInfo
+ * Description          : This function invokes WiFi hal api dpoe_getManufacturerInfo()
+ * @param [in]          : NIL
+ * @param [out]         : return status an integer value 0-success and 1-Failure
+ *
+ ********************************************************************************************/
+int ssp_EPONHAL_GetManufacturerInfo(dpoe_manufacturer_t *pManufacturerInfo)
+{
+    printf("\n ssp_EPONHAL_GetManufacturerInfo ----> Entry\n");
+    int return_status = 0;
+    return_status = dpoe_getManufacturerInfo(pManufacturerInfo);
+    printf("return value from ssp_EPONHAL_GetManufacturerInfo  is %d\n",return_status);
+    if(return_status != SSP_SUCCESS)
+    {
+     printf("\nssp_EPONHAL_GetManufacturerInfo::Failed\n");
+     return SSP_FAILURE;
+    }
+    else
+    {
+     printf("\nssp_EPONHAL_GetManufacturerInfo::Success\n");
+     return return_status;
+    }
+    printf("\n ssp_EPONHAL_GetManufacturerInfo ----> Exit\n");
+}
+
+
+/*******************************************************************************************
+ *
+ * Function Name        : ssp_EPONHAL_GetEponChipInfo
+ * Description          : This function invokes WiFi hal api dpoe_getEponChipInfo()
+ * @param [in]          : NIL
+ * @param [out]         : return status an integer value 0-success and 1-Failure
+ *
+ ********************************************************************************************/
+int ssp_EPONHAL_GetEponChipInfo(dpoe_epon_chip_info_t *pEponChipInfo)
+{
+    printf("\n ssp_EPONHAL_GetEponChipInfo----> Entry\n");
+    int return_status = 0;
+    return_status = dpoe_getEponChipInfo(pEponChipInfo);
+    printf("return value from ssp_EPONHAL_GetEponChipInfo  is %d\n",return_status);
+    if(return_status != SSP_SUCCESS)
+    {
+     printf("\n ssp_EPONHAL_GetEponChipInfo::Failed\n");
+     return SSP_FAILURE;
+    }
+    else
+    {
+     printf("\n ssp_EPONHAL_GetEponChipInfo::Success\n");
+     return return_status;
+    }
+    printf("\n ssp_EPONHAL_GetEponChipInfo ----> Exit\n");
+}
+
+
+
+/*******************************************************************************************
+ *
+ * Function Name        : ssp_EPONHAL_GetFirmwareInfo
+ * Description          : This function invokes WiFi hal api dpoe_getFirmwareInfo()
+ * @param [in]          : NIL
+ * @param [out]         : return status an integer value 0-success and 1-Failure
+ *
+ ********************************************************************************************/
+int ssp_EPONHAL_GetFirmwareInfo(dpoe_firmware_info_t *pFirmwareInfo)
+{
+    printf("\n ssp_EPONHAL_GetFirmwareInfo----> Entry\n");
+    int return_status = 0;
+    return_status = dpoe_getFirmwareInfo(pFirmwareInfo);
+    printf("return value from ssp_EPONHAL_GetFirmwareInfo  is %d\n",return_status);
+    if(return_status != SSP_SUCCESS)
+    {
+     printf("\n ssp_EPONHAL_GetFirmwareInfo::Failed\n");
+     return SSP_FAILURE;
+    }
+    else
+    {
+     printf("\n ssp_EPONHAL_GetFirmwareInfo::Success\n");
+     return return_status;
+    }
+    printf("\n ssp_EPONHAL_GetFirmwareInfo ----> Exit\n");
+}
+
+
+
