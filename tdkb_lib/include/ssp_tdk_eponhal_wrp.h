@@ -20,12 +20,16 @@
 #ifndef __SSP_TDK_EPONHAL_WRP_H__
 #define __SSP_TDK_EPONHAL_WRP_H__
 #include "dpoe_hal.h"
-
+#define SSP_SUCCESS       0
+#define SSP_FAILURE       1
 #ifdef __cplusplus
 extern "C"
 {
 #endif
         int ssp_EPONHAL_GetParamUlongValue(char* paramName, unsigned long* value);
+        int ssp_EPONHAL_GetFirmwareInfo(dpoe_firmware_info_t *pFirmwareInfo);
+        int ssp_EPONHAL_GetEponChipInfo(dpoe_epon_chip_info_t *pEponChipInfo);
+        int ssp_EPONHAL_GetManufacturerInfo(dpoe_manufacturer_t *pManufacturerInfo);
 #ifdef __cplusplus
 }
 #endif
