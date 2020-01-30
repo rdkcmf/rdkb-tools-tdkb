@@ -120,7 +120,15 @@ if "SUCCESS" in loadmodulestatus.upper():
         time.sleep(30)
 
         resultDetails = " "
+        timeout = time.time() + 30
         while (resultDetails.find('MTA_COMPLETE') == -1 and resultDetails.find('MTA_ERROR') == -1):
+
+            if time.time() >= timeout:
+                tdkTestObj.setResultStatus("FAILURE")
+                print "TEST EXECUTION TIMEOUT"
+                print "[TEST EXECUTION RESULT] : FAILURE"
+                break
+
             #Script to load the configuration file of the component
             tdkTestObj = obj.createTestStep("MTAHAL_getMtaOperationalStatus")    
             expectedresult="SUCCESS"
@@ -145,7 +153,7 @@ if "SUCCESS" in loadmodulestatus.upper():
                 print "[TEST EXECUTION RESULT] : FAILURE"
 
             # sleep a while when MTA device resets in progress
-            time.sleep(10)
+            time.sleep(1)
 
     else:
         tdkTestObj.setResultStatus("FAILURE")
