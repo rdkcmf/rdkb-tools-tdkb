@@ -222,6 +222,32 @@ typedef struct _wifi_associated_dev_stats {
         wifi_rssi_snapshot_t cli_rssi_ack;
 } wifi_associated_dev_stats_t;
 
+typedef struct _wifi_associated_dev2
+{
+  mac_address_t cli_MACAddress;
+  char cli_IPAddress[64];
+  bool cli_AuthenticationState;
+  unsigned int cli_LastDataDownlinkRate;
+  unsigned int cli_LastDataUplinkRate;
+  int cli_SignalStrength;
+  unsigned int cli_Retransmissions;
+  bool cli_Active;
+  char cli_OperatingStandard[64];
+  char cli_OperatingChannelBandwidth[64];
+  int  cli_SNR;
+  char cli_InterferenceSources[64];
+  unsigned long cli_DataFramesSentAck;
+  unsigned long cli_DataFramesSentNoAck;
+  unsigned long cli_BytesSent;
+  unsigned long cli_BytesReceived;
+  int cli_RSSI;
+  int cli_MinRSSI;
+  int cli_MaxRSSI;
+  unsigned int cli_Disassociations;
+  unsigned int cli_AuthenticationFailures;
+  unsigned long long cli_Associations;
+} wifi_associated_dev2_t;
+
 typedef struct {
        unsigned int    wake_time;
     unsigned int    wake_interval;
@@ -356,7 +382,19 @@ typedef struct _wifi_channelStats2 {
         unsigned int    ch_SelfBssUtil;
 } wifi_channelStats2_t;
 
+typedef struct wifi_associated_dev_tid_entry
+{
+    unsigned char  ac;
+    unsigned char  tid;
+    unsigned long long ewma_time_ms;
+    unsigned long long sum_time_ms;
+    unsigned long long num_msdus;
+} wifi_associated_dev_tid_entry_t;
 
+typedef struct wifi_associated_dev_tid_stats
+{
+  wifi_associated_dev_tid_entry_t tid_array[16];
+} wifi_associated_dev_tid_stats_t;
 /* To provide external linkage to C Functions defined in TDKB Component folder */
 extern "C"
 {
@@ -403,6 +441,10 @@ extern "C"
     int ssp_WIFIHALGetApAssociatedDeviceRxStatsResult(int radioIndex, mac_address_t *clientMacAddress, wifi_associated_dev_rate_info_rx_stats_t **stats_array, unsigned int *output_array_size, unsigned long long *handle);
     int ssp_WIFIHALGetApAssociatedDeviceStats(int apIndex, mac_address_t *clientMacAddress, wifi_associated_dev_stats_t *associated_dev_stats, unsigned long long *handle);
     int ssp_WIFIHALGetApAssociatedDeviceDiagnosticResult3(int apIndex, wifi_associated_dev3_t **associated_dev_array, unsigned int *output_array_size);
+    int ssp_WIFIHALGetApAssociatedDeviceTidStatsResult(int  radioIndex,  mac_address_t *clientMacAddress, wifi_associated_dev_tid_stats_t *tid_stats,  unsigned long long *handle);
+    int ssp_WIFIHALGetBandSteeringLog(int  record_index, unsigned long *pSteeringTime, char *pClientMAC, int *pSourceSSIDIndex, int *pDestSSIDIndex, int *pSteeringReason);
+    int ssp_WIFIHALGetApAssociatedDeviceDiagnosticResult2(int apIndex, wifi_associated_dev2_t **associated_dev_array, unsigned int *dev_cnt);
+
 };
 
 class RDKTestAgent;
@@ -455,6 +497,10 @@ class WIFIHAL : public RDKTestStubInterface, public AbstractServer<WIFIHAL>
                   this->bindAndAddMethod(Procedure("WIFIHAL_SetApScanFilter", PARAMS_BY_NAME, JSON_STRING, "methodName", JSON_STRING, "apIndex", JSON_INTEGER, "essid", JSON_STRING,"mode", JSON_INTEGER, NULL), &WIFIHAL::WIFIHAL_SetApScanFilter);
                   this->bindAndAddMethod(Procedure("WIFIHAL_GetApAssociatedDeviceDiagnosticResult3",PARAMS_BY_NAME, JSON_STRING, "apIndex",JSON_INTEGER,NULL), &WIFIHAL::WIFIHAL_GetApAssociatedDeviceDiagnosticResult3);
                   this->bindAndAddMethod(Procedure("WIFIHAL_GetRadioChannelStats2",PARAMS_BY_NAME, JSON_STRING, "radioIndex",JSON_INTEGER,NULL), &WIFIHAL::WIFIHAL_GetRadioChannelStats2);
+                  this->bindAndAddMethod(Procedure("WIFIHAL_GetApAssociatedDeviceTidStatsResult",PARAMS_BY_NAME,JSON_STRING,"radioIndex",JSON_INTEGER,"MAC",JSON_STRING,NULL), &WIFIHAL::WIFIHAL_GetApAssociatedDeviceTidStatsResult);
+                  this->bindAndAddMethod(Procedure("WIFIHAL_GetBandSteeringLog",PARAMS_BY_NAME,JSON_STRING,"record_index",JSON_INTEGER,NULL), &WIFIHAL::WIFIHAL_GetBandSteeringLog);
+                  this->bindAndAddMethod(Procedure("WIFIHAL_GetApAssociatedDeviceDiagnosticResult2",PARAMS_BY_NAME,JSON_STRING,"apIndex",JSON_INTEGER,NULL), &WIFIHAL::WIFIHAL_GetApAssociatedDeviceDiagnosticResult2);
+
                 }
         /*inherited functions*/
         bool initialize(IN const char* szVersion);
@@ -505,6 +551,11 @@ class WIFIHAL : public RDKTestStubInterface, public AbstractServer<WIFIHAL>
         void WIFIHAL_CreateAp(IN const Json::Value& req, OUT Json::Value& response);
         void WIFIHAL_GetApAssociatedDeviceDiagnosticResult3(IN const Json::Value& req, OUT Json::Value& response);
         void WIFIHAL_StartNeighborScan(IN const Json::Value& req, OUT Json::Value& response);
+        void WIFIHAL_GetApAssociatedDeviceTidStatsResult(IN const Json::Value& req, OUT Json::Value& response);
+        void WIFIHAL_GetBandSteeringLog(IN const Json::Value& req, OUT Json::Value& response);
+        void WIFIHAL_GetApAssociatedDeviceDiagnosticResult2(IN const Json::Value& req, OUT Json::Value& response);
 };
 #endif //__WIFIHAL_STUB_H__
+
+
 

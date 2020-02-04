@@ -63,4 +63,10 @@ int ssp_WIFIHALGetApAssociatedDeviceRxStatsResult(int radioIndex, mac_address_t 
 int ssp_WIFIHALGetApAssociatedDeviceTxStatsResult(int radioIndex, mac_address_t *clientMacAddress, wifi_associated_dev_rate_info_tx_stats_t **stats_array, unsigned int *output_array_size, unsigned long long *handle);
 int ssp_WIFIHALGetRadioChannelStats2(int radioIndex, wifi_channelStats2_t *outputChannelStats2);
 int ssp_WIFIHALStartNeighborScan(int apIndex, wifi_neighborScanMode_t scan_mode, int dwell_time, unsigned int chan_num, unsigned int* chan_list);
+int ssp_WIFIHALGetApAssociatedDeviceTidStatsResult(int radioIndex,  mac_address_t *clientMacAddress, wifi_associated_dev_tid_stats_t *tid_stats, unsigned long long *handle);
+int ssp_WIFIHALGetBandSteeringLog(int  record_index, unsigned long *pSteeringTime, char  *pClientMAC, int *pSourceSSIDIndex, int *pDestSSIDIndex, int *pSteeringReason);
+int ssp_WIFIHALGetApAssociatedDeviceDiagnosticResult2(int apIndex, wifi_associated_dev2_t **associated_dev_array, unsigned int *dev_cnt);
+
+
+
 
