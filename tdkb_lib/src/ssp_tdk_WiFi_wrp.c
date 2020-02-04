@@ -98,7 +98,7 @@ int ssp_WIFIHALApplySettings(int radioIndex, char* methodName)
 
 
 /********************************************************************************************
- * 
+ *
  * Function Name        : ssp_WIFIHALGetOrSetParamBoolValue
  * Description          : This function invokes WiFi hal's get/set apis, when the value to be
                           get /set is Bool
@@ -256,6 +256,10 @@ int ssp_WIFIHALGetOrSetParamBoolValue(int radioIndex, unsigned char *enable, cha
         return_status = wifi_pushApSsidAdvertisementEnable(radioIndex, *enable);
     else if(!strcmp(method, "getATMCapable"))
         return_status = wifi_getATMCapable(enable);
+    else if(!strcmp(method, "getBSSTransitionImplemented"))
+        return_status = wifi_getBSSTransitionImplemented(radioIndex,enable);
+    else if(!strcmp(method, "getBSSTransitionActivation"))
+        return_status = wifi_getBSSTransitionActivation(radioIndex,enable);
     else
     {
         return_status = SSP_FAILURE;
@@ -537,7 +541,7 @@ int ssp_WIFIHALGetOrSetParamIntValue(int radioIndex, int* output, char* method)
     printf("GetorSetParam: %d\n" , *output);
     printf("MethodName: %s\n", method);
     int return_status = 0;
-    
+
 
     if(!strcmp(method, "getRadioMCS"))
         return_status = wifi_getRadioMCS(radioIndex, output);
@@ -611,6 +615,8 @@ int ssp_WIFIHALGetOrSetParamIntValue(int radioIndex, int* output, char* method)
         return_status = wifi_getRadioBandUtilization(radioIndex, output);
     else if(!strcmp(method, "setApCsaDeauth"))
         return_status = wifi_setApCsaDeauth(radioIndex, *output);
+    else if(!strcmp(method, "setBSSTransitionActivation"))
+        return_status = wifi_setBSSTransitionActivation(radioIndex, *output);
     else
     {
         return_status = SSP_FAILURE;
@@ -818,8 +824,8 @@ int ssp_WIFIHALGetOrSetSecurityRadiusServer(int radioIndex, char* IPAddress, uns
  *
  * @param [in]          : radioIndex - WiFi radio index value
  * @param [in]          : method     - name of the wifi hal api to be invoked
- * @param [in]          : bridgeName 
- * @param [in]          : IP 
+ * @param [in]          : bridgeName
+ * @param [in]          : IP
  * @param [in]          : subnet
  * @param [out]         : return status an integer value 0-success and 1-Failure
  ********************************************************************************************/
@@ -1728,4 +1734,103 @@ int ssp_WIFIHALStartNeighborScan(int apIndex, wifi_neighborScanMode_t scan_mode,
     }
     printf("\n ssp_WIFIHALGetNeighboringWiFiStatus ---> Exit\n");
 }
+/*******************************************************************************************
+ *
+ * Function Name        :ssp_WIFIHALGetApAssociatedDeviceTidStatsResult
+ * Description          : This function invokes WiFi HAL api wifi_getApAssociatedDeviceTidStatsResult
+ *
+ * @param [in]          : radioIndex - WiFi radio index value
+ * @param [in]          : MAC - MAC address of the device
+ * @param [out]         : associated_dev - double pointer to a structure of type wifi_associated_dev_rate_info_tx_stats_t
+ * @param [out]         : handle - pointer to a variable storing the number of access points identified
+ * @param [out]         : return status an integer value 0-success and 1-Failure
+ ********************************************************************************************/
+int ssp_WIFIHALGetApAssociatedDeviceTidStatsResult(int radioIndex,  mac_address_t *clientMacAddress, wifi_associated_dev_tid_stats_t *tid_stats,  unsigned long long *handle)
+{
+    printf("\n ssp_WIFIHALGetApAssociatedDeviceTidStatsResult ----> Entry\n");
+    printf("Radio index:%d\n",radioIndex);
+    printf("MAC:%02x:%02x:%02x:%02x:%02x:%02x\n",(*clientMacAddress)[0],(*clientMacAddress)[1],(*clientMacAddress)[2],(*clientMacAddress)[3],(*clientMacAddress)[4],(*clientMacAddress)[5]);
+    int return_status = 0;
+    return_status = wifi_getApAssociatedDeviceTidStatsResult(radioIndex, clientMacAddress, tid_stats, handle);
+    if(return_status != SSP_SUCCESS)
+    {
+     printf("\nssp_WIFIHALGetApAssociatedDeviceTidStatsResult::Failed\n");
+     return SSP_FAILURE;
+    }
+    else
+    {
+     printf("\n ssp_WIFIHALGetApAssociatedDeviceTidStatsResult::Success\n");
+     return return_status;
+    }
+    printf("\n ssp_WIFIHALGetApAssociatedDeviceTidStatsResult ---> Exit\n");
+}
+
+
+
+
+/*******************************************************************************************
+ *
+ * Function Name                  ssp_WIFIHALGetBandSteeringLog
+ * Description                    This function invokes WiFi HAL api wifi_getBandSteeringLog
+ * @param[in]  record_index       Record index
+ * @param[out] pSteeringTime      Returns the UTC time in seconds
+ * @param[in]  pClientMAC         pClientMAC is pre allocated as 64bytes
+ * @param[in]  pSourceSSIDIndex   Source SSID index
+ * @param[in]  pDestSSIDIndex     Destination SSID index
+ * @param[out] pSteeringReason    Returns the predefined steering trigger reas
+ ********************************************************************************************/
+int ssp_WIFIHALGetBandSteeringLog(int record_index, unsigned long *pSteeringTime, char *pClientMAC, int *pSourceSSIDIndex, int *pDestSSIDIndex, int *pSteeringReason)
+{
+    printf("\n ssp_WIFIHALGetBandSteeringLog ----> Entry\n");
+    printf("record index:%d\n",record_index);
+    printf ("pClientMAC : %s\n",*pClientMAC);
+    int return_status = 0;
+    return_status = wifi_getBandSteeringLog(record_index, pSteeringTime, pClientMAC,pSourceSSIDIndex,pDestSSIDIndex,pSteeringReason);
+    if(return_status != SSP_SUCCESS)
+    {
+     printf("\nssp_WIFIHALGetBandSteeringLog::Failed\n");
+     return SSP_FAILURE;
+    }
+    else
+    {
+     printf("\n ssp_WIFIHALGetBandSteeringLog::Success\n");
+     return return_status;
+    }
+    printf("\n ssp_WIFIHALGetBandSteeringLog ---> Exit\n");
+}
+
+
+
+
+/*******************************************************************************************
+ *
+ * Function Name                    :ssp_WIFIHALGetApAssociatedDeviceDiagnosticResult2
+ * Description                      : This function invokes WiFi HAL api wifi_getApAssociatedDeviceDiagnosticResult2
+ *
+ * @param[in] apIndex               : Access Point index
+ * @param[out] dev_cnt               : Array size, to be returned
+ * @param[out] associated_dev_array  : pointer to structure
+
+ ********************************************************************************************/
+int ssp_WIFIHALGetApAssociatedDeviceDiagnosticResult2(int apIndex, wifi_associated_dev2_t **associated_dev_array, unsigned int *dev_cnt)
+{
+    printf("\n ssp_WIFIHALGetApAssociatedDeviceDiagnosticResult2 ----> Entry\n");
+    printf("radio index:%d\n",apIndex);
+    int return_status = 0;
+    return_status = wifi_getApAssociatedDeviceDiagnosticResult2(apIndex,associated_dev_array,dev_cnt);
+    if(return_status != SSP_SUCCESS)
+    {
+     printf("\n ssp_WIFIHALGetApAssociatedDeviceDiagnosticResult2::Failed\n");
+     return SSP_FAILURE;
+    }
+    else
+    {
+     printf("\n ssp_WIFIHALGetApAssociatedDeviceDiagnosticResult2\n");
+     return return_status;
+    }
+    printf("\n ssp_WIFIHALGetApAssociatedDeviceDiagnosticResult2 ---> Exit\n");
+}
+
+
+
 

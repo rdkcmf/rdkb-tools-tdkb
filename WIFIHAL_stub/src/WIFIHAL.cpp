@@ -109,7 +109,7 @@ void WIFIHAL::WIFIHAL_GetOrSetParamBoolValue(IN const Json::Value& req, OUT Json
             sprintf(details, "%s operation success", methodName);
             response["result"]="SUCCESS";
             response["details"]=details;
-        
+
             if(strstr(methodName, "Radio")||strstr(methodName, "SSID")||strstr(methodName, "Ap")||strstr(methodName, "BandSteering"))
             {
                 retValue = ssp_WIFIHALApplySettings(radioIndex,methodName);
@@ -191,7 +191,7 @@ void WIFIHAL::WIFIHAL_GetOrSetParamULongValue(IN const Json::Value& req, OUT Jso
             sprintf(details, "%s operation success", methodName);
             response["result"]="SUCCESS";
             response["details"]=details;
-        
+
             if(strstr(methodName, "Radio")||strstr(methodName, "SSID")||strstr(methodName, "Ap"))
             {
                 retValue = ssp_WIFIHALApplySettings(radioIndex,methodName);
@@ -472,7 +472,7 @@ void WIFIHAL::WIFIHAL_GetOrSetParamIntValue(IN const Json::Value& req, OUT Json:
             sprintf(details, "%s operation success", methodName);
             response["result"]="SUCCESS";
             response["details"]=details;
-        
+
             if(strstr(methodName, "Radio")||strstr(methodName, "SSID")||strstr(methodName, "Ap"))
             {
                 retValue = ssp_WIFIHALApplySettings(radioIndex,methodName);
@@ -558,7 +558,7 @@ void WIFIHAL::WIFIHAL_GetOrSetParamUIntValue (IN const Json::Value& req, OUT Jso
             sprintf(details, "%s operation success", methodName);
             response["result"]="SUCCESS";
             response["details"]=details;
-        
+
             if(strstr(methodName, "Radio")||strstr(methodName, "SSID")||strstr(methodName, "Ap"))
             {
                 retValue = ssp_WIFIHALApplySettings(radioIndex,methodName);
@@ -1217,7 +1217,7 @@ void WIFIHAL::WIFIHAL_FactoryReset(IN const Json::Value& req, OUT Json::Value& r
  * @param [in] req-     : radioIndex - radio Index value of wifi
                           methodName - identifier for the hal api name
 			  RadiusServerRetries - Number of retries for Radius requests
-			  RadiusServerRequestTimeout - Radius request timeout in seconds after which the request must be retransmitted for the # of 
+			  RadiusServerRequestTimeout - Radius request timeout in seconds after which the request must be retransmitted for the # of
                                                        retries available
 			  PMKLifetime - Default time in seconds after which a Wi-Fi client is forced to ReAuthenticate (def 8 hrs)
 			  PMKCaching - Time interval in seconds after which the PMKSA (Pairwise Master Key Security Association)cache is purged (def 5min)
@@ -2361,5 +2361,179 @@ extern "C" void DestroyObject(WIFIHAL *stubobj)
     DEBUG_PRINT(DEBUG_LOG,"Destroying WIFIHAL object\n");
     delete stubobj;
 }
+/*********************************************************************************************
+ * Function Name        :  WIFIHAL_GetApAssociatedDeviceTidStatsResult
+ * Description          : This function invokes WiFi hal get api which are
+                          related to wifi_getApAssociatedDeviceTidStatsResult
+ * @param [in] req-     : radioIndex : radio Index value of wifi
+                        : MAC : DeviceMacAddress - the MacAddress(string)of the device
+ * @param [out] response - filled with SUCCESS or FAILURE based on the output status of operation
+ ********************************************************************************************/
+void WIFIHAL::WIFIHAL_GetApAssociatedDeviceTidStatsResult(IN const Json::Value& req, OUT Json::Value& response)
+{
+    DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_GetApAssociatedDeviceTidStatsResult ----->Entry\n");
+    int i =0,n=0;
+    int radioIndex = 1;
+    wifi_associated_dev_tid_stats_t tid_stats;
+    wifi_associated_dev_tid_entry_t *s = NULL;
+    char ClientAddress[64] = {'\0'};
+    unsigned char tmp_MACConv[6];
+    radioIndex = req["radioIndex"].asInt();
+    unsigned long long handle = 0;
+    unsigned char ac =0 ,tid =0;
+    unsigned long long ewma_time_ms = 0,sum_time_ms = 0,num_msdus = 0 ;
+    int returnValue = 1;
+    char details[1000] = {'\0'};
+    mac_address_t MAC;
+    strcpy(ClientAddress, req["MAC"].asCString());
+    sscanf(ClientAddress, "%02x:%02x:%02x:%02x:%02x:%02x",
+                           &tmp_MACConv[0],
+                           &tmp_MACConv[1],
+                           &tmp_MACConv[2],
+                           &tmp_MACConv[3],
+                           &tmp_MACConv[4],
+                           &tmp_MACConv[5]);
+    for(i =0 ;i <6; i++)
+        MAC[i]=(unsigned char)tmp_MACConv[i];
+    DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_GetApAssociatedDeviceTidStatsResult MAC %02x:%02x:%02x:%02x:%02x:%02x\n",MAC[0],MAC[1],MAC[2],MAC[3],MAC[4],MAC[5]);
+    returnValue = ssp_WIFIHALGetApAssociatedDeviceTidStatsResult(radioIndex, (mac_address_t *)tmp_MACConv, & tid_stats, &handle);
+    if(0 == returnValue)
+    {
+          
+          n = (sizeof(tid_stats.tid_array)/sizeof(tid_stats.tid_array[0]));
+          printf ("Size of array is %d ",n);
+          if ( n > 0)
+          {
+              for (i=0; i< n; i++)
+              {
+                  s = &tid_stats.tid_array[i];
+                  printf("ac : %s,tid:%s,ewma_time_ms:%llu,sum_time_ms:%llu,num_msdus:%llu",s->ac,s->tid,s->ewma_time_ms,s->sum_time_ms,s->num_msdus);
+                  ac = s->ac;
+                  tid = s->tid;
+                  ewma_time_ms = s->ewma_time_ms;
+                  sum_time_ms = s->sum_time_ms;
+                  num_msdus = s->num_msdus;
+              }
+              sprintf(details," Value returned is : ac : %s,tid:%s,ewma_time_ms:%llu,sum_time_ms:%llu,num_msdus:%llu",ac,tid,ewma_time_ms,sum_time_ms,num_msdus);
+              response["result"]="SUCCESS";
+              response["details"]=details;
+
+          }
+          else
+          {
+             sprintf(details,"wifi_getApAssociatedDeviceTidStatsResult returned empty buffer");
+             response["result"]="FAILURE";
+             response["details"]=details;
+
+          }
+          return;
+
+    }
+    else
+    {
+        sprintf(details, "wifi_getApAssociatedDeviceTidStatsResult operation failed");
+        response["result"]="FAILURE";
+        response["details"]=details;
+        DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_GetApAssociatedDeviceTidStatsResult  ---->Error in execution\n");
+        return;
+    }
+}
+
+
+/*******************************************************************************************
+ *
+ * Function Name        : WIFIHAL_GetBandSteeringLog
+ * Description          : This function invokes WiFi hal get api which are
+                          related to wifi_getBandSteeringLog
+ * @param [in] req-     : record_index: index value of record
+ * @param [out] response - filled with SUCCESS or FAILURE based on the output status of operation
+
+ * @@param[out] pSteeringTime      Returns the UTC time in seconds
+ * @param[out] pSteeringReason    Returns the predefined steering trigger reason
+ ********************************************************************************************/
+void WIFIHAL::WIFIHAL_GetBandSteeringLog(IN const Json::Value& req, OUT Json::Value& response)
+{
+    DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_GetBandSteeringLog ----->Entry\n");
+    char pClientMAC[64] = {'\0'};
+    int  pSourceSSIDIndex = 0;
+    int  pDestSSIDIndex = 0;
+    int  pSteeringReason = 0 ;
+    int  record_index;
+    char details[1000] = {'\0'};
+    int returnValue = 1;
+    unsigned long pSteeringTime;
+    record_index = req["record_index"].asInt();
+
+    returnValue = ssp_WIFIHALGetBandSteeringLog(record_index,&pSteeringTime,pClientMAC,&pSourceSSIDIndex,&pDestSSIDIndex,&pSteeringReason);
+    if(0 == returnValue)
+    {
+      sprintf(details,"Value returned is : pSteeringTime: %lu ,pSteeringReason : %d, pClientMAC :%s,pSourceSSIDIndex :%s ,pDestSSIDIndex :%s",pSteeringTime,pSteeringReason,pClientMAC,pSourceSSIDIndex,pDestSSIDIndex);
+      response["result"]="SUCCESS";
+      response["details"]=details;
+      return;
+    }
+    else
+    {
+        sprintf(details, "wifi_getBandSteeringLog operation failed");
+        response["result"]="FAILURE";
+        response["details"]=details;
+        DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_GetBandSteeringLog---->Error in execution\n");
+        return;
+    }
+}
+
+
+/*******************************************************************************************
+ *
+ * Function Name                    : WIFIHAL_GetApAssociatedDeviceDiagnosticResult2
+ * Description                      : This function invokes WiFi hal api wifi_getApAssociatedDeviceDiagnosticResult2
+ * @param[in] apIndex               :Access Point index
+ * @param [out] response            : filled with SUCCESS or FAILURE based on the output status of operation
+ *
+ ********************************************************************************************/
+void WIFIHAL::WIFIHAL_GetApAssociatedDeviceDiagnosticResult2(IN const Json::Value& req, OUT Json::Value& response)
+{
+    DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_GetApAssociatedDeviceDiagnosticResult2 ----->Entry\n");
+    int apIndex = 1;
+    wifi_associated_dev2_t *associated_dev2 = NULL;
+    unsigned int dev_cnt = 0;
+    char details[2000] = {'\0'};
+    int returnValue = 1;
+    apIndex  = req["apIndex"].asInt();
+
+    returnValue = ssp_WIFIHALGetApAssociatedDeviceDiagnosticResult2(apIndex,&associated_dev2,&dev_cnt);
+    if(0 == returnValue)
+    {
+        if(associated_dev2 && dev_cnt > 0)
+        {
+             sprintf(details, "Value returned is : dev count:%u,cli_IPAddress :%s",dev_cnt,associated_dev2->cli_IPAddress);
+             response["result"]="SUCCESS";
+             response["details"]=details;
+        }
+        else
+        {
+           sprintf(details,"wifi_getApAssociatedDeviceDiagnosticResult2 returned empty buffer");
+           response["result"]="FAILURE";
+           response["details"]=details;
+
+        }
+
+        if(associated_dev2)
+           free(associated_dev2);
+
+        return;
+    }
+    else
+    {
+        sprintf(details, "wifi_getApAssociatedDeviceDiagnosticResult2 failed");
+        response["result"]="FAILURE";
+        response["details"]=details;
+        free(associated_dev2);
+        DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_GetApAssociatedDeviceDiagnosticResult2 ---->Error in execution\n");
+        return;
+    }
+}
+
+
 
 
