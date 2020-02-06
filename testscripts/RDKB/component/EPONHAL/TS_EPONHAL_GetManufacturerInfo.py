@@ -1,4 +1,4 @@
-##########################################################################
+#########################################################################
 # If not stated otherwise in this file or this component's Licenses.txt
 # file the following copyright and licenses apply:
 #
@@ -39,7 +39,7 @@
     <rdk_version>RDKB</rdk_version>
   </rdk_versions>
   <test_cases>
-    <test_case_id>TC_EPONHAL_6</test_case_id>
+    <test_case_id>TC_EPONHAL_11</test_case_id>
     <test_objective>Get the  Manufacturer Info using dpoe_getManufacturerInfo() and check if the received details is non empty.</test_objective>
     <test_type>Positive</test_type>
     <test_setup>Broadband</test_setup>
@@ -90,22 +90,24 @@ if "SUCCESS" in loadmodulestatus.upper():
     resultDetails = tdkTestObj.getResultDetails();
 
     if expectedresult in actualresult and resultDetails != " " :
-        manufacturer_Info =  resultDetails.split(':')[1].split(',')[0].strip()
-        manufacturer_OrganizationName = resultDetails.split(':')[2].strip()
-        if manufacturer_Info and manufacturer_OrganizationName:
+        manufacturer_Info =  resultDetails.split(':')[2].split(',')[0].strip()
+        print "manufacturer_Info:",manufacturer_Info;
+        manufacturer_OrganizationName = resultDetails.split(':')[3].strip()
+        print"manufacturer_OrganizationName:",manufacturer_OrganizationName;
+        if not  manufacturer_Info and not manufacturer_OrganizationName:
            #Set the result status of execution
-           tdkTestObj.setResultStatus("SUCCESS");
+           tdkTestObj.setResultStatus("FAILURE");
            print "TEST STEP 1: Get the manufacturer_OrganizationName ,manufacturer_Info ";
            print "EXPECTED RESULT 1: Should get the manufacturer_OrganizationName ,manufacturer_Info";
            print "ACTUAL RESULT 1: %s" %resultDetails;
            #Get the result of execution
-           print "[TEST EXECUTION RESULT] : SUCCESS";
+           print "[TEST EXECUTION RESULT] : FAILURE";
         else:
-            tdkTestObj.setResultStatus("FAILURE");
+            tdkTestObj.setResultStatus("SUCCESS");
             print "TEST STEP 1: Get the manufacturer_OrganizationName ,manufacturer_Info ";
             print "EXPECTED RESULT 1: Should get the manufacturer_OrganizationName ,manufacturer_Info";
-            print "ACTUAL RESULT 1: Failed to get the , ManufacturerInfo Details : %s" %resultDetails;
-            print "[TEST EXECUTION RESULT] : FAILURE";
+            print "ACTUAL RESULT 1:  ManufacturerInfo Details : %s" %resultDetails;
+            print "[TEST EXECUTION RESULT] : SUCCESS";
     else:
         tdkTestObj.setResultStatus("FAILURE");
         print "TEST STEP : Get the manufacturer_Info";
@@ -119,5 +121,6 @@ else:
     print "Failed to load the module";
     obj.setLoadModuleStatus("FAILURE");
     print "Module loading failed";
-    
+
+
 
