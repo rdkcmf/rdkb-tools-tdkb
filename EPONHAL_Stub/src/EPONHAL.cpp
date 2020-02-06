@@ -112,6 +112,106 @@ void EPONHAL::EPONHAL_GetParamUlongValue(IN const Json::Value& req, OUT Json::Va
     DEBUG_PRINT(DEBUG_TRACE,"\n EPONHAL_GetParamUlongValue ---> Exit\n");
     return;
 }
+/*******************************************************************************************
+ *
+ * Function Name        : EPONHAL_GetFirmwareInfo
+ * Description          : This function invokes EPON  hal api dpoe_getFirmwareInfo()
+ * @param [in] req-     : NIL
+ * @param [out] response - filled with SUCCESS or FAILURE based on the output status of operation
+ *
+ *******************************************************************************************/
+void EPONHAL::EPONHAL_GetFirmwareInfo(IN const Json::Value& req, OUT Json::Value& response)
+{
+    DEBUG_PRINT(DEBUG_TRACE,"\n EPONHAL_GetFirmwareInfo----->Entry\n");
+    int returnValue;
+    char details[200] = {'\0'};
+    dpoe_firmware_info_t pFirmwareInfo;
+    returnValue = ssp_EPONHAL_GetFirmwareInfo(&pFirmwareInfo);
+    if(0 == returnValue)
+       {
+            sprintf(details, "Value returned is : info_bootVersion : %d,info_bootCrc32 :%lu,info_appVersion :%d ,info_appCrc32 : %lu",pFirmwareInfo.info_bootVersion,pFirmwareInfo.info_bootCrc32,pFirmwareInfo.info_appVersion,pFirmwareInfo.info_appCrc32);
+            response["result"]="SUCCESS";
+            response["details"]=details;
+            return;
+       }
+    else
+       {
+            sprintf(details, "EPONHAL_GetFirmwareInfo failure");
+            response["result"]="FAILURE";
+            response["details"]=details;
+            return;
+       }
+    DEBUG_PRINT(DEBUG_TRACE,"\n EPONHAL_GetFirmwareInfo --->Exit\n");
+}
+
+
+
+/*******************************************************************************************
+ *
+ * Function Name        : EPON_GetEponChipInfo
+ * Description          : This function invokes EPON  hal api dpoe_getEponChipInfo()
+ * @param [in] req-     : NIL
+ * @param [out] response - filled with SUCCESS or FAILURE based on the output status of operation
+ *
+ *******************************************************************************************/
+void EPONHAL::EPONHAL_GetEponChipInfo(IN const Json::Value& req, OUT Json::Value& response)
+{
+    DEBUG_PRINT(DEBUG_TRACE,"\n EPON_GetEponChipInfo----->Entry\n");
+    int returnValue;
+    char details[200] = {'\0'};
+    dpoe_epon_chip_info_t pEponChipInfo;
+    returnValue = ssp_EPONHAL_GetEponChipInfo(& pEponChipInfo);
+    if(0 == returnValue)
+       {
+            sprintf(details, "Value returned is : info_JedecId :%d ,info_ChipModel :%lu,info_ChipVersion :%lu",pEponChipInfo.info_JedecId,pEponChipInfo.info_ChipModel,pEponChipInfo.info_ChipVersion);
+            response["result"]="SUCCESS";
+            response["details"]=details;
+            return;
+       }
+    else
+       {
+            sprintf(details, "EPONHAL_GetEponChipInfo failure");
+            response["result"]="FAILURE";
+            response["details"]=details;
+            return;
+       }
+    DEBUG_PRINT(DEBUG_TRACE,"\n EPONHAL_GetEponChipInfo --->Exit\n");
+}
+
+
+/*******************************************************************************************
+ *
+ * Function Name        : EPON_GetManufacturerInfo
+ * Description          : This function invokes EPON  hal api dpoe_getManufacturerInfo()
+ * @param [in] req-     : NIL
+ * @param [out] response - filled with SUCCESS or FAILURE based on the output status of operation
+ *
+ *******************************************************************************************/
+void EPONHAL::EPONHAL_GetManufacturerInfo(IN const Json::Value& req, OUT Json::Value& response)
+{
+    DEBUG_PRINT(DEBUG_TRACE,"\n EPON_GetManufacturerInfo----->Entry\n");
+    int returnValue;
+    char details[200] = {'\0'};
+    dpoe_manufacturer_t pManufacturerInfo;
+    returnValue = ssp_EPONHAL_GetManufacturerInfo(&pManufacturerInfo);
+    if(0 == returnValue)
+       {
+            sprintf(details, "Value returned is : manufacturer_Info :%s ,manufacturer_OrganizationName :%s",pManufacturerInfo.manufacturer_Info,pManufacturerInfo.manufacturer_OrganizationName );
+            response["result"]="SUCCESS";
+            response["details"]=details;
+            return;
+       }
+    else
+       {
+            sprintf(details, "EPONHAL_GetManufacturerInfo  failure");
+            response["result"]="FAILURE";
+            response["details"]=details;
+            return;
+       }
+    DEBUG_PRINT(DEBUG_TRACE,"\n EPONHAL_GetManufacturerInfo --->Exit\n");
+}
+
+
 
 /***************************************************************************************************
  *Function Name   : CreateObject

@@ -39,6 +39,7 @@
 #define TEST_FAILURE false
 
 using namespace std;
+
 /* RDKTestAgent : This Class provides interface for the module to enable RPC mechanism. */
 class RDKTestAgent;
 /* RDKTestStubInterface : This Class provides provides interface for the modules.  */
@@ -49,7 +50,10 @@ class EPONHAL : public RDKTestStubInterface, public AbstractServer<EPONHAL>
                 EPONHAL(TcpSocketServer &ptrRpcServer) : AbstractServer <EPONHAL>(ptrRpcServer)
                 {
                         this->bindAndAddMethod(Procedure("EPONHAL_GetParamUlongValue", PARAMS_BY_NAME, JSON_STRING, "paramName", JSON_STRING, "paramType", JSON_STRING,  NULL), &EPONHAL::EPONHAL_GetParamUlongValue);
-                }
+                        this->bindAndAddMethod(Procedure("EPONHAL_GetFirmwareInfo", PARAMS_BY_NAME, JSON_STRING, NULL), &EPONHAL::EPONHAL_GetFirmwareInfo);
+                        this->bindAndAddMethod(Procedure("EPONHAL_GetEponChipInfo", PARAMS_BY_NAME, JSON_STRING, NULL), &EPONHAL::EPONHAL_GetEponChipInfo);
+                        this->bindAndAddMethod(Procedure("EPONHAL_GetManufacturerInfo", PARAMS_BY_NAME, JSON_STRING, NULL), &EPONHAL::EPONHAL_GetManufacturerInfo);
+                }                
 
                 bool initialize(IN const char* szVersion);
                 bool cleanup(const char*);
@@ -57,5 +61,8 @@ class EPONHAL : public RDKTestStubInterface, public AbstractServer<EPONHAL>
                 bool testmodulepost_requisites();
 
                 void EPONHAL_GetParamUlongValue(IN const Json::Value& req, OUT Json::Value& response);
+                void EPONHAL_GetFirmwareInfo(IN const Json::Value& req, OUT Json::Value& response);
+                void EPONHAL_GetEponChipInfo(IN const Json::Value& req, OUT Json::Value& response);
+                void EPONHAL_GetManufacturerInfo(IN const Json::Value& req, OUT Json::Value& response);
 };
 #endif
