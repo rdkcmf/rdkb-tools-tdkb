@@ -39,7 +39,7 @@
     <rdk_version>RDKB</rdk_version>
   </rdk_versions>
   <test_cases>
-    <test_case_id>TC_EPONHAL_5</test_case_id>
+    <test_case_id>TC_EPONHAL_9</test_case_id>
     <test_objective>Get the tEponChipInfo using dpoe_getEponChipInfo() and check if the reveived details is non empty.</test_objective>
     <test_type>Positive</test_type>
     <test_setup>Broadband</test_setup>
