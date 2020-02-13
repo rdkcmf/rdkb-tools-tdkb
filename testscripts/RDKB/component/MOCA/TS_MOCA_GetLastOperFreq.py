@@ -73,8 +73,8 @@ TestManager GUI will publish the result as PASS in Execution/Console page of Tes
 </xml>
 
 '''
-# use tdklib library,which provides a wrapper for tdk testcase script 
-import tdklib; 
+# use tdklib library,which provides a wrapper for tdk testcase script
+import tdklib;
 
 #Test component to be tested
 obj = tdklib.TDKScriptingLibrary("moca","1");
@@ -192,7 +192,7 @@ if "SUCCESS" in loadmodulestatus.upper():
                         actualresult = tdkTestObj.getResult();
                         Last_Freq= tdkTestObj.getResultDetails();
 
-                        if expectedresult in actualresult and Curr_Freq in Last_Freq:
+                        if expectedresult in actualresult and int(Curr_Freq) == int(Last_Freq):
                             #Set the result status of execution
                             tdkTestObj.setResultStatus("SUCCESS");
                             print "TEST STEP 6: Get the last operating frequency and check with previous frequency";
@@ -304,6 +304,7 @@ if "SUCCESS" in loadmodulestatus.upper():
         print "[TEST EXECUTION RESULT] : FAILURE";
     obj.unloadModule("moca");
 else:
-        print "Failed to load moca module";
-        obj.setLoadModuleStatus("FAILURE");
-        print "Module loading failed";
+    print "Failed to load moca module";
+    obj.setLoadModuleStatus("FAILURE");
+    print "Module loading failed";
+
