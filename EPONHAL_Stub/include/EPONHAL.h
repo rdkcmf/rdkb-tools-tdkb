@@ -53,7 +53,11 @@ class EPONHAL : public RDKTestStubInterface, public AbstractServer<EPONHAL>
                         this->bindAndAddMethod(Procedure("EPONHAL_GetFirmwareInfo", PARAMS_BY_NAME, JSON_STRING, NULL), &EPONHAL::EPONHAL_GetFirmwareInfo);
                         this->bindAndAddMethod(Procedure("EPONHAL_GetEponChipInfo", PARAMS_BY_NAME, JSON_STRING, NULL), &EPONHAL::EPONHAL_GetEponChipInfo);
                         this->bindAndAddMethod(Procedure("EPONHAL_GetManufacturerInfo", PARAMS_BY_NAME, JSON_STRING, NULL), &EPONHAL::EPONHAL_GetManufacturerInfo);
-                }                
+                        this->bindAndAddMethod(Procedure("EPONHAL_GetOnuPacketBufferCapabilities", PARAMS_BY_NAME, JSON_STRING, NULL), &EPONHAL::EPONHAL_GetOnuPacketBufferCapabilities);
+                        this->bindAndAddMethod(Procedure("EPONHAL_GetOnuId", PARAMS_BY_NAME, JSON_STRING, NULL), &EPONHAL::EPONHAL_GetOnuId);
+                        this->bindAndAddMethod(Procedure("EPONHAL_GetMaxLogicalLinks", PARAMS_BY_NAME, JSON_STRING, NULL), &EPONHAL::EPONHAL_GetMaxLogicalLinks);
+                        this->bindAndAddMethod(Procedure("EPONHAL_GetDeviceSysDescrInfo", PARAMS_BY_NAME, JSON_STRING, NULL), &EPONHAL::EPONHAL_GetDeviceSysDescrInfo);
+                }
 
                 bool initialize(IN const char* szVersion);
                 bool cleanup(const char*);
@@ -64,5 +68,9 @@ class EPONHAL : public RDKTestStubInterface, public AbstractServer<EPONHAL>
                 void EPONHAL_GetFirmwareInfo(IN const Json::Value& req, OUT Json::Value& response);
                 void EPONHAL_GetEponChipInfo(IN const Json::Value& req, OUT Json::Value& response);
                 void EPONHAL_GetManufacturerInfo(IN const Json::Value& req, OUT Json::Value& response);
+                void EPONHAL_GetOnuPacketBufferCapabilities(IN const Json::Value& req, OUT Json::Value& response);
+                void EPONHAL_GetOnuId(IN const Json::Value& req, OUT Json::Value& response);
+                void EPONHAL_GetMaxLogicalLinks(IN const Json::Value& req, OUT Json::Value& response);
+                void EPONHAL_GetDeviceSysDescrInfo(IN const Json::Value& req, OUT Json::Value& response);
 };
 #endif

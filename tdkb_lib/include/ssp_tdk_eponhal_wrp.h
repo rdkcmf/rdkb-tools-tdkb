@@ -30,6 +30,10 @@ extern "C"
         int ssp_EPONHAL_GetFirmwareInfo(dpoe_firmware_info_t *pFirmwareInfo);
         int ssp_EPONHAL_GetEponChipInfo(dpoe_epon_chip_info_t *pEponChipInfo);
         int ssp_EPONHAL_GetManufacturerInfo(dpoe_manufacturer_t *pManufacturerInfo);
+        int ssp_EPONHAL_GetOnuPacketBufferCapabilities(dpoe_onu_packet_buffer_capabilities_t *pCapabilities);
+        int ssp_EPONHAL_GetOnuId(char* macAddress);
+        int ssp_EPONHAL_GetMaxLogicalLinks(dpoe_onu_max_logical_links_t *pMaxLogicalLinks);
+        int ssp_EPONHAL_GetDeviceSysDescrInfo(dpoe_device_sys_descr_info_t *pdevSysDescrInfo);
 #ifdef __cplusplus
 }
 #endif

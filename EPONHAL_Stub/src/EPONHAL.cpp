@@ -213,6 +213,92 @@ void EPONHAL::EPONHAL_GetManufacturerInfo(IN const Json::Value& req, OUT Json::V
 
 
 
+/*****************************************************************************************************
+ *Function name : EPONHAL_GetOnuId
+ *Description   : This function will invoke the SSP  HAL wrapper to get the ONU ID
+ *@param [out]  : response - filled with SUCCESS or FAILURE based on the return value
+ *******************************************************************************************************/
+void EPONHAL::EPONHAL_GetOnuId(IN const Json::Value& req, OUT Json::Value& response)
+{
+
+    char macAddress[18] = {0};
+
+    DEBUG_PRINT(DEBUG_TRACE,"\n EPONHAL_GetOnuId ---> Entry \n");
+
+    if(ssp_EPONHAL_GetOnuId(macAddress) == 0)
+    {
+        DEBUG_PRINT(DEBUG_TRACE, "Successfully retrieved the ONUID MAC as %s\n", macAddress);
+        response["result"] = "SUCCESS";
+        response["details"] = macAddress;
+        return;
+    }
+    else
+    {
+        response["result"] = "FAILURE";
+        response["details"] = "EPONHAL_GetOnuId failed.Please check logs";
+        DEBUG_PRINT(DEBUG_TRACE,"\n EPONHAL_GetOnuId failed. EPONHAL_GetOnuId ---> Exit\n");
+        return;
+    }
+}
+
+/*****************************************************************************************************
+ *Function name : EPONHAL_GetMaxLogicalLinks
+ *Description   : This function will invoke the SSP  HAL wrapper to get the MaxLogicalLinks
+ *@param [out]  : response - filled with SUCCESS or FAILURE based on the return value
+ *******************************************************************************************************/
+void EPONHAL::EPONHAL_GetMaxLogicalLinks(IN const Json::Value& req, OUT Json::Value& response)
+{
+    char details[120] = {'\0'};
+    dpoe_onu_max_logical_links_t maxLogicalLinks;
+
+    DEBUG_PRINT(DEBUG_TRACE,"\n EPONHAL_GetMaxLogicalLinks ---> Entry \n");
+
+    if(ssp_EPONHAL_GetMaxLogicalLinks(&maxLogicalLinks) == 0)
+    {
+        sprintf(details, "lnks_bidirectional: %u, links_downstreamonly: %u", maxLogicalLinks.links_bidirectional, maxLogicalLinks.links_downstreamonly);
+        DEBUG_PRINT(DEBUG_TRACE, "Successfully retrieved the maxLogicalLinks as %s: \n", details);
+        response["result"] = "SUCCESS";
+        response["details"] = details;
+        return;
+    }
+    else
+    {
+        response["result"] = "FAILURE";
+        response["details"] = "EPONHAL_GetMaxLogicalLinks failed.Please check logs";
+        DEBUG_PRINT(DEBUG_TRACE,"\n EPONHAL_GetMaxLogicalLinks failed. EPONHAL_GetMaxLogicalLinks ---> Exit\n");
+        return;
+    }
+}
+
+/*****************************************************************************************************
+ *Function name : EPONHAL_DeviceSysDescrInfo
+ *Description   : This function will invoke the SSP  HAL wrapper to get the DeviceSysDescrInfo
+ *@param [out]  : response - filled with SUCCESS or FAILURE based on the return value
+ *******************************************************************************************************/
+void EPONHAL::EPONHAL_GetDeviceSysDescrInfo(IN const Json::Value& req, OUT Json::Value& response)
+{
+    char details[120] = {'\0'};
+    dpoe_device_sys_descr_info_t devSysDescrInfo;
+
+    DEBUG_PRINT(DEBUG_TRACE,"\n EPONHAL_DeviceSysDescrInfo ---> Entry \n");
+
+    if(ssp_EPONHAL_GetDeviceSysDescrInfo(&devSysDescrInfo) == 0)
+    {
+        sprintf(details, "VendorName: %s, ModelNumber: %s, HardwareVersion: %s", devSysDescrInfo.info_VendorName, devSysDescrInfo.info_ModelNumber, devSysDescrInfo.info_HardwareVersion);
+        DEBUG_PRINT(DEBUG_TRACE, "Successfully retrieved the DeviceSysDescrInfo as %s: \n", details);
+        response["result"] = "SUCCESS";
+        response["details"] = details;
+        return;
+    }
+    else
+    {
+        response["result"] = "FAILURE";
+        response["details"] = "EPONHAL_GetDeviceSysDescrInfo failed.Please check logs";
+        DEBUG_PRINT(DEBUG_TRACE,"\n EPONHAL_GetDeviceSysDescrInfo failed. EPONHAL_GetGetDeviceSysDescrInfo ---> Exit\n");
+        return;
+    }
+}
+
 /***************************************************************************************************
  *Function Name   : CreateObject
  *Description     : This function is used to create a new object of the class "EPONHAL".
@@ -245,3 +331,36 @@ extern "C" void DestroyObject(EPONHAL *stubobj)
         DEBUG_PRINT(DEBUG_TRACE, "Destroying EPONHAL object\n");
         delete stubobj;
 }
+
+/*******************************************************************************************
+ *
+ * Function Name        : EPON_GetOnuPacketBufferCapabilities
+ * Description          : This function invokes EPON  hal api dpoe_getOnuPacketBufferCapabilities()
+ * @param [in] req-     : NIL
+ * @param [out] response - filled with SUCCESS or FAILURE based on the output status of operation
+ *
+ *******************************************************************************************/
+void EPONHAL::EPONHAL_GetOnuPacketBufferCapabilities(IN const Json::Value& req, OUT Json::Value& response)
+{
+    DEBUG_PRINT(DEBUG_TRACE,"\n EPONHAL_GetOnuPacketBufferCapabilities----->Entry\n");
+    int returnValue = 0;
+    char details[200] = {'\0'};
+    dpoe_onu_packet_buffer_capabilities_t pCapabilities;
+    returnValue = ssp_EPONHAL_GetOnuPacketBufferCapabilities(&pCapabilities);
+    if(0 == returnValue)
+       {
+            sprintf(details, "Value returned is : UpstreamQueues:%c ,UpQueuesMaxPerLink:%c ,UpQueueIncrement:%c ,DownstreamQueues: %c,DnQueuesMaxPerPort:%c ,DnQueueIncrement: %c ,TotalPacketBuffer: %d , UpPacketBuffer: %d ,DnPacketBuffer: %d ",pCapabilities.capabilities_UpstreamQueues,pCapabilities.capabilities_UpQueuesMaxPerLink,pCapabilities.capabilities_UpQueueIncrement,pCapabilities.capabilities_DownstreamQueues,pCapabilities.capabilities_DnQueuesMaxPerPort,pCapabilities.capabilities_DnQueueIncrement,pCapabilities.capabilities_TotalPacketBuffer,pCapabilities.capabilities_UpPacketBuffer,pCapabilities.capabilities_DnPacketBuffer );
+            response["result"]="SUCCESS";
+            response["details"]=details;
+            return;
+       }
+    else
+       {
+            sprintf(details, "EPONHAL_GetOnuPacketBufferCapabilities failure");
+            response["result"]="FAILURE";
+            response["details"]=details;
+            return;
+       }
+    DEBUG_PRINT(DEBUG_TRACE,"\n EPONHAL_GetOnuPacketBufferCapabilities --->Exit\n");
+}
+
