@@ -61,10 +61,96 @@ int ssp_EPONHAL_GetParamUlongValue(char* paramName, unsigned long* value)
     {
         return_status = dpoe_LlidForwardingStateGetEntryCount(&llidEntry);
         *value = llidEntry;
-        DEBUG_PRINT(DEBUG_TRACE, "Return status of dpoe_LlidForwardingStateGetEntryCount %d %u %lu", return_status, llidEntry, value);
+        DEBUG_PRINT(DEBUG_TRACE, "Return status of dpoe_LlidForwardingStateGetEntryCount %d, llidEntry: %u, output:%lu", return_status, llidEntry, value);
         if ( return_status != RETURN_OK)
         {
             DEBUG_PRINT(DEBUG_ERROR,"ssp_EPONHAL_GetParamUlongValue : Failed to get LlidForwardingStateGetEntryCount\n");
+        }
+    }
+    else if( !(strcmp(paramName, "GetErouterResetCount")) )
+    {
+       return_status = dpoe_hal_Get_ErouterResetCount(value);
+       DEBUG_PRINT(DEBUG_TRACE,"Return status of dpoe_hal_Get_ErouterResetCount %d,value : %lu", return_status,value);
+       if ( return_status != RETURN_OK)
+       {
+            DEBUG_PRINT(DEBUG_ERROR,"ssp_EPONHAL_GetParamUlongValue : Failed to get the Erouter Reset Count \n");
+       }
+    }
+    else if( !(strcmp(paramName, "GetLocalResetCount")) )
+    {
+       return_status = dpoe_hal_LocalResetCount(value);
+       DEBUG_PRINT(DEBUG_TRACE,"Return status of dpoe_hal_LocalResetCount %d ,value : %lu", return_status,value);
+       if ( return_status != RETURN_OK)
+       {
+            DEBUG_PRINT(DEBUG_ERROR,"ssp_EPONHAL_GetParamUlongValue : Failed to get the Local Reset count\n");
+       }
+    }
+    else if( !(strcmp(paramName, "GetEponResetCount")) )
+    {
+       return_status = dpoe_hal_Get_eponResetCount(value);
+       DEBUG_PRINT(DEBUG_TRACE,"Return status of dpoe_hal_Get_eponResetCount %d,value : %lu", return_status,value);
+       if ( return_status != RETURN_OK)
+       {
+            DEBUG_PRINT(DEBUG_ERROR,"ssp_EPONHAL_GetParamUlongValue : Failed to get the Epon Reset count\n");
+       }
+    }
+    else if( !(strcmp(paramName, "OnuLinkStatisticsGetEntryCount")) )
+    {
+        return_status = dpoe_OnuLinkStatisticsGetEntryCount(&llidEntry);
+        *value = llidEntry;
+        DEBUG_PRINT(DEBUG_TRACE,"Return status of dpoe_OnuLinkStatisticsGetEntryCount: %d llidEntry:%u  value:%lu ", return_status,llidEntry, value);
+        if ( return_status != RETURN_OK)
+        {
+            DEBUG_PRINT(DEBUG_ERROR,"ssp_EPONHAL_GetParamUlongValue : Failed to get the count of Onu Link Statstics\n");
+        }
+    }
+    else if( !(strcmp(paramName, "OamFrameRateGetEntryCount")) )
+    {
+        return_status = dpoe_OamFrameRateGetEntryCount(&llidEntry);
+        *value = llidEntry;
+        DEBUG_PRINT(DEBUG_TRACE,"Return status of dpoe_OamFrameRateGetEntryCount : %d  llidEntry:%u value:%lu", return_status,llidEntry, value);
+        if ( return_status != RETURN_OK)
+        {
+            DEBUG_PRINT(DEBUG_ERROR,"ssp_EPONHAL_GetParamUlongValue : Failed to get the count of  Frame Rate Entry\n");
+        }
+    }
+    else if( !(strcmp(paramName, "getMacLearningAggregateLimit")) )
+    {
+        return_status = dpoe_getMacLearningAggregateLimit(&llidEntry);
+        *value = llidEntry;
+        DEBUG_PRINT(DEBUG_TRACE,"Return status of dpoe_getMacLearningAggregateLimit : %d llidEntry:%u value:%lu", return_status,llidEntry, value);
+        if ( return_status != RETURN_OK)
+        {
+            DEBUG_PRINT(DEBUG_ERROR,"ssp_EPONHAL_GetParamUlongValue : Failed to get the count of  Frame Rate Entry\n");
+        }
+    }
+    else if( !(strcmp(paramName, "hal_Reboot_Ready")) )
+    {
+        return_status = dpoe_hal_Reboot_Ready(value);
+        DEBUG_PRINT(DEBUG_TRACE,"Return status of dpoe_hal_Reboot_Ready  %d,value : %lu", return_status,value);
+        if ( return_status != RETURN_OK)
+        {
+            DEBUG_PRINT(DEBUG_ERROR,"ssp_EPONHAL_GetParamUlongValue : Failed to get the count of  Frame Rate Entry\n");
+        }
+    }
+    else if( !(strcmp(paramName, "DynamicMacAddressAgeLimit")) )
+    {
+        return_status = dpoe_getDynamicMacAddressAgeLimit(&llidEntry);
+        *value = llidEntry;
+        DEBUG_PRINT(DEBUG_TRACE, "Return status of dpoe_getDynamicMacAddressAgeLimit %d, llidEntry: %u, output:%lu", return_status, llidEntry, value);
+        if ( return_status != RETURN_OK)
+        {
+            DEBUG_PRINT(DEBUG_ERROR,"ssp_EPONHAL_GetParamUlongValue : Failed to get DynamicMacAddressAgeLimit\n");
+        }
+    }
+    else if( !(strcmp(paramName, "DynamicMacLearningTableSize")) )
+    {
+        return_status = dpoe_getDynamicMacLearningTableSize(&llidEntry);
+        *value = llidEntry;
+        DEBUG_PRINT(DEBUG_TRACE, "Return status of dpoe_getDynamicMacLearningTableSize %d, llidEntry: %u, output:%lu", return_status, llidEntry, value);
+        if ( return_status != RETURN_OK)
+        {
+            DEBUG_PRINT(DEBUG_ERROR,"ssp_EPONHAL_GetParamUlongValue : Failed to get dpoe_getDynamicMacLearningTableSize\n");
         }
     }
     else
@@ -161,4 +247,121 @@ int ssp_EPONHAL_GetFirmwareInfo(dpoe_firmware_info_t *pFirmwareInfo)
 }
 
 
+/*******************************************************************************************
+ *
+ * Function Name        : ssp_EPONHAL_GetOnuPacketBufferCapabilities
+ * Description          : This function invokes WiFi hal api dpoe_getOnuPacketBufferCapabilities()
+ * @param [in]          : NIL
+ * @param [out]         : return status an integer value 0-success and 1-Failure
+ *
+ ********************************************************************************************/
+int ssp_EPONHAL_GetOnuPacketBufferCapabilities(dpoe_onu_packet_buffer_capabilities_t *pCapabilities)
+{
+    printf("\n ssp_EPONHAL_GetOnuPacketBufferCapabilities----> Entry\n");
+    int return_status = 0;
+    return_status = dpoe_getOnuPacketBufferCapabilities(pCapabilities);
+    printf("return value from ssp_EPONHAL_GetOnuPacketBufferCapabilities  is %d\n",return_status);
+    if(return_status != SSP_SUCCESS)
+    {
+     printf("\n ssp_EPONHAL_GetOnuPacketBufferCapabilities::Failed\n");
+     return SSP_FAILURE;
+    }
+    else
+    {
+     printf("\n ssp_EPONHAL_GetOnuPacketBufferCapabilities::Success\n");
+     return return_status;
+    }
+    printf("\n ssp_EPONHAL_GetOnuPacketBufferCapabilities----> Exit\n");
+}
 
+/*******************************************************************************************
+ *
+ * Function Name        : ssp_EPONHAL_GetOnuId
+ * Description          : This function will invoke the hal api dpoe_getOnuId to get the onuid
+ *
+ * @param [in]          : macAddress : returns the value of onu id mac
+ * @param [out]         : return status an integer value 0-success and 1-Failure
+ ********************************************************************************************/
+int ssp_EPONHAL_GetOnuId(char* macAddress)
+{
+    int return_status = RETURN_ERR;
+    dpoe_mac_address_t dpoe_mac;
+
+    DEBUG_PRINT(DEBUG_TRACE,"\n ssp_EPONHAL_GetOnuId ----> Entry\n");
+    CHECK_PARAM_AND_RET(macAddress);
+
+    return_status = dpoe_getOnuId(&dpoe_mac);
+    DEBUG_PRINT(DEBUG_TRACE,"Return status of dpoe_getOnuId %d", return_status);
+
+    if ( return_status == RETURN_OK)
+    {
+        sprintf(macAddress, "%02x:%02x:%02x:%02x:%02x:%02x",dpoe_mac.macAddress[0], dpoe_mac.macAddress[1], dpoe_mac.macAddress[2], dpoe_mac.macAddress[3], dpoe_mac.macAddress[4],dpoe_mac.macAddress[5]);
+        DEBUG_PRINT(DEBUG_ERROR,"ssp_EPONHAL_GetOnuId : Successfully got the ONU ID dpoe_mac.macAddress=%u macAddress=%s\n", dpoe_mac.macAddress, macAddress);
+        return return_status;
+    }
+    else
+    {
+        DEBUG_PRINT(DEBUG_ERROR,"ssp_EPONHAL_GetParamUlongValue : Failed to get the EPON NumberOfNetworkPorts\n");
+         return return_status;
+    }
+}
+
+/*******************************************************************************************
+ *
+ * Function Name        : ssp_EPONHAL_GetMaxLogicalLinks
+ * Description          : This function will invoke the hal api dpoe_getMaxLogicalLinks to get the onuid
+ *
+ * @param [in]          : pMaxLogicalLinks : buffer to hold the pMaxLogicalLinks values
+ * @param [out]         : return status an integer value 0-success and 1-Failure
+ ********************************************************************************************/
+int ssp_EPONHAL_GetMaxLogicalLinks(dpoe_onu_max_logical_links_t *pMaxLogicalLinks)
+{
+    int return_status = RETURN_ERR;
+
+    DEBUG_PRINT(DEBUG_TRACE,"\n ssp_EPONHAL_GetMaxLogicalLinks ----> Entry\n");
+    CHECK_PARAM_AND_RET(pMaxLogicalLinks);
+
+    return_status = dpoe_getMaxLogicalLinks(pMaxLogicalLinks);
+    DEBUG_PRINT(DEBUG_TRACE,"Return status of dpoe_getMaxLogicalLinks %d", return_status);
+
+    if ( return_status == RETURN_OK)
+    {
+        DEBUG_PRINT(DEBUG_ERROR,"ssp_EPONHAL_GetMaxLogicalLinks : Successfully got the MaxLogicalLinks\n");
+        return return_status;
+    }
+    else
+    {
+        DEBUG_PRINT(DEBUG_ERROR,"ssp_EPONHAL_GetMaxLogicalLinks : Failed to get the MaxLogicalLinks\n");
+         return return_status;
+    }
+}
+
+/*******************************************************************************************
+ *
+ * Function Name        : ssp_EPONHAL_GetDeviceSysDescrInfo
+ * Description          : This function will invoke the hal api dpoe_getDeviceSysDescrInfo to get the onuid
+ *
+ * @param [in]          : pdevSysDescrInfo : buffer to hold the DeviceSysDescrInfo values
+ * @param [out]         : return status an integer value 0-success and 1-Failure
+ ********************************************************************************************/
+int ssp_EPONHAL_GetDeviceSysDescrInfo(dpoe_device_sys_descr_info_t *pdevSysDescrInfo)
+{
+    int return_status = RETURN_ERR;
+
+    DEBUG_PRINT(DEBUG_TRACE,"\n ssp_EPONHAL_GetDeviceSysDescrInfo ----> Entry\n");
+    CHECK_PARAM_AND_RET(pdevSysDescrInfo);
+
+    return_status = dpoe_getDeviceSysDescrInfo(pdevSysDescrInfo);
+    DEBUG_PRINT(DEBUG_TRACE,"Return status of dpoe_getDeviceSysDescrInfo %d", return_status);
+
+    if ( return_status == RETURN_OK)
+    {
+        DEBUG_PRINT(DEBUG_ERROR,"ssp_EPONHAL_GetDeviceSysDescrInfo : Successfully got the DeviceSysDescrInfo\n");
+        return return_status;
+    }
+    else
+    {
+        DEBUG_PRINT(DEBUG_ERROR,"ssp_EPONHAL_GetDeviceSysDescrInfo : Failed to get the DeviceSysDescrInfo\n");
+         return return_status;
+    }
+}
