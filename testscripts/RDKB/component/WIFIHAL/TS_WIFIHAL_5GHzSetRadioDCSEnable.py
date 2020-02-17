@@ -89,7 +89,7 @@ print "[LIB LOAD STATUS]  :  %s" %loadmodulestatus
 if "SUCCESS" in loadmodulestatus.upper():
     obj.setLoadModuleStatus("SUCCESS");
 
-tdkTestObjTemp, idx = getIndex(obj, radio);
+    tdkTestObjTemp, idx = getIndex(obj, radio);
     ## Check if a invalid index is returned
     if idx == -1:
         print "Failed to get radio index for radio %s\n" %radio;
@@ -129,7 +129,9 @@ tdkTestObjTemp, idx = getIndex(obj, radio);
 		    else:
 			print "Set validation with get api failed"
 			tdkTestObj.setResultStatus("FAILURE");
-
+                else :
+                    tdkTestObj.setResultStatus("FAILURE");
+                    print "wifi_setRadioDCSEnable() call failed";
     obj.unloadModule("wifihal");
 
 else:

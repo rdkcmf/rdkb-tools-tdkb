@@ -273,7 +273,7 @@ if "SUCCESS" in loadmodulestatus.upper():
 	    print "AutoChannelSupport =" ,autoChannelSupport;
 	    if expectedresult in actualresult and "Disabled" in autoChannelSupport:
 		#Set the result status of execution
-		tdkTestObj.setResultStatus("FAILURE");
+		tdkTestObj.setResultStatus("SUCCESS");
 		print "Automatic channel selection is not supported by this radio";
 
 		#Giving the method name to invoke the api wifi_getRadioAutoChannelEnable()
@@ -357,8 +357,8 @@ if "SUCCESS" in loadmodulestatus.upper():
 		print "getAutoChannelSupported() failed";
 
     obj.unloadModule("wifihal");
-	else:
-		print "Failed to load the module";
-		obj.setLoadModuleStatus("FAILURE");
-		print "Module loading failed";
+else:
+    print "Failed to load the module";
+    obj.setLoadModuleStatus("FAILURE");
+    print "Module loading failed";
 
