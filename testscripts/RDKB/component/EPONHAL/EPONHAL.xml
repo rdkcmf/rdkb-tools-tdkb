@@ -12,7 +12,6 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 -->
-
 <?xml version="1.0" encoding="UTF-8"?><xml>
   <module name="EPONHAL" testGroup="Component">
     <primitiveTests>
@@ -43,10 +42,43 @@
         <function>EPONHAL_GetFirmwareInfo</function>
         <parameters/>
       </primitiveTest>
-      <primitiveTest name="EPONHAL_GetDeviceSysDescrInfo" id="" version="1">
+      <primitiveTest id="" name="EPONHAL_GetDeviceSysDescrInfo" version="1">
         <function>EPONHAL_GetDeviceSysDescrInfo</function>
         <parameters/>
+      </primitiveTest>
+      <primitiveTest id="" name="EPONHAL_GetOnuPacketBufferCapabilities" version="1">
+        <function>EPONHAL_GetOnuPacketBufferCapabilities</function>
+        <parameters/>
+      </primitiveTest>
+      <primitiveTest id="" name="EPONHAL_GetParamUshortValue" version="1">
+        <function>EPONHAL_GetParamUshortValue</function>
+        <parameters/>
+      </primitiveTest>
+      <primitiveTest id=" " name="EPONHAL_GetLlidForwardingState" version="1">
+        <function>EPONHAL_GetLlidForwardingState</function>
+        <parameters>
+          <parameter name="numEntries" value="0"/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest id=" " name="EPONHAL_GetOamFrameRate" version="1">
+        <function>EPONHAL_GetOamFrameRate</function>
+        <parameters>
+          <parameter name="numEntries" value="0"/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest id=" " name="EPONHAL_GetDynamicMacTable" version="1">
+        <function>EPONHAL_GetDynamicMacTable</function>
+        <parameters>
+          <parameter name="numEntries" value="0"/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest name="EPONHAL_GetOnuLinkStatistics" id=" " version="1">
+        <function>EPONHAL_GetOnuLinkStatistics</function>
+        <parameters>
+          <parameter name="numEntries" value="0"/>
+        </parameters>
       </primitiveTest>
     </primitiveTests>
   </module>
 </xml>
+
