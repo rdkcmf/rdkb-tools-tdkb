@@ -1,0 +1,47 @@
+<?xml version='1.0' encoding='utf-8'?>
+<xml>
+  <module>
+  <!-- Module Name  -->
+    <moduleName>EPONHAL</moduleName>
+  <!-- Category of the module  -->
+    <category>RDKB</category>
+  <!-- Excecution time out of module -->
+    <executionTimeOut>5</executionTimeOut>
+  <!-- Excecution time out of module -->
+    <testGroup>Component</testGroup>
+  <!-- Logs File Names of module -->
+    <logFileNames>[]</logFileNames>
+  <!-- Crash File Names of the module -->
+    <crashFileNames>[]</crashFileNames>
+  <!-- Total functions corresponding module  -->
+    <functions>
+      <function name='EPONHAL_GetParamUlongValue' />
+      <function name='EPONHAL_GetOnuId' />
+      <function name='EPONHAL_GetMaxLogicalLinks' />
+      <function name='EPONHAL_GetFirmwareInfo' />
+      <function name='EPONHAL_GetEponChipInfo' />
+      <function name='EPONHAL_GetManufacturerInfo' />
+      <function name='EPONHAL_GetDeviceSysDescrInfo' />
+      <function name='EPONHAL_GetOnuPacketBufferCapabilities' />
+      <function name='EPONHAL_OnuLinkStatisticsGetEntryCount' />
+      <function name='EPONHAL_OamFrameRateGetEntryCount' />
+      <function name='EPONHAL_hal_Get_ErouterResetCount' />
+      <function name='EPONHAL_hal_LocalResetCount' />
+      <function name='EPONHAL_hal_Get_eponResetCount' />
+      <function name='EPONHAL_GetParamUshortValue' />
+      <function name='EPONHAL_GetLlidForwardingState' />
+      <function name='EPONHAL_GetOamFrameRate' />
+      <function name='EPONHAL_GetDynamicMacTable' />
+      <function name='EPONHAL_GetOnuLinkStatistics' />
+    </functions>
+  <!-- Total parameters corresponding module  -->
+    <parameters>
+      <parameter funName='EPONHAL_GetParamUlongValue' parameterName='paramName' parameterType='STRING' range='A-Z' />
+      <parameter funName='EPONHAL_GetParamUlongValue' parameterName='paramType' parameterType='STRING' range='A-Z' />
+      <parameter funName='EPONHAL_GetLlidForwardingState' parameterName='numEntries' parameterType='INTEGER' range='0-100' />
+      <parameter funName='EPONHAL_GetOamFrameRate' parameterName='numEntries' parameterType='INTEGER' range='0-100' />
+      <parameter funName='EPONHAL_GetDynamicMacTable' parameterName='numEntries' parameterType='INTEGER' range='0-100' />
+      <parameter funName='EPONHAL_GetOnuLinkStatistics' parameterName='numEntries' parameterType='INTEGER' range='0-100' />
+    </parameters>
+  </module>
+</xml>

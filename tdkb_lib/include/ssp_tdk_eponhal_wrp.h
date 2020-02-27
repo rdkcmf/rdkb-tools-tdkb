@@ -34,6 +34,11 @@ extern "C"
         int ssp_EPONHAL_GetOnuId(char* macAddress);
         int ssp_EPONHAL_GetMaxLogicalLinks(dpoe_onu_max_logical_links_t *pMaxLogicalLinks);
         int ssp_EPONHAL_GetDeviceSysDescrInfo(dpoe_device_sys_descr_info_t *pdevSysDescrInfo);
+        int ssp_EPONHAL_GetLlidForwardingState(dpoe_link_forwarding_state_t linkForwardingState[], unsigned short numEntries);
+        int ssp_EPONHAL_GetOamFrameRate(dpoe_link_oam_frame_rate_t linkOamFrameRate[], unsigned short numEntries);
+        int ssp_EPONHAL_GetDynamicMacTable(dpoe_link_mac_address_t linkDynamicMacTable[], unsigned short numEntries);
+        int ssp_EPONHAL_GetOnuLinkStatistics(dpoe_link_traffic_stats_t onuLinkTrafficStats[], unsigned short numEntries);
+
 #ifdef __cplusplus
 }
 #endif

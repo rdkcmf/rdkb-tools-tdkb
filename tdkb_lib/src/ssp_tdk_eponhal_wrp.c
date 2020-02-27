@@ -19,7 +19,7 @@
 
 #include "ssp_tdk_eponhal_wrp.h"
 #include "ssp_hal_logger.h"
-
+#define DummyValue 10
 /*******************************************************************************************
  *
  * Function Name        : ssp_EPONHAL_GetParamUlongValue
@@ -365,3 +365,143 @@ int ssp_EPONHAL_GetDeviceSysDescrInfo(dpoe_device_sys_descr_info_t *pdevSysDescr
          return return_status;
     }
 }
+
+/*******************************************************************************************
+ *
+ * Function Name        : ssp_EPONHAL_GetLlidForwardingState
+ * Description          : This function invokes EPON  hal api dpoe_getLlidForwardingState()
+ * @param [in]          : NILL
+ * @param [out]         : return status an integer value 0-success and 1-Failure
+ *
+** ********************************************************************************************/
+int ssp_EPONHAL_GetLlidForwardingState(dpoe_link_forwarding_state_t linkForwardingState[], unsigned short numEntries)
+{
+    printf("\n ssp_EPONHAL_GetLlidForwardingState----> Entry\n");
+    int return_status = 0;
+    return_status = dpoe_getLlidForwardingState(linkForwardingState,numEntries);
+    printf("return value from ssp_EPON_GetLlidForwardingState  is %d\n",return_status);
+    printf("num entries : %d",numEntries);
+    if(return_status != SSP_SUCCESS)
+    {
+     printf("\n ssp_EPONHAL_GetLlidForwardingState::Failed\n");
+     printf("\n ssp_EPONHAL_GetLlidForwardingState ----> Exit\n");
+     return SSP_FAILURE;
+    }
+    else
+    {
+     printf("\n ssp_EPONHAL_GetLlidForwardingState::Success\n");
+      printf("\n ssp_EPONHAL_GetLlidForwardingState ----> Exit\n");
+     return return_status;
+    }
+}
+
+/*******************************************************************************************
+ *
+ * Function Name        : ssp_EPONHAL_GetOamFrameRate
+ * Description          : This function invokes EPON  hal api dpoe_getOamFrameRate()
+ * @param [in]          : NILL
+ * @param [out]         : return status an integer value 0-success and 1-Failure
+ *
+** ********************************************************************************************/
+int ssp_EPONHAL_GetOamFrameRate(dpoe_link_oam_frame_rate_t linkOamFrameRate[], unsigned short numEntries)
+{
+    printf("\n ssp_EPONHAL_GetOamFrameRate----> Entry\n");
+    int return_status = 0;
+    return_status = dpoe_getOamFrameRate(linkOamFrameRate,numEntries);
+    printf("return value from ssp_EPONHAL_GetOamFrameRate  is %d\n",return_status);
+    printf("num entries : %d",numEntries);
+    if(return_status != SSP_SUCCESS)
+    {
+     printf("\n ssp_EPONHAL_GetOamFrameRate::Failed\n");
+     printf("\n ssp_EPONHAL_GetOamFrameRate ----> Exit\n");
+     return SSP_FAILURE;
+    }
+    else
+    {
+     printf("\n ssp_EPONHAL_GetOamFrameRate::Success\n");
+      printf("\n ssp_EPONHAL_GetOamFrameRate ----> Exit\n");
+     return return_status;
+    }
+}
+
+/*******************************************************************************************
+ *
+ * Function Name        : ssp_EPONHAL_GetDynamicMacTable
+ * Description          : This function invokes EPON  hal api dpoe_getDynamicMacTable()
+ * @param [in]          : NILL
+ * @param [out]         : return status an integer value 0-success and 1-Failure
+ *
+** ********************************************************************************************/
+int ssp_EPONHAL_GetDynamicMacTable(dpoe_link_mac_address_t linkDynamicMacTable[], unsigned short numEntries)
+{
+    printf("\n ssp_EPONHAL_GetDynamicMacTable----> Entry\n");
+    int return_status = 0;
+    return_status = dpoe_getDynamicMacTable(linkDynamicMacTable,numEntries);
+    printf("return value from ssp_EPONHAL_GetDynamicMacTable  is %d\n",return_status);
+    printf("num entries : %d",numEntries);
+    if(return_status != SSP_SUCCESS)
+    {
+     printf("\n ssp_EPONHAL_GetDynamicMacTable::Failed\n");
+     printf("\n ssp_EPONHAL_GetDynamicMacTable ----> Exit\n");
+     return SSP_FAILURE;
+    }
+    else
+    {
+     printf("\n ssp_EPONHAL_GetDynamicMacTable::Success\n");
+     printf("\n ssp_EPONHAL_GetDynamicMacTable ----> Exit\n");
+     return return_status;
+    }
+}
+
+/*******************************************************************************************
+ *
+ * Function Name        : ssp_EPONHAL_GetOnuLinkStatistics
+ * Description          : This function invokes EPON  hal api dpoe_getOnuLinkStatistics()
+ * @param [in]          : NILL
+ * @param [out]         : return status an integer value 0-success and 1-Failure
+ *
+** ********************************************************************************************/
+int ssp_EPONHAL_GetOnuLinkStatistics(dpoe_link_traffic_stats_t onuLinkTrafficStats[], unsigned short numEntries)
+{
+    printf("\n ssp_EPONHAL_GetOnuLinkStatistics----> Entry\n");
+    int return_status = -1;
+    dpoe_onu_max_logical_links_t  MaxLogicalLinks = { };
+    //for max logical links
+    if (DummyValue  == numEntries)
+    {
+        numEntries = dpoe_getMaxLogicalLinks(&MaxLogicalLinks);
+        printf("\n numEntries: %s,%d,",numEntries,numEntries);
+        if (numEntries != return_status && numEntries != 0)
+        {
+          dpoe_link_traffic_stats_t *pMyLinkStats = (dpoe_link_traffic_stats_t *)malloc((sizeof(dpoe_link_traffic_stats_t)*numEntries));
+          memset((char *)pMyLinkStats, 0x00, (sizeof(dpoe_link_traffic_stats_t)*numEntries));
+          return_status = dpoe_getOnuLinkStatistics(pMyLinkStats,numEntries);
+          free(pMyLinkStats);
+        }
+        else
+        {
+          printf("\n dpoe_getMaxLogicalLinks::Failed\n");
+        }
+    }
+   //for min logical links
+    else
+    {
+
+     return_status = dpoe_getOnuLinkStatistics(onuLinkTrafficStats,numEntries);
+    }
+    printf("return value from ssp_EPONHAL_GetOnuLinkStatistics  is %d\n",return_status);
+    printf("num entries : %d",numEntries);
+    if(return_status != SSP_SUCCESS)
+    {
+     printf("\n ssp_EPONHAL_GetOnuLinkStatistics::Failed\n");
+     printf("\n ssp_EPONHAL_GetOnuLinkStatistics----> Exit\n");
+     return SSP_FAILURE;
+    }
+    else
+    {
+     printf("\n ssp_EPONHAL_GetOnuLinkStatistics::Success\n");
+     printf("\n ssp_EPONHAL_GetOnuLinkStatistics----> Exit\n");
+     return return_status;
+    }
+}
+
