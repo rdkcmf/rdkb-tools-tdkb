@@ -57,6 +57,10 @@ class EPONHAL : public RDKTestStubInterface, public AbstractServer<EPONHAL>
                         this->bindAndAddMethod(Procedure("EPONHAL_GetOnuId", PARAMS_BY_NAME, JSON_STRING, NULL), &EPONHAL::EPONHAL_GetOnuId);
                         this->bindAndAddMethod(Procedure("EPONHAL_GetMaxLogicalLinks", PARAMS_BY_NAME, JSON_STRING, NULL), &EPONHAL::EPONHAL_GetMaxLogicalLinks);
                         this->bindAndAddMethod(Procedure("EPONHAL_GetDeviceSysDescrInfo", PARAMS_BY_NAME, JSON_STRING, NULL), &EPONHAL::EPONHAL_GetDeviceSysDescrInfo);
+                        this->bindAndAddMethod(Procedure("EPONHAL_GetLlidForwardingState", PARAMS_BY_NAME, JSON_STRING,"numEntries",JSON_INTEGER, NULL), &EPONHAL::EPONHAL_GetLlidForwardingState);
+                        this->bindAndAddMethod(Procedure("EPONHAL_GetOamFrameRate", PARAMS_BY_NAME, JSON_STRING,"numEntries",JSON_INTEGER, NULL), &EPONHAL::EPONHAL_GetOamFrameRate);
+                        this->bindAndAddMethod(Procedure("EPONHAL_GetDynamicMacTable", PARAMS_BY_NAME, JSON_STRING,"numEntries",JSON_INTEGER, NULL), &EPONHAL::EPONHAL_GetDynamicMacTable);
+                        this->bindAndAddMethod(Procedure("EPONHAL_GetOnuLinkStatistics", PARAMS_BY_NAME, JSON_STRING,"numEntries",JSON_INTEGER,NULL), &EPONHAL::EPONHAL_GetOnuLinkStatistics);
                 }
 
                 bool initialize(IN const char* szVersion);
@@ -72,5 +76,10 @@ class EPONHAL : public RDKTestStubInterface, public AbstractServer<EPONHAL>
                 void EPONHAL_GetOnuId(IN const Json::Value& req, OUT Json::Value& response);
                 void EPONHAL_GetMaxLogicalLinks(IN const Json::Value& req, OUT Json::Value& response);
                 void EPONHAL_GetDeviceSysDescrInfo(IN const Json::Value& req, OUT Json::Value& response);
+                void EPONHAL_GetLlidForwardingState(IN const Json::Value& req, OUT Json::Value& response);
+                void EPONHAL_GetOamFrameRate(IN const Json::Value& req, OUT Json::Value& response);
+                void EPONHAL_GetDynamicMacTable(IN const Json::Value& req, OUT Json::Value& response);
+                void EPONHAL_GetOnuLinkStatistics(IN const Json::Value& req, OUT Json::Value& response);
+
 };
 #endif

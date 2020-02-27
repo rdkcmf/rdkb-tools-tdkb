@@ -335,7 +335,7 @@ extern "C" void DestroyObject(EPONHAL *stubobj)
 /*******************************************************************************************
  *
  * Function Name        : EPON_GetOnuPacketBufferCapabilities
- * Description          : This function invokes EPON  hal api dpoe_getOnuPacketBufferCapabilities()
+ * Description          : This function invokes EPON wrapper ssp_EPONHAL_GetOnuPacketBufferCapabilities
  * @param [in] req-     : NIL
  * @param [out] response - filled with SUCCESS or FAILURE based on the output status of operation
  *
@@ -343,13 +343,20 @@ extern "C" void DestroyObject(EPONHAL *stubobj)
 void EPONHAL::EPONHAL_GetOnuPacketBufferCapabilities(IN const Json::Value& req, OUT Json::Value& response)
 {
     DEBUG_PRINT(DEBUG_TRACE,"\n EPONHAL_GetOnuPacketBufferCapabilities----->Entry\n");
-    int returnValue = 0;
+    int returnValue;
     char details[200] = {'\0'};
-    dpoe_onu_packet_buffer_capabilities_t pCapabilities;
+    dpoe_onu_packet_buffer_capabilities_t pCapabilities = { };
+    unsigned long UpstreamQueues = 0,UpQueuesMaxPerLink =0,UpQueueIncrement =0,DownstreamQueues =0,DnQueuesMaxPerPort =0,DnQueueIncrement =0;
     returnValue = ssp_EPONHAL_GetOnuPacketBufferCapabilities(&pCapabilities);
+    UpstreamQueues = (unsigned long)pCapabilities.capabilities_UpstreamQueues;
+    UpQueuesMaxPerLink = (unsigned long)pCapabilities.capabilities_UpQueuesMaxPerLink;
+    UpQueueIncrement = (unsigned long)pCapabilities.capabilities_UpQueueIncrement;
+    DownstreamQueues = (unsigned long)pCapabilities.capabilities_DownstreamQueues;
+    DnQueuesMaxPerPort = (unsigned long)pCapabilities.capabilities_DnQueuesMaxPerPort;
+    DnQueueIncrement = (unsigned long)pCapabilities.capabilities_DnQueueIncrement;
     if(0 == returnValue)
        {
-            sprintf(details, "Value returned is : UpstreamQueues:%c ,UpQueuesMaxPerLink:%c ,UpQueueIncrement:%c ,DownstreamQueues: %c,DnQueuesMaxPerPort:%c ,DnQueueIncrement: %c ,TotalPacketBuffer: %d , UpPacketBuffer: %d ,DnPacketBuffer: %d ",pCapabilities.capabilities_UpstreamQueues,pCapabilities.capabilities_UpQueuesMaxPerLink,pCapabilities.capabilities_UpQueueIncrement,pCapabilities.capabilities_DownstreamQueues,pCapabilities.capabilities_DnQueuesMaxPerPort,pCapabilities.capabilities_DnQueueIncrement,pCapabilities.capabilities_TotalPacketBuffer,pCapabilities.capabilities_UpPacketBuffer,pCapabilities.capabilities_DnPacketBuffer );
+            sprintf(details, "Value returned is : UpstreamQueues: %lu,UpQueuesMaxPerLink:%lu ,UpQueueIncrement:%lu ,DownstreamQueues: %lu,DnQueuesMaxPerPort:%lu ,DnQueueIncrement: %lu ,TotalPacketBuffer: %d , UpPacketBuffer: %d",UpstreamQueues,UpQueuesMaxPerLink,UpQueueIncrement,DownstreamQueues,DnQueuesMaxPerPort,DnQueueIncrement,pCapabilities.capabilities_TotalPacketBuffer,pCapabilities.capabilities_UpPacketBuffer);
             response["result"]="SUCCESS";
             response["details"]=details;
             return;
@@ -363,4 +370,432 @@ void EPONHAL::EPONHAL_GetOnuPacketBufferCapabilities(IN const Json::Value& req, 
        }
     DEBUG_PRINT(DEBUG_TRACE,"\n EPONHAL_GetOnuPacketBufferCapabilities --->Exit\n");
 }
+
+/*******************************************************************************************
+ *
+ * Function Name        : EPONHAL_GetLlidForwardingState
+ * Description          : This function invokes epon wrapper ssp_EPONHAL_GetLlidForwardingState
+ * @param [in] req-     : NIL
+ * @param [out] response - filled with SUCCESS or FAILURE based on the output status of operation
+ *
+** *******************************************************************************************/
+void EPONHAL::EPONHAL_GetLlidForwardingState(IN const Json::Value& req, OUT Json::Value& response)
+{
+    DEBUG_PRINT(DEBUG_TRACE,"\n EPONHAL_GetLlidForwardingState----->Entry\n");
+    int returnValue = 0, loop= 0,num = 0,count = 1;
+    char details[2000] = {'\0'};
+    unsigned short numEntries =0;
+    numEntries  = req["numEntries"].asInt();
+    num = int(numEntries);
+    dpoe_link_forwarding_state_t linkForwardingState[num] = { };
+    for (loop = 0; loop< num;loop++)
+    {
+      linkForwardingState[loop].link_Id = count++;
+    }
+
+    returnValue = ssp_EPONHAL_GetLlidForwardingState(linkForwardingState,numEntries);
+    printf("\n return value:%d \n",returnValue);
+    printf("\n numEntries : %d \n",num);
+    if(0 == returnValue)
+    {
+            if ( num > 0)
+            {
+               for( loop = 0; loop < num;loop++)
+               {
+                 sprintf(details + strlen(details),"ForwardingState %d : %d ,",loop+1,linkForwardingState[loop].link_ForwardingState);
+                 printf("\nForwardingState %d : %d ",loop,linkForwardingState[loop].link_ForwardingState);
+               }
+               response["result"]="SUCCESS";
+               response["details"]=details;
+               return;
+            }
+            else
+            {
+               sprintf(details, "EPONHAL_GetLlidForwardingState has not entries --> failure");
+               response["result"]="FAILURE";
+               response["details"]=details;
+               return;
+            }
+
+    }
+    else
+    {
+       sprintf(details, "EPONHAL_GetLlidForwardingState  failure");
+       response["result"]="FAILURE";
+       response["details"]=details;
+       return;
+    }
+    DEBUG_PRINT(DEBUG_TRACE,"\n EPONHAL_GetLlidForwardingState --->Exit\n");
+}
+
+/*******************************************************************************************
+ *
+ * Function Name        : EPONHAL_GetOamFrameRate
+ * Description          : This function invokes epon wrapper ssp_EPONHAL_GetOamFrameRate
+ * @param [in] req-     : NILL
+ * @param [out] response - filled with SUCCESS or FAILURE based on the output status of operation
+ *
+** *******************************************************************************************/
+void EPONHAL::EPONHAL_GetOamFrameRate(IN const Json::Value& req, OUT Json::Value& response)
+{
+    DEBUG_PRINT(DEBUG_TRACE,"\n EPONHAL_GetOamFrameRate----->Entry\n");
+    int returnValue = 0,loop = 0,num = 0,count =1;
+    char details[1024] = {'\0'};
+    unsigned short numEntries = 0;
+    numEntries  = req["numEntries"].asInt();
+    num = int(numEntries);
+    dpoe_link_oam_frame_rate_t linkOamFrameRate[num] = {};
+    for (loop = 0; loop< num;loop++)
+    {
+      linkOamFrameRate[loop].link_Id = count++;
+    }
+    returnValue = ssp_EPONHAL_GetOamFrameRate(linkOamFrameRate,numEntries);
+    printf("\n return value:%d \n",returnValue);
+    printf("\n numEntries : %d \n",num);
+    if(0 == returnValue)
+    {
+            if ( num > 0)
+            {
+               for( loop = 0; loop < num ;loop++)
+               {
+                 if (strlen(details) < 512)
+                 {
+                  sprintf( details + strlen(details),",MaxRate %d : %d ,MinRate %d :%d",loop+1,linkOamFrameRate[loop].link_MaxRate,loop+1,linkOamFrameRate[loop].link_MinRate);
+                 }
+                 else break;
+                 printf("\n link_MaxRate %d : %d",loop+1,linkOamFrameRate[loop].link_MaxRate);
+                 printf("\n link_MinRate %d : %d",loop+1,linkOamFrameRate[loop].link_MinRate);
+               }
+               response["result"]="SUCCESS";
+               response["details"]=details;
+               return;
+            }
+            else
+            {
+               sprintf(details, "EPONHAL_GetOamFrameRate has no entries --> failure");
+               response["result"]="FAILURE";
+               response["details"]=details;
+               return;
+            }
+
+    }
+    else
+    {
+       sprintf(details, "EPONHAL_GetOamFrameRate  failure");
+       response["result"]="FAILURE";
+       response["details"]=details;
+       return;
+    }
+    DEBUG_PRINT(DEBUG_TRACE,"\n EPONHAL_GetOamFrameRate --->Exit\n");
+}
+ /*******************************************************************************************
+ *
+ * Function Name        : EPONHAL_GetDynamicMacTable
+ * Description          : This function invokes epon wrapper ssp_EPONHAL_GetDynamicMacTable
+ * @param [in] req-     : NILL
+ * @param [out] response - filled with SUCCESS or FAILURE based on the output status of operation
+ *
+** *******************************************************************************************/
+void EPONHAL::EPONHAL_GetDynamicMacTable(IN const Json::Value& req, OUT Json::Value& response)
+{
+    DEBUG_PRINT(DEBUG_TRACE,"\n EPONHAL_GetDynamicMacTable----->Entry\n");
+    int returnValue = 0,loop = 0,num = 0;
+    char details[2000] = {'\0'};
+    unsigned short numEntries = 0;
+    numEntries  = req["numEntries"].asInt();
+    num= int(numEntries);
+    dpoe_link_mac_address_t linkDynamicMacTable[num] ={ };
+    returnValue = ssp_EPONHAL_GetDynamicMacTable(linkDynamicMacTable,numEntries);
+    printf("\n return value:%d \n",returnValue);
+    printf("\n numEntries : %d \n",num);
+    num  = int(linkDynamicMacTable ->numEntries);
+    printf("\n linkDynamicMacTable ->numEntries : %d \n",num);
+    if(0 == returnValue)
+    {
+            if ( num > 0)
+            {
+               for( loop = 0; loop < num ;loop++)
+               {
+                 if (strlen(details) < 512)
+                 {
+                   sprintf(details + strlen(details),"MAC %d: %x %x %x %x %x %x",loop+1,linkDynamicMacTable[loop].pMacAddress->macAddress[0],linkDynamicMacTable[loop].pMacAddress->macAddress[1],linkDynamicMacTable[loop].pMacAddress->macAddress[2],linkDynamicMacTable[loop].pMacAddress->macAddress[3],linkDynamicMacTable[loop].pMacAddress->macAddress[4],linkDynamicMacTable[loop].pMacAddress->macAddress[5]);
+                 }
+                else break;
+               }
+               response["result"]="SUCCESS";
+               response["details"]=details;
+               return;
+            }
+            else
+            {
+               sprintf(details, "EPONHAL_GetDynamicMacTable has not entries");
+               response["result"]="FAILURE";
+               response["details"]=details;
+               return;
+            }
+
+    }
+    else
+    {
+       sprintf(details, "EPONHAL_GetDynamicMacTable failure");
+       response["result"]="FAILURE";
+       response["details"]=details;
+       return;
+    }
+    DEBUG_PRINT(DEBUG_TRACE,"\n EPONHAL_GetDynamicMacTable --->Exit\n");
+}
+
+/*******************************************************************************************
+ *
+ * Function Name        : EPONHAL_GetOnuLinkStatistics
+ * Description          : This function invokes epon wrapper ssp_EPONHAL_GetOnuLinkStatistics
+ * @param [in] req-     : NILL
+ * @param [out] response - filled with SUCCESS or FAILURE based on the output status of operation
+ *
+** *******************************************************************************************/
+void EPONHAL::EPONHAL_GetOnuLinkStatistics(IN const Json::Value& req, OUT Json::Value& response)
+{
+    DEBUG_PRINT(DEBUG_TRACE,"\n EPONHAL_GetOnuLinkStatistics----->Entry\n");
+    int returnValue = 0,loop = 0,num = 0,count =1;
+    char details[2000] = {'\0'};
+    unsigned short numEntries = 0;
+    numEntries = req["numEntries"].asInt();
+    num = int(numEntries);
+    dpoe_link_traffic_stats_t onuLinkTrafficStats[num] ={ };
+    for (loop = 0; loop< num;loop++)
+    {
+      onuLinkTrafficStats[loop].link_Id = count++;
+    }
+
+    returnValue = ssp_EPONHAL_GetOnuLinkStatistics(onuLinkTrafficStats,numEntries);
+    printf("\n return value:%d \n",returnValue);
+    printf("\n numEntries : %d \n",num);
+    if(0 == returnValue)
+    {
+            if ( num > 0)
+            {
+               for( loop = 0; loop < num ;loop++)
+               {
+                 printf("\nRxUnicastFrames %d : %llu",loop+1,onuLinkTrafficStats[loop].link_TrafficStats.port_RxUnicastFrames);
+                 printf("\nTxUnicastFrames %d : %llu",loop+1,onuLinkTrafficStats[loop].link_TrafficStats.port_TxUnicastFrames);
+                 printf("\nRxFrameTooShort %d : %llu",loop+1,onuLinkTrafficStats[loop].link_TrafficStats.port_RxFrameTooShort);
+                 printf("\nRxFrame64 %d : %llu",loop+1,onuLinkTrafficStats[loop].link_TrafficStats.port_RxFrame64);
+                 printf("\n RxFrame65_127%d : %llu",loop+1,onuLinkTrafficStats[loop].link_TrafficStats.port_RxFrame65_127);
+                 printf("\nRxFrame128_255 %d : %llu",loop+1,onuLinkTrafficStats[loop].link_TrafficStats.port_RxFrame128_255);
+                 printf("\nRxFrame256_511 %d : %llu",loop+1,onuLinkTrafficStats[loop].link_TrafficStats.port_RxFrame256_511);
+                 printf("\nRxFrame512_1023 %d : %llu",loop+1,onuLinkTrafficStats[loop].link_TrafficStats.port_RxFrame512_1023);
+                 printf("\nRxFrame1024_1518 %d : %llu",loop+1,onuLinkTrafficStats[loop].link_TrafficStats.port_RxFrame1024_1518);
+                 printf("\nRxFrame1519_Plus %d : %llu",loop+1,onuLinkTrafficStats[loop].link_TrafficStats.port_RxFrame1519_Plus);
+                 printf("\nTxFrame64 %d : %llu",loop+1,onuLinkTrafficStats[loop].link_TrafficStats.port_TxFrame64);
+                 printf("\nTxFrame65_127 %d : %llu",loop+1, onuLinkTrafficStats[loop].link_TrafficStats.port_TxFrame65_127);
+                 printf("\nTxFrame128_255 %d : %llu",loop+1,onuLinkTrafficStats[loop].link_TrafficStats.port_TxFrame128_255);
+                 printf("\nTxFrame256_511 %d : %llu",loop+1,onuLinkTrafficStats[loop].link_TrafficStats.port_TxFrame256_511);
+                 printf("\nTxFrame512_1023 %d : %llu",loop+1,onuLinkTrafficStats[loop].link_TrafficStats.port_TxFrame512_1023);
+                 printf("\nRxFrame1024_1518 %d : %llu",loop+1,onuLinkTrafficStats[loop].link_TrafficStats.port_TxFrame_1024_1518);
+                 printf("\nTxFrame_1519_Plus %d : %llu",loop+1,onuLinkTrafficStats[loop].link_TrafficStats.port_TxFrame_1519_Plus);
+                 printf("\nFramesDropped %d : %llu",loop+1,onuLinkTrafficStats[loop].link_TrafficStats.port_FramesDropped);
+                 printf("\nBytesDropped %d : %llu",loop+1,onuLinkTrafficStats[loop].link_TrafficStats.port_BytesDropped);
+                 printf("\nOpticalMonVcc %d : %d",loop+1,onuLinkTrafficStats[loop].link_TrafficStats.port_OpticalMonVcc);
+                 printf("\nOpticalMonTxBiasCurrent %d : %d",loop+1,onuLinkTrafficStats[loop].link_TrafficStats.port_OpticalMonTxBiasCurrent);
+                 printf("\nOpticalMonTxPower %d : %d",loop+1,onuLinkTrafficStats[loop].link_TrafficStats.port_OpticalMonTxPower);
+                 printf("\nOpticalMonRxPower %d : %d",loop+1,onuLinkTrafficStats[loop].link_TrafficStats.port_OpticalMonRxPower);
+
+               }
+
+              sprintf(details," Value returned is : RxUnicastFrames: %llu,TxUnicastFrames :%llu,RxFrameTooShort : %llu,RxFrame64 :%llu,RxFrame65_127: %llu,RxFrame128_255:%llu,RxFrame256_511:%llu,RxFrame512_1023 :%llu,RxFrame1024_1518 :%llu,RxFrame1519_Plus :%llu,TxFrame64 :%llu,TxFrame65_127:%llu,TxFrame128_255:%llu,TxFrame256_511:%llu,TxFrame512_1023 :%llu,TxFrame_1024_1518:%llu,TxFrame_1519_Plus :%llu,FramesDropped:%llu,BytesDropped:%llu,OpticalMonVcc:%d,OpticalMonTxBiasCurrent:%d,OpticalMonTxPower:%d,OpticalMonRxPower:%d",onuLinkTrafficStats[0].link_TrafficStats.port_RxUnicastFrames,onuLinkTrafficStats[0].link_TrafficStats.port_TxUnicastFrames,onuLinkTrafficStats[0].link_TrafficStats.port_RxFrameTooShort,onuLinkTrafficStats[0].link_TrafficStats.port_RxFrame64,onuLinkTrafficStats[0].link_TrafficStats.port_RxFrame65_127,onuLinkTrafficStats[0].link_TrafficStats.port_RxFrame128_255,onuLinkTrafficStats[0].link_TrafficStats.port_RxFrame256_511,onuLinkTrafficStats[0].link_TrafficStats.port_RxFrame512_1023,onuLinkTrafficStats[0].link_TrafficStats.port_RxFrame1024_1518,onuLinkTrafficStats[0].link_TrafficStats.port_RxFrame1519_Plus, onuLinkTrafficStats[0].link_TrafficStats.port_TxFrame64,onuLinkTrafficStats[0].link_TrafficStats.port_TxFrame65_127,onuLinkTrafficStats[0].link_TrafficStats.port_TxFrame128_255,onuLinkTrafficStats[0].link_TrafficStats.port_TxFrame256_511,onuLinkTrafficStats[0].link_TrafficStats.port_TxFrame512_1023,onuLinkTrafficStats[0].link_TrafficStats.port_TxFrame_1024_1518,onuLinkTrafficStats[0].link_TrafficStats.port_TxFrame_1519_Plus,onuLinkTrafficStats[0].link_TrafficStats.port_FramesDropped,onuLinkTrafficStats[0].link_TrafficStats.port_BytesDropped, onuLinkTrafficStats[0].link_TrafficStats.port_OpticalMonVcc,onuLinkTrafficStats[0].link_TrafficStats.port_OpticalMonTxBiasCurrent,onuLinkTrafficStats[0].link_TrafficStats.port_OpticalMonTxPower, onuLinkTrafficStats[0].link_TrafficStats.port_OpticalMonRxPower);
+               response["result"]="SUCCESS";
+               response["details"]=details;
+               return;
+            }
+            else
+            {
+               sprintf(details, "EPONHAL_GetOnuLinkStatistics has no entries");
+               response["result"]="FAILURE";
+               response["details"]=details;
+               return;
+            }
+
+    }
+    else
+    {
+       sprintf(details, "EPONHAL_GetOnuLinkStatistics  failure");
+       response["result"]="FAILURE";
+       response["details"]=details;
+       return;
+    }
+    DEBUG_PRINT(DEBUG_TRACE,"\n EPONHAL_GetOnuLinkStatistics --->Exit\n");
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
