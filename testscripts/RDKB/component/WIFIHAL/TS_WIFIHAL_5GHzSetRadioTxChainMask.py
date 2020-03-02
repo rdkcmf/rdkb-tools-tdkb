@@ -99,7 +99,7 @@ if "SUCCESS" in loadmodulestatus.upper():
         tdkTestObjTemp.setResultStatus("FAILURE");
     else:
 	 
-	   expectedresult="SUCCESS";
+	    expectedresult="SUCCESS";
 	    radioIndex = idx;
 	    getMethod = "getRadioTxChainMask"
 	    primitive = 'WIFIHAL_GetOrSetParamIntValue'
