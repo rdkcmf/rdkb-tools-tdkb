@@ -17,7 +17,7 @@
 # limitations under the License.
 ##########################################################################
 
-SUBDIRS = agent tdkb_lib RDKLogger_stub CMAgent_stub WIFIAgent_stub MBUS_Stub WECB_Stub CosaCM_Stub SNMP_PA_Stub TR069Pa_Stub Mta_agent_Stub AdvancedConfig_stub CosaMTA_Stub pam_stub SysUtil_stub TAD_stub Moca_Stub LMLite_Stub WIFIHAL_stub CMHAL_Stub ethsw_hal_stub dhcp_hal_stub tdkb_e2e_stub platform_hal_stub tdkb_tr181_stub MoCAHAL_Stub MTAHAL_Stub XUPNP_Stub EPONHAL_Stub
+SUBDIRS = agent tdkb_lib RDKLogger_stub CMAgent_stub WIFIAgent_stub MBUS_Stub WECB_Stub CosaCM_Stub SNMP_PA_Stub TR069Pa_Stub Mta_agent_Stub AdvancedConfig_stub CosaMTA_Stub pam_stub SysUtil_stub TAD_stub Moca_Stub LMLite_Stub WIFIHAL_stub CMHAL_Stub ethsw_hal_stub dhcp_hal_stub tdkb_e2e_stub platform_hal_stub tdkb_tr181_stub MoCAHAL_Stub MTAHAL_Stub XUPNP_Stub EPONHAL_Stub mso_mgmt_hal_stub
 DIST_SUBDIRS = @SUBDIRS@
 
 distcleancheck_listfiles = *-libtool
