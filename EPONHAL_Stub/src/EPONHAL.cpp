@@ -345,7 +345,7 @@ void EPONHAL::EPONHAL_GetOnuPacketBufferCapabilities(IN const Json::Value& req, 
     DEBUG_PRINT(DEBUG_TRACE,"\n EPONHAL_GetOnuPacketBufferCapabilities----->Entry\n");
     int returnValue;
     char details[200] = {'\0'};
-    dpoe_onu_packet_buffer_capabilities_t pCapabilities = { };
+    dpoe_onu_packet_buffer_capabilities_t pCapabilities;
     unsigned long UpstreamQueues = 0,UpQueuesMaxPerLink =0,UpQueueIncrement =0,DownstreamQueues =0,DnQueuesMaxPerPort =0,DnQueueIncrement =0;
     returnValue = ssp_EPONHAL_GetOnuPacketBufferCapabilities(&pCapabilities);
     UpstreamQueues = (unsigned long)pCapabilities.capabilities_UpstreamQueues;
@@ -387,7 +387,7 @@ void EPONHAL::EPONHAL_GetLlidForwardingState(IN const Json::Value& req, OUT Json
     unsigned short numEntries =0;
     numEntries  = req["numEntries"].asInt();
     num = int(numEntries);
-    dpoe_link_forwarding_state_t linkForwardingState[num] = { };
+    dpoe_link_forwarding_state_t linkForwardingState[num];
     for (loop = 0; loop< num;loop++)
     {
       linkForwardingState[loop].link_Id = count++;
@@ -444,7 +444,7 @@ void EPONHAL::EPONHAL_GetOamFrameRate(IN const Json::Value& req, OUT Json::Value
     unsigned short numEntries = 0;
     numEntries  = req["numEntries"].asInt();
     num = int(numEntries);
-    dpoe_link_oam_frame_rate_t linkOamFrameRate[num] = {};
+    dpoe_link_oam_frame_rate_t linkOamFrameRate[num];
     for (loop = 0; loop< num;loop++)
     {
       linkOamFrameRate[loop].link_Id = count++;
@@ -504,7 +504,7 @@ void EPONHAL::EPONHAL_GetDynamicMacTable(IN const Json::Value& req, OUT Json::Va
     unsigned short numEntries = 0;
     numEntries  = req["numEntries"].asInt();
     num= int(numEntries);
-    dpoe_link_mac_address_t linkDynamicMacTable[num] ={ };
+    dpoe_link_mac_address_t linkDynamicMacTable[num];
     returnValue = ssp_EPONHAL_GetDynamicMacTable(linkDynamicMacTable,numEntries);
     printf("\n return value:%d \n",returnValue);
     printf("\n numEntries : %d \n",num);
@@ -561,7 +561,7 @@ void EPONHAL::EPONHAL_GetOnuLinkStatistics(IN const Json::Value& req, OUT Json::
     unsigned short numEntries = 0;
     numEntries = req["numEntries"].asInt();
     num = int(numEntries);
-    dpoe_link_traffic_stats_t onuLinkTrafficStats[num] ={ };
+    dpoe_link_traffic_stats_t onuLinkTrafficStats[num];
     for (loop = 0; loop< num;loop++)
     {
       onuLinkTrafficStats[loop].link_Id = count++;
@@ -625,177 +625,4 @@ void EPONHAL::EPONHAL_GetOnuLinkStatistics(IN const Json::Value& req, OUT Json::
     }
     DEBUG_PRINT(DEBUG_TRACE,"\n EPONHAL_GetOnuLinkStatistics --->Exit\n");
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
