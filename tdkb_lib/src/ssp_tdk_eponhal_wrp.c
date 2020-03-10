@@ -19,7 +19,7 @@
 
 #include "ssp_tdk_eponhal_wrp.h"
 #include "ssp_hal_logger.h"
-#define DummyValue 10
+#define DummyValue 500
 /*******************************************************************************************
  *
  * Function Name        : ssp_EPONHAL_GetParamUlongValue
@@ -452,7 +452,6 @@ int ssp_EPONHAL_GetDynamicMacTable(dpoe_link_mac_address_t linkDynamicMacTable[]
      return return_status;
     }
 }
-
 /*******************************************************************************************
  *
  * Function Name        : ssp_EPONHAL_GetOnuLinkStatistics
@@ -461,47 +460,57 @@ int ssp_EPONHAL_GetDynamicMacTable(dpoe_link_mac_address_t linkDynamicMacTable[]
  * @param [out]         : return status an integer value 0-success and 1-Failure
  *
 ** ********************************************************************************************/
-int ssp_EPONHAL_GetOnuLinkStatistics(dpoe_link_traffic_stats_t onuLinkTrafficStats[], unsigned short numEntries)
+int ssp_EPONHAL_GetOnuLinkStatistics(dpoe_link_traffic_stats_t onuLinkTrafficStats[], unsigned short *numEntries)
 {
     printf("\n ssp_EPONHAL_GetOnuLinkStatistics----> Entry\n");
-    int return_status = -1;
-    dpoe_onu_max_logical_links_t  MaxLogicalLinks = { };
+    int return_status = -1 ,loop =0,count=1;
+    dpoe_onu_max_logical_links_t  MaxLogicalLinks = {0};
     //for max logical links
-    if (DummyValue  == numEntries)
+    if (DummyValue  == *numEntries)
     {
-        numEntries = dpoe_getMaxLogicalLinks(&MaxLogicalLinks);
-        printf("\n numEntries: %s,%d,",numEntries,numEntries);
-        if (numEntries != return_status && numEntries != 0)
-        {
-          dpoe_link_traffic_stats_t *pMyLinkStats = (dpoe_link_traffic_stats_t *)malloc((sizeof(dpoe_link_traffic_stats_t)*numEntries));
-          memset((char *)pMyLinkStats, 0x00, (sizeof(dpoe_link_traffic_stats_t)*numEntries));
-          return_status = dpoe_getOnuLinkStatistics(pMyLinkStats,numEntries);
-          free(pMyLinkStats);
-        }
-        else
-        {
+       *numEntries  = dpoe_getMaxLogicalLinks(&MaxLogicalLinks);
+       printf("\n numEntries form dpoe_getMaxLogicalLinks :%d,",*numEntries);
+       if (*numEntries != return_status && *numEntries != 0 && *numEntries > 0)
+       {
+          onuLinkTrafficStats  = (dpoe_link_traffic_stats_t *)malloc((sizeof(dpoe_link_traffic_stats_t)*(*numEntries)));
+          if(onuLinkTrafficStats != NULL)
+          {
+             memset((char *)onuLinkTrafficStats, 0x00, (sizeof(dpoe_link_traffic_stats_t)*(*numEntries)));
+             for (loop = 0; loop< *numEntries;loop++)
+             {
+                onuLinkTrafficStats[loop].link_Id = count++;
+             }
+             return_status = dpoe_getOnuLinkStatistics(onuLinkTrafficStats,*numEntries);
+          }
+          else
+          {
+            printf("Memory allocation failed");
+          }
+
+       }
+       else
+       {
           printf("\n dpoe_getMaxLogicalLinks::Failed\n");
-        }
-    }
+       }
+   }
    //for min logical links
     else
     {
-
-     return_status = dpoe_getOnuLinkStatistics(onuLinkTrafficStats,numEntries);
+       return_status = dpoe_getOnuLinkStatistics(onuLinkTrafficStats,*numEntries);
     }
     printf("return value from ssp_EPONHAL_GetOnuLinkStatistics  is %d\n",return_status);
-    printf("num entries : %d",numEntries);
-    if(return_status != SSP_SUCCESS)
+    printf("num entries at the ssp_EPONHAL_GetOnuLinkStatistics exit is  : %d",*numEntries);
+    if(return_status == -1)
     {
-     printf("\n ssp_EPONHAL_GetOnuLinkStatistics::Failed\n");
-     printf("\n ssp_EPONHAL_GetOnuLinkStatistics----> Exit\n");
-     return SSP_FAILURE;
+         printf("\n ssp_EPONHAL_GetOnuLinkStatistics::Failed\n");
+         printf("\n ssp_EPONHAL_GetOnuLinkStatistics----> Exit\n");
+         return return_status;
     }
     else
     {
-     printf("\n ssp_EPONHAL_GetOnuLinkStatistics::Success\n");
-     printf("\n ssp_EPONHAL_GetOnuLinkStatistics----> Exit\n");
-     return return_status;
+
+         printf("\n ssp_EPONHAL_GetOnuLinkStatistics::Success\n");
+         printf("\n ssp_EPONHAL_GetOnuLinkStatistics----> Exit\n");
+         return SSP_SUCCESS;
     }
 }
-
