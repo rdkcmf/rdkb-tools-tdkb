@@ -18,7 +18,7 @@
 */
 
 #include "EPONHAL.h"
-
+#define Dummy 500
 /********************************************************************************************
  *Function name : testmodulepre_requisites
  *Description   : testmodulepre_requisites will  be used for registering TDK with the CR
@@ -544,7 +544,6 @@ void EPONHAL::EPONHAL_GetDynamicMacTable(IN const Json::Value& req, OUT Json::Va
     }
     DEBUG_PRINT(DEBUG_TRACE,"\n EPONHAL_GetDynamicMacTable --->Exit\n");
 }
-
 /*******************************************************************************************
  *
  * Function Name        : EPONHAL_GetOnuLinkStatistics
@@ -556,73 +555,113 @@ void EPONHAL::EPONHAL_GetDynamicMacTable(IN const Json::Value& req, OUT Json::Va
 void EPONHAL::EPONHAL_GetOnuLinkStatistics(IN const Json::Value& req, OUT Json::Value& response)
 {
     DEBUG_PRINT(DEBUG_TRACE,"\n EPONHAL_GetOnuLinkStatistics----->Entry\n");
-    int returnValue = 0,loop = 0,num = 0,count =1;
+    int returnValue = -1,loop = 0,count =1;
     char details[2000] = {'\0'};
-    unsigned short numEntries = 0;
-    numEntries = req["numEntries"].asInt();
-    num = int(numEntries);
-    dpoe_link_traffic_stats_t onuLinkTrafficStats[num];
-    for (loop = 0; loop< num;loop++)
+    unsigned short *numEntries = NULL,num = 0;
+    num = req["numEntries"].asInt();
+    numEntries = &num;
+    dpoe_link_traffic_stats_t onuLinkTrafficStats = {0};
+    dpoe_link_traffic_stats_t *ptronuLinkTrafficStats = NULL;
+    //for min logical link
+    if (num != Dummy)
     {
-      onuLinkTrafficStats[loop].link_Id = count++;
-    }
+       onuLinkTrafficStats.link_Id = count;
+       returnValue = ssp_EPONHAL_GetOnuLinkStatistics(&onuLinkTrafficStats,numEntries);
+       printf("\n return value:%d \n",returnValue);
+       printf("\n numEntries : %d \n",num);
+       if(0 == returnValue)
+       {
+                 printf("\nRxUnicastFrames : %llu",onuLinkTrafficStats.link_TrafficStats.port_RxUnicastFrames);
+                 printf("\nTxUnicastFrames : %llu",onuLinkTrafficStats.link_TrafficStats.port_TxUnicastFrames);
+                 printf("\nRxFrameTooShort  : %llu",onuLinkTrafficStats.link_TrafficStats.port_RxFrameTooShort);
+                 printf("\nRxFrame64  : %llu",onuLinkTrafficStats.link_TrafficStats.port_RxFrame64);
+                 printf("\n RxFrame65_127 : %llu",onuLinkTrafficStats.link_TrafficStats.port_RxFrame65_127);
+                 printf("\nRxFrame128_255  : %llu",onuLinkTrafficStats.link_TrafficStats.port_RxFrame128_255);
+                 printf("\nRxFrame256_511  : %llu",onuLinkTrafficStats.link_TrafficStats.port_RxFrame256_511);
+                 printf("\nRxFrame512_1023  : %llu",onuLinkTrafficStats.link_TrafficStats.port_RxFrame512_1023);
+                 printf("\nRxFrame1024_1518  : %llu",onuLinkTrafficStats.link_TrafficStats.port_RxFrame1024_1518);
+                 printf("\nRxFrame1519_Plus  : %llu",onuLinkTrafficStats.link_TrafficStats.port_RxFrame1519_Plus);
+                 printf("\nTxFrame64  : %llu",onuLinkTrafficStats.link_TrafficStats.port_TxFrame64);
+                 printf("\nTxFrame65_127  : %llu",onuLinkTrafficStats.link_TrafficStats.port_TxFrame65_127);
+                 printf("\nTxFrame128_255  : %llu",onuLinkTrafficStats.link_TrafficStats.port_TxFrame128_255);
+                 printf("\nTxFrame256_511  : %llu",onuLinkTrafficStats.link_TrafficStats.port_TxFrame256_511);
+                 printf("\nTxFrame512_1023 : %llu",onuLinkTrafficStats.link_TrafficStats.port_TxFrame512_1023);
+                 printf("\nRxFrame1024_1518: %llu",onuLinkTrafficStats.link_TrafficStats.port_TxFrame_1024_1518);
+                 printf("\nTxFrame_1519_Plus: %llu",onuLinkTrafficStats.link_TrafficStats.port_TxFrame_1519_Plus);
+                 printf("\nFramesDropped : %llu",onuLinkTrafficStats.link_TrafficStats.port_FramesDropped);
+                 printf("\nBytesDropped : %llu",onuLinkTrafficStats.link_TrafficStats.port_BytesDropped);
+                 printf("\nOpticalMonVcc : %d",onuLinkTrafficStats.link_TrafficStats.port_OpticalMonVcc);
+                 printf("\nOpticalMonTxBiasCurrent: %d",onuLinkTrafficStats.link_TrafficStats.port_OpticalMonTxBiasCurrent);
+                 printf("\nOpticalMonTxPower: %d",onuLinkTrafficStats.link_TrafficStats.port_OpticalMonTxPower);
+                 printf("\nOpticalMonRxPower: %d",onuLinkTrafficStats.link_TrafficStats.port_OpticalMonRxPower);
 
-    returnValue = ssp_EPONHAL_GetOnuLinkStatistics(onuLinkTrafficStats,numEntries);
-    printf("\n return value:%d \n",returnValue);
-    printf("\n numEntries : %d \n",num);
-    if(0 == returnValue)
-    {
-            if ( num > 0)
-            {
-               for( loop = 0; loop < num ;loop++)
-               {
-                 printf("\nRxUnicastFrames %d : %llu",loop+1,onuLinkTrafficStats[loop].link_TrafficStats.port_RxUnicastFrames);
-                 printf("\nTxUnicastFrames %d : %llu",loop+1,onuLinkTrafficStats[loop].link_TrafficStats.port_TxUnicastFrames);
-                 printf("\nRxFrameTooShort %d : %llu",loop+1,onuLinkTrafficStats[loop].link_TrafficStats.port_RxFrameTooShort);
-                 printf("\nRxFrame64 %d : %llu",loop+1,onuLinkTrafficStats[loop].link_TrafficStats.port_RxFrame64);
-                 printf("\n RxFrame65_127%d : %llu",loop+1,onuLinkTrafficStats[loop].link_TrafficStats.port_RxFrame65_127);
-                 printf("\nRxFrame128_255 %d : %llu",loop+1,onuLinkTrafficStats[loop].link_TrafficStats.port_RxFrame128_255);
-                 printf("\nRxFrame256_511 %d : %llu",loop+1,onuLinkTrafficStats[loop].link_TrafficStats.port_RxFrame256_511);
-                 printf("\nRxFrame512_1023 %d : %llu",loop+1,onuLinkTrafficStats[loop].link_TrafficStats.port_RxFrame512_1023);
-                 printf("\nRxFrame1024_1518 %d : %llu",loop+1,onuLinkTrafficStats[loop].link_TrafficStats.port_RxFrame1024_1518);
-                 printf("\nRxFrame1519_Plus %d : %llu",loop+1,onuLinkTrafficStats[loop].link_TrafficStats.port_RxFrame1519_Plus);
-                 printf("\nTxFrame64 %d : %llu",loop+1,onuLinkTrafficStats[loop].link_TrafficStats.port_TxFrame64);
-                 printf("\nTxFrame65_127 %d : %llu",loop+1, onuLinkTrafficStats[loop].link_TrafficStats.port_TxFrame65_127);
-                 printf("\nTxFrame128_255 %d : %llu",loop+1,onuLinkTrafficStats[loop].link_TrafficStats.port_TxFrame128_255);
-                 printf("\nTxFrame256_511 %d : %llu",loop+1,onuLinkTrafficStats[loop].link_TrafficStats.port_TxFrame256_511);
-                 printf("\nTxFrame512_1023 %d : %llu",loop+1,onuLinkTrafficStats[loop].link_TrafficStats.port_TxFrame512_1023);
-                 printf("\nRxFrame1024_1518 %d : %llu",loop+1,onuLinkTrafficStats[loop].link_TrafficStats.port_TxFrame_1024_1518);
-                 printf("\nTxFrame_1519_Plus %d : %llu",loop+1,onuLinkTrafficStats[loop].link_TrafficStats.port_TxFrame_1519_Plus);
-                 printf("\nFramesDropped %d : %llu",loop+1,onuLinkTrafficStats[loop].link_TrafficStats.port_FramesDropped);
-                 printf("\nBytesDropped %d : %llu",loop+1,onuLinkTrafficStats[loop].link_TrafficStats.port_BytesDropped);
-                 printf("\nOpticalMonVcc %d : %d",loop+1,onuLinkTrafficStats[loop].link_TrafficStats.port_OpticalMonVcc);
-                 printf("\nOpticalMonTxBiasCurrent %d : %d",loop+1,onuLinkTrafficStats[loop].link_TrafficStats.port_OpticalMonTxBiasCurrent);
-                 printf("\nOpticalMonTxPower %d : %d",loop+1,onuLinkTrafficStats[loop].link_TrafficStats.port_OpticalMonTxPower);
-                 printf("\nOpticalMonRxPower %d : %d",loop+1,onuLinkTrafficStats[loop].link_TrafficStats.port_OpticalMonRxPower);
 
-               }
-
-              sprintf(details," Value returned is : RxUnicastFrames: %llu,TxUnicastFrames :%llu,RxFrameTooShort : %llu,RxFrame64 :%llu,RxFrame65_127: %llu,RxFrame128_255:%llu,RxFrame256_511:%llu,RxFrame512_1023 :%llu,RxFrame1024_1518 :%llu,RxFrame1519_Plus :%llu,TxFrame64 :%llu,TxFrame65_127:%llu,TxFrame128_255:%llu,TxFrame256_511:%llu,TxFrame512_1023 :%llu,TxFrame_1024_1518:%llu,TxFrame_1519_Plus :%llu,FramesDropped:%llu,BytesDropped:%llu,OpticalMonVcc:%d,OpticalMonTxBiasCurrent:%d,OpticalMonTxPower:%d,OpticalMonRxPower:%d",onuLinkTrafficStats[0].link_TrafficStats.port_RxUnicastFrames,onuLinkTrafficStats[0].link_TrafficStats.port_TxUnicastFrames,onuLinkTrafficStats[0].link_TrafficStats.port_RxFrameTooShort,onuLinkTrafficStats[0].link_TrafficStats.port_RxFrame64,onuLinkTrafficStats[0].link_TrafficStats.port_RxFrame65_127,onuLinkTrafficStats[0].link_TrafficStats.port_RxFrame128_255,onuLinkTrafficStats[0].link_TrafficStats.port_RxFrame256_511,onuLinkTrafficStats[0].link_TrafficStats.port_RxFrame512_1023,onuLinkTrafficStats[0].link_TrafficStats.port_RxFrame1024_1518,onuLinkTrafficStats[0].link_TrafficStats.port_RxFrame1519_Plus, onuLinkTrafficStats[0].link_TrafficStats.port_TxFrame64,onuLinkTrafficStats[0].link_TrafficStats.port_TxFrame65_127,onuLinkTrafficStats[0].link_TrafficStats.port_TxFrame128_255,onuLinkTrafficStats[0].link_TrafficStats.port_TxFrame256_511,onuLinkTrafficStats[0].link_TrafficStats.port_TxFrame512_1023,onuLinkTrafficStats[0].link_TrafficStats.port_TxFrame_1024_1518,onuLinkTrafficStats[0].link_TrafficStats.port_TxFrame_1519_Plus,onuLinkTrafficStats[0].link_TrafficStats.port_FramesDropped,onuLinkTrafficStats[0].link_TrafficStats.port_BytesDropped, onuLinkTrafficStats[0].link_TrafficStats.port_OpticalMonVcc,onuLinkTrafficStats[0].link_TrafficStats.port_OpticalMonTxBiasCurrent,onuLinkTrafficStats[0].link_TrafficStats.port_OpticalMonTxPower, onuLinkTrafficStats[0].link_TrafficStats.port_OpticalMonRxPower);
+                sprintf(details," Value returned is : RxUnicastFrames: %llu,TxUnicastFrames :%llu,RxFrameTooShort : %llu,RxFrame64 :%llu,RxFrame65_127: %llu,RxFrame128_255:%llu,RxFrame256_511:%llu,RxFrame512_1023 :%llu,RxFrame1024_1518 :%llu,RxFrame1519_Plus :%llu,TxFrame64 :%llu,TxFrame65_127:%llu,TxFrame128_255:%llu,TxFrame256_511:%llu,TxFrame512_1023 :%llu,TxFrame_1024_1518:%llu,TxFrame_1519_Plus :%llu,FramesDropped:%llu,BytesDropped:%llu,OpticalMonVcc:%d,OpticalMonTxBiasCurrent:%d,OpticalMonTxPower:%d,OpticalMonRxPower:%d",onuLinkTrafficStats.link_TrafficStats.port_RxUnicastFrames,onuLinkTrafficStats.link_TrafficStats.port_TxUnicastFrames,onuLinkTrafficStats.link_TrafficStats.port_RxFrameTooShort,onuLinkTrafficStats.link_TrafficStats.port_RxFrame64,onuLinkTrafficStats.link_TrafficStats.port_RxFrame65_127,onuLinkTrafficStats.link_TrafficStats.port_RxFrame128_255,onuLinkTrafficStats.link_TrafficStats.port_RxFrame256_511,onuLinkTrafficStats.link_TrafficStats.port_RxFrame512_1023,onuLinkTrafficStats.link_TrafficStats.port_RxFrame1024_1518,onuLinkTrafficStats.link_TrafficStats.port_RxFrame1519_Plus, onuLinkTrafficStats.link_TrafficStats.port_TxFrame64,onuLinkTrafficStats.link_TrafficStats.port_TxFrame65_127,onuLinkTrafficStats.link_TrafficStats.port_TxFrame128_255,onuLinkTrafficStats.link_TrafficStats.port_TxFrame256_511,onuLinkTrafficStats.link_TrafficStats.port_TxFrame512_1023,onuLinkTrafficStats.link_TrafficStats.port_TxFrame_1024_1518,onuLinkTrafficStats.link_TrafficStats.port_TxFrame_1519_Plus,onuLinkTrafficStats.link_TrafficStats.port_FramesDropped,onuLinkTrafficStats.link_TrafficStats.port_BytesDropped, onuLinkTrafficStats.link_TrafficStats.port_OpticalMonVcc,onuLinkTrafficStats.link_TrafficStats.port_OpticalMonTxBiasCurrent,onuLinkTrafficStats.link_TrafficStats.port_OpticalMonTxPower, onuLinkTrafficStats.link_TrafficStats.port_OpticalMonRxPower);
                response["result"]="SUCCESS";
                response["details"]=details;
                return;
-            }
-            else
-            {
-               sprintf(details, "EPONHAL_GetOnuLinkStatistics has no entries");
-               response["result"]="FAILURE";
-               response["details"]=details;
-               return;
-            }
 
+    }
+    else
+    {
+      sprintf(details, "EPONHAL_GetOnuLinkStatistics failure");
+      response["result"]="FAILURE";
+      response["details"]=details;
+      return;
+    }
+ }
+ else
+ {
+   //for max logical link
+   returnValue = ssp_EPONHAL_GetOnuLinkStatistics(ptronuLinkTrafficStats,numEntries);
+   num = int(*numEntries);
+   printf("\n return value:%d \n",returnValue);
+   printf("\n numEntries : %d \n",num) ;
+   if (0 == returnValue)
+   {
+      for( loop = 0; loop < num ;loop++)
+      {
+        printf("\nRxUnicastFrames %d : %llu",loop+1,ptronuLinkTrafficStats[loop].link_TrafficStats.port_RxUnicastFrames);
+        printf("\nTxUnicastFrames %d : %llu",loop+1,ptronuLinkTrafficStats[loop].link_TrafficStats.port_TxUnicastFrames);
+        printf("\nRxFrameTooShort %d : %llu",loop+1,ptronuLinkTrafficStats[loop].link_TrafficStats.port_RxFrameTooShort);
+        printf("\nRxFrame64 %d : %llu",loop+1,ptronuLinkTrafficStats[loop].link_TrafficStats.port_RxFrame64);
+        printf("\n RxFrame65_127%d : %llu",loop+1,ptronuLinkTrafficStats[loop].link_TrafficStats.port_RxFrame65_127);
+        printf("\nRxFrame128_255 %d : %llu",loop+1,ptronuLinkTrafficStats[loop].link_TrafficStats.port_RxFrame128_255);
+        printf("\nRxFrame256_511 %d : %llu",loop+1,ptronuLinkTrafficStats[loop].link_TrafficStats.port_RxFrame256_511);
+        printf("\nRxFrame512_1023 %d : %llu",loop+1,ptronuLinkTrafficStats[loop].link_TrafficStats.port_RxFrame512_1023);
+        printf("\nRxFrame1024_1518 %d : %llu",loop+1,ptronuLinkTrafficStats[loop].link_TrafficStats.port_RxFrame1024_1518);
+        printf("\nRxFrame1519_Plus %d : %llu",loop+1,ptronuLinkTrafficStats[loop].link_TrafficStats.port_RxFrame1519_Plus);
+        printf("\nTxFrame64 %d : %llu",loop+1,ptronuLinkTrafficStats[loop].link_TrafficStats.port_TxFrame64);
+        printf("\nTxFrame65_127 %d : %llu",loop+1, ptronuLinkTrafficStats[loop].link_TrafficStats.port_TxFrame65_127);
+        printf("\nTxFrame128_255 %d : %llu",loop+1,ptronuLinkTrafficStats[loop].link_TrafficStats.port_TxFrame128_255);
+        printf("\nTxFrame256_511 %d : %llu",loop+1,ptronuLinkTrafficStats[loop].link_TrafficStats.port_TxFrame256_511);
+        printf("\nTxFrame512_1023 %d : %llu",loop+1,ptronuLinkTrafficStats[loop].link_TrafficStats.port_TxFrame512_1023);
+        printf("\nRxFrame1024_1518 %d : %llu",loop+1,ptronuLinkTrafficStats[loop].link_TrafficStats.port_TxFrame_1024_1518);
+        printf("\nTxFrame_1519_Plus %d : %llu",loop+1,ptronuLinkTrafficStats[loop].link_TrafficStats.port_TxFrame_1519_Plus);
+        printf("\nFramesDropped %d : %llu",loop+1,ptronuLinkTrafficStats[loop].link_TrafficStats.port_FramesDropped);
+        printf("\nBytesDropped %d : %llu",loop+1,ptronuLinkTrafficStats[loop].link_TrafficStats.port_BytesDropped);
+        printf("\nOpticalMonVcc %d : %d",loop+1,ptronuLinkTrafficStats[loop].link_TrafficStats.port_OpticalMonVcc);
+        printf("\nOpticalMonTxBiasCurrent %d : %d",loop+1,ptronuLinkTrafficStats[loop].link_TrafficStats.port_OpticalMonTxBiasCurrent);
+        printf("\nOpticalMonTxPower %d : %d",loop+1,ptronuLinkTrafficStats[loop].link_TrafficStats.port_OpticalMonTxPower);
+        printf("\nOpticalMonRxPower %d : %d",loop+1,ptronuLinkTrafficStats[loop].link_TrafficStats.port_OpticalMonRxPower);
+
+      }
+      sprintf(details," Value returned is : RxUnicastFrames: %llu,TxUnicastFrames :%llu,RxFrameTooShort : %llu,RxFrame64 :%llu,RxFrame65_127: %llu,RxFrame128_255:%llu,RxFrame256_511:%llu,RxFrame512_1023 :%llu,RxFrame1024_1518 :%llu,RxFrame1519_Plus :%llu,TxFrame64 :%llu,TxFrame65_127:%llu,TxFrame128_255:%llu,TxFrame256_511:%llu,TxFrame512_1023 :%llu,TxFrame_1024_1518:%llu,TxFrame_1519_Plus :%llu,FramesDropped:%llu,BytesDropped:%llu,OpticalMonVcc:%d,OpticalMonTxBiasCurrent:%d,OpticalMonTxPower:%d,OpticalMonRxPower:%d",ptronuLinkTrafficStats[0].link_TrafficStats.port_RxUnicastFrames,ptronuLinkTrafficStats[0].link_TrafficStats.port_TxUnicastFrames,ptronuLinkTrafficStats[0].link_TrafficStats.port_RxFrameTooShort,ptronuLinkTrafficStats[0].link_TrafficStats.port_RxFrame64,ptronuLinkTrafficStats[0].link_TrafficStats.port_RxFrame65_127,ptronuLinkTrafficStats[0].link_TrafficStats.port_RxFrame128_255,ptronuLinkTrafficStats[0].link_TrafficStats.port_RxFrame256_511,ptronuLinkTrafficStats[0].link_TrafficStats.port_RxFrame512_1023,ptronuLinkTrafficStats[0].link_TrafficStats.port_RxFrame1024_1518,ptronuLinkTrafficStats[0].link_TrafficStats.port_RxFrame1519_Plus, ptronuLinkTrafficStats[0].link_TrafficStats.port_TxFrame64,ptronuLinkTrafficStats[0].link_TrafficStats.port_TxFrame65_127,ptronuLinkTrafficStats[0].link_TrafficStats.port_TxFrame128_255,ptronuLinkTrafficStats[0].link_TrafficStats.port_TxFrame256_511,ptronuLinkTrafficStats[0].link_TrafficStats.port_TxFrame512_1023,ptronuLinkTrafficStats[0].link_TrafficStats.port_TxFrame_1024_1518,ptronuLinkTrafficStats[0].link_TrafficStats.port_TxFrame_1519_Plus,ptronuLinkTrafficStats[0].link_TrafficStats.port_FramesDropped,ptronuLinkTrafficStats[0].link_TrafficStats.port_BytesDropped, ptronuLinkTrafficStats[0].link_TrafficStats.port_OpticalMonVcc,ptronuLinkTrafficStats[0].link_TrafficStats.port_OpticalMonTxBiasCurrent,ptronuLinkTrafficStats[0].link_TrafficStats.port_OpticalMonTxPower, ptronuLinkTrafficStats[0].link_TrafficStats.port_OpticalMonRxPower);
+
+      response["result"]="SUCCESS";
+      response["details"]=details;
+      free(ptronuLinkTrafficStats);
+      return;
     }
     else
     {
        sprintf(details, "EPONHAL_GetOnuLinkStatistics  failure");
        response["result"]="FAILURE";
        response["details"]=details;
+       free(ptronuLinkTrafficStats);
        return;
     }
+  }
     DEBUG_PRINT(DEBUG_TRACE,"\n EPONHAL_GetOnuLinkStatistics --->Exit\n");
 }
 

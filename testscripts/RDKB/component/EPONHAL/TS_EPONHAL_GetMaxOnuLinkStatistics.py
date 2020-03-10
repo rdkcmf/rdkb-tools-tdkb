@@ -86,7 +86,7 @@ if "SUCCESS" in loadmodulestatus.upper():
         tdkTestObj = obj.createTestStep('EPONHAL_GetOnuLinkStatistics');
         expectedresult="SUCCESS";
         #passing a dummy value as the numEntries is derived from dpoe_getMaxLogicalLinks
-        tdkTestObj.addParameter("numEntries",10);
+        tdkTestObj.addParameter("numEntries",500);
         tdkTestObj.executeTestCase(expectedresult);
         actualresult = tdkTestObj.getResult();
         resultDetails = " ";
@@ -112,14 +112,14 @@ if "SUCCESS" in loadmodulestatus.upper():
            if flag == 1:
               print "TEST STEP 2: check if the value received is greater than or equal to 0";
               print "EXPECTED RESULT 2: The value received must be greater than or equal to 0";
-              print "ACTUAL RESULT 2: The values received are:",maxonu;
+              print "ACTUAL RESULT 2: The values received are:",resultDetails;
               tdkTestObj.setResultStatus("SUCCESS");
               print "[TEST EXECUTION RESULT] : SUCCESS";
 
            else:
                print "TEST STEP 2: check if the value received is greater than or equal to 0";
                print "EXPECTED RESULT 2: The value received must be greater than or equal to 0";
-               print "ACTUAL RESULT 2: The values received are:",maxonu;
+               print "ACTUAL RESULT 2: The values received are:",resultDetails;
                tdkTestObj.setResultStatus("FAILURE");
                print "[TEST EXECUTION RESULT] : FAILURE";
         else:
