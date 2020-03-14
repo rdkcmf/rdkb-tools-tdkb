@@ -102,6 +102,8 @@ if "SUCCESS" in loadmodulestatus.upper():
 
         #Script to load the configuration file of the component
         tdkTestObj = obj.createTestStep("dhcp_stub_hal_get_ert_ip_addr");
+        #to indicate if its a negative scenario
+        tdkTestObj.addParameter("flag",1);
         expectedresult="FAILURE";
         tdkTestObj.executeTestCase(expectedresult);
         actualresult = tdkTestObj.getResult();
@@ -126,4 +128,5 @@ else:
         print "Failed to load the module";
         obj.setLoadModuleStatus("FAILURE");
         print "Module loading failed";
+
 
