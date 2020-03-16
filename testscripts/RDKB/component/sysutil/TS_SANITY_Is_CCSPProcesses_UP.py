@@ -91,22 +91,28 @@
 # use tdklib library,which provides a wrapper for tdk testcase script 
 import tdklib; 
 from tdkbVariables import *;
-
+import time;
+from time import sleep;
+from xfinityWiFiLib import *
 #Test component to be tested
 obj = tdklib.TDKScriptingLibrary("sysutil","1");
-
+obj1 = tdklib.TDKScriptingLibrary("wifiagent","1")
+obj2 = tdklib.TDKScriptingLibrary("tdkbtr181","1");
 #IP and Port of box, No need to change,
 #This will be replaced with correspoing Box Ip and port while executing script
 ip = <ipaddress>
 port = <port>
 obj.configureTestCase(ip,port,'TS_SANITY_Is_CCSPProcesses_UP');
-
+obj1.configureTestCase(ip,port,'TS_SANITY_Is_CCSPProcesses_UP');
+obj2.configureTestCase(ip,port,'TS_SANITY_Is_CCSPProcesses_UP');
 #Get the result of connection with test component and STB
 loadmodulestatus =obj.getLoadModuleResult();
-
-if "SUCCESS" in loadmodulestatus.upper():
+loadmodulestatus1 =obj1.getLoadModuleResult();
+loadmodulestatus2 =obj2.getLoadModuleResult();
+if "SUCCESS" in loadmodulestatus.upper() and loadmodulestatus1.upper() and loadmodulestatus2.upper():
     obj.setLoadModuleStatus("SUCCESS");
-
+    obj1.setLoadModuleStatus("SUCCESS");
+    obj2.setLoadModuleStatus("SUCCESS");
     tdkTestObj = obj.createTestStep('ExecuteCmd');
     CcspProcess= "sh %s/tdk_utility.sh parseConfigFile CCSP_PROCESS" %TDK_PATH;
     print CcspProcess;
@@ -126,23 +132,59 @@ if "SUCCESS" in loadmodulestatus.upper():
 
 	CcspProcessList = CcspProcessList.split(",");
         for item in CcspProcessList:
-	    command = "pidof %s" %item
-            tdkTestObj.addParameter("command", command);
-            tdkTestObj.executeTestCase(expectedresult);
-            actualresult = tdkTestObj.getResult();
-            details = tdkTestObj.getResultDetails().strip();
-	    details = details.replace("\\n", "");
-	    if expectedresult in actualresult and "" != details:
-		tdkTestObj.setResultStatus("SUCCESS");
-	        print "Process Name : %s" %item;
-		print "PID : %s" %details;
-		print "%s with process ID %s is running" %(item,details)
-	 	print "[TEST EXECUTION RESULT] : SUCCESS"
-	    else:
-		tdkTestObj.setResultStatus("FAILURE");
-		print "Process Name : %s" %item
-		print "%s is not running" %item
-		print "[TEST EXECUTION RESULT] : FAILURE"
+            if item == "CcspHotspot":
+               #Get current values of public wifi params
+               tdkTestObj= obj2.createTestStep('TDKB_TR181Stub_Get');
+               tdkTestObj.addParameter("ParamName","Device.DeviceInfo.X_COMCAST_COM_xfinitywifiEnable");
+               expectedresult="SUCCESS";
+               #Execute the test case in DUT
+               tdkTestObj.executeTestCase(expectedresult);
+               actualresult = tdkTestObj.getResult();
+               details = tdkTestObj.getResultDetails();
+
+               if expectedresult in  actualresult and details == "true":
+                  command1 = "pidof %s" %item
+                  tdkTestObj = obj.createTestStep('ExecuteCmd');
+                  tdkTestObj.addParameter("command", command1);
+                  tdkTestObj.executeTestCase(expectedresult);
+                  actualresult = tdkTestObj.getResult();
+                  details = tdkTestObj.getResultDetails().strip();
+                  details = details.replace("\\n", "");
+                  if expectedresult in actualresult and "" != details:
+                     tdkTestObj.setResultStatus("SUCCESS");
+                     print "Process Name : %s" %item;
+                     print "PID : %s" %details;
+                     print "%s with process ID %s is running" %(item,details)
+                     print "[TEST EXECUTION RESULT] : SUCCESS"
+                  else:
+                      tdkTestObj.setResultStatus("FAILURE");
+                      print "Process Name : %s" %item
+                      print "%s is not running" %item
+                      print "[TEST EXECUTION RESULT] : FAILURE"
+               else:
+                   tdkTestObj.setResultStatus("SUCCESS");
+                   print "Since xfinitywifi is disabled CcspHotspot is not running"        
+                   print "[TEST EXECUTION RESULT] : SUCCESS"
+
+            else:
+	         command1 = "pidof %s" %item
+                 tdkTestObj = obj.createTestStep('ExecuteCmd');
+                 tdkTestObj.addParameter("command", command1);
+                 tdkTestObj.executeTestCase(expectedresult);
+                 actualresult = tdkTestObj.getResult();
+                 details = tdkTestObj.getResultDetails().strip();
+	         details = details.replace("\\n", "");
+	         if expectedresult in actualresult and "" != details:
+	            tdkTestObj.setResultStatus("SUCCESS");
+	            print "Process Name : %s" %item;
+		    print "PID : %s" %details;
+		    print "%s with process ID %s is running" %(item,details)
+	 	    print "[TEST EXECUTION RESULT] : SUCCESS"
+	         else:
+		     tdkTestObj.setResultStatus("FAILURE");
+	             print "Process Name : %s" %item
+		     print "%s is not running" %item
+         	     print "[TEST EXECUTION RESULT] : FAILURE"
     else:
 	tdkTestObj.setResultStatus("FAILURE");
         print "TEST STEP 1: Get the list of ccsp processes ";
@@ -152,10 +194,12 @@ if "SUCCESS" in loadmodulestatus.upper():
         print "[TEST EXECUTION RESULT] : FAILURE"
 
     obj.unloadModule("sysutil");
-
+    obj1.unloadModule("wifiagent");
+    obj2.unloadModule("tdkbtr181");
 else:
         print "Failed to load sysutil module";
         obj.setLoadModuleStatus("FAILURE");
         print "Module loading failed"; 
+
 
 
