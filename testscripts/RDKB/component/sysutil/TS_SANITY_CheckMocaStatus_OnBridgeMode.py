@@ -27,7 +27,7 @@
   <status>FREE</status>
   <synopsis>Check if the moca status is disabled  in bridge mode and enabled again in router mode</synopsis>
   <groups_id/>
-  <execution_time>0</execution_time>
+  <execution_time>15</execution_time>
   <long_duration>false</long_duration>
   <advanced_script>false</advanced_script>
   <remarks/>
@@ -70,6 +70,8 @@
 # use tdklib library,which provides a wrapper for tdk testcase script
 import tdklib;
 from tdkbVariables import *;
+from time import sleep;
+
 #Test component to be tested
 obj = tdklib.TDKScriptingLibrary("tdkbtr181","RDKB");
 #IP and Port of box, No need to change,
@@ -110,7 +112,7 @@ if "SUCCESS" in loadmodulestatus.upper():
            tdkTestObj.setResultStatus("SUCCESS");
            print "TEST STEP 2: Get the lanmode";
            print "EXPECTED RESULT 2: Should get the lanmode";
-           print "ACTUAL RESULT 2: Lanmode is %s" %lanmodeInitial;
+           print "ACTUAL RESULT 2: Lanmode is :",lanmodeInitial;
            #Get the result of execution
            print "[TEST EXECUTION RESULT] : SUCCESS";
 
@@ -118,7 +120,6 @@ if "SUCCESS" in loadmodulestatus.upper():
               print "The Device is in bridge static mode"
               tdkTestObj = obj.createTestStep('TDKB_TR181Stub_Get');
     	      tdkTestObj.addParameter("ParamName","Device.MoCA.Interface.1.Enable");
-
     	      #Execute the test case in DUT
     	      tdkTestObj.executeTestCase(expectedresult);
     	      actualresult = tdkTestObj.getResult();
@@ -189,11 +190,13 @@ if "SUCCESS" in loadmodulestatus.upper():
                      print "ACTUAL RESULT 4: %s" %details;
                      #Get the result of execution
                      print "[TEST EXECUTION RESULT] : SUCCESS";
-
+                     
                      obj.setLoadModuleStatus("SUCCESS");
                      tdkTestObj = obj.createTestStep('TDKB_TR181Stub_Get');
                      tdkTestObj.addParameter("ParamName","Device.MoCA.Interface.1.Enable");
                      expectedresult="SUCCESS";
+                     # adding sleep  to reflect status of Moca after changing lan mode
+                     sleep(20);
                      #Execute the test case in DUT
                      tdkTestObj.executeTestCase(expectedresult);
                      actualresult = tdkTestObj.getResult();
@@ -229,10 +232,11 @@ if "SUCCESS" in loadmodulestatus.upper():
                            print "ACTUAL RESULT 5: %s" %details;
                            #Get the result of execution
                            print "[TEST EXECUTION RESULT] : SUCCESS";
-
+                          
                            tdkTestObj = obj.createTestStep('TDKB_TR181Stub_Get');
                            tdkTestObj.addParameter("ParamName","Device.MoCA.Interface.1.Enable");
-
+                           # adding sleep  to reflect status of Moca after changing lan mode
+                           sleep(20);
                            #Execute the test case in DUT
                            tdkTestObj.executeTestCase(expectedresult);
                            actualresult = tdkTestObj.getResult();
@@ -351,7 +355,7 @@ if "SUCCESS" in loadmodulestatus.upper():
             tdkTestObj.setResultStatus("FAILURE");
             print "TEST STEP 2: Get the lanmode";
             print "EXPECTED RESULT 2: Should get the lanmode";
-            print "ACTUAL RESULT 2: Lanmode is %s" %lanmode;
+            print "ACTUAL RESULT 2: Lanmode is %s" %lanmodeInitial;
             #Get the result of execution
             print "[TEST EXECUTION RESULT] : FAILURE";
     else:
@@ -367,6 +371,3 @@ else:
         print "Failed to load sysutil module";
         obj.setLoadModuleStatus("FAILURE");
         print "Module loading failed"
-
-
-
