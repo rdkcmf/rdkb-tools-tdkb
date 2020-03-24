@@ -206,6 +206,45 @@ void Mocastub::Mocastub_SetKeypassphrase(IN const Json::Value& req, OUT Json::Va
     }
 }
 
+/***************************************************************************
+ *Function name : Mocastub_SetOnly
+ *Descrption    : Moca Component Set Param Value API functionality checking
+ * @param [in]  req - ParamName : Holds the name of the parameter
+ * @param [in]  req - ParamValue : Holds the value of the parameter
+ * @param [in]  req - Type : Holds the Type of the parameter
+ * @param [out] response - filled with SUCCESS or FAILURE based on the return value
+ *
+ *****************************************************************************/
+void Mocastub::Mocastub_SetOnly(IN const Json::Value& req, OUT Json::Value& response)
+{
+    DEBUG_PRINT(DEBUG_TRACE,"Mocastub_SetOnly --->Entry \n");
+    int size_ret=0,i=0,setResult=0;
+    char details[2000] = {'\0'};
+    char ParamName[MAX_PARAM_SIZE];
+    char ParamValue[MAX_PARAM_SIZE];
+    char Type[MAX_PARAM_SIZE];
+    strcpy(ParamName,req["ParamName"].asCString());
+    strcpy(ParamValue,req["ParamValue"].asCString());
+    strcpy(Type,req["Type"].asCString());
+    setResult=ssp_setParameterValue(&ParamName[0],&ParamValue[0],&Type[0],1);
+    if(setResult==0)
+    {
+	printf("Set has been validated successfully\n");
+        response["result"] = "SUCCESS";
+        response["details"] = "Set has been validated successfully";
+        return;
+    }
+    else
+    {
+        sprintf(details, "Set operation failed , Return status : %d",setResult);
+	response["result"] = "FAILURE";
+        response["details"] = details;
+        return;
+    }
+     
+}
+	
+
 /**************************************************************************
  * Function Name        : CreateObject
  * Description  : This function will be used to create a new object for the

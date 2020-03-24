@@ -27,7 +27,7 @@
   <status>FREE</status>
   <synopsis>To check whether the MocaResetCount is getting increment after each reset</synopsis>
   <groups_id/>
-  <execution_time>1</execution_time>
+  <execution_time>10</execution_time>
   <long_duration>false</long_duration>
   <advanced_script>false</advanced_script>
   <remarks/>
@@ -109,7 +109,7 @@ if "SUCCESS" in loadmodulestatus.upper():
         print "ACTUAL RESULT 1: MocaResetCount is:%s" %LastResetCount;
         #Get the result of execution
         print "[TEST EXECUTION RESULT] : SUCCESS";
-        tdkTestObj = obj.createTestStep('Mocastub_Set');
+        tdkTestObj = obj.createTestStep('Mocastub_SetOnly');
         tdkTestObj.addParameter("ParamName","Device.MoCA.Interface.1.X_CISCO_COM_Reset");
         tdkTestObj.addParameter("ParamValue","true");
         tdkTestObj.addParameter("Type","bool");
@@ -134,7 +134,7 @@ if "SUCCESS" in loadmodulestatus.upper():
             tdkTestObj.executeTestCase(expectedresult);
             actualresult = tdkTestObj.getResult();
             NewResetCount = tdkTestObj.getResultDetails();
-	    Resetcount = int(LastResetCount) +1;
+            Resetcount = int(LastResetCount) +1;	    
             if expectedresult in actualresult and str(Resetcount) in NewResetCount:
                 #Set the result status of execution
                 tdkTestObj.setResultStatus("SUCCESS");
@@ -172,3 +172,6 @@ else:
         print "Failed to load moca module";
         obj.setLoadModuleStatus("FAILURE");
         print "Module loading failed";
+
+
+

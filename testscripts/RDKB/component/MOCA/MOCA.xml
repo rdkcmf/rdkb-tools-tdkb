@@ -33,7 +33,7 @@
           <parameter name="ParamValue" value="null"/>
         </parameters>
       </primitiveTest>
-      <primitiveTest name="Mocastub_SetKeypassphrase" id=" " version="1">
+      <primitiveTest id=" " name="Mocastub_SetKeypassphrase" version="1">
         <function>Mocastub_SetKeypassphrase</function>
         <parameters>
           <parameter name="ParamName" value="null"/>
@@ -41,6 +41,15 @@
           <parameter name="Type" value="null"/>
         </parameters>
       </primitiveTest>
+      <primitiveTest name="Mocastub_SetOnly" id=" " version="1">
+        <function>Mocastub_SetOnly</function>
+        <parameters>
+          <parameter name="ParamName" value=" "/>
+          <parameter name="ParamValue" value=" "/>
+          <parameter name="Type" value=" "/>
+        </parameters>
+      </primitiveTest>
     </primitiveTests>
   </module>
 </xml>
+
