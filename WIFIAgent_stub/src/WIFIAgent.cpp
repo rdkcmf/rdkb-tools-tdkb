@@ -235,12 +235,12 @@ void WIFIAgent::WIFIAgent_Set(IN const Json::Value& req, OUT Json::Value& respon
         DEBUG_PRINT(DEBUG_TRACE,"\n tdk_wifiagent_set --->Error in Set API Validation of WIFI Agent in DUT !!! \n");
     }
 
-    if ((!strncmp(ParamName, "Device.WiFi.Radio.1.", 20)) || (!strncmp(ParamName, "Device.WiFi.AccessPoint.1.", 26)) || (!strncmp(ParamName, "Device.WiFi.SSID.1.", 19)))
+    if ((!strncmp(ParamName, "Device.WiFi.Radio.1.", 20)) || (!strncmp(ParamName, "Device.WiFi.AccessPoint.1.", 26)) || (!strncmp(ParamName, "Device.WiFi.SSID.1.", 19)) || (!strncmp(ParamName, "Device.WiFi.AccessPoint.3.", 26)) || (!strncmp(ParamName, "Device.WiFi.SSID.3.", 19)))
     {
         printf("Apply the wifi settings for 2.4GHZ\n");
         retVal = ssp_setParameterValue("Device.WiFi.Radio.1.X_CISCO_COM_ApplySetting","true","boolean",commit);
     }
-    else if ((!strncmp(ParamName, "Device.WiFi.Radio.2.", 20)) || (!strncmp(ParamName, "Device.WiFi.AccessPoint.2.", 26)) || (!strncmp(ParamName, "Device.WiFi.SSID.2.", 19)))
+    else if ((!strncmp(ParamName, "Device.WiFi.Radio.2.", 20)) || (!strncmp(ParamName, "Device.WiFi.AccessPoint.2.", 26)) || (!strncmp(ParamName, "Device.WiFi.SSID.2.", 19)) || (!strncmp(ParamName, "Device.WiFi.AccessPoint.4.", 26)) || (!strncmp(ParamName, "Device.WiFi.SSID.4.", 19))) 
     {
         printf("Apply the wifi settings for 5GHZ\n");
         retVal = ssp_setParameterValue("Device.WiFi.Radio.2.X_CISCO_COM_ApplySetting","true","boolean",commit);
@@ -331,12 +331,12 @@ void WIFIAgent::WIFIAgent_SetMultiple(IN const Json::Value& req, OUT Json::Value
        DEBUG_PRINT(DEBUG_TRACE,"\n WIFIAgent_SetMultiple: Failed to set multiple parameters !!! \n");
    }
 
-   if ((!strncmp(paramlist[0], "Device.WiFi.Radio.1.", 20)) || (!strncmp(paramlist[0], "Device.WiFi.AccessPoint.1.", 26)) || (!strncmp(paramlist[0], "Device.WiFi.SSID.1.", 19)))
+   if ((!strncmp(paramlist[0], "Device.WiFi.Radio.1.", 20)) || (!strncmp(paramlist[0], "Device.WiFi.AccessPoint.1.", 26)) || (!strncmp(paramlist[0], "Device.WiFi.SSID.1.", 19)) || (!strncmp(paramlist[0], "Device.WiFi.AccessPoint.3.", 26)) || (!strncmp(paramlist[0], "Device.WiFi.SSID.3.", 19)))
     {
         printf("Apply the wifi settings for 2.4GHZ\n");
         retVal = ssp_setParameterValue("Device.WiFi.Radio.1.X_CISCO_COM_ApplySetting","true","boolean",commit);
     }
-    else if ((!strncmp(paramlist[0], "Device.WiFi.Radio.2.", 20)) || (!strncmp(paramlist[0], "Device.WiFi.AccessPoint.2.", 26)) || (!strncmp(paramlist[0], "Device.WiFi.SSID.2.", 19)))
+    else if ((!strncmp(paramlist[0], "Device.WiFi.Radio.2.", 20)) || (!strncmp(paramlist[0], "Device.WiFi.AccessPoint.2.", 26)) || (!strncmp(paramlist[0], "Device.WiFi.SSID.2.", 19)) || (!strncmp(paramlist[0], "Device.WiFi.AccessPoint.4.", 26)) || (!strncmp(paramlist[0], "Device.WiFi.SSID.4.", 19)))
     {
         printf("Apply the wifi settings for 5GHZ\n");
         retVal = ssp_setParameterValue("Device.WiFi.Radio.2.X_CISCO_COM_ApplySetting","true","boolean",commit);
@@ -414,12 +414,12 @@ void WIFIAgent::WIFIAgent_Set_Get(IN const Json::Value& req, OUT Json::Value& re
         return;
     }
 
-    if ((!strncmp(ParamName, "Device.WiFi.Radio.1.", 20)) || (!strncmp(ParamName, "Device.WiFi.AccessPoint.1.", 26)) || (!strncmp(ParamName, "Device.WiFi.SSID.1.", 19)))
+    if ((!strncmp(ParamName, "Device.WiFi.Radio.1.", 20)) || (!strncmp(ParamName, "Device.WiFi.AccessPoint.1.", 26)) || (!strncmp(ParamName, "Device.WiFi.SSID.1.", 19)) || (!strncmp(ParamName, "Device.WiFi.AccessPoint.3.", 26)) || (!strncmp(ParamName, "Device.WiFi.SSID.3.", 19)))
     {
         printf("Apply the wifi settings for 2.4GHZ\n");
         retVal = ssp_setParameterValue("Device.WiFi.Radio.1.X_CISCO_COM_ApplySetting","true","boolean",commit);
     }
-    else if ((!strncmp(ParamName, "Device.WiFi.Radio.2.", 20)) || (!strncmp(ParamName, "Device.WiFi.AccessPoint.2.", 26)) || (!strncmp(ParamName, "Device.WiFi.SSID.2.", 19)))
+    else if ((!strncmp(ParamName, "Device.WiFi.Radio.2.", 20)) || (!strncmp(ParamName, "Device.WiFi.AccessPoint.2.", 26)) || (!strncmp(ParamName, "Device.WiFi.SSID.2.", 19)) || (!strncmp(ParamName, "Device.WiFi.AccessPoint.4.", 26)) || (!strncmp(ParamName, "Device.WiFi.SSID.4.", 19)))
     {
         printf("Apply the wifi settings for 5GHZ\n");
         retVal = ssp_setParameterValue("Device.WiFi.Radio.2.X_CISCO_COM_ApplySetting","true","boolean",commit);
