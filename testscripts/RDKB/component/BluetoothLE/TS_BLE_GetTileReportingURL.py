@@ -83,47 +83,94 @@ import tdklib;
 
 #Test component to be tested
 obj = tdklib.TDKScriptingLibrary("tdkbtr181","1");
-
+sysobj = tdklib.TDKScriptingLibrary("sysutil","1");
 #IP and Port of box, No need to change,
 #This will be replaced with correspoing Box Ip and port while executing script
 ip = <ipaddress>
 port = <port>
 obj.configureTestCase(ip,port,'TS_BLE_GetTileReportingURL');
-
+sysobj.configureTestCase(ip,port,'TS_BLE_GetTileReportingURL');
 #Get the result of connection with test component and STB
 loadmodulestatus=obj.getLoadModuleResult();
+sysloadmodulestatus=sysobj.getLoadModuleResult();
 
 if "SUCCESS" in loadmodulestatus.upper():
     #Set the result status of execution
     obj.setLoadModuleStatus("SUCCESS")
+    sysobj.setLoadModuleStatus("SUCCESS")
 
-    tdkTestObj = obj.createTestStep('TDKB_TR181Stub_Get');
-    tdkTestObj.addParameter("ParamName","Device.DeviceInfo.X_RDKCENTRAL-COM_RFC.Feature.BLE.Tile.ReportingURL");
-    expectedresult="SUCCESS";
-
-    #Execute the test case in DUT
+    tdkTestObj = sysobj.createTestStep('ExecuteCmd');
+    expectedresult="SUCCESS"
+    cmd= "cat /tmp/rfc_configdata.txt  | grep -i tr181.Device.DeviceInfo.X_RDKCENTRAL-COM_RFC.Feature.BLERadio#~";
+    tdkTestObj.addParameter("command",cmd);
     tdkTestObj.executeTestCase(expectedresult);
     actualresult = tdkTestObj.getResult();
-    tileReportingURL = tdkTestObj.getResultDetails().strip().replace("\\n", "")
+    details = tdkTestObj.getResultDetails().strip().replace("\\n", "");
 
-    if expectedresult in actualresult and tileReportingURL:
-        #Set the result status of execution
-        tdkTestObj.setResultStatus("SUCCESS");
-        print "TEST STEP 1: Get the BLE TileReportingURL";
-        print "EXPECTED RESULT 1: Should get a non-empty BLE TileReportingURL";
-        print "ACTUAL RESULT 1: BLE TileReportingURL is %s" %tileReportingURL;
-        #Get the result of execution
-        print "[TEST EXECUTION RESULT] : SUCCESS";
+    print "details:",details
+    if details != "":
+       Mode = details.split("#~")[1].split(' ')[0].rstrip(" ");
+       print "Mode:",Mode
+    
+       tdkTestObj = obj.createTestStep('TDKB_TR181Stub_Get');
+       tdkTestObj.addParameter("ParamName","Device.DeviceInfo.X_RDKCENTRAL-COM_RFC.Feature.BLE.Tile.ReportingURL");
+       tdkTestObj.executeTestCase(expectedresult);
+       actualresult = tdkTestObj.getResult();
+       tileReportingURL = tdkTestObj.getResultDetails().strip().replace("\\n", "")
+
+       if expectedresult in actualresult :
+          if Mode == "true":
+             if tileReportingURL != "":
+                #Set the result status of execution
+                tdkTestObj.setResultStatus("SUCCESS");
+                print "TEST STEP 1: Get the BLE TileReportingURL";
+                print "EXPECTED RESULT 1: Should get a non-empty BLE TileReportingURL";
+                print "ACTUAL RESULT 1: BLE TileReportingURL is %s" %tileReportingURL;
+                #Get the result of execution
+                print "[TEST EXECUTION RESULT] : SUCCESS";
+             else:
+                 #Set the result status of execution
+                 tdkTestObj.setResultStatus("FAILURE");
+                 print "TEST STEP 1: Get the BLE TileReportingURL";
+                 print "EXPECTED RESULT 1: Should get a non empty BLE TileReportingURL";
+                 print "ACTUAL RESULT 1: BLE TileReportingURL is %s" %tileReportingURL;
+                 #Get the result of execution
+                 print "[TEST EXECUTION RESULT] : FAILURE";
+
+          else:
+
+              if tileReportingURL == "":
+
+                 #Set the result status of execution
+                 tdkTestObj.setResultStatus("SUCCESS");
+                 print "TEST STEP 1: Get the BLE TileReportingURL";
+                 print "EXPECTED RESULT 1: Should get a empty BLE TileReportingURL";
+                 print "ACTUAL RESULT 1: BLE TileReportingURL is %s" %tileReportingURL;
+                 #Get the result of execution
+                 print "[TEST EXECUTION RESULT] : SUCCESS";               
+              else:
+                  #Set the result status of execution
+                  tdkTestObj.setResultStatus("FAILURE");
+                  print "TEST STEP 1: Get the BLE TileReportingURL";
+                  print "EXPECTED RESULT 1: Should get the empty BLE TileReportingURL";
+                  print "ACTUAL RESULT 1: BLE TileReportingURL is %s" %tileReportingURL;
+                  #Get the result of execution
+                  print "[TEST EXECUTION RESULT] : FAILURE";
     else:
-        #Set the result status of execution
-        tdkTestObj.setResultStatus("FAILURE");
-        print "TEST STEP 1: Get the BLE TileReportingURL";
-        print "EXPECTED RESULT 1: Should get the BLE TileReportingURL";
-        print "ACTUAL RESULT 1: BLE TileReportingURL is %s" %tileReportingURL;
-        #Get the result of execution
-        print "[TEST EXECUTION RESULT] : FAILURE";
+         tdkTestObj.setResultStatus("FAILURE");
+         print "TEST STEP 1: Get  whether the  BLE is enabled form rfc_configdata.txt";
+         print "EXPECTED RESULT 1: Should get whether BLE feature is enabled from the logs ";
+         print "ACTUAL RESULT 1: BLE radio status is :" %details;
+         #Get the result of execution
+         print "[TEST EXECUTION RESULT] : FAILURE";
+
+
     obj.unloadModule("tdkbtr181");
+    sysobj.unloadModule("sysutil");
 else:
     print "Failed to load module";
     obj.setLoadModuleStatus("FAILURE");
     print "Module loading failed";
+
+
+
