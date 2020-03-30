@@ -69,11 +69,9 @@ QPSK: 12 dB minimum.</except_output>
     <remarks/>
   </test_cases>
 </xml>
-
 '''
 # use tdklib library,which provides a wrapper for tdk testcase script 
 import tdklib; 
-
 #Test component to be tested
 obj = tdklib.TDKScriptingLibrary("cmhal","1");
 
@@ -107,6 +105,7 @@ if "SUCCESS" in loadmodulestatus.upper():
         Details = tdkTestObj.getResultDetails();
         Details = ''.join(Details.split());
         List = Details.split(",");
+      
         for (lockstatus,modulation) in zip(LockStatusList,List):
             Data = modulation.split(":");
             lock = lockstatus.split(":");
@@ -120,10 +119,12 @@ if "SUCCESS" in loadmodulestatus.upper():
                 minSNR = 16;
             elif "QPSK" in Data[0]:
                 minSNR = 12;
+            elif "OFDM" in Data[0]:
+                minSNR = 30;
             else:
                 minSNR = 0;
-
-            if lock[0] == "Locked" and minSNR !=0 and float(Data[1].split()[0]) >= minSNR:
+            print "minSNR: ",minSNR
+            if lock[0] == "Locked" and minSNR !=0 and float(Data[1].split("dB")[0]) >= minSNR:
                 status = "Success";
             elif lock[0] == "NotLocked":
                 status = "Success";
@@ -152,3 +153,4 @@ else:
         print "Failed to load the module";
         obj.setLoadModuleStatus("FAILURE");
         print "Module loading failed";
+
