@@ -72,6 +72,7 @@ import tdklib;
 import tdkbSetAllParams
 from tdkbVariables import *;
 import snmplib;
+import time;
 
 #Test component to be tested
 obj = tdklib.TDKScriptingLibrary("tdkbtr181","1");
@@ -114,6 +115,7 @@ if "SUCCESS" in loadmodulestatus.upper() and "SUCCESS" in loadmodulestatus1.uppe
         print "Factory reset : SUCCESS";
         #Restore the device state saved before reboot
         obj1.restorePreviousStateAfterReboot();
+        time.sleep(60);
 
         setup_type = "SNMP"
         factoryReset = "true"
