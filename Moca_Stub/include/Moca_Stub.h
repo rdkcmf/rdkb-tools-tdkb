@@ -46,6 +46,7 @@ class Mocastub : public RDKTestStubInterface, public AbstractServer<Mocastub>
 			this->bindAndAddMethod(Procedure("Mocastub_Get", PARAMS_BY_NAME, JSON_STRING, "paramName", JSON_STRING, NULL), &Mocastub::Mocastub_Get);
 			this->bindAndAddMethod(Procedure("Mocastub_Set", PARAMS_BY_NAME, JSON_STRING, "ParamName", JSON_STRING, "ParamValue", JSON_STRING, "Type", JSON_STRING, NULL), &Mocastub::Mocastub_Set);
 			this->bindAndAddMethod(Procedure("Mocastub_SetKeypassphrase", PARAMS_BY_NAME, JSON_STRING, "ParamName", JSON_STRING, "ParamValue", JSON_STRING, "Type", JSON_STRING, NULL), &Mocastub::Mocastub_SetKeypassphrase);
+                        this->bindAndAddMethod(Procedure("Mocastub_SetOnly", PARAMS_BY_NAME, JSON_STRING, "ParamName", JSON_STRING, "ParamValue", JSON_STRING, "Type", JSON_STRING, NULL), &Mocastub::Mocastub_SetOnly);
 		}
 
         /*inherited functions*/
@@ -57,6 +58,7 @@ class Mocastub : public RDKTestStubInterface, public AbstractServer<Mocastub>
         /*Moca stub Wrapper functions*/
         void Mocastub_Get(IN const Json::Value& req, OUT Json::Value& response);
         void Mocastub_Set(IN const Json::Value& req, OUT Json::Value& response);
+        void Mocastub_SetOnly(IN const Json::Value& req, OUT Json::Value& response);
 	void Mocastub_SetKeypassphrase(IN const Json::Value& req, OUT Json::Value& response);
 };
 #endif //__MOCA_STUB_H__
