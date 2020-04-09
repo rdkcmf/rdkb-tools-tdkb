@@ -92,7 +92,6 @@ obj = tdklib.TDKScriptingLibrary("mtahal","1");
 ip = <ipaddress>
 port = <port>
 obj.configureTestCase(ip,port,'TS_MTAHAL_SetDSXLogEnableOn');
-
 #Get the result of connection with test component and DUT 
 loadmodulestatus =obj.getLoadModuleResult();
 print "[LIB LOAD STATUS]  :  %s" %loadmodulestatus ;
@@ -140,21 +139,35 @@ if "SUCCESS" in loadmodulestatus.upper():
             expectedresult="SUCCESS";
             tdkTestObj.executeTestCase(expectedresult);
             actualresult = tdkTestObj.getResult();
-            checkpoint = tdkTestObj.getResultDetails();
+            DSXLogEnable  = tdkTestObj.getResultDetails();
+            print "DSXLogEnable before converting to little endian:",DSXLogEnable
+  
+            #if the received value is not 1
+            #Doing a conversion from Bigendian to little endian
+            if DSXLogEnable != 1:
+               num = int(DSXLogEnable)
+               #converting to binary value
+               binarynum  = bin(num)[2:]
+               #removing the appened character b
+               reversenum =  binarynum[::-1]
+               #reversing the number to get a decimal value
+               DSXLogEnable = int(reversenum,2)
+               print"DSXLogEnable after converting to little endian:",DSXLogEnable
+              
 
-            if expectedresult in actualresult and checkpoint == '1':
+            if expectedresult in actualresult and DSXLogEnable  == 1:
                 #Set the result status of execution
                 tdkTestObj.setResultStatus("SUCCESS");
                 print "TEST STEP 3: Get the value of DSXLogEnable";
                 print "EXPECTED RESULT 3: Should get the DSXLogEnable successfully";
-                print "ACTUAL RESULT 3: The current value of DSXLogEnable is %s" %checkpoint;
+                print "ACTUAL RESULT 3: The current value of DSXLogEnable is %s" %DSXLogEnable;
                 #Get the result of execution
                 print "[TEST EXECUTION RESULT] : SUCCESS";
             else:
                 tdkTestObj.setResultStatus("FAILURE");
                 print "TEST STEP 3: Get the value of DSXLogEnable";
                 print "EXPECTED RESULT 3: Should get the DSXLogEnable successfully";
-                print "ACTUAL RESULT 3: Failed to get the DSXLogEnable, Details : %s" %checkpoint;
+                print "ACTUAL RESULT 3: Failed to get the DSXLogEnable, Details : %s" %DSXLogEnable;
                 print "[TEST EXECUTION RESULT] : FAILURE";            
         else:
             tdkTestObj.setResultStatus("FAILURE");
@@ -198,3 +211,6 @@ else:
     print "Failed to load the module";
     obj.setLoadModuleStatus("FAILURE");
     print "Module loading failed";
+
+
+
