@@ -27,7 +27,7 @@
   <status>FREE</status>
   <synopsis>To do set operation on all WiFi tr181 parameters</synopsis>
   <groups_id/>
-  <execution_time>30</execution_time>
+  <execution_time>45</execution_time>
   <long_duration>false</long_duration>
   <advanced_script>false</advanced_script>
   <remarks/>
