@@ -54,12 +54,14 @@ radioIndex   :   0</input_parameters>
 2.Python Script will be generated/overrided automatically by Test Manager with provided arguments in configure page (TS_WIFIHAL_2.4GHzGetRadioBeaconPeriod.py)
 3.Execute the generated Script(TS_WIFIHAL_2.4GHzGetRadioBeaconPeriod.py) using execution page of  Test Manager GUI
 4.wifihalstub which is a part of TDK Agent process, will be in listening mode to execute TDK Component function named WIFIHAL_GetOrSetParamUIntValue through registered TDK wifihalstub function along with necessary Path Name as arguments
-5.WIFIHAL_GetOrSetParamUIntValue function will call Ccsp Base Function named "ssp_WIFIHALGetOrSetParamUIntValue", that inturn will call WIFIHAL Library Function wifi_getRadioBeaconPeriod() function
-6.Response(s)(printf) from TDK Component,Ccsp Library function and wifihalstub would be logged in Agent Console log based on the debug info redirected to agent console
-7.wifihalstub will validate the available result (from agent console log and Pointer to instance as updated) with expected result
-8.Test Manager will publish the result in GUI as SUCCESS/FAILURE based on the response from wifihalstub</automation_approch>
+5.The default beacon Period value is parsed from tdk platform properties file
+6.WIFIHAL_GetOrSetParamUIntValue function will call Ccsp Base Function named "ssp_WIFIHALGetOrSetParamUIntValue", that inturn will call WIFIHAL Library Function wifi_getRadioBeaconPeriod() function
+7.The value received form WIFIHAL_GetOrSetParamUIntValue and the one received from platform properties should be same.
+8.Response(s)(printf) from TDK Component,Ccsp Library function and wifihalstub would be logged in Agent Console log based on the debug info redirected to agent console
+9.wifihalstub will validate the available result (from agent console log and Pointer to instance as updated) with expected result
+10.Test Manager will publish the result in GUI as SUCCESS/FAILURE based on the response from wifihalstub</automation_approch>
     <except_output>CheckPoint
-1:wifi_getRadioBeaconPeriod log from DUT should be available in Agent Console LogCheckPoint
+1:wifi_getRadioBeaconPeriod log and the value received by platform properties file  from DUT should be available in Agent Console LogCheckPoint
 2:TDK agent Test Function will log the test case result as PASS based on API response CheckPoint
 3:Test Manager GUI will publish the result as SUCCESS in Execution page"""</except_output>
     <priority>High</priority>
@@ -76,52 +78,90 @@ radioIndex   :   0</input_parameters>
 # use tdklib library,which provides a wrapper for tdk testcase script
 import tdklib;
 from wifiUtility import *;
-
+from tdkbVariables import *;
 #Test component to be tested
 obj = tdklib.TDKScriptingLibrary("wifihal","1");
-
+obj1 = tdklib.TDKScriptingLibrary("sysutil","1")
 #IP and Port of box, No need to change,
 #This will be replaced with correspoing Box Ip and port while executing script
 ip = <ipaddress>
 port = <port>
 obj.configureTestCase(ip,port,'TS_WIFIHAL_2.4GHzGetRadioBeaconPeriod');
-
+obj1.configureTestCase(ip,port,'TS_WIFIHAL_2.4GHzGetRadioBeaconPeriod');
 loadmodulestatus =obj.getLoadModuleResult();
+sysutilmodulestatus =obj1.getLoadModuleResult();
+
 print "[LIB LOAD STATUS]  :  %s" %loadmodulestatus
+print "[SYSUTIL  LOAD STATUS]  :  %s" %sysutilmodulestatus
 
-if "SUCCESS" in loadmodulestatus.upper():
+if "SUCCESS" in (loadmodulestatus.upper() and  sysutilmodulestatus.upper()):
     obj.setLoadModuleStatus("SUCCESS");
-
+    obj1.setLoadModuleStatus("SUCCESS");        
+  
+    #Get the default value from properties file
+    tdkTestObj1 = obj1.createTestStep('ExecuteCmd');
+    cmd = "sh %s/tdk_utility.sh parseConfigFile DEFAULT_BEACON_PERIOD" %TDK_PATH;
+    print cmd;
     expectedresult="SUCCESS";
-    radioIndex = 0
-    getMethod = "getRadioBeaconPeriod"
-    primitive = 'WIFIHAL_GetOrSetParamUIntValue'
+    tdkTestObj1.addParameter("command", cmd);
+    tdkTestObj1.executeTestCase(expectedresult);
+    actualresult = tdkTestObj1.getResult();
+    details = ""
+    details = tdkTestObj1.getResultDetails().strip();
+    defaultValue = ""
+    defaultValue = details.replace("\\n", "");
+    print "DEFAULT BEACON PERIOD:",defaultValue
+    if defaultValue != "" and ( expectedresult in  actualresult):
+        tdkTestObj1.setResultStatus("SUCCESS");
+        print "TEST STEP 1: Get the default beacon period from  tdk_platform properties file";
+        print "EXPECTED RESULT 1: Should Get the default beacon period form tdk_platfrom properties file";
+        print "ACTUAL RESULT 1: The default beacon period form tdk_pltaform properties file : %s" % defaultValue;
+        #Get the result of execution
+        print "[TEST EXECUTION RESULT] : SUCCESS"
 
-    #Calling the method from wifiUtility to execute test case and set result status for the test.
-    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, 0, getMethod)
+        expectedresult="SUCCESS";
+        radioIndex = 0
+        getMethod = "getRadioBeaconPeriod"
+        primitive = 'WIFIHAL_GetOrSetParamUIntValue'
 
-    if expectedresult in actualresult:
-        beaconPeriodValue = details.split(":")[1].strip()
-        if int(beaconPeriodValue) == 100:
-            print "getRadioBeaconPeriod function successful: %s"%details
-            tdkTestObj.setResultStatus("SUCCESS");
-            print "TEST STEP 1: Get the BeaconPeriod value";
-            print "EXPECTED RESULT 1: Function Should return a Beacon Period value";
-            print "ACTUAL RESULT 1: Beacon period value Received Successfully: %s"%beaconPeriodValue;
-            print "[TEST EXECUTION RESULT] : SUCCESS";
+        #Calling the method from wifiUtility to execute test case and set result status for the test.
+        tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, 0, getMethod)
+
+        if expectedresult in actualresult:
+           tdkTestObj.setResultStatus("SUCCESS");
+           print "getRadioBeaconPeriod function successful: %s"%details
+           beaconPeriodValue = details.split(":")[1].strip()
+           if int(beaconPeriodValue) == int(defaultValue):
+              print "getRadioBeaconPeriod function successful: %s"%details
+              tdkTestObj.setResultStatus("SUCCESS");
+              print "TEST STEP 2: Compare the default value with received beacon period";
+              print "EXPECTED RESULT 2:Default value and  Received beacon period should be equal";
+              print "ACTUAL RESULT 2: Default value and  Received beacon period are equal: %s"%beaconPeriodValue;
+              print "[TEST EXECUTION RESULT] : SUCCESS";
+           else:
+                tdkTestObj.setResultStatus("FAILURE");
+                print "TEST STEP 2:  Compare the default value with received beacon period";
+                print "EXPECTED RESULT 2:Default value and  Received beacon period should be equal";
+                print "ACTUAL RESULT 2: Default value and  Received beacon period are not equal:  %s"%beaconPeriodValue;
+                print "[TEST EXECUTION RESULT] : FAILURE";
+
         else:
-            print "getRadioBeaconPeriod function fails: %s"%details
+            print "getRadioBeaconPeriod function failed";
             tdkTestObj.setResultStatus("FAILURE");
-            print "TEST STEP 1: Get the BeaconPeriod value";
-            print "EXPECTED RESULT 1: Function Should return a Beacon Period value";
-            print "ACTUAL RESULT 1: Failed to receive Beacon period value: %s"%beaconPeriodValue;
-            print "[TEST EXECUTION RESULT] : FAILURE";
-
     else:
-        print "getRadioBeaconPeriod function failed";
-        tdkTestObj.setResultStatus("FAILURE");
+        tdkTestObj1.setResultStatus("FAILURE");
+        print "TEST STEP 1: Get the default beacon period from  tdk_platform properties file";
+        print "EXPECTED RESULT 1: Should Get the default beacon period form tdk_platfrom properties file";
+        print "ACTUAL RESULT 1: Failed to get the default beacon period form tdk_pltaform properties file : %s" % defaultValue;
+        #Get the result of execution
+        print "[TEST EXECUTION RESULT] : FAILURE"
+
     obj.unloadModule("wifihal");
+    obj1.unloadModule("sysutil");
 
 else:
-    print "Failed to load wifi module";
+    print "Failed to load wifi module/sysutil module";
     obj.setLoadModuleStatus("FAILURE");
+
+
+
