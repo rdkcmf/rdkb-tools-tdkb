@@ -101,7 +101,7 @@ if "SUCCESS" in loadmodulestatus.upper():
         print "[TEST EXECUTION RESULT] : SUCCESS";
 
         #Set values to enable public wifi
-        setvalues = ["44","68.86.15.199","68.86.15.171","true","true","true"];
+        setvalues = ["44","68.86.15.199","68.86.15.171","true","true","false"];
         tdkTestObj, actualresult, details = setPublicWiFiParamValues(obj,setvalues);
         if expectedresult in actualresult:
             tdkTestObj.setResultStatus("SUCCESS");
@@ -238,6 +238,6 @@ if "SUCCESS" in loadmodulestatus.upper():
     obj.unloadModule("wifiagent");
 
 else:
-        print "Failed to load wifi module";
-        obj.setLoadModuleStatus("FAILURE");
-        print "Module loading failed";
+    print "Failed to load wifi module";
+    obj.setLoadModuleStatus("FAILURE");
+    print "Module loading failed";
