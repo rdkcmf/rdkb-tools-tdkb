@@ -629,3 +629,228 @@ int ssp_SetFanSpeed(unsigned long int Value)
         }
         return RETURN_OK;
 }
+/*******************************************************************************************
+ ** Function Name        : ssp_SetMACsecEnable
+ ** Description          : This function will invoke the HAL API to Set MACsec Enable
+ ** @param [in]          : Integer Port Number and Boolean value
+ ** @param [out]         : return status an integer value 0-success and 1-Failure
+ ********************************************************************************************/
+int ssp_SetMACsecEnable(int ethPort, BOOLEAN flag)
+{
+        DEBUG_PRINT(DEBUG_TRACE, "Entering the ssp_SetMACsecEnable wrapper\n");
+
+        if (platform_hal_SetMACsecEnable(ethPort,flag) != RETURN_OK )
+        {
+                DEBUG_PRINT(DEBUG_ERROR, "SetMACsecEnable returns failure of funtion\n");
+                return RETURN_ERR;
+        }
+        DEBUG_PRINT(DEBUG_TRACE, "SetMACsecEnable returns success\n");
+        return RETURN_OK;
+}
+
+/*******************************************************************************************
+ * *Function Name        : ssp_GetMACsecEnable
+ ** Description          : This function will invoke the HAL API to Get MACsec Enable
+ ** @param [in]          : Integer Port Number and Boolean value
+ ** @param [out]         : return status an integer value 0-success and 1-Failure
+ ********************************************************************************************/
+int ssp_GetMACsecEnable(int ethPort, BOOLEAN* pflag)
+{
+        DEBUG_PRINT(DEBUG_TRACE, "Entering the ssp_GetMACsecEnable wrapper\n");
+        if(pflag == NULL)
+	{
+		DEBUG_PRINT(DEBUG_TRACE, "Sending NULL pointer to the flag\n");
+	}
+
+        if (platform_hal_GetMACsecEnable(ethPort,pflag) != RETURN_OK )
+        {
+                DEBUG_PRINT(DEBUG_ERROR, "Platform funtion returns failure\n");
+                return RETURN_ERR;
+        }
+        DEBUG_PRINT(DEBUG_TRACE, "Platform function returns success\n");
+        return RETURN_OK;
+}
+
+/*******************************************************************************************
+ * *Function Name        : ssp_GetMACsecOperationalStatus
+ ** Description          : This function will invoke the HAL API to Get MACsec Operational status
+ ** @param [in]          : Integer Port Number and Boolean value
+ ** @param [out]         : return status an integer value 0-success and 1-Failure
+ ********************************************************************************************/
+int ssp_GetMACsecOperationalStatus(int ethPort, BOOLEAN* pflag)
+{
+        DEBUG_PRINT(DEBUG_TRACE, "Entering the ssp_GetMACsecOperationalStatus wrapper\n");
+
+        if (platform_hal_GetMACsecOperationalStatus(ethPort,pflag) != RETURN_OK )
+        {
+                DEBUG_PRINT(DEBUG_ERROR, "Platform funtion returns failure\n");
+                return RETURN_ERR;
+        }
+        DEBUG_PRINT(DEBUG_TRACE, "Platform function returns success\n");
+        return RETURN_OK;
+}
+
+/*******************************************************************************************
+ **
+ ** Function Name       : ssp_getFactoryCmVariant
+ ** Description          : This function will invoke the HAL API to get the FactoryCM varient
+ ** @param [in]          : String to fetch the Cm varient value
+ ** @param [out]         : return status an integer value 0-success and 1-Failure
+ *********************************************************************************************/
+int ssp_getFactoryCmVariant(char *pValue)
+{
+        DEBUG_PRINT(DEBUG_TRACE, "Entering the ssp_getFactoryCmVariant wrapper\n");
+	char pro_info[64] = {'\0'};
+
+        if (platform_hal_getFactoryCmVariant(pro_info) != RETURN_OK )
+        {
+                DEBUG_PRINT(DEBUG_ERROR, "Platform funtion returns failure\n");
+                return RETURN_ERR;
+        }
+	strcpy(pValue, pro_info);
+        DEBUG_PRINT(DEBUG_TRACE, "Platform function returns success\n");
+        return RETURN_OK;
+}
+
+/*******************************************************************************************
+ * *
+ ** Function Name       : ssp_setFactoryCmVariant
+ ** Description          : This function will invoke the HAL API to set the Factory CM varient
+ **
+ ** @param [in]          : String  value to set the CM varient value
+ ** @param [out]         : return status an integer value 0-success and 1-Failure
+ *********************************************************************************************/
+int ssp_setFactoryCmVariant(char *pValue)
+{
+        DEBUG_PRINT(DEBUG_TRACE, "Entering the ssp_setFactoryCmVariant wrapper\n");
+
+        if (platform_hal_setFactoryCmVariant(pValue) != RETURN_OK )
+        {
+                DEBUG_PRINT(DEBUG_ERROR, "Platform funtion returns failure\n");
+                return RETURN_ERR;
+        }
+        DEBUG_PRINT(DEBUG_TRACE, "Platform function returns success\n");
+        return RETURN_OK;
+}
+
+/*******************************************************************************************
+ **
+ ** Function Name       : ssp_getRPM
+ ** Description          : This function will invoke the HAL API to get RPM value
+ **
+ ** @param [in]          : boolean to fetch the RPM value
+ ** @param [out]         : return status an integer value 0-success and 1-Failure
+ *********************************************************************************************/
+int ssp_getRPM(unsigned int *rpmbuf)
+{
+        DEBUG_PRINT(DEBUG_TRACE, "Entering the ssp_getRPM wrapper\n");
+        unsigned int rpmValue = 0;
+        rpmValue = platform_hal_getRPM();
+        *rpmbuf = rpmValue;
+        DEBUG_PRINT(DEBUG_TRACE, "Value of RPM is %d\n",rpmValue);
+
+        if (rpmValue < 0 )
+        {
+                DEBUG_PRINT(DEBUG_ERROR, "Platform funtion returns failure\n");
+                return RETURN_ERR;
+        }
+        DEBUG_PRINT(DEBUG_TRACE, "Platform function returns success\n");
+        return RETURN_OK;
+}
+
+/*******************************************************************************************
+ **
+ ** Function Name       : ssp_getRotorLock
+ ** Description          : This function will invoke the HAL API to get the Rotor Lock
+ **
+ ** @param [in]          : integer to fetch the Rotot Lock Value
+ ** @param [out]         : return status an integer value 0-success and 1-Failure
+ *********************************************************************************************/
+int ssp_getRotorLock(int *rotorLockbuf)
+{
+        DEBUG_PRINT(DEBUG_TRACE, "Entering the ssp_getRotorLock wrapper\n");
+        int rotorLockValue = 0;
+        rotorLockValue = platform_hal_getRotorLock();
+        *rotorLockbuf = rotorLockValue;
+        DEBUG_PRINT(DEBUG_ERROR, "Value of RotorLock is %d\n",rotorLockValue);
+
+        if (rotorLockValue < -1 || rotorLockValue > 1)
+        {
+                DEBUG_PRINT(DEBUG_ERROR, "Platform funtion returns failure\n");
+                return RETURN_ERR;
+        }
+        DEBUG_PRINT(DEBUG_TRACE, "Platform function returns success\n");
+        return RETURN_OK;
+}
+
+/*******************************************************************************************
+ **
+ ** Function Name       : ssp_getFanStatus
+ ** Description          : This function will invoke the HAL API to get the Fan status
+ **
+ ** @param [in]          : String to fetch the Fan status
+ ** @param [out]         : return status an integer value 0-success and 1-Failure
+ *********************************************************************************************/
+int ssp_getFanStatus(int *flag)
+{
+        DEBUG_PRINT(DEBUG_TRACE, "Entering the ssp_getFanStatus wrapper\n");
+        BOOLEAN fanStatus = 0;
+        fanStatus = platform_hal_getFanStatus();
+        *flag = (int)fanStatus;
+        DEBUG_PRINT(DEBUG_TRACE, "Value of FanStatus is %d\n",fanStatus);
+        if (fanStatus == 1)
+	{
+                DEBUG_PRINT(DEBUG_ERROR, "Platform function  success and returns Fanstatus TRUE \n");
+		return RETURN_OK;
+	}
+	else if (fanStatus == 0)
+	{
+		DEBUG_PRINT(DEBUG_ERROR, "Platform function  success and returns Fanstatus FALSE \n");
+		return RETURN_OK;
+	}
+	else
+	{
+	        DEBUG_PRINT(DEBUG_ERROR, "Platform function failed to get a value \n");
+		return RETURN_ERR;
+	}
+}
+
+/*******************************************************************************************
+ **
+ ** Function Name       : ssp_setFanMaxOverride
+ ** Description          : This function will invoke the HAL API to set the Fan Max Override
+ **
+ ** @param [in]          : Boolean value to enable or disable
+ ** @param [out]         : return status an integer value 0-success and 1-Failure
+ *********************************************************************************************/
+int ssp_setFanMaxOverride(BOOLEAN flag)
+{
+        DEBUG_PRINT(DEBUG_TRACE, "Entering the ssp_setFanMaxOverride wrapper\n");
+	if (platform_hal_setFanMaxOverride(flag) != RETURN_OK )
+        {
+                DEBUG_PRINT(DEBUG_ERROR, "Platform funtion returns failure\n");
+                return RETURN_ERR;
+        }
+        DEBUG_PRINT(DEBUG_TRACE, "Platform function returns success\n");
+        return RETURN_OK;
+}
+
+/*******************************************************************************************
+ **
+ ** Function Name        : ssp_setSNMMOnboardRebootEnable
+ ** Description          : This function will invoke the HAL API to set the SNMP Onboard Reboot Enable
+ **
+ ** @param [in]          : String value to enable or disable
+ ** @param [out]         : return status an integer value 0-success and 1-Failure
+ *********************************************************************************************/
+int ssp_SetSNMPOnboardRebootEnable(char *pEnable)
+{
+        DEBUG_PRINT(DEBUG_TRACE, "Entering the ssp_SetSNMPOnboardRebootEnable wrapper\n");
+
+        if (platform_hal_SetSNMPOnboardRebootEnable(pEnable) != RETURN_OK)
+        {
+                DEBUG_PRINT(DEBUG_ERROR, "platform_hal_SetSNMPEnable function failure\n");
+                return RETURN_ERR;
+        }
+        return RETURN_OK;
+}
