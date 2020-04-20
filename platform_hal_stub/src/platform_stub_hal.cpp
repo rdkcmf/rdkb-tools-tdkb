@@ -1485,6 +1485,395 @@ void platform_stub_hal::platform_stub_hal_SetFanSpeed(IN const Json::Value& req,
         }
 }
 
+
+/***********************************************************************************************
+ *Function name : platform_stub_hal_SetMACsecEnable
+ *Description   : This function will invoke the SSP HAL wrapper to set the MACsec Enable
+ *@param [in]   : req - ethPort: Ethernet Port Number index: To enable/Disable the MACsec
+ *@param [out]  : response - filled with SUCCESS or FAILURE based on the return value
+ ****************************************************************************************************/
+void platform_stub_hal::platform_stub_hal_SetMACsecEnable(IN const Json::Value& req, OUT Json::Value& response)
+{
+        int ethPort = 0, flag = 0;
+
+        DEBUG_PRINT(DEBUG_TRACE,"Inside Function platform_stub_hal_SetSSHEnable stub\n");
+        if(&req["ethPort"] == NULL || &req["index"] == NULL)
+        {
+                response["result"] = "FAILURE";
+                response["details"] = "NULL parameter as input argument";
+                return;
+        }
+        ethPort = req["ethPort"].asInt();
+        flag = req["index"].asInt();
+        if(ethPort < 1 || ethPort > 4 || flag < 0 || flag > 1)
+        {
+                response["result"] = "FAILURE";
+                response["details"] = "Invalid parameter";
+                return;
+        }
+
+        if(ssp_SetMACsecEnable(ethPort,flag) == RETURN_SUCCESS)
+        {
+                response["result"] = "SUCCESS";
+                response["details"] = "Set MACsec Enable fetched successfully";
+                return;
+        }
+        else
+        {
+                response["result"] = "FAILURE";
+                response["details"] = "Set MACsec Enable not fetched successfully";
+                return;
+        }
+}
+
+/*****************************************************************************************************
+ *Function name : platform_stub_hal_GetMACsecEnable
+ *Description   : This function will invoke the SSP HAL wrapper to get the Get MACsec Enable status
+ *@param [in]   : req - ethPort: Ethernet Port Number , flag: To set Postitive or Negative Scenario
+ *@param [out]  : response - filled with SUCCESS or FAILURE based on the return value
+ ******************************************************************************************************/
+void platform_stub_hal::platform_stub_hal_GetMACsecEnable(IN const Json::Value& req, OUT Json::Value& response)
+{
+        BOOLEAN index = 0;
+	int ethPort = 0;
+        char getResult[MAX_STRING_SIZE] = {0};
+        int isNegativeScenario = 0;
+        int result = RETURN_FAILURE;
+
+        DEBUG_PRINT(DEBUG_TRACE,"Inside Function platform_stub_hal_GetMACsecEnable stub \n");
+
+	if(&req["ethPort"] == NULL)
+	{
+                response["result"] = "FAILURE";
+                response["details"] = "NULL parameter as input argument";
+                return;
+	}
+	ethPort = req["ethPort"].asInt();
+
+        if(&req["index"])
+        {
+                isNegativeScenario = req["index"].asInt();
+        }
+
+        if(isNegativeScenario)
+        {
+                DEBUG_PRINT(DEBUG_TRACE, "Executing negative scenario\n");
+                result = ssp_GetMACsecEnable(ethPort,NULL);
+        }
+        else
+        {
+                DEBUG_PRINT(DEBUG_TRACE, "Executing positive scenario\n");
+                result = ssp_GetMACsecEnable(ethPort,&index);
+        }
+        if(result == RETURN_SUCCESS)
+        {
+                snprintf(getResult, MAX_STRING_SIZE, "%d", index);
+                response["result"] = "SUCCESS";
+                response["details"] = getResult;
+
+                DEBUG_PRINT(DEBUG_TRACE, "%s:: Test execution successful:: result = %s\n", __func__, getResult);
+                return;
+        }
+        else
+        {
+                response["result"] = "FAILURE";
+                response["details"] = "MACsec Enable not  fetched successfully";
+
+                DEBUG_PRINT(DEBUG_TRACE, "%s:: Test execution failed\n", __func__);
+                return;
+        }
+}
+
+
+/*****************************************************************************************************
+ *Function name : platform_stub_hal_GetMACsecOperationalStatus
+ *Description   : This function will invoke the HAL wrapper to get the Get MACsec Operation status
+ *@param [in]   : req - ethPort: Ethernet Port Number, index: To set negative or positive scenario
+ *@param [out]  : response - filled with SUCCESS or FAILURE based on the return value
+ ******************************************************************************************************/
+void platform_stub_hal::platform_stub_hal_GetMACsecOperationalStatus(IN const Json::Value& req, OUT Json::Value& response)
+{
+        BOOLEAN index = 0;
+	int ethPort = 0;
+        char getResult[MAX_STRING_SIZE] = {0};
+        int isNegativeScenario = 0;
+        int result = RETURN_FAILURE;
+        DEBUG_PRINT(DEBUG_TRACE,"Inside Function platform_stub_hal_GetMACsecOperationalStatus stub \n");
+
+        if(&req["ethPort"] == NULL  || &req["index"] == NULL )
+	{
+		response["result"] = "FAILURE";
+		response["details"] = "NULL parameter as input argument";
+		return;
+	}
+	ethPort = req["ethPort"].asInt();
+
+        if(&req["index"])
+        {
+                isNegativeScenario = req["index"].asInt();
+        }
+
+        if(isNegativeScenario)
+        {
+                DEBUG_PRINT(DEBUG_TRACE, "Executing negative scenario\n");
+                result = ssp_GetMACsecOperationalStatus(ethPort,NULL);
+        }
+        else
+        {
+                DEBUG_PRINT(DEBUG_TRACE, "Executing positive scenario\n");
+                result = ssp_GetMACsecOperationalStatus(ethPort,&index);
+        }
+        if(result == RETURN_SUCCESS)
+        {
+                snprintf(getResult, MAX_STRING_SIZE, "%d", index);
+                response["result"] = "SUCCESS";
+                response["details"] = getResult;
+
+                DEBUG_PRINT(DEBUG_TRACE, "%s:: Test execution successful:: result = %s\n", __func__, getResult);
+                return;
+        }
+        else
+        {
+                response["result"] = "FAILURE";
+                response["details"] = "MACsec Operational Status not  fetched successfully";
+
+                DEBUG_PRINT(DEBUG_TRACE, "%s:: Test execution failed\n", __func__);
+                return;
+        }
+}
+
+/*****************************************************************************************************
+ *Function name : platform_stub_hal_getFactoryCmVariant
+ *Description   : This function will invoke the HAL wrapper to get the Factory CM Variant value
+ *@param [in]   : req -
+ *@param [out]  : response - filled with SUCCESS or FAILURE based on the return value
+ ******************************************************************************************************/
+void platform_stub_hal::platform_stub_hal_getFactoryCmVariant(IN const Json::Value& req, OUT Json::Value& response)
+{
+        char getResult[MAX_STRING_SIZE] = {0};
+        int result = RETURN_FAILURE;
+        DEBUG_PRINT(DEBUG_TRACE,"Inside Function platform_stub_hal_getFactoryCmVariant stub\n");
+        result = ssp_getFactoryCmVariant(getResult);
+        if(result == RETURN_SUCCESS)
+        {
+                response["result"] = "SUCCESS";
+                response["details"] = getResult;
+                DEBUG_PRINT(DEBUG_TRACE, "%s:: Test execution successful:: result = %s\n", __func__, getResult);
+                return;
+        }
+        else
+        {
+                response["result"] = "FAILURE";
+                response["details"] = "Get Factory Cm varient details is not fetched successfully";
+                DEBUG_PRINT(DEBUG_TRACE, "%s:: Test execution failed\n", __func__);
+                return;
+        }
+}
+
+/*****************************************************************************************************
+ *Function name : platform_stub_hal_setFactoryCmVariant
+ *Description   : This function will invoke the HAL wrapper to set the Factory CM Variant value
+ *@param [in]   : req - CmVarient: Holds the value of CmVarient
+ *@param [out]  : response - filled with SUCCESS or FAILURE based on the return value
+ ******************************************************************************************************/
+void platform_stub_hal::platform_stub_hal_setFactoryCmVariant(IN const Json::Value& req, OUT Json::Value& response)
+{
+        char getResult[MAX_STRING_SIZE] = {0};
+        DEBUG_PRINT(DEBUG_TRACE,"Inside Function platform_stub_hal_setFactoryCmVariant stub\n");
+        if(&req["CmVarient"] == NULL)
+        {
+                response["result"] = "FAILURE";
+                response["details"] = "NULL parameter as input argument";
+                return;
+        }
+        strcpy(getResult, req["CmVarient"].asCString());
+
+        if(ssp_setFactoryCmVariant(getResult) == RETURN_SUCCESS )
+        {
+                response["result"] = "SUCCESS";
+                response["details"] = "Set Factory CmVarient fetched successfully";
+                return;
+        }
+        else
+        {
+                response["result"] = "FAILURE";
+                response["details"] = "Set Factory CmVarient not  fetched successfully";
+                return;
+        }
+}
+
+/*****************************************************************************************************
+ *Function name : platform_stub_hal_getRPM
+ *Description   : This function will invoke the HAL wrapper to get the RPM value
+ *@param [in]   : req - 
+ *@param [out]  : response - filled with SUCCESS or FAILURE based on the return value
+ ******************************************************************************************************/
+void platform_stub_hal::platform_stub_hal_getRPM(IN const Json::Value& req, OUT Json::Value& response)
+{
+        unsigned int rpmValue = 0;
+        char details[MAX_STRING_SIZE] = {0};
+        DEBUG_PRINT(DEBUG_TRACE,"Inside Function platform_stub_hal_getRPM stub\n");
+
+        if(ssp_getRPM(&rpmValue) == RETURN_SUCCESS)
+        {
+                sprintf(details, "RPM value is :%u", rpmValue);
+                response["result"] = "SUCCESS";
+                response["details"] = details;
+                DEBUG_PRINT(DEBUG_TRACE, "%s:: Test execution successful:: result = %u\n", __func__, rpmValue);
+                return;
+        }
+        else
+        {
+                response["result"] = "FAILURE";
+                response["details"] = "RPM details is not fetched successfully";
+                DEBUG_PRINT(DEBUG_TRACE, "%s:: Test execution failed\n", __func__);
+                return;
+        }
+}
+
+/*****************************************************************************************************
+ *Function name : platform_stub_hal_getRotorLock
+ *Description   : This function will invoke the HAL wrapper to get the Rotor Lock value
+ *@param [in]   : req -
+ *@param [out]  : response - filled with SUCCESS or FAILURE based on the return value
+ ******************************************************************************************************/
+void platform_stub_hal::platform_stub_hal_getRotorLock(IN const Json::Value& req, OUT Json::Value& response)
+{
+        int rotorLock = 0;
+        char details[MAX_STRING_SIZE] = {0};
+        DEBUG_PRINT(DEBUG_TRACE,"Inside Function platform_stub_hal_getRotorLock stub\n");
+        if(ssp_getRotorLock(&rotorLock) == RETURN_SUCCESS)
+        {
+                response["result"] = "SUCCESS";
+                sprintf(details,"Rotor Lock value is :%d",rotorLock);
+                response["details"] = details;
+                DEBUG_PRINT(DEBUG_TRACE, "%s:: Test execution successful:: result = %d\n", __func__, rotorLock);
+                return;
+        }
+        else
+        {
+                response["result"] = "FAILURE";
+                response["details"] = "Rotor Lock details is not fetched successfully";
+                DEBUG_PRINT(DEBUG_TRACE, "%s:: Test execution failed\n", __func__);
+                return;
+        }
+}
+
+/*****************************************************************************************************
+ *Function name : platform_stub_hal_getFanStatus
+ *Description   : This function will invoke the HAL wrapper to get the Fan status value
+ *@param [in]   : req - 
+ *@param [out]  : response - filled with SUCCESS or FAILURE based on the return value
+ ******************************************************************************************************/
+void platform_stub_hal::platform_stub_hal_getFanStatus(IN const Json::Value& req, OUT Json::Value& response)
+{
+        int fanstatus = 0;
+        char details[MAX_STRING_SIZE] = {0};
+        DEBUG_PRINT(DEBUG_TRACE,"Inside Function platform_stub_hal_getRotorLock stub\n");
+        if(ssp_getFanStatus(&fanstatus) == RETURN_SUCCESS)
+	{
+                response["result"] = "SUCCESS";
+                sprintf(details,"Fan Status is :%d",fanstatus);
+                response["details"] = details;
+                DEBUG_PRINT(DEBUG_TRACE, "%s:: Test execution successful:: result = %s\n", __func__, details);
+                return;
+        }
+        else
+        {
+                response["result"] = "FAILURE";
+                response["details"] = "Get Fan Status details is not fetched successfully";
+                DEBUG_PRINT(DEBUG_TRACE, "%s:: Test execution failed\n", __func__);
+                return;
+        }
+}
+
+/*****************************************************************************************************
+ *Function name : platform_stub_hal_ssp_setFanMaxOverride
+ *Description   : This function will invoke the HAL wrapper to set the Fan Max override
+ *@param [in]   : req - flag : To set the Fan Max override
+ *param [out]  : response - filled with SUCCESS or FAILURE based on the return value
+ ******************************************************************************************************/
+void platform_stub_hal::platform_stub_hal_setFanMaxOverride(IN const Json::Value& req, OUT Json::Value& response)
+{
+        int flag = 0;
+        BOOLEAN setFlag = 0;
+        DEBUG_PRINT(DEBUG_TRACE,"Inside Function platform_stub_hal_SetFanMaxOverride stub\n");
+        if(&req["flag"] == NULL)
+        {
+                response["result"] = "FAILURE";
+                response["details"] = "NULL parameter as input argument";
+                return;
+        }
+        flag = req["flag"].asInt();
+        if(flag == 0)
+        {
+                setFlag = 0;
+        }
+        else if(flag == 1)
+        {
+                setFlag = 1;
+        }
+        else
+        {
+                response["result"] = "FAILURE";
+                response["details"] = "Invalid parameter";
+                return;
+        }
+
+        if(ssp_setFanMaxOverride(setFlag) == RETURN_SUCCESS)
+        {
+                response["result"] = "SUCCESS";
+                response["details"] = "Set FanMaxOverride fetched successfully";
+                return;
+        }
+        else
+        {
+                response["result"] = "FAILURE";
+                response["details"] = "Set FanMaxOverride not fetched successfully";
+                return;
+        }
+}
+
+/*****************************************************************************************************
+ *Function name : platform_stub_hal_SetSNMPOnboardRebootEnable
+ *Description   : This function will invoke the HAL wrapper to set the SNMP Onboard Reboot Enable
+ *@param [in]   : req - SNMPonboard: Holds the  enable or disable value for SNMP onboard Reboot
+ *@param [out]  : response - filled with SUCCESS or FAILURE based on the return value
+ ******************************************************************************************************/
+void platform_stub_hal::platform_stub_hal_SetSNMPOnboardRebootEnable(IN const Json::Value& req, OUT Json::Value& response)
+{
+        char setFlag[MAX_STRING_SIZE] = {'\0'};
+
+        DEBUG_PRINT(DEBUG_TRACE,"Inside Function platform_stub_hal_SetSNMPOnboardRebootEnable stub\n");
+        if(&req["SNMPonboard"] == NULL)
+        {
+                response["result"] = "FAILURE";
+                response["details"] = "NULL parameter as input argument";
+                return;
+        }
+        strcpy(setFlag, req["SNMPonboard"].asCString());
+
+        if(strcmp(setFlag,"enable") != 0 && strcmp(setFlag,"disable") != 0)
+        {
+		response["result"] = "FAILURE";
+                response["details"] = "Invalid parameter as input argument";
+                return;
+	}
+
+        if(ssp_SetSNMPOnboardRebootEnable(setFlag) == RETURN_SUCCESS)
+        {
+                response["result"] = "SUCCESS";
+                response["details"] = "Set SNMP onboard Reboot Enable fetched successfully";
+                return;
+        }
+        else
+        {
+                response["result"] = "FAILURE";
+                response["details"] = "Set SNMP  onboard Reboot Enable not  fetched successfully";
+                return;
+        }
+}
+
 /********************************************************************************************
  *Function Name   : CreateObject
  *Description     : This function is used to create a new object of the class "TR069Agent".
