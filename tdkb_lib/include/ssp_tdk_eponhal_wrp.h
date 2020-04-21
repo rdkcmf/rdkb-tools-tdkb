@@ -38,6 +38,9 @@ extern "C"
         int ssp_EPONHAL_GetOamFrameRate(dpoe_link_oam_frame_rate_t linkOamFrameRate[], unsigned short numEntries);
         int ssp_EPONHAL_GetDynamicMacTable(dpoe_link_mac_address_t linkDynamicMacTable[], unsigned short numEntries);
         int ssp_EPONHAL_GetOnuLinkStatistics(dpoe_link_traffic_stats_t onuLinkTrafficStats[], unsigned short *numEntries);
+        int ssp_EPONHAL_GetStaticMacTable(dpoe_link_mac_address_t linkStaticMacTable[], unsigned short numEntries);
+        int ssp_EPONHAL_SetClearOnuLinkStatistics();
+        int ssp_EPONHAL_SetResetOnu();
 #ifdef __cplusplus
 }
 #endif

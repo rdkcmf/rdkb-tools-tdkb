@@ -61,6 +61,9 @@ class EPONHAL : public RDKTestStubInterface, public AbstractServer<EPONHAL>
                         this->bindAndAddMethod(Procedure("EPONHAL_GetOamFrameRate", PARAMS_BY_NAME, JSON_STRING,"numEntries",JSON_INTEGER, NULL), &EPONHAL::EPONHAL_GetOamFrameRate);
                         this->bindAndAddMethod(Procedure("EPONHAL_GetDynamicMacTable", PARAMS_BY_NAME, JSON_STRING,"numEntries",JSON_INTEGER, NULL), &EPONHAL::EPONHAL_GetDynamicMacTable);
                         this->bindAndAddMethod(Procedure("EPONHAL_GetOnuLinkStatistics", PARAMS_BY_NAME, JSON_STRING,"numEntries",JSON_INTEGER,NULL), &EPONHAL::EPONHAL_GetOnuLinkStatistics);
+                        this->bindAndAddMethod(Procedure("EPONHAL_GetStaticMacTable", PARAMS_BY_NAME, JSON_STRING,"numEntries",JSON_INTEGER, NULL), &EPONHAL::EPONHAL_GetStaticMacTable);
+                        this->bindAndAddMethod(Procedure("EPONHAL_SetClearOnuLinkStatistics", PARAMS_BY_NAME, JSON_STRING, NULL), &EPONHAL::EPONHAL_SetClearOnuLinkStatistics);
+                        this->bindAndAddMethod(Procedure("EPONHAL_SetResetOnu", PARAMS_BY_NAME, JSON_STRING, NULL), &EPONHAL::EPONHAL_SetResetOnu);
                 }
 
                 bool initialize(IN const char* szVersion);
@@ -80,6 +83,8 @@ class EPONHAL : public RDKTestStubInterface, public AbstractServer<EPONHAL>
                 void EPONHAL_GetOamFrameRate(IN const Json::Value& req, OUT Json::Value& response);
                 void EPONHAL_GetDynamicMacTable(IN const Json::Value& req, OUT Json::Value& response);
                 void EPONHAL_GetOnuLinkStatistics(IN const Json::Value& req, OUT Json::Value& response);
-
+                void EPONHAL_GetStaticMacTable(IN const Json::Value& req, OUT Json::Value& response);
+                void EPONHAL_SetClearOnuLinkStatistics(IN const Json::Value& req, OUT Json::Value& response);
+                void EPONHAL_SetResetOnu(IN const Json::Value& req, OUT Json::Value& response);
 };
 #endif

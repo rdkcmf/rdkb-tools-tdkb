@@ -514,3 +514,93 @@ int ssp_EPONHAL_GetOnuLinkStatistics(dpoe_link_traffic_stats_t onuLinkTrafficSta
          return SSP_SUCCESS;
     }
 }
+
+/*******************************************************************************************
+ *
+ * Function Name        : ssp_EPONHAL_GetStaticMacTable
+ * Description          : This function invokes EPON  hal api dpoe_getStaticMacTable()
+ * @param [in]          : linkStaticMacTable - buffer to hold MAC details
+ * @param [in]          : numEntries - numEntries in StaticMACTable
+ * @param [out]         : return status an integer value 0-success and 1-Failure
+ *
+** ********************************************************************************************/
+int ssp_EPONHAL_GetStaticMacTable(dpoe_link_mac_address_t linkStaticMacTable[], unsigned short numEntries)
+{
+    printf("\n ssp_EPONHAL_GetStaticMacTable----> Entry\n");
+    int return_status = 0;
+
+    return_status = dpoe_getStaticMacTable(linkStaticMacTable,numEntries);
+    printf("return value from ssp_EPONHAL_GetStaticMacTable  is %d\n",return_status);
+    if(return_status != SSP_SUCCESS)
+    {
+     printf("\n ssp_EPONHAL_GetStaticMacTable::Failed\n");
+     printf("\n ssp_EPONHAL_GetStaticMacTable ----> Exit\n");
+     return SSP_FAILURE;
+    }
+    else
+    {
+     printf("\n ssp_EPONHAL_GetStaticMacTable::Success\n");
+     printf("\n ssp_EPONHAL_GetStaticMacTable ----> Exit\n");
+     return return_status;
+    }
+}
+
+
+/*******************************************************************************************
+ *
+ * Function Name        : ssp_EPONHAL_SetClearOnuLinkStatistics
+ * Description          : This function invokes EPON  hal api dpoe_setClearOnuLinkStatistics()
+ * @param [in]          : NILL
+ * @param [out]         : return status an integer value 0-success and 1-Failure
+ *
+** ********************************************************************************************/
+int ssp_EPONHAL_SetClearOnuLinkStatistics()
+{
+    printf("\n ssp_EPONHAL_SetClearOnuLinkStatistics----> Entry\n");
+    int return_status = 0;
+
+    return_status = dpoe_setClearOnuLinkStatistics();
+    printf("return value from ssp_EPONHAL_SetClearOnuLinkStatistics is %d\n",return_status);
+    if(return_status != SSP_SUCCESS)
+    {
+     printf("\n ssp_EPONHAL_SetClearOnuLinkStatistics::Failed\n");
+     printf("\n ssp_EPONHAL_SetClearOnuLinkStatistics ----> Exit\n");
+     return SSP_FAILURE;
+    }
+    else
+    {
+     printf("\n ssp_EPONHAL_SetClearOnuLinkStatistics::Success\n");
+     printf("\n ssp_EPONHAL_SetClearOnuLinkStatistics ----> Exit\n");
+     return return_status;
+    }
+}
+
+
+/*******************************************************************************************
+ *
+ * Function Name        : ssp_EPONHAL_SetResetOnu
+ * Description          : This function invokes EPON hal api dpoe_SetResetOnu()
+ * @param [in]          : NILL
+ * @param [out]         : return status an integer value 0-success and 1-Failure
+ *
+** ********************************************************************************************/
+int ssp_EPONHAL_SetResetOnu()
+{
+    printf("\n ssp_EPONHAL_SetResetOnu----> Entry\n");
+    int return_status = 0;
+
+    return_status = dpoe_setResetOnu();
+    printf("return value from ssp_EPONHAL_SetResetOnu is %d\n",return_status);
+    if(return_status != SSP_SUCCESS)
+    {
+     printf("\n ssp_EPONHAL_SetResetOnu::Failed\n");
+     printf("\n ssp_EPONHAL_SetResetOnu ----> Exit\n");
+     return SSP_FAILURE;
+    }
+    else
+    {
+     printf("\n ssp_EPONHAL_SetResetOnu::Success\n");
+     printf("\n ssp_EPONHAL_SetResetOnu ----> Exit\n");
+     return return_status;
+    }
+}
