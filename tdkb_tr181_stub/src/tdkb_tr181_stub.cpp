@@ -136,12 +136,12 @@ void TDKB_TR181Stub::TDKB_TR181Stub_Set(IN const Json::Value& req, OUT Json::Val
     setResult=ssp_setParameterValue(&ParamName[0],&ParamValue[0],&Type[0],1);
     if(setResult==0)
     {
-        if ((!ParamName.compare(0, 20, "Device.WiFi.Radio.1.")) || (!ParamName.compare(0, 26, "Device.WiFi.AccessPoint.1.")) || (!ParamName.compare(0,19,"Device.WiFi.SSID.1.")))
+        if ((!ParamName.compare(0, 20, "Device.WiFi.Radio.1.")) || (!ParamName.compare(0, 26, "Device.WiFi.AccessPoint.1.")) || (!ParamName.compare(0,19,"Device.WiFi.SSID.1.")) || (!ParamName.compare(0, 26, "Device.WiFi.AccessPoint.3.")) || (!ParamName.compare(0,19,"Device.WiFi.SSID.3.")))
         {
             printf("Apply the wifi settings for 2.4GHZ\n");
             apRet = ssp_setParameterValue("Device.WiFi.Radio.1.X_CISCO_COM_ApplySetting","true","boolean",commit);
         }
-        else if ((!ParamName.compare(0, 20, "Device.WiFi.Radio.2.")) || (!ParamName.compare(0, 26, "Device.WiFi.AccessPoint.2.")) || (!ParamName.compare(0,19,"Device.WiFi.SSID.2.")))
+        else if ((!ParamName.compare(0, 20, "Device.WiFi.Radio.2.")) || (!ParamName.compare(0, 26, "Device.WiFi.AccessPoint.2.")) || (!ParamName.compare(0,19,"Device.WiFi.SSID.2.")) || (!ParamName.compare(0, 26, "Device.WiFi.AccessPoint.4.")) || (!ParamName.compare(0,19,"Device.WiFi.SSID.4.")))
         {
             printf("Apply the wifi settings for 5GHZ\n");
             apRet = ssp_setParameterValue("Device.WiFi.Radio.2.X_CISCO_COM_ApplySetting","true","boolean",commit);
