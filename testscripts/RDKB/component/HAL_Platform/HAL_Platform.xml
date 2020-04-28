@@ -11,167 +11,167 @@
  limitations under the License.
 -->
 <?xml version="1.0" encoding="UTF-8"?><xml>
-  <module name="HAL_Platform" testGroup="Component">
+  <module testGroup="Component" name="HAL_Platform">
     <primitiveTests>
-      <primitiveTest id="" name="platform_stub_hal_GetModelName" version="1">
+      <primitiveTest name="platform_stub_hal_GetModelName" id="" version="1">
         <function>platform_stub_hal_GetModelName</function>
         <parameters>
           <parameter name="flag" value="0"/>
         </parameters>
       </primitiveTest>
-      <primitiveTest id="" name="platform_stub_hal_DocsisParamsDBInit" version="1">
+      <primitiveTest name="platform_stub_hal_DocsisParamsDBInit" id="" version="1">
         <function>platform_stub_hal_DocsisParamsDBInit</function>
         <parameters/>
       </primitiveTest>
-      <primitiveTest id="" name="platform_stub_hal_GetBaseMacAddress" version="1">
+      <primitiveTest name="platform_stub_hal_GetBaseMacAddress" id="" version="1">
         <function>platform_stub_hal_GetBaseMacAddress</function>
         <parameters>
           <parameter name="flag" value="0"/>
         </parameters>
       </primitiveTest>
-      <primitiveTest id="" name="platform_stub_hal_GetBootLoaderVersion" version="1">
+      <primitiveTest name="platform_stub_hal_GetBootLoaderVersion" id="" version="1">
         <function>platform_stub_hal_GetBootLoaderVersion</function>
         <parameters>
           <parameter name="flag" value="0"/>
         </parameters>
       </primitiveTest>
-      <primitiveTest id="" name="platform_stub_hal_GetDeviceConfigStatus" version="1">
+      <primitiveTest name="platform_stub_hal_GetDeviceConfigStatus" id="" version="1">
         <function>platform_stub_hal_GetDeviceConfigStatus</function>
         <parameters>
           <parameter name="flag" value="0"/>
         </parameters>
       </primitiveTest>
-      <primitiveTest id="" name="platform_stub_hal_GetFirmwareName" version="1">
+      <primitiveTest name="platform_stub_hal_GetFirmwareName" id="" version="1">
         <function>platform_stub_hal_GetFirmwareName</function>
         <parameters>
           <parameter name="flag" value="0"/>
         </parameters>
       </primitiveTest>
-      <primitiveTest id="" name="platform_stub_hal_GetFreeMemorySize" version="1">
+      <primitiveTest name="platform_stub_hal_GetFreeMemorySize" id="" version="1">
         <function>platform_stub_hal_GetFreeMemorySize</function>
         <parameters>
           <parameter name="flag" value="0"/>
         </parameters>
       </primitiveTest>
-      <primitiveTest id="" name="platform_stub_hal_GetHardware" version="1">
+      <primitiveTest name="platform_stub_hal_GetHardware" id="" version="1">
         <function>platform_stub_hal_GetHardware</function>
         <parameters>
           <parameter name="flag" value="0"/>
         </parameters>
       </primitiveTest>
-      <primitiveTest id="" name="platform_stub_hal_GetHardwareFree" version="1">
+      <primitiveTest name="platform_stub_hal_GetHardwareFree" id="" version="1">
         <function>platform_stub_hal_GetHardwareFree</function>
         <parameters>
           <parameter name="flag" value="0"/>
         </parameters>
       </primitiveTest>
-      <primitiveTest id="" name="platform_stub_hal_GetHardwareMemUsed" version="1">
+      <primitiveTest name="platform_stub_hal_GetHardwareMemUsed" id="" version="1">
         <function>platform_stub_hal_GetHardwareMemUsed</function>
         <parameters>
           <parameter name="flag" value="0"/>
         </parameters>
       </primitiveTest>
-      <primitiveTest id="" name="platform_stub_hal_GetHardwareVersion" version="1">
+      <primitiveTest name="platform_stub_hal_GetHardwareVersion" id="" version="1">
         <function>platform_stub_hal_GetHardwareVersion</function>
         <parameters>
           <parameter name="flag" value="0"/>
         </parameters>
       </primitiveTest>
-      <primitiveTest id="" name="platform_stub_hal_GetSerialNumber" version="1">
+      <primitiveTest name="platform_stub_hal_GetSerialNumber" id="" version="1">
         <function>platform_stub_hal_GetSerialNumber</function>
         <parameters>
           <parameter name="flag" value="0"/>
         </parameters>
       </primitiveTest>
-      <primitiveTest id="" name="platform_stub_hal_GetTelnetEnable" version="1">
+      <primitiveTest name="platform_stub_hal_GetTelnetEnable" id="" version="1">
         <function>platform_stub_hal_GetTelnetEnable</function>
         <parameters>
           <parameter name="flag" value="0"/>
         </parameters>
       </primitiveTest>
-      <primitiveTest id="" name="platform_stub_hal_GetTotalMemorySize" version="1">
+      <primitiveTest name="platform_stub_hal_GetTotalMemorySize" id="" version="1">
         <function>platform_stub_hal_GetTotalMemorySize</function>
         <parameters>
           <parameter name="flag" value="0"/>
         </parameters>
       </primitiveTest>
-      <primitiveTest id="" name="platform_stub_hal_GetUsedMemorySize" version="1">
+      <primitiveTest name="platform_stub_hal_GetUsedMemorySize" id="" version="1">
         <function>platform_stub_hal_GetUsedMemorySize</function>
         <parameters>
           <parameter name="flag" value="0"/>
         </parameters>
       </primitiveTest>
-      <primitiveTest id="" name="platform_stub_hal_GetWebUITimeout" version="1">
+      <primitiveTest name="platform_stub_hal_GetWebUITimeout" id="" version="1">
         <function>platform_stub_hal_GetWebUITimeout</function>
         <parameters>
           <parameter name="flag" value="0"/>
         </parameters>
       </primitiveTest>
-      <primitiveTest id="" name="platform_stub_hal_PandMDBInit" version="1">
+      <primitiveTest name="platform_stub_hal_PandMDBInit" id="" version="1">
         <function>platform_stub_hal_PandMDBInit</function>
         <parameters/>
       </primitiveTest>
-      <primitiveTest id=" " name="platform_stub_hal_SetSSHEnable" version="1">
+      <primitiveTest name="platform_stub_hal_SetSSHEnable" id=" " version="1">
         <function>platform_stub_hal_SetSSHEnable</function>
         <parameters>
           <parameter name="index" value="1"/>
         </parameters>
       </primitiveTest>
-      <primitiveTest id=" " name="platform_stub_hal_SetWebUITimeout" version="1">
+      <primitiveTest name="platform_stub_hal_SetWebUITimeout" id=" " version="1">
         <function>platform_stub_hal_SetWebUITimeout</function>
         <parameters>
           <parameter name="index" value="30"/>
         </parameters>
       </primitiveTest>
-      <primitiveTest id="" name="platform_stub_hal_GetSSHEnable" version="1">
+      <primitiveTest name="platform_stub_hal_GetSSHEnable" id="" version="1">
         <function>platform_stub_hal_GetSSHEnable</function>
         <parameters>
           <parameter name="flag" value="0"/>
         </parameters>
       </primitiveTest>
-      <primitiveTest id="" name="platform_stub_hal_GetSNMPEnable" version="1">
+      <primitiveTest name="platform_stub_hal_GetSNMPEnable" id="" version="1">
         <function>platform_stub_hal_GetSNMPEnable</function>
         <parameters>
           <parameter name="flag" value="0"/>
         </parameters>
       </primitiveTest>
-      <primitiveTest id="" name="platform_stub_hal_GetSoftwareVersion" version="1">
+      <primitiveTest name="platform_stub_hal_GetSoftwareVersion" id="" version="1">
         <function>platform_stub_hal_GetSoftwareVersion</function>
         <parameters>
           <parameter name="flag" value="0"/>
         </parameters>
       </primitiveTest>
-      <primitiveTest id=" " name="platform_stub_hal_SetTelnetEnable" version="1">
+      <primitiveTest name="platform_stub_hal_SetTelnetEnable" id=" " version="1">
         <function>platform_stub_hal_SetTelnetEnable</function>
         <parameters>
           <parameter name="index" value="1"/>
         </parameters>
       </primitiveTest>
-      <primitiveTest id=" " name="platform_stub_hal_SetSNMPEnable" version="1">
+      <primitiveTest name="platform_stub_hal_SetSNMPEnable" id=" " version="1">
         <function>platform_stub_hal_SetSNMPEnable</function>
         <parameters>
           <parameter name="index" value="0"/>
         </parameters>
       </primitiveTest>
-      <primitiveTest id=" " name="platform_stub_hal_GetFactoryResetCount" version="1">
+      <primitiveTest name="platform_stub_hal_GetFactoryResetCount" id=" " version="1">
         <function>platform_stub_hal_GetFactoryResetCount</function>
         <parameters>
           <parameter name="flag" value="0"/>
         </parameters>
       </primitiveTest>
-      <primitiveTest id=" " name="platform_stub_hal_ClearResetCount" version="1">
+      <primitiveTest name="platform_stub_hal_ClearResetCount" id=" " version="1">
         <function>platform_stub_hal_ClearResetCount</function>
         <parameters>
           <parameter name="index" value="1"/>
         </parameters>
       </primitiveTest>
-      <primitiveTest id=" " name="platform_stub_hal_GetTimeOffSet" version="1">
+      <primitiveTest name="platform_stub_hal_GetTimeOffSet" id=" " version="1">
         <function>platform_stub_hal_GetTimeOffSet</function>
         <parameters>
           <parameter name="flag" value="0"/>
         </parameters>
       </primitiveTest>
-      <primitiveTest id=" " name="platform_stub_hal_GetCMTSMac" version="1">
+      <primitiveTest name="platform_stub_hal_GetCMTSMac" id=" " version="1">
         <function>platform_stub_hal_GetCMTSMac</function>
         <parameters>
           <parameter name="flag" value="0"/>
@@ -202,6 +202,62 @@
           <parameter name="flag" value="0"/>
         </parameters>
       </primitiveTest>
+      <primitiveTest name="platform_stub_hal_SetMACsecEnable" id=" " version="3">
+        <function>platform_stub_hal_SetMACsecEnable</function>
+        <parameters>
+          <parameter name="ethPort" value="0"/>
+          <parameter name="index" value="0"/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest name="platform_stub_hal_GetMACsecEnable" id=" " version="6">
+        <function>platform_stub_hal_GetMACsecEnable</function>
+        <parameters>
+          <parameter name="ethPort" value="0"/>
+          <parameter name="index" value="0"/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest name="platform_stub_hal_GetMACsecOperationalStatus" id=" " version="4">
+        <function>platform_stub_hal_GetMACsecOperationalStatus</function>
+        <parameters>
+          <parameter name="ethPort" value="0"/>
+          <parameter name="index" value="0"/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest name="platform_stub_hal_getRPM" id="" version="1">
+        <function>platform_stub_hal_getRPM</function>
+        <parameters/>
+      </primitiveTest>
+      <primitiveTest name="platform_stub_hal_getRotorLock" id="" version="1">
+        <function>platform_stub_hal_getRotorLock</function>
+        <parameters/>
+      </primitiveTest>
+      <primitiveTest name="platform_stub_hal_getFanStatus" id="" version="1">
+        <function>platform_stub_hal_getFanStatus</function>
+        <parameters/>
+      </primitiveTest>
+      <primitiveTest name="platform_stub_hal_setFanMaxOverride" id=" " version="1">
+        <function>platform_stub_hal_setFanMaxOverride</function>
+        <parameters>
+          <parameter name="flag" value="0"/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest name="platform_stub_hal_getFactoryCmVariant" id="" version="1">
+        <function>platform_stub_hal_getFactoryCmVariant</function>
+        <parameters/>
+      </primitiveTest>
+      <primitiveTest name="platform_stub_hal_setFactoryCmVariant" id=" " version="3">
+        <function>platform_stub_hal_setFactoryCmVariant</function>
+        <parameters>
+          <parameter name="CmVarient" value=" "/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest name="platform_stub_hal_SetSNMPOnboardRebootEnable" id=" " version="3">
+        <function>platform_stub_hal_SetSNMPOnboardRebootEnable</function>
+        <parameters>
+          <parameter name="SNMPonboard" value="  "/>
+        </parameters>
+      </primitiveTest>
     </primitiveTests>
   </module>
 </xml>
+
