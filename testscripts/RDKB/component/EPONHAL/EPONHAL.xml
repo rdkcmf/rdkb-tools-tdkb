@@ -72,11 +72,25 @@
           <parameter name="numEntries" value="0"/>
         </parameters>
       </primitiveTest>
-      <primitiveTest name="EPONHAL_GetOnuLinkStatistics" id=" " version="1">
+      <primitiveTest id=" " name="EPONHAL_GetOnuLinkStatistics" version="1">
         <function>EPONHAL_GetOnuLinkStatistics</function>
         <parameters>
           <parameter name="numEntries" value="0"/>
         </parameters>
+      </primitiveTest>
+      <primitiveTest id=" " name="EPONHAL_GetStaticMacTable" version="1">
+        <function>EPONHAL_GetStaticMacTable</function>
+        <parameters>
+          <parameter name="numEntries" value="0"/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest id="" name="EPONHAL_SetResetOnu" version="1">
+        <function>EPONHAL_SetResetOnu</function>
+        <parameters/>
+      </primitiveTest>
+      <primitiveTest name="EPONHAL_SetClearOnuLinkStatistics" id="" version="1">
+        <function>EPONHAL_SetClearOnuLinkStatistics</function>
+        <parameters/>
       </primitiveTest>
     </primitiveTests>
   </module>
