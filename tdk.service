@@ -18,14 +18,12 @@
 ##########################################################################
 [Unit]
 Description=TDK Test Agent Start
-After=dbus.service
+After=dbus.service apps-rdm.service
 Wants=dbus.service
 
 [Service]
-Type=forking
 ExecStartPre=/bin/sh -c 'mkdir -p /nvram/TDK'
-ExecStart=/bin/sh -c '/usr/ccsp/tdk/StartTDK.sh'
-Restart=always
-RestartSec=3
+ExecStart=/bin/sh -c '/usr/sbin/tdkb_launcher.sh'
+
 [Install]
 WantedBy=multi-user.target
