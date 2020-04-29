@@ -51,6 +51,35 @@ int ssp_mso_mgmt_hal_GetMsoPodSeed(char* value)
     return return_status;
 
 }
+
+/*******************************************************************************************
+ *
+ * Function Name        : ssp_mso_set_pod_seed
+ * Description          : This function will invoke the hal api of mso_mgmt_hal to set the MSO POD seed value
+ *
+ * @param [in]          : value: value of the seed to be set
+ * @param [out]         : return status an integer value 0-success and 1-Failure
+ ********************************************************************************************/
+int ssp_mso_mgmt_hal_SetMsoPodSeed(char* value)
+{
+    int return_status = RETURN_ERR;
+
+    printf("\nEntering ssp_ function ssp_mso_set_pod_seed\n\n");
+
+    return_status = mso_set_pod_seed(value);
+    printf("Return status of mso_get_pod_seed %d", return_status);
+
+    if ( return_status != RETURN_OK)
+    {
+        printf("ssp_mso_set_pod_seed : Failed to set the mso pod seed\n");
+    }
+    else
+    {
+         printf("\n ssp_mso_set_pod_seed::Success\n");
+    }
+    return return_status;
+}
+
 /*******************************************************************************************
  *
  * Function Name        : ssp_mso_mgmt_hal_MsoValidatePwd
