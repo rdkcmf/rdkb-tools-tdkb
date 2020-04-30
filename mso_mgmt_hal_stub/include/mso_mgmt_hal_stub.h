@@ -49,7 +49,8 @@ class mso_mgmt_hal : public RDKTestStubInterface, public AbstractServer<mso_mgmt
                 mso_mgmt_hal(TcpSocketServer &ptrRpcServer) : AbstractServer <mso_mgmt_hal>(ptrRpcServer)
                 {
                   this->bindAndAddMethod(Procedure("mso_mgmt_hal_GetMsoPodSeed", PARAMS_BY_NAME, JSON_STRING,"paramType", JSON_STRING,NULL), &mso_mgmt_hal::mso_mgmt_hal_GetMsoPodSeed);                
-                  this->bindAndAddMethod(Procedure("mso_mgmt_hal_MsoValidatePwd", PARAMS_BY_NAME,JSON_STRING,"paramValue",JSON_STRING,"paramType",JSON_STRING,NULL), &mso_mgmt_hal::mso_mgmt_hal_MsoValidatePwd);
+                  this->bindAndAddMethod(Procedure("mso_mgmt_hal_SetMsoPodSeed", PARAMS_BY_NAME,JSON_STRING,"paramValue",JSON_STRING,"paramType",JSON_STRING,NULL), &mso_mgmt_hal::mso_mgmt_hal_SetMsoPodSeed);
+		  this->bindAndAddMethod(Procedure("mso_mgmt_hal_MsoValidatePwd", PARAMS_BY_NAME,JSON_STRING,"paramValue",JSON_STRING,"paramType",JSON_STRING,NULL), &mso_mgmt_hal::mso_mgmt_hal_MsoValidatePwd);
                 }                
                 bool initialize(IN const char* szVersion);
                 bool cleanup(const char*);
@@ -57,6 +58,7 @@ class mso_mgmt_hal : public RDKTestStubInterface, public AbstractServer<mso_mgmt
                 bool testmodulepost_requisites();
 
                 void mso_mgmt_hal_GetMsoPodSeed(IN const Json::Value& req, OUT Json::Value& response);
+		void mso_mgmt_hal_SetMsoPodSeed(IN const Json::Value& req, OUT Json::Value& response);
                 void mso_mgmt_hal_MsoValidatePwd(IN const Json::Value& req, OUT Json::Value& response);
 
 };

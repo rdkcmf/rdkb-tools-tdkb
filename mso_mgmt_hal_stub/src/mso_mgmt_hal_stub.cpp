@@ -105,6 +105,50 @@ void mso_mgmt_hal::mso_mgmt_hal_GetMsoPodSeed(IN const Json::Value& req, OUT Jso
 
 /*******************************************************************************************
  *
+ * Function Name    : mso_mgmt_hal_SetPodSeed
+ * Description      : This will set the MSO POD Seed value
+ *
+
+ * @param [in]  req - paramValue : Value of Pod seed to be set
+                      paramType : Holds NULL in the case of negative scenario and empty otherwise
+ * @param [out] response - filled with SUCCESS or FAILURE based on the return value
+ *
+ *******************************************************************************************/
+void mso_mgmt_hal::mso_mgmt_hal_SetMsoPodSeed(IN const Json::Value& req, OUT Json::Value& response)
+{
+    DEBUG_PRINT(DEBUG_TRACE,"\n mso_set_pod_seed  --->Entry \n");
+
+    int returnValue = 0;
+    char paramValue[10] = {'\0'};
+    char paramType[10] = {'\0'};
+
+    /* Validate the input arguments */
+    strcpy(paramType, req["paramType"].asCString());
+    strcpy(paramValue, req["paramValue"].asCString());
+
+    //For negative scenario, "NULL" will be passed as the paramType argument
+    if(strcmp(paramType, "NULL"))
+       returnValue = ssp_mso_mgmt_hal_SetMsoPodSeed(paramValue);
+    else
+       returnValue = ssp_mso_mgmt_hal_SetMsoPodSeed(NULL);
+    if(0 == returnValue)
+    {
+       DEBUG_PRINT(DEBUG_TRACE,"Mso POD Seed set Validation successful");
+       response["result"]="SUCCESS";
+       response["details"]="Mso POD Seed set Validation successful";
+    }
+    else
+    {
+       response["result"]="FAILURE";
+       response["details"]="Failed to validate the POD seed";
+       DEBUG_PRINT(DEBUG_TRACE,"MSO POD seed validation failed");
+    }
+    DEBUG_PRINT(DEBUG_TRACE,"\n mso_set_pod_seed --->Exit\n");
+    return;
+}
+
+/*******************************************************************************************
+ *
  * Function Name    : mso_mgmt_hal_MsoValidatePwd
  * Description      : This will validate the password
  *

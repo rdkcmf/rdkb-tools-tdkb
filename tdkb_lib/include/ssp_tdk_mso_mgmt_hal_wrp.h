@@ -26,6 +26,7 @@ extern "C"
 {
 #endif
         int ssp_mso_mgmt_hal_GetMsoPodSeed(char* value);
+        int ssp_mso_mgmt_hal_SetMsoPodSeed(char* value);
         int ssp_mso_mgmt_hal_MsoValidatePwd(char* paramValue,char* output);
 #ifdef __cplusplus
 }
