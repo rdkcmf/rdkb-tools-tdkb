@@ -56,6 +56,16 @@ extern "C"
 	int ssp_GetChipTemperature(unsigned int,unsigned long int*);
         int ssp_GetFanSpeed(unsigned long int*);
         int ssp_SetFanSpeed(unsigned long int);
+        int ssp_SetMACsecEnable(int,BOOLEAN);
+        int ssp_GetMACsecEnable(int,BOOLEAN*);
+        int ssp_GetMACsecOperationalStatus(int,BOOLEAN*);
+        int ssp_getFactoryCmVariant(char*);
+        int ssp_setFactoryCmVariant(char*);
+        int ssp_getRPM(unsigned int*);
+        int ssp_getRotorLock(int*);
+        int ssp_getFanStatus(int*);
+        int ssp_setFanMaxOverride(BOOLEAN);
+        int ssp_SetSNMPOnboardRebootEnable(char*);
 #ifdef __cplusplus
 }
 #endif
