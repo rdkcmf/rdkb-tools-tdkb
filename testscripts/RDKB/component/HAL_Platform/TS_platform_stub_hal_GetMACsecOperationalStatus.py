@@ -92,7 +92,7 @@ if "SUCCESS" in (loadmodulestatus.upper() and  loadmodulestatus1.upper()):
 
     #Get the default value from properties file
     tdkTestObj1 = obj1.createTestStep('ExecuteCmd');
-    cmd = "sh %s/tdk_utility.sh parseConfigFile ETHERNET_PORT" %TDK_PATH;
+    cmd = "sh %s/tdk_utility.sh parseConfigFile ETHWAN_ETH_PORT" %TDK_PATH;
     print cmd;
     expectedresult="SUCCESS";
     tdkTestObj1.addParameter("command", cmd);
@@ -102,7 +102,7 @@ if "SUCCESS" in (loadmodulestatus.upper() and  loadmodulestatus1.upper()):
     details = tdkTestObj1.getResultDetails().strip();
     ethPort = ""
     ethPort = details.replace("\\n", "");
-    print"ETHERNET PORT:",ethPort
+    print" ETHWAN ETHERNET PORT:",ethPort
     if ethPort != "" and ( expectedresult in  actualresult):
        tdkTestObj1.setResultStatus("SUCCESS");
        print "TEST STEP 1: Get the ETHERNET PORT  from  tdk_platform properties file";
@@ -147,4 +147,5 @@ else:
     print "Failed to load the module";
     obj.setLoadModuleStatus("FAILURE");
     print "Module loading failed";
+
 
