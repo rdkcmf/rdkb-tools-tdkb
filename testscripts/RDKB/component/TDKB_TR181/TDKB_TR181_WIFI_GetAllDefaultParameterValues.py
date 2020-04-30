@@ -72,6 +72,7 @@ WiFi module's parameter xml should be available</pre_requisite>
 import tdklib;
 import tdkbSetAllParams
 from tdkbVariables import *;
+import time;
 
 #Test component to be tested
 obj = tdklib.TDKScriptingLibrary("tdkbtr181","1");
@@ -126,6 +127,7 @@ if "SUCCESS" in loadmodulestatus.upper() and "SUCCESS" in loadmodulestatus1.uppe
 
         #Restore the device state saved before reboot
         obj.restorePreviousStateAfterReboot();
+        time.sleep(60);
 
         #Invoke the utility function to get and validate the values for all configured tr181 params
         moduleStatus,failedParams = tdkbSetAllParams.getAllParams("WIFI", setup_type, factoryReset, obj, obj1);
