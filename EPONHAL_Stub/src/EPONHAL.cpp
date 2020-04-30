@@ -19,6 +19,7 @@
 
 #include "EPONHAL.h"
 #define Dummy 500
+#define MAX_STRING_SIZE 1024
 /********************************************************************************************
  *Function name : testmodulepre_requisites
  *Description   : testmodulepre_requisites will  be used for registering TDK with the CR
@@ -665,3 +666,117 @@ void EPONHAL::EPONHAL_GetOnuLinkStatistics(IN const Json::Value& req, OUT Json::
     DEBUG_PRINT(DEBUG_TRACE,"\n EPONHAL_GetOnuLinkStatistics --->Exit\n");
 }
 
+ /*******************************************************************************************
+ *
+ * Function Name        : EPONHAL_GetStaticMacTable
+ * Description          : This function invokes epon wrapper ssp_EPONHAL_GetStaticMacTable
+ * @param [in] req-     : numEntries - no: of entries in StaticMacTable
+ * @param [out] response - filled with SUCCESS or FAILURE based on the output status of operation
+ *
+** *******************************************************************************************/
+void EPONHAL::EPONHAL_GetStaticMacTable(IN const Json::Value& req, OUT Json::Value& response)
+{
+    DEBUG_PRINT(DEBUG_TRACE,"\n EPONHAL_GetStaticMacTable----->Entry\n");
+    int returnValue = 0,loop = 0,num = 0;
+    char details[MAX_STRING_SIZE] = {'\0'};
+    unsigned short numEntries = 0;
+    numEntries  = req["numEntries"].asInt();
+    num= int(numEntries);
+    dpoe_link_mac_address_t linkStaticMacTable[num];
+
+    //invoke ssp wrapper for dpoe_getStaticMacTable
+    returnValue = ssp_EPONHAL_GetStaticMacTable(linkStaticMacTable, numEntries);
+    printf("\n dpoe_getStaticMacTable return value:%d \n",returnValue);
+    printf("\n dpoe_getStaticMacTable numEntries : %d \n",num);
+    num  = int(linkStaticMacTable->numEntries);
+    printf("\n linkStaticMacTable->numEntries : %d \n",num);
+    if(0 == returnValue)
+    {
+            if ( num > 0)
+            {
+               for( loop = 0; loop < num ;loop++)
+               {
+                 if (strlen(details) < 512)
+                 {
+                   sprintf(details + strlen(details),"MAC %d: %x %x %x %x %x %x",loop+1,linkStaticMacTable[loop].pMacAddress->macAddress[0],linkStaticMacTable[loop].pMacAddress->macAddress[1],linkStaticMacTable[loop].pMacAddress->macAddress[2],linkStaticMacTable[loop].pMacAddress->macAddress[3],linkStaticMacTable[loop].pMacAddress->macAddress[4],linkStaticMacTable[loop].pMacAddress->macAddress[5]);
+                 }
+                else break;
+               }
+               response["result"]="SUCCESS";
+               response["details"]=details;
+               return;
+            }
+            else
+            {
+               sprintf(details, "EPONHAL_GetStaticMacTable has no entries");
+               response["result"]="FAILURE";
+               response["details"]=details;
+               return;
+            }
+    }
+    else
+    {
+       sprintf(details, "EPONHAL_GetStaticMacTable failure");
+       response["result"]="FAILURE";
+       response["details"]=details;
+       return;
+    }
+    DEBUG_PRINT(DEBUG_TRACE,"\n EPONHAL_GetStaticMacTable --->Exit\n");
+}
+
+ /*******************************************************************************************
+ *
+ * Function Name        : EPONHAL_SetClearOnuLinkStatistics
+ * Description          : This function invokes epon wrapper ssp_EPONHAL_SetClearOnuLinkStatistics
+ * @param [in] req-     : NILL
+ * @param [out] response - filled with SUCCESS or FAILURE based on the output status of operation
+ *
+** *******************************************************************************************/
+void EPONHAL::EPONHAL_SetClearOnuLinkStatistics(IN const Json::Value& req, OUT Json::Value& response)
+{
+    DEBUG_PRINT(DEBUG_TRACE,"\n EPONHAL_SetClearOnuLinkStatistics ----->Entry\n");
+    int returnValue = 0;
+
+    returnValue = ssp_EPONHAL_SetClearOnuLinkStatistics();
+    if(0 == returnValue)
+    {
+        response["result"]="SUCCESS";
+        response["details"]="EPONHAL_SetClearOnuLinkStatistics api returned success";
+    }
+    else
+    {
+       response["result"]="FAILURE";
+       response["details"]="EPONHAL_SetClearOnuLinkStatistics api returned failure";
+    }
+    DEBUG_PRINT(DEBUG_TRACE,"\n EPONHAL_SetClearOnuLinkStatistics --->Exit\n");
+    return;
+}
+
+
+ /*******************************************************************************************
+ *
+ * Function Name        : EPONHAL_SetResetOnu
+ * Description          : This function invokes epon wrapper ssp_EPONHAL_SetResetOnu
+ * @param [in] req-     : NILL
+ * @param [out] response - filled with SUCCESS or FAILURE based on the output status of operation
+ *
+** *******************************************************************************************/
+void EPONHAL::EPONHAL_SetResetOnu(IN const Json::Value& req, OUT Json::Value& response)
+{
+    DEBUG_PRINT(DEBUG_TRACE,"\n EPONHAL_SetResetOnu ----->Entry\n");
+    int returnValue = 0;
+
+    returnValue = ssp_EPONHAL_SetResetOnu();
+    if(0 == returnValue)
+    {
+        response["result"]="SUCCESS";
+        response["details"]="EPONHAL_SetResetOnu api returned success";
+    }
+    else
+    {
+       response["result"]="FAILURE";
+       response["details"]="EPONHAL_SetResetOnu api returned failure";
+    }
+    DEBUG_PRINT(DEBUG_TRACE,"\n EPONHAL_SetResetOnu --->Exit\n");
+    return;
+}
