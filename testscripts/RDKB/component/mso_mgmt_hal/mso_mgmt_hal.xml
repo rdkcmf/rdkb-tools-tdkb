@@ -13,23 +13,29 @@
  limitations under the License.
 -->
 <?xml version="1.0" encoding="UTF-8"?><xml>
-  <module name="mso_mgmt_hal" testGroup="Component">
+  <module testGroup="Component" name="mso_mgmt_hal">
     <primitiveTests>
-      <primitiveTest id=" " name="mso_mgmt_hal_GetMsoPodSeed" version="1">
+      <primitiveTest name="mso_mgmt_hal_GetMsoPodSeed" id=" " version="1">
         <function>mso_mgmt_hal_GetMsoPodSeed</function>
         <parameters>
           <parameter name="paramType" value=""/>
         </parameters>
       </primitiveTest>
-      <primitiveTest id=" " name="mso_mgmt_hal_MsoValidatePwd" version="1">
+      <primitiveTest name="mso_mgmt_hal_MsoValidatePwd" id=" " version="1">
         <function>mso_mgmt_hal_MsoValidatePwd</function>
         <parameters>
           <parameter name="paramType" value=""/>
           <parameter name="paramValue" value=""/>
         </parameters>
       </primitiveTest>
+      <primitiveTest name="mso_mgmt_hal_SetMsoPodSeed" id=" " version="2">
+        <function>mso_mgmt_hal_SetMsoPodSeed</function>
+        <parameters>
+          <parameter name="paramValue" value=" "/>
+          <parameter name="paramType" value=" "/>
+        </parameters>
+      </primitiveTest>
     </primitiveTests>
   </module>
 </xml>
-
 
