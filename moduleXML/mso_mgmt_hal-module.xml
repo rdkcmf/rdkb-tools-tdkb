@@ -35,14 +35,15 @@
     <functions>
       <function name='mso_mgmt_hal_GetMsoPodSeed' />
       <function name='mso_mgmt_hal_MsoValidatePwd' />
+      <function name='mso_mgmt_hal_SetMsoPodSeed' />
     </functions>
   <!-- Total parameters corresponding module  -->
     <parameters>
       <parameter funName='mso_mgmt_hal_GetMsoPodSeed' parameterName='paramType' parameterType='STRING' range='A-Z' />
+      <parameter funName='mso_mgmt_hal_MsoValidatePwd' parameterName='paramValue' parameterType='STRING' range='A-Z' />
       <parameter funName='mso_mgmt_hal_MsoValidatePwd' parameterName='paramType' parameterType='STRING' range='A-Z' />
-      <parameter funName='mso_mgmt_hal_MsoValidatePwd' parameterName='paramValue' parameterType='STRING' range='A-Z' />         
+      <parameter funName='mso_mgmt_hal_SetMsoPodSeed' parameterName='paramValue' parameterType='STRING' range='A-Z' />
+      <parameter funName='mso_mgmt_hal_SetMsoPodSeed' parameterName='paramType' parameterType='STRING' range='A-Z' />
     </parameters>
   </module>
 </xml>
-
-

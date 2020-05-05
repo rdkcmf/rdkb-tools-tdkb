@@ -33,6 +33,9 @@
       <function name='EPONHAL_GetOamFrameRate' />
       <function name='EPONHAL_GetDynamicMacTable' />
       <function name='EPONHAL_GetOnuLinkStatistics' />
+      <function name='EPONHAL_GetStaticMacTable' />
+      <function name='EPONHAL_SetClearOnuLinkStatistics' />
+      <function name='EPONHAL_SetResetOnu' />
     </functions>
   <!-- Total parameters corresponding module  -->
     <parameters>
@@ -42,6 +45,7 @@
       <parameter funName='EPONHAL_GetOamFrameRate' parameterName='numEntries' parameterType='INTEGER' range='0-100' />
       <parameter funName='EPONHAL_GetDynamicMacTable' parameterName='numEntries' parameterType='INTEGER' range='0-100' />
       <parameter funName='EPONHAL_GetOnuLinkStatistics' parameterName='numEntries' parameterType='INTEGER' range='0-100' />
+      <parameter funName='EPONHAL_GetStaticMacTable' parameterName='numEntries' parameterType='INTEGER' range='0-100' />
     </parameters>
   </module>
 </xml>

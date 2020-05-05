@@ -35,7 +35,6 @@
       <function name='platform_stub_hal_GetBaseMacAddress' />
       <function name='platform_stub_hal_GetBootLoaderVersion' />
       <function name='platform_stub_hal_GetDeviceConfigStatus' />
-      <function name='platform_stub_hal_getFactoryPartnerId' />
       <function name='platform_stub_hal_GetFirmwareName' />
       <function name='platform_stub_hal_GetFreeMemorySize' />
       <function name='platform_stub_hal_GetHardware' />
@@ -55,6 +54,29 @@
       <function name='platform_stub_hal_GetSoftwareVersion' />
       <function name='platform_stub_hal_SetTelnetEnable' />
       <function name='platform_stub_hal_SetSNMPEnable' />
+      <function name='platform_stub_hal_GetFactoryResetCount' />
+      <function name='platform_stub_hal_ClearResetCount' />
+      <function name='platform_stub_hal_GetTimeOffSet' />
+      <function name='platform_stub_hal_GetCMTSMac' />
+      <function name='platform_stub_hal_GetChipTemperature' />
+      <function name='platform_stub_hal_GetFanSpeed' />
+      <function name='platform_stub_hal_SetFanSpeed' />
+      <function name='platform_stub_hal_GetWebAccessLevel' />
+      <function name='platform_stub_hal_SetWebAccessLevel' />
+      <function name='platform_stub_hal_getFactoryPartnerId' />
+      <function name='platform_stub_hal_SetDeviceCodeImageTimeout' />
+      <function name='platform_stub_hal_SetDeviceCodeImageValid' />
+      <function name='platform_stub_hal_SetLed' />
+      <function name='platform_stub_hal_SetMACsecEnable' />
+      <function name='platform_stub_hal_GetMACsecEnable' />
+      <function name='platform_stub_hal_GetMACsecOperationalStatus' />
+      <function name='platform_stub_hal_getRPM' />
+      <function name='platform_stub_hal_getRotorLock' />
+      <function name='platform_stub_hal_getFanStatus' />
+      <function name='platform_stub_hal_setFanMaxOverride' />
+      <function name='platform_stub_hal_setFactoryCmVariant' />
+      <function name='platform_stub_hal_getFactoryCmVariant' />
+      <function name='platform_stub_hal_SetSNMPOnboardRebootEnable' />
     </functions>
   <!-- Total parameters corresponding module  -->
     <parameters>
@@ -62,7 +84,6 @@
       <parameter funName='platform_stub_hal_GetBaseMacAddress' parameterName='flag' parameterType='INTEGER' range='0-1' />
       <parameter funName='platform_stub_hal_GetBootLoaderVersion' parameterName='flag' parameterType='INTEGER' range='0-1' />
       <parameter funName='platform_stub_hal_GetDeviceConfigStatus' parameterName='flag' parameterType='INTEGER' range='0-1' />
-      <parameter funName='platform_stub_hal_getFactoryPartnerId' parameterName='flag' parameterType='INTEGER' range='0-1' />
       <parameter funName='platform_stub_hal_GetFirmwareName' parameterName='flag' parameterType='INTEGER' range='0-1' />
       <parameter funName='platform_stub_hal_GetFreeMemorySize' parameterName='flag' parameterType='INTEGER' range='0-1' />
       <parameter funName='platform_stub_hal_GetHardware' parameterName='flag' parameterType='INTEGER' range='0-1' />
@@ -81,6 +102,34 @@
       <parameter funName='platform_stub_hal_GetSoftwareVersion' parameterName='flag' parameterType='INTEGER' range='0-1' />
       <parameter funName='platform_stub_hal_SetTelnetEnable' parameterName='index' parameterType='INTEGER' range='0-100' />
       <parameter funName='platform_stub_hal_SetSNMPEnable' parameterName='index' parameterType='INTEGER' range='0-100' />
+      <parameter funName='platform_stub_hal_GetFactoryResetCount' parameterName='flag' parameterType='INTEGER' range='0-1' />
+      <parameter funName='platform_stub_hal_ClearResetCount' parameterName='index' parameterType='INTEGER' range='0-100' />
+      <parameter funName='platform_stub_hal_GetTimeOffSet' parameterName='flag' parameterType='INTEGER' range='0-1' />
+      <parameter funName='platform_stub_hal_GetCMTSMac' parameterName='flag' parameterType='INTEGER' range='0-1' />
+      <parameter funName='platform_stub_hal_GetChipTemperature' parameterName='flag' parameterType='INTEGER' range='0-1' />
+      <parameter funName='platform_stub_hal_GetChipTemperature' parameterName='chipIndex' parameterType='INTEGER' range='0-1' />
+      <parameter funName='platform_stub_hal_GetFanSpeed' parameterName='flag' parameterType='INTEGER' range='0-1' />
+      <parameter funName='platform_stub_hal_SetFanSpeed' parameterName='index' parameterType='INTEGER' range='0-100000' />
+      <parameter funName='platform_stub_hal_GetWebAccessLevel' parameterName='userIndex' parameterType='INTEGER' range='0-100' />
+      <parameter funName='platform_stub_hal_GetWebAccessLevel' parameterName='ifIndex' parameterType='INTEGER' range='0-100' />
+      <parameter funName='platform_stub_hal_SetWebAccessLevel' parameterName='ifIndex' parameterType='INTEGER' range='0-100' />
+      <parameter funName='platform_stub_hal_SetWebAccessLevel' parameterName='userIndex' parameterType='INTEGER' range='0-100' />
+      <parameter funName='platform_stub_hal_SetWebAccessLevel' parameterName='level' parameterType='INTEGER' range='0-100' />
+      <parameter funName='platform_stub_hal_getFactoryPartnerId' parameterName='flag' parameterType='INTEGER' range='0-1' />
+      <parameter funName='platform_stub_hal_SetDeviceCodeImageTimeout' parameterName='value' parameterType='INTEGER' range='0-100' />
+      <parameter funName='platform_stub_hal_SetDeviceCodeImageValid' parameterName='value' parameterType='INTEGER' range='0-1' />
+      <parameter funName='platform_stub_hal_SetLed' parameterName='color' parameterType='INTEGER' range='0-1' />
+      <parameter funName='platform_stub_hal_SetLed' parameterName='state' parameterType='INTEGER' range='0-1' />
+      <parameter funName='platform_stub_hal_SetLed' parameterName='interval' parameterType='INTEGER' range='0-1' />
+      <parameter funName='platform_stub_hal_SetMACsecEnable' parameterName='ethPort' parameterType='INTEGER' range='0-100' />
+      <parameter funName='platform_stub_hal_SetMACsecEnable' parameterName='index' parameterType='INTEGER' range='0-100' />
+      <parameter funName='platform_stub_hal_GetMACsecEnable' parameterName='ethPort' parameterType='INTEGER' range='0-100' />
+      <parameter funName='platform_stub_hal_GetMACsecEnable' parameterName='index' parameterType='INTEGER' range='0-100' />
+      <parameter funName='platform_stub_hal_GetMACsecOperationalStatus' parameterName='ethPort' parameterType='INTEGER' range='0-100' />
+      <parameter funName='platform_stub_hal_GetMACsecOperationalStatus' parameterName='index' parameterType='INTEGER' range='0-100' />
+      <parameter funName='platform_stub_hal_setFanMaxOverride' parameterName='flag' parameterType='INTEGER' range='0-100' />
+      <parameter funName='platform_stub_hal_setFactoryCmVariant' parameterName='CmVarient' parameterType='STRING' range='A-Z' />
+      <parameter funName='platform_stub_hal_SetSNMPOnboardRebootEnable' parameterName='SNMPonboard' parameterType='STRING' range='A-Z' />
     </parameters>
   </module>
 </xml>
