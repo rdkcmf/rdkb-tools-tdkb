@@ -68,6 +68,9 @@ Before running the script we should connect the device and should give MAC addre
 # use tdklib library,which provides a wrapper for tdk testcase script
 import tdklib;
 import re;
+from wifiUtility import *;
+
+radio = "2.4G"
 
 #Test component to be tested
 obj = tdklib.TDKScriptingLibrary("wifihal","1");
@@ -83,72 +86,80 @@ loadmodulestatus =obj.getLoadModuleResult();
 print "[LIB LOAD STATUS]  :  %s" %loadmodulestatus;
 if "SUCCESS" in loadmodulestatus.upper():
     obj.setLoadModuleStatus("SUCCESS");
-    print "TEST STEP1: Get AssociatedDevice details"
-    tdkTestObj = obj.createTestStep('WIFIHAL_GetApAssociatedDevice');
-    tdkTestObj.addParameter("apIndex",0);
-    expectedresult="SUCCESS";
-    tdkTestObj.executeTestCase(expectedresult);
-    actualresult = tdkTestObj.getResult();
-    details = tdkTestObj.getResultDetails();
-    print "Entire Details:",details;
-    if expectedresult in actualresult:
-        outputList = details.split("=")[1].strip()
-        if "," in outputList:
-            outputValue = outputList.split(",")[0].strip()
-        else:
-            outputValue = outputList.split(":Value")[0].strip()
-        
-        print "test step: get the associateddevice"
-        print "expected result: should get the number of associated devices"
-        print "Associated Device's MAC address:",outputValue
-        
-        #check if outputvalue is a mac address
-        if re.match("[0-9a-f]{2}([-:])[0-9a-f]{2}(\\1[0-9a-f]{2}){4}$", outputValue.lower()):
-            #prmitive test case which associated to this script
-            tdkTestObj = obj.createTestStep("WIFIHAL_GetApDeviceRSSI");
-            tdkTestObj.addParameter("methodName","getApDeviceRSSI");
-            tdkTestObj.addParameter("apIndex", 0);
-            #Connect a device and add MAC Address
-            tdkTestObj.addParameter("MAC",outputValue);
-            expectedresult="SUCCESS";
-            tdkTestObj.executeTestCase(expectedresult);
-            actualresult = tdkTestObj.getResult();
-            details = tdkTestObj.getResultDetails();
-            print"details",details;
-            if expectedresult in actualresult :
-                print "TEST STEP : Get the ApDeviceRSSI"
-                print "EXPECTED RESULT : Should successfully get the ApDeviceRSSI"
-                print "ACTUAL RESULT : Successfully gets the ApDeviceRSSI"
-                RSSI_details = int(details.split(":")[1].strip());
-                if RSSI_details<0:               
-                    tdkTestObj.setResultStatus("SUCCESS");
-                    print "TEST STEP : Check the ApDeviceRSSI"
-                    print "EXPECTED RESULT : ApDeviceRSSI should be less than 0"
-                    print "ACTUAL RESULT : ApDeviceRSSI is less than 0"
-                    print " RSSI_details=", RSSI_details
 
-                    #Get the result of execution
-                    print "[TEST EXECUTION RESULT] : SUCCESS";
-                else:
-                    print "RSSI value is greater than 0"
-                    tdkTestObj.setResultStatus("FAILURE") 
-                    print "[TEST EXECUTION RESULT] : FAILURE";
-            else:
-                tdkTestObj.setResultStatus("FAILURE");
-                print "TEST STEP : Get the ApDeviceRSSI"
-                print "EXPECTED RESULT : Should successfully get the ApDeviceRSSI"
-                print "ACTUAL RESULT : Failed to get the ApDeviceRSSI"
-                print "Details: %s"%details
-                #Get the result of execution
-                print "[TEST EXECUTION RESULT] : FAILURE";
-        else:
-             tdkTestObj.setResultStatus("FAILURE");
-             print "Not able to  Get the ApDeviceRSSI as no device is connected or Invalid Format"
-    else:
-        tdkTestObj.setResultStatus("FAILURE");
-        print "TEST STEP: get the associateddevice"
-        print "EXPECTED RESULT: should get the number of associated devices"
-        print "ACTUAL RESULT : Failed to get the number of associated devices"
+    tdkTestObjTemp, idx = getIndex(obj, radio);
+    ## Check if a invalid index is returned
+    if idx == -1:
+        print "Failed to get radio index for radio %s\n" %radio;
+        tdkTestObjTemp.setResultStatus("FAILURE");
+    else: 
+
+	    print "TEST STEP1: Get AssociatedDevice details"
+	    tdkTestObj = obj.createTestStep('WIFIHAL_GetApAssociatedDevice');
+	    tdkTestObj.addParameter("apIndex",idx);
+	    expectedresult="SUCCESS";
+	    tdkTestObj.executeTestCase(expectedresult);
+	    actualresult = tdkTestObj.getResult();
+	    details = tdkTestObj.getResultDetails();
+	    print "Entire Details:",details;
+	    if expectedresult in actualresult:
+		outputList = details.split("=")[1].strip()
+		if "," in outputList:
+		    outputValue = outputList.split(",")[0].strip()
+		else:
+		    outputValue = outputList.split(":Value")[0].strip()
+		
+		print "test step: get the associateddevice"
+		print "expected result: should get the number of associated devices"
+		print "Associated Device's MAC address:",outputValue
+		
+		#check if outputvalue is a mac address
+		if re.match("[0-9a-f]{2}([-:])[0-9a-f]{2}(\\1[0-9a-f]{2}){4}$", outputValue.lower()):
+		    #prmitive test case which associated to this script
+		    tdkTestObj = obj.createTestStep("WIFIHAL_GetApDeviceRSSI");
+		    tdkTestObj.addParameter("methodName","getApDeviceRSSI");
+		    tdkTestObj.addParameter("apIndex", idx);
+		    #Connect a device and add MAC Address
+		    tdkTestObj.addParameter("MAC",outputValue);
+		    expectedresult="SUCCESS";
+		    tdkTestObj.executeTestCase(expectedresult);
+		    actualresult = tdkTestObj.getResult();
+		    details = tdkTestObj.getResultDetails();
+		    print"details",details;
+		    if expectedresult in actualresult :
+			print "TEST STEP : Get the ApDeviceRSSI"
+			print "EXPECTED RESULT : Should successfully get the ApDeviceRSSI"
+			print "ACTUAL RESULT : Successfully gets the ApDeviceRSSI"
+			RSSI_details = int(details.split(":")[1].strip());
+			if RSSI_details<0:               
+			    tdkTestObj.setResultStatus("SUCCESS");
+			    print "TEST STEP : Check the ApDeviceRSSI"
+			    print "EXPECTED RESULT : ApDeviceRSSI should be less than 0"
+			    print "ACTUAL RESULT : ApDeviceRSSI is less than 0"
+			    print " RSSI_details=", RSSI_details
+	
+			    #Get the result of execution
+			    print "[TEST EXECUTION RESULT] : SUCCESS";
+			else:
+			    print "RSSI value is greater than 0"
+			    tdkTestObj.setResultStatus("FAILURE") 
+			    print "[TEST EXECUTION RESULT] : FAILURE";
+		    else:
+			tdkTestObj.setResultStatus("FAILURE");
+			print "TEST STEP : Get the ApDeviceRSSI"
+			print "EXPECTED RESULT : Should successfully get the ApDeviceRSSI"
+			print "ACTUAL RESULT : Failed to get the ApDeviceRSSI"
+			print "Details: %s"%details
+			#Get the result of execution
+			print "[TEST EXECUTION RESULT] : FAILURE";
+		else:
+		     tdkTestObj.setResultStatus("FAILURE");
+		     print "Not able to  Get the ApDeviceRSSI as no device is connected or Invalid Format"
+	    else:
+		tdkTestObj.setResultStatus("FAILURE");
+		print "TEST STEP: get the associateddevice"
+		print "EXPECTED RESULT: should get the number of associated devices"
+		print "ACTUAL RESULT : Failed to get the number of associated devices"
     obj.unloadModule("wifihal");
 
 else:

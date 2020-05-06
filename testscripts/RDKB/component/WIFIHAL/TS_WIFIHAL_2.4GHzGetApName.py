@@ -71,6 +71,8 @@ import tdklib;
 from wifiUtility import *;
 from tdkbVariables import *;
 
+radio = "2.4G"
+
 #Test component to be tested
 obj = tdklib.TDKScriptingLibrary("wifihal","1");
 sysobj = tdklib.TDKScriptingLibrary("sysutil","1");
@@ -92,46 +94,53 @@ print "[LIB LOAD STATUS]  :  %s" %loadmodulestatus ;
 if "SUCCESS" in loadmodulestatus.upper() and "SUCCESS" in sysloadmodulestatus.upper():
     obj.setLoadModuleStatus("SUCCESS");
 
-    tdkTestObj = sysobj.createTestStep('ExecuteCmd');
-    expectedresult="SUCCESS";
-    accesspointname = "sh %s/tdk_utility.sh parseConfigFile AP_IF_NAME_2G" %TDK_PATH;
-    print "query:%s" %accesspointname
-    tdkTestObj.addParameter("command", accesspointname);
-    tdkTestObj.executeTestCase(expectedresult);
-    actualresult = tdkTestObj.getResult();
-    accesspointname= tdkTestObj.getResultDetails().strip().replace("\\n", "");
-    if expectedresult in actualresult and accesspointname != "":
-        #Set the result status of execution
-        tdkTestObj.setResultStatus("SUCCESS");
-        print "TEST STEP 1: Get the 2.4GHZ Access Point name from properties file";
-        print "ACTUAL RESULT 1: %s" %accesspointname;
-        #Get the result of execution
-        print "[TEST EXECUTION RESULT] : SUCCESS";
+    tdkTestObjTemp, idx = getIndex(obj, radio);
+    ## Check if a invalid index is returned
+    if idx == -1:
+        print "Failed to get radio index for radio %s\n" %radio;
+        tdkTestObjTemp.setResultStatus("FAILURE");
+    else: 
 
-        getMethod = "getApName"
-        apIndex = 0
-        primitive = 'WIFIHAL_GetOrSetParamStringValue'
+	    tdkTestObj = sysobj.createTestStep('ExecuteCmd');
+	    expectedresult="SUCCESS";
+	    accesspointname = "sh %s/tdk_utility.sh parseConfigFile AP_IF_NAME_2G" %TDK_PATH;
+	    print "query:%s" %accesspointname
+	    tdkTestObj.addParameter("command", accesspointname);
+	    tdkTestObj.executeTestCase(expectedresult);
+	    actualresult = tdkTestObj.getResult();
+	    accesspointname= tdkTestObj.getResultDetails().strip().replace("\\n", "");
+	    if expectedresult in actualresult and accesspointname != "":
+		#Set the result status of execution
+		tdkTestObj.setResultStatus("SUCCESS");
+		print "TEST STEP 1: Get the 2.4GHZ Access Point name from properties file";
+		print "ACTUAL RESULT 1: %s" %accesspointname;
+		#Get the result of execution
+		print "[TEST EXECUTION RESULT] : SUCCESS";
 
-        #Calling the method from wifiUtility to execute test case and set result status for the test.
-        tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, "0", getMethod)
-        apName = details.split(":")[1].strip()
-        if expectedresult in actualresult and accesspointname == apName:
-            #Set the result status of execution
-            tdkTestObj.setResultStatus("SUCCESS");
-            print "TEST STEP 2: Get the 2.4GHZ Access Point name";
-            print "ACTUAL RESULT 2: %s" %apName;
-            #Get the result of execution
-            print "[TEST EXECUTION RESULT] : SUCCESS";
-        else:
-            #Set the result status of execution
-            tdkTestObj.setResultStatus("FAILURE");
-            print "TEST STEP 2: Get the 2.4GHZ Access Point name";
-            print "ACTUAL RESULT 2: %s" %apName;
-            #Get the result of execution
-            print "[TEST EXECUTION RESULT] : FAILURE";
-    else:
-        tdkTestObj.setResultStatus("FAILURE");
-        print "FAILURE: Failed to get the value of 2.4 GHZ access point name from tdk_platform.properties file"
+		getMethod = "getApName"
+		apIndex = idx
+		primitive = 'WIFIHAL_GetOrSetParamStringValue'
+
+		#Calling the method from wifiUtility to execute test case and set result status for the test.
+		tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, "0", getMethod)
+		apName = details.split(":")[1].strip()
+		if expectedresult in actualresult and accesspointname == apName:
+		    #Set the result status of execution
+		    tdkTestObj.setResultStatus("SUCCESS");
+		    print "TEST STEP 2: Get the 2.4GHZ Access Point name";
+		    print "ACTUAL RESULT 2: %s" %apName;
+		    #Get the result of execution
+		    print "[TEST EXECUTION RESULT] : SUCCESS";
+		else:
+		    #Set the result status of execution
+		    tdkTestObj.setResultStatus("FAILURE");
+		    print "TEST STEP 2: Get the 2.4GHZ Access Point name";
+		    print "ACTUAL RESULT 2: %s" %apName;
+		    #Get the result of execution
+		    print "[TEST EXECUTION RESULT] : FAILURE";
+	    else:
+		tdkTestObj.setResultStatus("FAILURE");
+		print "FAILURE: Failed to get the value of 2.4 GHZ access point name from tdk_platform.properties file"
 
     obj.unloadModule("wifihal");
     sysobj.unloadModule("sysutil");
