@@ -72,6 +72,9 @@ radioIndex : 0</input_parameters>
 import tdklib;
 from wifiUtility import *
 import random;
+
+radio = "2.4G"
+
 #Test component to be tested
 obj = tdklib.TDKScriptingLibrary("wifihal","1");
 #IP and Port of box, No need to change,
@@ -83,103 +86,111 @@ loadmodulestatus =obj.getLoadModuleResult();
 print "[LIB LOAD STATUS]  :  %s" %loadmodulestatus
 if "SUCCESS" in loadmodulestatus.upper():
     obj.setLoadModuleStatus("SUCCESS");
-    print "Check set and get value functonality for values less than 63"
-    expectedresult="SUCCESS";
-    radioIndex = 0
-    getMethod = "getApMaxAssociatedDevices"
-    primitive = 'WIFIHAL_GetOrSetParamUIntValue'
-    #Calling the method from wifiUtility to execute test case and set result status for the test.
-    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, 0, getMethod)
-    initialApMaxAssociatedDevices = int(details.split(":")[1])
-    if expectedresult in actualresult:
-	expectedresult="SUCCESS";
-	radioIndex = 0
-	primitive = 'WIFIHAL_GetOrSetParamUIntValue'
-	setMethod = "setApMaxAssociatedDevices"
-	setApMaxAssociatedDevicesValue  = random.randint(1,63)
-	print "setApMaxAssociatedDevicesValue = ",setApMaxAssociatedDevicesValue
-        #Calling the method from wifiUtility to execute test case and set result status for the test.
-        tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, setApMaxAssociatedDevicesValue, setMethod)
-	if expectedresult in actualresult:
+
+    tdkTestObjTemp, idx = getIndex(obj, radio);
+    ## Check if a invalid index is returned
+    if idx == -1:
+        print "Failed to get radio index for radio %s\n" %radio;
+        tdkTestObjTemp.setResultStatus("FAILURE");
+    else:    
+
+	    print "Check set and get value functonality for values less than 63"
 	    expectedresult="SUCCESS";
-	    radioIndex = 0
+	    radioIndex = idx;
 	    getMethod = "getApMaxAssociatedDevices"
 	    primitive = 'WIFIHAL_GetOrSetParamUIntValue'
 	    #Calling the method from wifiUtility to execute test case and set result status for the test.
 	    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, 0, getMethod)
-	    getApMaxAssociatedDevicesValue = int(details.split(":")[1])
-            
-	    if expectedresult in actualresult and getApMaxAssociatedDevicesValue == setApMaxAssociatedDevicesValue:
-		
-	       print "TEST STEP : Comparing the set and get values of ApMax Associated Devices"
-	       print "EXPECTED RESULT : Set and get values should be the same"
-	       print "ACTUAL RESULT : Set and get values are the same"
-	       print "TEST EXECUTION RESULT : SUCCESS"
-	       tdkTestObj.setResultStatus("SUCCESS");
+	    initialApMaxAssociatedDevices = int(details.split(":")[1])
+	    if expectedresult in actualresult:
+		expectedresult="SUCCESS";
+		radioIndex = idx;
+		primitive = 'WIFIHAL_GetOrSetParamUIntValue'
+		setMethod = "setApMaxAssociatedDevices"
+		setApMaxAssociatedDevicesValue  = random.randint(1,63)
+		print "setApMaxAssociatedDevicesValue = ",setApMaxAssociatedDevicesValue
+		#Calling the method from wifiUtility to execute test case and set result status for the test.
+		tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, setApMaxAssociatedDevicesValue, setMethod)
+		if expectedresult in actualresult:
+		    expectedresult="SUCCESS";
+		    radioIndex = idx;
+		    getMethod = "getApMaxAssociatedDevices"
+		    primitive = 'WIFIHAL_GetOrSetParamUIntValue'
+		    #Calling the method from wifiUtility to execute test case and set result status for the test.
+		    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, 0, getMethod)
+		    getApMaxAssociatedDevicesValue = int(details.split(":")[1])
+		    
+		    if expectedresult in actualresult and getApMaxAssociatedDevicesValue == setApMaxAssociatedDevicesValue:
+			
+		       print "TEST STEP : Comparing the set and get values of ApMax Associated Devices"
+		       print "EXPECTED RESULT : Set and get values should be the same"
+		       print "ACTUAL RESULT : Set and get values are the same"
+		       print "TEST EXECUTION RESULT : SUCCESS"
+		       tdkTestObj.setResultStatus("SUCCESS");
 
-               print "Check set and get value functonality for values greater than 63"
-               expectedresult="SUCCESS";
-               radioIndex = 0
-               getMethod = "getApMaxAssociatedDevices"
-               primitive = 'WIFIHAL_GetOrSetParamUIntValue'
-               expectedresult="SUCCESS";
-               primitive = 'WIFIHAL_GetOrSetParamUIntValue'
-               setMethod = "setApMaxAssociatedDevices"
-               setApMaxAssociatedDevicesValue  = random.randint(64,200)
-               print "setApMaxAssociatedDevicesValue = ",setApMaxAssociatedDevicesValue
-               #Calling the method from wifiUtility to execute test case and set result status for the test.
-               tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, setApMaxAssociatedDevicesValue, setMethod)
-               if expectedresult in actualresult:
-                  expectedresult="SUCCESS";
-                  radioIndex = 0
-                  getMethod = "getApMaxAssociatedDevices"
-                  primitive = 'WIFIHAL_GetOrSetParamUIntValue'
-                  #Calling the method from wifiUtility to execute test case and set result status for the test.
-                  tdkTestObj, actualresult, detail = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, 0, getMethod)
-                  getApMaxAssociatedDevicesValue2 = int(detail.split(":")[1])
-                  print "getApMaxAssociatedDevicesValue",getApMaxAssociatedDevicesValue2
-                  maxValue = 63
-                  if expectedresult in actualresult and getApMaxAssociatedDevicesValue2 == maxValue:
-                     tdkTestObj.setResultStatus("SUCCESS");
-                     print "TEST STEP : As setApMaxAssociatedDevicesValue is greater than %d set value is expected to be %d " %(maxValue,maxValue)
-                     print "EXPECTED RESULT :  As setApMaxAssociatedDevicesValue is greater than %d  set value should be %d"  %(maxValue,maxValue)
-                     print "ACTUAL RESULT : Set value is equal to %d  " %maxValue
-                     print "TEST EXECUTION RESULT : SUCCESS"
-                  else:
-                      tdkTestObj.setResultStatus("FAILURE");
-                      print "TEST STEP : As setApMaxAssociatedDevicesValue is greater than %d set value is expected to be %d " %(maxValue,maxValue)
-                      print "EXPECTED RESULT :  As setApMaxAssociatedDevicesValue is greater than %d set value is not equal to %d" %(maxValue,maxValue)
-                      print "ACTUAL RESULT : Set value is not equal to %d" %maxValue
-                      print "TEST EXECUTION RESULT:FAILURE"
-               else:
-                   tdkTestObj.setResultStatus("FAILURE");
-                   print "setApMaxAssociatedDevices function failed";
+		       print "Check set and get value functonality for values greater than 63"
+		       expectedresult="SUCCESS";
+		       radioIndex = idx;
+		       getMethod = "getApMaxAssociatedDevices"
+		       primitive = 'WIFIHAL_GetOrSetParamUIntValue'
+		       expectedresult="SUCCESS";
+		       primitive = 'WIFIHAL_GetOrSetParamUIntValue'
+		       setMethod = "setApMaxAssociatedDevices"
+		       setApMaxAssociatedDevicesValue  = random.randint(64,200)
+		       print "setApMaxAssociatedDevicesValue = ",setApMaxAssociatedDevicesValue
+		       #Calling the method from wifiUtility to execute test case and set result status for the test.
+		       tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, setApMaxAssociatedDevicesValue, setMethod)
+		       if expectedresult in actualresult:
+			  expectedresult="SUCCESS";
+			  radioIndex = idx;
+			  getMethod = "getApMaxAssociatedDevices"
+			  primitive = 'WIFIHAL_GetOrSetParamUIntValue'
+			  #Calling the method from wifiUtility to execute test case and set result status for the test.
+			  tdkTestObj, actualresult, detail = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, 0, getMethod)
+			  getApMaxAssociatedDevicesValue2 = int(detail.split(":")[1])
+			  print "getApMaxAssociatedDevicesValue",getApMaxAssociatedDevicesValue2
+			  maxValue = 63
+			  if expectedresult in actualresult and getApMaxAssociatedDevicesValue2 == maxValue:
+			     tdkTestObj.setResultStatus("SUCCESS");
+			     print "TEST STEP : As setApMaxAssociatedDevicesValue is greater than %d set value is expected to be %d " %(maxValue,maxValue)
+			     print "EXPECTED RESULT :  As setApMaxAssociatedDevicesValue is greater than %d  set value should be %d"  %(maxValue,maxValue)
+			     print "ACTUAL RESULT : Set value is equal to %d  " %maxValue
+			     print "TEST EXECUTION RESULT : SUCCESS"
+			  else:
+			      tdkTestObj.setResultStatus("FAILURE");
+			      print "TEST STEP : As setApMaxAssociatedDevicesValue is greater than %d set value is expected to be %d " %(maxValue,maxValue)
+			      print "EXPECTED RESULT :  As setApMaxAssociatedDevicesValue is greater than %d set value is not equal to %d" %(maxValue,maxValue)
+			      print "ACTUAL RESULT : Set value is not equal to %d" %maxValue
+			      print "TEST EXECUTION RESULT:FAILURE"
+		       else:
+			   tdkTestObj.setResultStatus("FAILURE");
+			   print "setApMaxAssociatedDevices function failed";
 
-	    else:
-		    print "TEST STEP : Comparing the set and get values of ApMax Associated Devices"
-		    print "EXPECTED RESULT : Set and get values should be the same"
-		    print "ACTUAL RESULT : Set and get values are NOT the same"
-		    print "TEST EXECUTION RESULT : FAILURE"
+		    else:
+			    print "TEST STEP : Comparing the set and get values of ApMax Associated Devices"
+			    print "EXPECTED RESULT : Set and get values should be the same"
+			    print "ACTUAL RESULT : Set and get values are NOT the same"
+			    print "TEST EXECUTION RESULT : FAILURE"
+			    tdkTestObj.setResultStatus("FAILURE");
+		    #Revert back the ApMax Associated Devices to initial value
+		    expectedresult="SUCCESS";
+		    radioIndex = idx;
+		    setMethod = "setApMaxAssociatedDevices"
+		    primitive = 'WIFIHAL_GetOrSetParamUIntValue'
+		    #Calling the method from wifiUtility to execute test case and set result status for the test.
+		    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, initialApMaxAssociatedDevices, setMethod)
+		    if expectedresult in actualresult:
+		       tdkTestObj.setResultStatus("SUCCESS");
+		       print "Successfully reverted back to default value"
+		    else:
+			tdkTestObj.setResultStatus("FAILURE");
+			print" Unable to revert to default value"
+		else:
 		    tdkTestObj.setResultStatus("FAILURE");
-            #Revert back the ApMax Associated Devices to initial value
-	    expectedresult="SUCCESS";
-	    radioIndex = 0
-	    setMethod = "setApMaxAssociatedDevices"
-	    primitive = 'WIFIHAL_GetOrSetParamUIntValue'
-            #Calling the method from wifiUtility to execute test case and set result status for the test.
-            tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, initialApMaxAssociatedDevices, setMethod)
-            if expectedresult in actualresult:
-	       tdkTestObj.setResultStatus("SUCCESS");
-	       print "Successfully reverted back to default value"
+		    print "setApMaxAssociatedDevices function failed";
 	    else:
+		print "getApMaxAssociatedDevices function failed";
 		tdkTestObj.setResultStatus("FAILURE");
-		print" Unable to revert to default value"
-	else:
-	    tdkTestObj.setResultStatus("FAILURE");
-	    print "setApMaxAssociatedDevices function failed";
-    else:
-        print "getApMaxAssociatedDevices function failed";
-        tdkTestObj.setResultStatus("FAILURE");
     obj.unloadModule("wifihal");
 else:
     print "Failed to load wifi module";
