@@ -71,6 +71,8 @@ radioIndex : 1</input_parameters>
 import tdklib; 
 from wifiUtility import *
 
+radio = "5G"
+
 #Test component to be tested
 obj = tdklib.TDKScriptingLibrary("wifihal","1");
 
@@ -86,38 +88,45 @@ print "[LIB LOAD STATUS]  :  %s" %loadmodulestatus
 if "SUCCESS" in loadmodulestatus.upper():
     obj.setLoadModuleStatus("SUCCESS");
 
-    expectedresult="SUCCESS";
-    radioIndex = 1
-    flag = 1
-    getMethod = "getSupportedDataTransmitRates"
-    #getMethod = "getRadioSupportedFrequencyBands"
-    primitive = "WIFIHAL_GetOrSetParamStringValue"
-    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, "0", getMethod)
+    tdkTestObjTemp, idx = getIndex(obj, radio);
+    ## Check if a invalid index is returned
+    if idx == -1:
+        print "Failed to get radio index for radio %s\n" %radio;
+        tdkTestObjTemp.setResultStatus("FAILURE");
+    else: 
 
-    if expectedresult in actualresult :
-        supportedRates = details.split(":")[1].strip().split(",")
+	    expectedresult="SUCCESS";
+	    radioIndex = idx
+	    flag = 1
+	    getMethod = "getSupportedDataTransmitRates"
+	    #getMethod = "getRadioSupportedFrequencyBands"
+	    primitive = "WIFIHAL_GetOrSetParamStringValue"
+	    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, "0", getMethod)
 
-        getMethod = "getOperationalDataTransmitRates"
-        tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, "0", getMethod)
-        if expectedresult in actualresult :
-            operationalRates = details.split(":")[1].strip().split(",")
+	    if expectedresult in actualresult :
+		supportedRates = details.split(":")[1].strip().split(",")
 
-	    for rate in operationalRates:
-		if rate not in supportedRates:
-		    flag = 0;
-		    break;
-	    if flag == 1:
-                print "OperationalDataTransmitRates is in the list of SupportedDataTransmitRates"
-                tdkTestObj.setResultStatus("SUCCESS");
-            else:
-                print "OperationalDataTransmitRates is not in the list of SupportedDataTransmitRates"
-                tdkTestObj.setResultStatus("FAILURE");
-        else:
-            print "getOperationalDataTransmitRates() call failed"
-            tdkTestObj.setResultStatus("FAILURE");
-    else:
-        print "getSupportedDataTransmitRates() call failed"
-        tdkTestObj.setResultStatus("FAILURE");
+		getMethod = "getOperationalDataTransmitRates"
+		tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, "0", getMethod)
+		if expectedresult in actualresult :
+		    operationalRates = details.split(":")[1].strip().split(",")
+
+		    for rate in operationalRates:
+			if rate not in supportedRates:
+			    flag = 0;
+			    break;
+		    if flag == 1:
+			print "OperationalDataTransmitRates is in the list of SupportedDataTransmitRates"
+			tdkTestObj.setResultStatus("SUCCESS");
+		    else:
+			print "OperationalDataTransmitRates is not in the list of SupportedDataTransmitRates"
+			tdkTestObj.setResultStatus("FAILURE");
+		else:
+		    print "getOperationalDataTransmitRates() call failed"
+		    tdkTestObj.setResultStatus("FAILURE");
+	    else:
+		print "getSupportedDataTransmitRates() call failed"
+		tdkTestObj.setResultStatus("FAILURE");
 
     obj.unloadModule("wifihal");
 

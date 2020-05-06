@@ -77,6 +77,8 @@ radioIndex   :   1</input_parameters>
 import tdklib;
 from wifiUtility import *;
 
+radio = "5G"
+
 #Test component to be tested
 obj = tdklib.TDKScriptingLibrary("wifihal","1");
 
@@ -92,35 +94,42 @@ print "[LIB LOAD STATUS]  :  %s" %loadmodulestatus
 if "SUCCESS" in loadmodulestatus.upper():
     obj.setLoadModuleStatus("SUCCESS");
 
-    expectedresult="SUCCESS";
-    radioIndex = 1
-    getMethod = "getRadioExtChannel"
-    primitive = 'WIFIHAL_GetOrSetParamStringValue'
+    tdkTestObjTemp, idx = getIndex(obj, radio);
+    ## Check if a invalid index is returned
+    if idx == -1:
+        print "Failed to get radio index for radio %s\n" %radio;
+        tdkTestObjTemp.setResultStatus("FAILURE");
+    else: 
 
-    #Calling the method from wifiUtility to execute test case and set result status for the test.
-    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, "0", getMethod)
+	    expectedresult="SUCCESS";
+	    radioIndex = idx
+	    getMethod = "getRadioExtChannel"
+	    primitive = 'WIFIHAL_GetOrSetParamStringValue'
 
-    success_values = ['AboveControlChannel', 'BelowControlChannel', 'Auto']
+	    #Calling the method from wifiUtility to execute test case and set result status for the test.
+	    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, "0", getMethod)
 
-    if expectedresult in actualresult:
-        status_received = details.split(":")[1].strip()
-        if status_received in success_values and len(status_received) <= 64:
-            print "wifi_getRadioExtChannel Function call is successful and %s"%details
-            tdkTestObj.setResultStatus("SUCCESS");
-            print "TEST STEP 1: Validate the wifi_getRadioExtChannel Function";
-            print "EXPECTED RESULT 1: wifi_getRadioExtChannel should return a string value either AboveControlChannel or BelowControlChannel or Auto";
-            print "ACTUAL RESULT 1: Ext Channel value string received: %s"%status_received;
-            print "[TEST EXECUTION RESULT] : SUCCESS";
-        else:
-            print "wifi_getRadioExtChannel Function call is failed and %s"%details
-            tdkTestObj.setResultStatus("FAILURE");
-            print "TEST STEP 1: Validate the wifi_getRadioExtChannel Function";
-            print "EXPECTED RESULT 1: wifi_getRadioExtChannel should return a string value either AboveControlChannel or BelowControlChannel or Auto";
-            print "ACTUAL RESULT 1: Failed to get Ext Channel value string: %s"%status_received;
-            print "[TEST EXECUTION RESULT] : FAILURE";
-    else:
-        print "wifi_getRadioExtChannel Function call is failed";
-        tdkTestObj.setResultStatus("FAILURE");
+	    success_values = ['AboveControlChannel', 'BelowControlChannel', 'Auto']
+
+	    if expectedresult in actualresult:
+		status_received = details.split(":")[1].strip()
+		if status_received in success_values and len(status_received) <= 64:
+		    print "wifi_getRadioExtChannel Function call is successful and %s"%details
+		    tdkTestObj.setResultStatus("SUCCESS");
+		    print "TEST STEP 1: Validate the wifi_getRadioExtChannel Function";
+		    print "EXPECTED RESULT 1: wifi_getRadioExtChannel should return a string value either AboveControlChannel or BelowControlChannel or Auto";
+		    print "ACTUAL RESULT 1: Ext Channel value string received: %s"%status_received;
+		    print "[TEST EXECUTION RESULT] : SUCCESS";
+		else:
+		    print "wifi_getRadioExtChannel Function call is failed and %s"%details
+		    tdkTestObj.setResultStatus("FAILURE");
+		    print "TEST STEP 1: Validate the wifi_getRadioExtChannel Function";
+		    print "EXPECTED RESULT 1: wifi_getRadioExtChannel should return a string value either AboveControlChannel or BelowControlChannel or Auto";
+		    print "ACTUAL RESULT 1: Failed to get Ext Channel value string: %s"%status_received;
+		    print "[TEST EXECUTION RESULT] : FAILURE";
+	    else:
+		print "wifi_getRadioExtChannel Function call is failed";
+		tdkTestObj.setResultStatus("FAILURE");
 
     obj.unloadModule("wifihal");
 
