@@ -66,6 +66,8 @@ radioIndex : 1</input_parameters>
 import tdklib;
 from wifiUtility import *;
 
+radio = "5G"
+
 #Test component to be tested
 obj = tdklib.TDKScriptingLibrary("wifihal","1");
 
@@ -82,33 +84,40 @@ print "[LIB LOAD STATUS]  :  %s" %loadmodulestatus
 
 if "SUCCESS" in loadmodulestatus.upper():
     obj.setLoadModuleStatus("SUCCESS");
-
     expectedresult = "SUCCESS"
-    radioIndex = 1
-    getMethod = "getApAclDeviceNum"
-    primitive = 'WIFIHAL_GetOrSetParamUIntValue'
 
-    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, 0, getMethod)
+    tdkTestObjTemp, idx = getIndex(obj, radio);
+    ## Check if a invalid index is returned
+    if idx == -1:
+        print "Failed to get radio index for radio %s\n" %radio;
+        tdkTestObjTemp.setResultStatus("FAILURE");
+    else: 
 
-    if expectedresult in actualresult:
-        deviceNum = details.split(":")[1].strip();
-        if deviceNum != "":
-            tdkTestObj.setResultStatus("SUCCESS");
-            print "TEST STEP : Get the number of devices in the filter list"
-            print "EXPECTED RESULT : Should get the number of devices as a non empty value"
-            print "ACTUAL RESULT : Received the number of devices as a NON EMPTY value"
-            print "Device number : %s"%deviceNum
-            print "TEST EXECUTION RESULT: SUCCESS"
-        else:
-            tdkTestObj.setResultStatus("FAILURE");
-            print "TEST STEP : Get the number of devices in the filter list"
-            print "EXPECTED RESULT : Should get the number of devices as a non empty value"
-            print "ACTUAL RESULT : Received the number of devices as an EMPTY value"
-            print "Device number : %s"%deviceNum
-            print "TEST EXECUTION RESULT: FAILURE"
-    else:
-        tdkTestObj.setResultStatus("FAILURE");
-        print "getApAclDeviceNum() call failed"
+	    radioIndex = idx
+	    getMethod = "getApAclDeviceNum"
+	    primitive = 'WIFIHAL_GetOrSetParamUIntValue'
+
+	    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, 0, getMethod)
+
+	    if expectedresult in actualresult:
+		deviceNum = details.split(":")[1].strip();
+		if deviceNum != "":
+		    tdkTestObj.setResultStatus("SUCCESS");
+		    print "TEST STEP : Get the number of devices in the filter list"
+		    print "EXPECTED RESULT : Should get the number of devices as a non empty value"
+		    print "ACTUAL RESULT : Received the number of devices as a NON EMPTY value"
+		    print "Device number : %s"%deviceNum
+		    print "TEST EXECUTION RESULT: SUCCESS"
+		else:
+		    tdkTestObj.setResultStatus("FAILURE");
+		    print "TEST STEP : Get the number of devices in the filter list"
+		    print "EXPECTED RESULT : Should get the number of devices as a non empty value"
+		    print "ACTUAL RESULT : Received the number of devices as an EMPTY value"
+		    print "Device number : %s"%deviceNum
+		    print "TEST EXECUTION RESULT: FAILURE"
+	    else:
+		tdkTestObj.setResultStatus("FAILURE");
+		print "getApAclDeviceNum() call failed"
     obj.unloadModule("wifihal");
 else:
     obj.setLoadModuleStatus("FAILURE");
