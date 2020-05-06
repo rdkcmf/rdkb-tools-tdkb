@@ -73,6 +73,9 @@ radioIndex: 0</input_parameters>
 '''
 # use tdklib library,which provides a wrapper for tdk testcase script 
 import tdklib; 
+from wifiUtility import *;
+
+radio = "2.4G"
 
 #Test component to be tested
 obj = tdklib.TDKScriptingLibrary("wifihal","1");
@@ -83,13 +86,13 @@ ip = <ipaddress>
 port = <port>
 obj.configureTestCase(ip,port,'TS_WIFIHAL_GetRadioAMSDUEnable');
 
-def RadioAMSDUEnable(methodName,param):
+def RadioAMSDUEnable(methodName,param,idx):
     #Script to load the configuration file of the component
     tdkTestObj = obj.createTestStep("WIFIHAL_GetOrSetParamBoolValue");
     #Giving the method name to invoke the api for getting RadioAMSDU Enable status
     tdkTestObj.addParameter("methodName",methodName);
     #Radio index is 0 for 2.4GHz and 1 for 5GHz
-    tdkTestObj.addParameter("radioIndex",0);
+    tdkTestObj.addParameter("radioIndex",idx);
     tdkTestObj.addParameter("param",param);
     expectedresult="SUCCESS";
     tdkTestObj.executeTestCase(expectedresult);
@@ -104,85 +107,92 @@ print "[LIB LOAD STATUS]  :  %s" %loadmodulestatus ;
 if "SUCCESS" in loadmodulestatus.upper():
     obj.setLoadModuleStatus("SUCCESS");
     
-    expectedresult="SUCCESS";
-    methodName = "getRadioAMSDUEnable";
-    #Dummy param for get method
-    param = 0; 
-    tdkTestObj, actualresult, details = RadioAMSDUEnable(methodName,param);
-    if expectedresult in actualresult :
-	print "TEST STEP: Get the initial Radio AMSDU Enable status"
-	print "EXPECTED RESULT : Should return either Enabled or Disabled"
-	print "ACTUAL RESULT : %s" %details;
-	print "TEST EXECUTION RESULT :SUCCESS"
-        tdkTestObj.setResultStatus("SUCCESS");
-        enable = details.split(":")[1].strip()
-	print "enable:" ,enable;
-        if "Enabled" in enable:
-            print "AMSDU is Enabled"
-            tdkTestObj.setResultStatus("SUCCESS");
-            oldEnable = 1
-            newEnable = 0
-        else:
-            print "AMSDU is Disabled"
-            oldEnable = 0
-            newEnable = 1
-
-        #Toggle the enable status using set
-        methodName = "setRadioAMSDUEnable"
-        tdkTestObj, actualresult, details = RadioAMSDUEnable(methodName,newEnable);
-        if expectedresult in actualresult :
-	    print "TEST STEP: Set the Radio AMSDU Enable status"
-	    print "EXPECTED RESULT : Should return SUCCESS"
-	    print "ACTUAL RESULT : %s" %details;
-	    print "TEST EXECUTION RESULT :SUCCESS"
-            tdkTestObj.setResultStatus("SUCCESS");
-
-            # Get the New AP enable status
-	    methodName = "getRadioAMSDUEnable";
-            #Dummy param for get method
-	    param = 0;
-	    tdkTestObj, actualresult, details = RadioAMSDUEnable(methodName,param);
-	    print "details: %s" %details;
-            if expectedresult in actualresult and enable not in details.split(":")[1].strip():
-	        print "TEST STEP: Get the previously set Radio AMSDU Enable status and compare with the initial get value"
-	        print "EXPECTED RESULT : Should return a status otherthan the initial get value"
-	        print "ACTUAL RESULT : %s" %details;
-	        print "TEST EXECUTION RESULT :SUCCESS"
-                print "getRadioAMSDUEnable Success, verified with setRadioAMSDUEnable() api"
-                tdkTestObj.setResultStatus("SUCCESS");
-            else:
-	        print "TEST STEP: Get the previously set Radio AMSDU Enable status and compare with the initial get value"
-	        print "EXPECTED RESULT : Should return a status otherthan the initial get value"
-	        print "ACTUAL RESULT : %s" %details;
-	        print "TEST EXECUTION RESULT :FAILURE"
-                print "getRadioAMSDUEnable failed after set"
-                tdkTestObj.setResultStatus("FAILURE");
-
-            #Revert back to original Enable status
-	    methodName = "setRadioAMSDUEnable"
-	    tdkTestObj, actualresult, details = RadioAMSDUEnable(methodName,oldEnable);
-	    print "details: %s" %details;
-            if expectedresult in actualresult :
-                print "Enable status reverted back";
-                tdkTestObj.setResultStatus("SUCCESS");
-		
-            else:
-                print "Couldn't revert enable status"
-                tdkTestObj.setResultStatus("FAILURE");
-        else:
-	    print "TEST STEP: Set the Radio AMSDU Enable status"
-	    print "EXPECTED RESULT : Should return SUCCESS"
-	    print "ACTUAL RESULT : %s" %details;
-	    print "TEST EXECUTION RESULT :FAILURE"
-            print "setRadioAMSDUEnable failed"
-            tdkTestObj.setResultStatus("FAILURE");
+    tdkTestObjTemp, idx = getIndex(obj, radio);
+    ## Check if a invalid index is returned
+    if idx == -1:
+        print "Failed to get radio index for radio %s\n" %radio;
+        tdkTestObjTemp.setResultStatus("FAILURE");
     else:
-	print "TEST STEP: Get the initial Radio AMSDU Enable status"
-	print "EXPECTED RESULT : Should return either Enabled or Disabled"
-	print "ACTUAL RESULT : %s" %details;
-	print "TEST EXECUTION RESULT :FAILURE"
-        print "getRadioAMSDUEnable failed"
-        tdkTestObj.setResultStatus("FAILURE");
+
+	    expectedresult="SUCCESS";
+	    methodName = "getRadioAMSDUEnable";
+	    #Dummy param for get method
+	    param = 0; 
+	    tdkTestObj, actualresult, details = RadioAMSDUEnable(methodName,param,idx);
+	    if expectedresult in actualresult :
+		print "TEST STEP: Get the initial Radio AMSDU Enable status"
+		print "EXPECTED RESULT : Should return either Enabled or Disabled"
+		print "ACTUAL RESULT : %s" %details;
+		print "TEST EXECUTION RESULT :SUCCESS"
+		tdkTestObj.setResultStatus("SUCCESS");
+		enable = details.split(":")[1].strip()
+		print "enable:" ,enable;
+		if "Enabled" in enable:
+		    print "AMSDU is Enabled"
+		    tdkTestObj.setResultStatus("SUCCESS");
+		    oldEnable = 1
+		    newEnable = 0
+		else:
+		    print "AMSDU is Disabled"
+		    oldEnable = 0
+		    newEnable = 1
+
+		#Toggle the enable status using set
+		methodName = "setRadioAMSDUEnable"
+		tdkTestObj, actualresult, details = RadioAMSDUEnable(methodName,newEnable,idx);
+		if expectedresult in actualresult :
+		    print "TEST STEP: Set the Radio AMSDU Enable status"
+		    print "EXPECTED RESULT : Should return SUCCESS"
+		    print "ACTUAL RESULT : %s" %details;
+		    print "TEST EXECUTION RESULT :SUCCESS"
+		    tdkTestObj.setResultStatus("SUCCESS");
+
+		    # Get the New AP enable status
+		    methodName = "getRadioAMSDUEnable";
+		    #Dummy param for get method
+		    param = 0;
+		    tdkTestObj, actualresult, details = RadioAMSDUEnable(methodName,param,idx);
+		    print "details: %s" %details;
+		    if expectedresult in actualresult and enable not in details.split(":")[1].strip():
+			print "TEST STEP: Get the previously set Radio AMSDU Enable status and compare with the initial get value"
+			print "EXPECTED RESULT : Should return a status otherthan the initial get value"
+			print "ACTUAL RESULT : %s" %details;
+			print "TEST EXECUTION RESULT :SUCCESS"
+			print "getRadioAMSDUEnable Success, verified with setRadioAMSDUEnable() api"
+			tdkTestObj.setResultStatus("SUCCESS");
+		    else:
+			print "TEST STEP: Get the previously set Radio AMSDU Enable status and compare with the initial get value"
+			print "EXPECTED RESULT : Should return a status otherthan the initial get value"
+			print "ACTUAL RESULT : %s" %details;
+			print "TEST EXECUTION RESULT :FAILURE"
+			print "getRadioAMSDUEnable failed after set"
+			tdkTestObj.setResultStatus("FAILURE");
+
+		    #Revert back to original Enable status
+		    methodName = "setRadioAMSDUEnable"
+		    tdkTestObj, actualresult, details = RadioAMSDUEnable(methodName,oldEnable,idx);
+		    print "details: %s" %details;
+		    if expectedresult in actualresult :
+			print "Enable status reverted back";
+			tdkTestObj.setResultStatus("SUCCESS");
+			
+		    else:
+			print "Couldn't revert enable status"
+			tdkTestObj.setResultStatus("FAILURE");
+		else:
+		    print "TEST STEP: Set the Radio AMSDU Enable status"
+		    print "EXPECTED RESULT : Should return SUCCESS"
+		    print "ACTUAL RESULT : %s" %details;
+		    print "TEST EXECUTION RESULT :FAILURE"
+		    print "setRadioAMSDUEnable failed"
+		    tdkTestObj.setResultStatus("FAILURE");
+	    else:
+		print "TEST STEP: Get the initial Radio AMSDU Enable status"
+		print "EXPECTED RESULT : Should return either Enabled or Disabled"
+		print "ACTUAL RESULT : %s" %details;
+		print "TEST EXECUTION RESULT :FAILURE"
+		print "getRadioAMSDUEnable failed"
+		tdkTestObj.setResultStatus("FAILURE");
     obj.unloadModule("wifihal");
 
 else:

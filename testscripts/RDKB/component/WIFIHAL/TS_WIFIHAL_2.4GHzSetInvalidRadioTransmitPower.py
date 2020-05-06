@@ -76,6 +76,8 @@ import tdklib;
 from wifiUtility import *;
 import time;
 
+radio = "2.4G"
+
 #Test component to be tested
 obj = tdklib.TDKScriptingLibrary("wifihal","1");
 
@@ -92,89 +94,96 @@ print "[LIB LOAD STATUS]  :  %s" %loadmodulestatus
 if "SUCCESS" in loadmodulestatus.upper():
     obj.setLoadModuleStatus("SUCCESS");
 
-    expectedresult="SUCCESS";
-    getMethod = "getRadioTransmitPowerSupported"
-    primitive = 'WIFIHAL_GetOrSetParamStringValue'
-    radioIndex = 0
-    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, "0", getMethod)
-
-    if expectedresult in actualresult:
-        supportedTransmitPower = details.split(":")[1].strip()
-        supportedTransmitPower = [int(x) for x in details.split(":")[1].split(",")];
-	print "Supported Transmit Power: %s"%supportedTransmitPower
-        tdkTestObj.setResultStatus("SUCCESS");
-
-        getMethod = "getRadioTransmitPower"
-        primitive = 'WIFIHAL_GetOrSetParamULongValue'
-        radioIndex = 0
-        tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, 0, getMethod)
-
-        if expectedresult in actualresult:
-            initGetValue = details.split(":")[1].strip()
-            tdkTestObj.setResultStatus("SUCCESS");
-
-            r = range(1,100);
-            for setPower in r:
-                if setPower not in supportedTransmitPower:
-
-		    expectedresult = "FAILURE"
-	            setMethod = "setRadioTransmitPower"
-        	    radioIndex = 0
-	            primitive = 'WIFIHAL_GetOrSetParamULongValue'
-                    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, setPower, setMethod)
-
-		    if expectedresult in actualresult:
-			tdkTestObj.setResultStatus("SUCCESS");
-			print "TEST STEP: Set a value outside the range of SupportedTransmitPower"
-			print "EXPECTED RESULT: Set operation should fail"
-			print "ACTUAL RESULT: %s"%actualresult
-			print "Set Value:",setPower
-			print "TEST EXECUTION RESULT: SUCCESS"
-		    else:
-			tdkTestObj.setResultStatus("FAILURE");
-			print "TEST STEP: Set a value outside the range of SupportedTransmitPower"
-			print "EXPECTED RESULT: Set operation should fail"
-			print "ACTUAL RESULT: %s"%actualresult
-			print "Set Value:",setPower
-			print "TEST EXECUTION RESULT: FAILURE"
-
-			time.sleep(60)
-                        getMethod = "getRadioTransmitPower"
-                        radioIndex = 0
-                        primitive = 'WIFIHAL_GetOrSetParamULongValue'
-			expectedresult = "SUCCESS"
-                        tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, 0, getMethod)
-
-                        if expectedresult in actualresult:
-			    tdkTestObj.setResultStatus("SUCCESS");
-                            finalGetValue = details.split(":")[1].strip()
-                            print "finalGetValue",finalGetValue
-                        else:
-			    tdkTestObj.setResultStatus("FAILURE");
-                            print "Not able to get the invalid value"
-
-                        #Revert back to initial value
-	    	        expectedresult = "SUCCESS"
-                        setMethod = "setRadioTransmitPower"
-                        primitive = 'WIFIHAL_GetOrSetParamULongValue'
-                        setPower = int(initGetValue)
-                        tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, setPower, setMethod)
-
-                        if expectedresult in actualresult:
-                            tdkTestObj.setResultStatus("SUCCESS");
-                            print "Successfully reverted back to inital value"
-                        else:
-                            tdkTestObj.setResultStatus("FAILURE");
-                            print "Unable to revert to initial value"
-                else:
-		    continue;
-                break;
-        else:
-            tdkTestObj.setResultStatus("FAILURE");
-            print "getRadioTransmitPower() call failed"
+    tdkTestObjTemp, idx = getIndex(obj, radio);
+    ## Check if a invalid index is returned
+    if idx == -1:
+        print "Failed to get radio index for radio %s\n" %radio;
+        tdkTestObjTemp.setResultStatus("FAILURE");
     else:
-        tdkTestObj.setResultStatus("FAILURE");
-        print "getRadioTransmitPowerSupported() call failed"
+
+	    expectedresult="SUCCESS";
+	    getMethod = "getRadioTransmitPowerSupported"
+	    primitive = 'WIFIHAL_GetOrSetParamStringValue'
+	    radioIndex = idx;
+	    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, "0", getMethod)
+
+	    if expectedresult in actualresult:
+		supportedTransmitPower = details.split(":")[1].strip()
+		supportedTransmitPower = [int(x) for x in details.split(":")[1].split(",")];
+		print "Supported Transmit Power: %s"%supportedTransmitPower
+		tdkTestObj.setResultStatus("SUCCESS");
+
+		getMethod = "getRadioTransmitPower"
+		primitive = 'WIFIHAL_GetOrSetParamULongValue'
+		radioIndex = idx;
+		tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, 0, getMethod)
+
+		if expectedresult in actualresult:
+		    initGetValue = details.split(":")[1].strip()
+		    tdkTestObj.setResultStatus("SUCCESS");
+
+		    r = range(1,100);
+		    for setPower in r:
+			if setPower not in supportedTransmitPower:
+
+			    expectedresult = "FAILURE"
+			    setMethod = "setRadioTransmitPower"
+			    radioIndex = idx;
+			    primitive = 'WIFIHAL_GetOrSetParamULongValue'
+			    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, setPower, setMethod)
+
+			    if expectedresult in actualresult:
+				tdkTestObj.setResultStatus("SUCCESS");
+				print "TEST STEP: Set a value outside the range of SupportedTransmitPower"
+				print "EXPECTED RESULT: Set operation should fail"
+				print "ACTUAL RESULT: %s"%actualresult
+				print "Set Value:",setPower
+				print "TEST EXECUTION RESULT: SUCCESS"
+			    else:
+				tdkTestObj.setResultStatus("FAILURE");
+				print "TEST STEP: Set a value outside the range of SupportedTransmitPower"
+				print "EXPECTED RESULT: Set operation should fail"
+				print "ACTUAL RESULT: %s"%actualresult
+				print "Set Value:",setPower
+				print "TEST EXECUTION RESULT: FAILURE"
+
+				time.sleep(60)
+				getMethod = "getRadioTransmitPower"
+				radioIndex = idx;
+				primitive = 'WIFIHAL_GetOrSetParamULongValue'
+				expectedresult = "SUCCESS"
+				tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, 0, getMethod)
+
+				if expectedresult in actualresult:
+				    tdkTestObj.setResultStatus("SUCCESS");
+				    finalGetValue = details.split(":")[1].strip()
+				    print "finalGetValue",finalGetValue
+				else:
+				    tdkTestObj.setResultStatus("FAILURE");
+				    print "Not able to get the invalid value"
+
+				#Revert back to initial value
+				expectedresult = "SUCCESS"
+				setMethod = "setRadioTransmitPower"
+				primitive = 'WIFIHAL_GetOrSetParamULongValue'
+				setPower = int(initGetValue)
+				tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, setPower, setMethod)
+
+				if expectedresult in actualresult:
+				    tdkTestObj.setResultStatus("SUCCESS");
+				    print "Successfully reverted back to inital value"
+				else:
+				    tdkTestObj.setResultStatus("FAILURE");
+				    print "Unable to revert to initial value"
+			else:
+			    continue;
+			break;
+		else:
+		    tdkTestObj.setResultStatus("FAILURE");
+		    print "getRadioTransmitPower() call failed"
+	    else:
+		tdkTestObj.setResultStatus("FAILURE");
+		print "getRadioTransmitPowerSupported() call failed"
     obj.unloadModule("wifihal");
 
 else:
