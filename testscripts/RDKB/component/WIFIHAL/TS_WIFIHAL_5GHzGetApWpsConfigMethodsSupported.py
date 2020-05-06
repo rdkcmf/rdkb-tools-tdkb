@@ -77,6 +77,8 @@ apIndex     : 1</input_parameters>
 import tdklib;
 from wifiUtility import *;
 
+radio = "5G"
+
 #Test component to be tested
 obj = tdklib.TDKScriptingLibrary("wifihal","1");
 
@@ -92,38 +94,45 @@ print "[LIB LOAD STATUS]  :  %s" %loadmodulestatus
 if "SUCCESS" in loadmodulestatus.upper():
     obj.setLoadModuleStatus("SUCCESS");
 
-    expectedresult="SUCCESS";
-    apIndex = 1
-    getMethod = "getApWpsConfigMethodsSupported"
-    primitive = 'WIFIHAL_GetOrSetParamStringValue'
+    tdkTestObjTemp, idx = getIndex(obj, radio);
+    ## Check if a invalid index is returned
+    if idx == -1:
+        print "Failed to get radio index for radio %s\n" %radio;
+        tdkTestObjTemp.setResultStatus("FAILURE");
+    else: 
 
-    #Calling the method from wifiUtility to execute test case and set result status for the test.
-    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, "0", getMethod)
+	    expectedresult="SUCCESS";
+	    apIndex = idx
+	    getMethod = "getApWpsConfigMethodsSupported"
+	    primitive = 'WIFIHAL_GetOrSetParamStringValue'
 
-    #List of default WPS config mode supported
-    defaultWpsConfigModesSupported = ['USBFlashDrive', 'Ethernet', 'ExternalNFCToken', 'IntegratedNFCToken', 'NFCInterface', 'PushButton', 'PIN', 'Label', 'Display', 'Keypad']
+	    #Calling the method from wifiUtility to execute test case and set result status for the test.
+	    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, "0", getMethod)
 
-    if expectedresult in actualresult:
-       supportedWpsConfigModes = details.split(":")[1].strip()
-       for item in list(supportedWpsConfigModes.split(",")):
-           if item.strip() in defaultWpsConfigModesSupported:
-               print "getApWpsConfigMethodsSupported function successful %s"%details
-               tdkTestObj.setResultStatus("SUCCESS");
-               print "TEST STEP 1: Validate the wifi_getApWpsConfigMethodsSupported Function";
-               print "EXPECTED RESULT 1: wifi_getApWpsConfigMethodsSupported should return a string comma separated list of the enabled WPS config methods";
-               print "ACTUAL RESULT 1: APWPS config methods string received %s"%list(supportedWpsConfigModes.split(","));
-               print "[TEST EXECUTION RESULT] : SUCCESS";
-           else:
-               print "getApWpsConfigMethodsSupported() failed %s"%details
-               tdkTestObj.setResultStatus("FAILURE");
-               print "TEST STEP 1: Validate the wifi_getApWpsConfigMethodsSupported Function";
-               print "EXPECTED RESULT 1: wifi_getApWpsConfigMethodsSupported should return a string comma separated list of the enabled WPS config methods";
-               print "ACTUAL RESULT 1: Failed to receive ApWpsconfigMethod string: %s"%list(supportedWpsConfigModes.split(","));
-               print "[TEST EXECUTION RESULT] : FAILURE";
+	    #List of default WPS config mode supported
+	    defaultWpsConfigModesSupported = ['USBFlashDrive', 'Ethernet', 'ExternalNFCToken', 'IntegratedNFCToken', 'NFCInterface', 'PushButton', 'PIN', 'Label', 'Display', 'Keypad']
 
-    else:
-        print "getApWpsConfigMethodsSupported() failed"
-        tdkTestObj.setResultStatus("FAILURE");
+	    if expectedresult in actualresult:
+	       supportedWpsConfigModes = details.split(":")[1].strip()
+	       for item in list(supportedWpsConfigModes.split(",")):
+		   if item.strip() in defaultWpsConfigModesSupported:
+		       print "getApWpsConfigMethodsSupported function successful %s"%details
+		       tdkTestObj.setResultStatus("SUCCESS");
+		       print "TEST STEP 1: Validate the wifi_getApWpsConfigMethodsSupported Function";
+		       print "EXPECTED RESULT 1: wifi_getApWpsConfigMethodsSupported should return a string comma separated list of the enabled WPS config methods";
+		       print "ACTUAL RESULT 1: APWPS config methods string received %s"%list(supportedWpsConfigModes.split(","));
+		       print "[TEST EXECUTION RESULT] : SUCCESS";
+		   else:
+		       print "getApWpsConfigMethodsSupported() failed %s"%details
+		       tdkTestObj.setResultStatus("FAILURE");
+		       print "TEST STEP 1: Validate the wifi_getApWpsConfigMethodsSupported Function";
+		       print "EXPECTED RESULT 1: wifi_getApWpsConfigMethodsSupported should return a string comma separated list of the enabled WPS config methods";
+		       print "ACTUAL RESULT 1: Failed to receive ApWpsconfigMethod string: %s"%list(supportedWpsConfigModes.split(","));
+		       print "[TEST EXECUTION RESULT] : FAILURE";
+
+	    else:
+		print "getApWpsConfigMethodsSupported() failed"
+		tdkTestObj.setResultStatus("FAILURE");
 
     obj.unloadModule("wifihal");
 else:
