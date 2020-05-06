@@ -92,6 +92,8 @@ radioIndex   :    1</input_parameters>
 import tdklib;
 from wifiUtility import *;
 
+radio = "5G"
+
 #Test component to be tested
 obj = tdklib.TDKScriptingLibrary("wifihal","1");
 
@@ -107,56 +109,63 @@ print "[LIB LOAD STATUS]  :  %s" %loadmodulestatus
 if "SUCCESS" in loadmodulestatus.upper():
     obj.setLoadModuleStatus("SUCCESS");
 
-    #Prmitive test case which is associated to this Script
-    tdkTestObj = obj.createTestStep('WIFIHAL_GetApAssociatedDeviceDiagnosticResult');
-    tdkTestObj.addParameter("radioIndex", 1);
-    expectedresult="SUCCESS";
-    tdkTestObj.executeTestCase(expectedresult);
-    actualresult = tdkTestObj.getResult();
-    details = tdkTestObj.getResultDetails();
+    tdkTestObjTemp, idx = getIndex(obj, radio);
+    ## Check if a invalid index is returned
+    if idx == -1:
+        print "Failed to get radio index for radio %s\n" %radio;
+        tdkTestObjTemp.setResultStatus("FAILURE");
+    else: 
 
-    if expectedresult in actualresult :
-        tdkTestObj.setResultStatus("SUCCESS");
-        print "wifi_getApAssociatedDeviceDiagnosticResult() call to get STA details is SUCCESS";
-        details = details.split(":")[1].strip();
-        output_array_size = details.split("=")[1].strip();
-        if int(output_array_size) > 0 :
-            tdkTestObj.setResultStatus("SUCCESS");
-            print "**********STA Associated with DUT**********";
-            expectedresult="SUCCESS";
-            radioIndex = 1
-            getMethod = "getRadioStatsReceivedSignalLevel"
-            primitive = 'WIFIHAL_GetOrSetParamIntValue'
+	    #Prmitive test case which is associated to this Script
+	    tdkTestObj = obj.createTestStep('WIFIHAL_GetApAssociatedDeviceDiagnosticResult');
+	    tdkTestObj.addParameter("radioIndex", idx);
+	    expectedresult="SUCCESS";
+	    tdkTestObj.executeTestCase(expectedresult);
+	    actualresult = tdkTestObj.getResult();
+	    details = tdkTestObj.getResultDetails();
 
-            #Calling the method from wifiUtility to execute test case and set result status for the test.
-            tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, 0, getMethod)
+	    if expectedresult in actualresult :
+		tdkTestObj.setResultStatus("SUCCESS");
+		print "wifi_getApAssociatedDeviceDiagnosticResult() call to get STA details is SUCCESS";
+		details = details.split(":")[1].strip();
+		output_array_size = details.split("=")[1].strip();
+		if int(output_array_size) > 0 :
+		    tdkTestObj.setResultStatus("SUCCESS");
+		    print "**********STA Associated with DUT**********";
+		    expectedresult="SUCCESS";
+		    radioIndex = idx
+		    getMethod = "getRadioStatsReceivedSignalLevel"
+		    primitive = 'WIFIHAL_GetOrSetParamIntValue'
 
-            if expectedresult in actualresult:
-               signalLevel = int(details.split(":")[1].strip())
-               if (-111 < signalLevel and signalLevel < 0 ):
-                    print "getRadioStatsReceivedSignalLevel is in valid range between -110 to 0dBm ,%s"%details
-	            tdkTestObj.setResultStatus("SUCCESS");
-	            print "TEST STEP 1: Get the Stats Received Signal Level";
-	            print "EXPECTED RESULT 1:Stats Received Signal Level should be in between -110 to 0dBm ";
-	            print "ACTUAL RESULT 1: Stats Received Signal Level is in valid Range: %s"%details.split(":")[1].strip();
-	            print "[TEST EXECUTION RESULT] : SUCCESS";
-               else:
-	            print "getRadioStatsReceivedSignalLevel is not in valid range between -110 to 0dBm ,%s"%details
-	            tdkTestObj.setResultStatus("FAILURE");
-                    print "TEST STEP 1: Get the Stats Received Signal Level";
-	            print "EXPECTED RESULT 1:Stats Received Signal Level should be in between -110 to 0dBm ";
-	            print "ACTUAL RESULT 1: Stats Received Signal Level is NOT in valid Range: %s"%details.split(":")[1].strip();
-	            print "[TEST EXECUTION RESULT] : FAILURE";
-            else:
-                print "getRadioStatsReceivedSignalLevel function failed"
-                tdkTestObj.setResultStatus("FAILURE");
-        else :
-            tdkTestObj.setResultStatus("FAILURE");
-            print "**********NO STA Associated with DUT**********";
-            print " Please connect wifi client to 5GHz with DUT before execution";
-    else :
-        tdkTestObj.setResultStatus("FAILURE");
-        print "wifi_getApAssociatedDeviceDiagnosticResult() call to get STA details is FAILED";
+		    #Calling the method from wifiUtility to execute test case and set result status for the test.
+		    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, 0, getMethod)
+
+		    if expectedresult in actualresult:
+		       signalLevel = int(details.split(":")[1].strip())
+		       if (-111 < signalLevel and signalLevel < 0 ):
+			    print "getRadioStatsReceivedSignalLevel is in valid range between -110 to 0dBm ,%s"%details
+			    tdkTestObj.setResultStatus("SUCCESS");
+			    print "TEST STEP 1: Get the Stats Received Signal Level";
+			    print "EXPECTED RESULT 1:Stats Received Signal Level should be in between -110 to 0dBm ";
+			    print "ACTUAL RESULT 1: Stats Received Signal Level is in valid Range: %s"%details.split(":")[1].strip();
+			    print "[TEST EXECUTION RESULT] : SUCCESS";
+		       else:
+			    print "getRadioStatsReceivedSignalLevel is not in valid range between -110 to 0dBm ,%s"%details
+			    tdkTestObj.setResultStatus("FAILURE");
+			    print "TEST STEP 1: Get the Stats Received Signal Level";
+			    print "EXPECTED RESULT 1:Stats Received Signal Level should be in between -110 to 0dBm ";
+			    print "ACTUAL RESULT 1: Stats Received Signal Level is NOT in valid Range: %s"%details.split(":")[1].strip();
+			    print "[TEST EXECUTION RESULT] : FAILURE";
+		    else:
+			print "getRadioStatsReceivedSignalLevel function failed"
+			tdkTestObj.setResultStatus("FAILURE");
+		else :
+		    tdkTestObj.setResultStatus("FAILURE");
+		    print "**********NO STA Associated with DUT**********";
+		    print " Please connect wifi client to 5GHz with DUT before execution";
+	    else :
+		tdkTestObj.setResultStatus("FAILURE");
+		print "wifi_getApAssociatedDeviceDiagnosticResult() call to get STA details is FAILED";
     obj.unloadModule("wifihal");
 else:
     print "Failed to load wifi module";
