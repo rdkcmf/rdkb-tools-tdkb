@@ -90,6 +90,8 @@ radioIndex : 1</input_parameters>
 import tdklib;
 from wifiUtility import *;
 
+radio = "5G"
+
 #Test component to be tested
 obj = tdklib.TDKScriptingLibrary("wifihal","1");
 
@@ -105,39 +107,46 @@ print "[LIB LOAD STATUS]  :  %s" %loadmodulestatus
 if "SUCCESS" in loadmodulestatus.upper():
     obj.setLoadModuleStatus("SUCCESS");
 
-    expectedresult="SUCCESS";
-    radioIndex = 1
-    getMethod = "getRadioIEEE80211hSupported"
-    primitive = 'WIFIHAL_GetOrSetParamBoolValue'
+    tdkTestObjTemp, idx = getIndex(obj, radio);
+    ## Check if a invalid index is returned
+    if idx == -1:
+        print "Failed to get radio index for radio %s\n" %radio;
+        tdkTestObjTemp.setResultStatus("FAILURE");
+    else: 
 
-    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, 0, getMethod)
-    enablestate = details.split(":")[1].strip(" ");
-    if expectedresult in actualresult:
-        if 'Enabled' in enablestate :
-            expectedresult="SUCCESS";
-            radioIndex = 1
-            getMethod = "getRadioIEEE80211hEnabled"
-            primitive = 'WIFIHAL_GetOrSetParamBoolValue'
+	    expectedresult="SUCCESS";
+	    radioIndex = idx
+	    getMethod = "getRadioIEEE80211hSupported"
+	    primitive = 'WIFIHAL_GetOrSetParamBoolValue'
 
-            tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, 0, getMethod)        
-            if expectedresult in actualresult:
-                print"TEST STEP : Get the Radio IEEE80211h Enabled Status for 5GHz";
-                print"EXPECTED RESULT : Get the radio enabled status for 5GHz";
-                print"ACTUAL RESULT : Got the radio enabled status for 5GHz";
-                print"details",details;
-                tdkTestObj.setResultStatus("SUCCESS");
-            else:
-                print"TEST STEP : Get the Radio IEEE80211h Enabled Status for 5GHz";
-                print"EXPECTED RESULT : Get the radio enabled status for 5GHz";
-                print"ACTUAL RESULT : Unable to get the radio enabled status for 5GHz";
-                print"details",details;
-                tdkTestObj.setResultStatus("FAILURE");
-        else:
-            print"Radio IEEE80211h feature is not supported for 5GHz";
-            tdkTestObj.setResultStatus("SUCCESS");
-    else:
-        print"wifi_getRadioIEEE80211hSupported() operation failed";
-        tdkTestObj.setResultStatus("FAILURE");
+	    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, 0, getMethod)
+	    enablestate = details.split(":")[1].strip(" ");
+	    if expectedresult in actualresult:
+		if 'Enabled' in enablestate :
+		    expectedresult="SUCCESS";
+		    radioIndex = idx
+		    getMethod = "getRadioIEEE80211hEnabled"
+		    primitive = 'WIFIHAL_GetOrSetParamBoolValue'
+
+		    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, 0, getMethod)        
+		    if expectedresult in actualresult:
+			print"TEST STEP : Get the Radio IEEE80211h Enabled Status for 5GHz";
+			print"EXPECTED RESULT : Get the radio enabled status for 5GHz";
+			print"ACTUAL RESULT : Got the radio enabled status for 5GHz";
+			print"details",details;
+			tdkTestObj.setResultStatus("SUCCESS");
+		    else:
+			print"TEST STEP : Get the Radio IEEE80211h Enabled Status for 5GHz";
+			print"EXPECTED RESULT : Get the radio enabled status for 5GHz";
+			print"ACTUAL RESULT : Unable to get the radio enabled status for 5GHz";
+			print"details",details;
+			tdkTestObj.setResultStatus("FAILURE");
+		else:
+		    print"Radio IEEE80211h feature is not supported for 5GHz";
+		    tdkTestObj.setResultStatus("SUCCESS");
+	    else:
+		print"wifi_getRadioIEEE80211hSupported() operation failed";
+		tdkTestObj.setResultStatus("FAILURE");
     obj.unloadModule("wifihal");
 else:
     print "Failed to load wifi module";

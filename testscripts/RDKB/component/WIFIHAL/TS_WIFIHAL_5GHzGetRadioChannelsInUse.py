@@ -73,6 +73,8 @@ radioIndex     :    1</input_parameters>
 import tdklib; 
 from wifiUtility import *
 
+radio = "5G"
+
 #Test component to be tested
 obj = tdklib.TDKScriptingLibrary("wifihal","1");
 
@@ -88,34 +90,41 @@ print "[LIB LOAD STATUS]  :  %s" %loadmodulestatus
 if "SUCCESS" in loadmodulestatus.upper():
     obj.setLoadModuleStatus("SUCCESS");
 
-    expectedresult="SUCCESS";
-    radioIndex = 1
-    getMethod = "getRadioPossibleChannels"
-    primitive = 'WIFIHAL_GetOrSetParamStringValue'
-    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, "0", getMethod)
+    tdkTestObjTemp, idx = getIndex(obj, radio);
+    ## Check if a invalid index is returned
+    if idx == -1:
+        print "Failed to get radio index for radio %s\n" %radio;
+        tdkTestObjTemp.setResultStatus("FAILURE");
+    else: 
 
-    if expectedresult in actualresult :
-	possibleCh = details.split(":")[1].strip()
+	    expectedresult="SUCCESS";
+	    radioIndex = idx
+	    getMethod = "getRadioPossibleChannels"
+	    primitive = 'WIFIHAL_GetOrSetParamStringValue'
+	    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, "0", getMethod)
 
-	getMethod = "getRadioChannelsInUse"
-	tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, "0", getMethod)
-	if expectedresult in actualresult :
-	    chInUse = details.split(":")[1].strip();
+	    if expectedresult in actualresult :
+		possibleCh = details.split(":")[1].strip()
 
-	    flag = 1
-            for index in range(len(chInUse)):
-                if chInUse[index] not in possibleCh:
-                    flag = 0;
-                    break;
+		getMethod = "getRadioChannelsInUse"
+		tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, "0", getMethod)
+		if expectedresult in actualresult :
+		    chInUse = details.split(":")[1].strip();
 
-	    if flag == 1 :
-		print "Channel In use is a subset of possible cahannels"
+		    flag = 1
+		    for index in range(len(chInUse)):
+			if chInUse[index] not in possibleCh:
+			    flag = 0;
+			    break;
+
+		    if flag == 1 :
+			print "Channel In use is a subset of possible cahannels"
+		    else:
+			print "Error:Channel In use not found in possible channel list"
+		else:
+		    print "getChannelInUse() failed"
 	    else:
-		print "Error:Channel In use not found in possible channel list"
-	else:
-	    print "getChannelInUse() failed"
-    else:
-	print "getRadioPossibleChannels failed"
+		print "getRadioPossibleChannels failed"
 
     obj.unloadModule("wifihal");
 
