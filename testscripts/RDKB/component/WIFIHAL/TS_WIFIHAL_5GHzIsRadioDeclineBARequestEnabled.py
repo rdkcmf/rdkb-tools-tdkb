@@ -81,6 +81,8 @@ CheckPoint
 import tdklib; 
 from wifiUtility import *;
 
+radio = "5G"
+
 #Test component to be tested
 obj = tdklib.TDKScriptingLibrary("wifihal","1");
 
@@ -96,53 +98,60 @@ print "[LIB LOAD STATUS]  :  %s" %loadmodulestatus
 if "SUCCESS" in loadmodulestatus.upper():
     obj.setLoadModuleStatus("SUCCESS");
 
-    expectedresult="SUCCESS";
-    radioIndex = 1
-    getMethod = "getRadioDeclineBARequestEnable"
-    primitive = 'WIFIHAL_GetOrSetParamBoolValue'
-    #Getting the default enable mode
-    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, 0, getMethod)
+    tdkTestObjTemp, idx = getIndex(obj, radio);
+    ## Check if a invalid index is returned
+    if idx == -1:
+        print "Failed to get radio index for radio %s\n" %radio;
+        tdkTestObjTemp.setResultStatus("FAILURE");
+    else: 
 
-    if expectedresult in actualresult :
-        tdkTestObj.setResultStatus("SUCCESS");
-        enable = details.split(":")[1].strip()
-        if "Enabled" in enable:
-            print "Decline BA Request is enabled for Radio 5GHz"
-            oldEnable = 1
-            newEnable = 0
-        else:
-            print "Decline BA Request is Disabled for Radio 5GHz"
-            oldEnable = 0
-            newEnable = 1
+	    expectedresult="SUCCESS";
+	    radioIndex = idx
+	    getMethod = "getRadioDeclineBARequestEnable"
+	    primitive = 'WIFIHAL_GetOrSetParamBoolValue'
+	    #Getting the default enable mode
+	    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, 0, getMethod)
 
-        setMethod = "setRadioDeclineBARequestEnable"
-        #Toggle the enable status using set
-        tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, newEnable, setMethod)
+	    if expectedresult in actualresult :
+		tdkTestObj.setResultStatus("SUCCESS");
+		enable = details.split(":")[1].strip()
+		if "Enabled" in enable:
+		    print "Decline BA Request is enabled for Radio 5GHz"
+		    oldEnable = 1
+		    newEnable = 0
+		else:
+		    print "Decline BA Request is Disabled for Radio 5GHz"
+		    oldEnable = 0
+		    newEnable = 1
 
-        if expectedresult in actualresult :
-            print "Enable state toggled using set"
-            #Get the New enable status
-            tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, 0, getMethod)
+		setMethod = "setRadioDeclineBARequestEnable"
+		#Toggle the enable status using set
+		tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, newEnable, setMethod)
 
-            if expectedresult in actualresult and enable not in details.split(":")[1].strip():
-                print "getRadioDeclineBARequestEnable Success, verified along with setRadioDeclineBARequestEnable() api"
-                #Revert back to original Enable status
-                tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, oldEnable, setMethod)
+		if expectedresult in actualresult :
+		    print "Enable state toggled using set"
+		    #Get the New enable status
+		    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, 0, getMethod)
 
-                if expectedresult in actualresult :
-                    print "Enable status reverted back";
-                else:
-                    print "Couldn't revert enable status"
-                    tdkTestObj.setResultStatus("FAILURE");
-            else:
-                print "getRadioDeclineBARequestEnable() failed after set function"
+		    if expectedresult in actualresult and enable not in details.split(":")[1].strip():
+			print "getRadioDeclineBARequestEnable Success, verified along with setRadioDeclineBARequestEnable() api"
+			#Revert back to original Enable status
+			tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, oldEnable, setMethod)
+
+			if expectedresult in actualresult :
+			    print "Enable status reverted back";
+			else:
+			    print "Couldn't revert enable status"
+			    tdkTestObj.setResultStatus("FAILURE");
+		    else:
+			print "getRadioDeclineBARequestEnable() failed after set function"
+			tdkTestObj.setResultStatus("FAILURE");
+		else:
+		    print "setRadioDeclineBARequestEnable() failed"
+		    tdkTestObj.setResultStatus("FAILURE");
+	    else:
+		print "getRadioDeclineBARequestEnable() failed"
 		tdkTestObj.setResultStatus("FAILURE");
-        else:
-	    print "setRadioDeclineBARequestEnable() failed"
-            tdkTestObj.setResultStatus("FAILURE");
-    else:
-	print "getRadioDeclineBARequestEnable() failed"
-        tdkTestObj.setResultStatus("FAILURE");
 
     obj.unloadModule("wifihal");
 

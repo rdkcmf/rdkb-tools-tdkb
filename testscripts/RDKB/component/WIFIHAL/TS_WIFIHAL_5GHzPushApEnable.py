@@ -86,6 +86,8 @@ radioIndex : 1</input_parameters>
 '''
 # use tdklib library,which provides a wrapper for tdk testcase script
 import tdklib;
+from wifiUtility import *;
+radio = "5G"
 
 #Test component to be tested
 obj = tdklib.TDKScriptingLibrary("wifihal","1");
@@ -100,13 +102,13 @@ obj.configureTestCase(ip,port,'TS_WIFIHAL_5GHzPushApEnable');
 loadmodulestatus =obj.getLoadModuleResult();
 print "[LIB LOAD STATUS]  :  %s" %loadmodulestatus ;
 
-def ApEnable(obj,methodName,param) :
+def ApEnable(obj,methodName,param, idx) :
     #Script to load the configuration file of the component
     tdkTestObj = obj.createTestStep("WIFIHAL_GetOrSetParamBoolValue");
     #Giving the method name to invoke the api
     tdkTestObj.addParameter("methodName",methodName);
     #Radio index is 0 for 2.4GHz and 1 for 5GHz
-    tdkTestObj.addParameter("radioIndex",1);
+    tdkTestObj.addParameter("radioIndex", idx);
     tdkTestObj.addParameter("param",param);
     expectedresult="SUCCESS";
     tdkTestObj.executeTestCase(expectedresult);
@@ -116,116 +118,124 @@ def ApEnable(obj,methodName,param) :
 
 if "SUCCESS" in loadmodulestatus.upper():
     obj.setLoadModuleStatus("SUCCESS");
-    expectedresult="SUCCESS";
-    tdkTestObj, actualresult, details = ApEnable(obj,"getApEnable",0);
-    if expectedresult in actualresult :
-        #Set the result status of execution
-        tdkTestObj.setResultStatus("SUCCESS");
-        print "**************************************************";
-        print "TEST STEP 1: Get the initial Ap Enable status for 5GHz";
-        print "EXPECTED RESULT 1: Should return either Enabled or Disabled";
-        print "ACTUAL RESULT 1: %s" %details;
-        #Get the result of execution
-        print "[TEST EXECUTION RESULT] : SUCCESS";
-        print "**************************************************";
-        enable = details.split(":")[1].strip()
-        print "Initial Ap Enable:" ,enable;
-        if "Enabled" in enable:
-            print "Access Point is Enabled";
-            tdkTestObj.setResultStatus("SUCCESS");
-            oldEnable = 1
-            newEnable = 0
-        else:
-            print "Access Point is Disabled";
-            oldEnable = 0
-            newEnable = 1
 
-        #Toggle the enable status using wifi_pushApEnable()
-        tdkTestObj, actualresult, details = ApEnable(obj,"pushApEnable",newEnable);
-        if expectedresult in actualresult :
-            #Set the result status of execution
-            tdkTestObj.setResultStatus("SUCCESS");
-            print "**************************************************";
-            print "TEST STEP 2: Push Ap Enable using wifi_pushApEnable for 5GHz";
-            print "EXPECTED RESULT 2: Should successfully push the Ap Enable to %d"%newEnable;
-            print "ACTUAL RESULT 2: %s" %details;
-            #Get the result of execution
-            print "[TEST EXECUTION RESULT] : SUCCESS";
-            print "**************************************************";
+    tdkTestObjTemp, idx = getIndex(obj, radio);
+    ## Check if a invalid index is returned
+    if idx == -1:
+        print "Failed to get radio index for radio %s\n" %radio;
+        tdkTestObjTemp.setResultStatus("FAILURE");
+    else: 
 
-            # Get the New AP enable status
-            tdkTestObj, actualresult, details = ApEnable(obj,"getApEnable",0);
-            print "details: %s" %details;
-            if expectedresult in actualresult :
-                #Set the result status of execution
-                tdkTestObj.setResultStatus("SUCCESS");
-                print "**************************************************";
-                print "TEST STEP 3: Get the Ap Enable status after push operation for 5GHz";
-                print "EXPECTED RESULT 3: Should return either Enabled or Disabled";
-                print "ACTUAL RESULT 3: %s" %details;
-                #Get the result of execution
-                print "[TEST EXECUTION RESULT] : SUCCESS";
-                print "**************************************************";
-                if enable not in details.split(":")[1].strip():
-                    #Set the result status of execution
-                     tdkTestObj.setResultStatus("SUCCESS");
-                     print "**************************************************";
-                     print "TEST STEP 4: Check Ap Enable status is equal to the push value for 5GHz";
-                     print "EXPECTED RESULT 4: Ap Enable status should be equal to the push value";
-                     print "ACTUAL RESULT 4: Ap Enable status is equal to the push value" ;
-                     #Get the result of execution
-                     print "[TEST EXECUTION RESULT] : SUCCESS";
-                     print "**************************************************";
-                else:
-                    #Set the result status of execution
-                     tdkTestObj.setResultStatus("FAILURE");
-                     print "**************************************************";
-                     print "TEST STEP 4: Check Ap Enable status is equal to the push value for 5GHz";
-                     print "EXPECTED RESULT 4: Ap Enable status should be equal to the push value";
-                     print "ACTUAL RESULT 4: Ap Enable status is NOT equal to the push value" ;
-                     #Get the result of execution
-                     print "[TEST EXECUTION RESULT] : FAILURE";
-                     print "**************************************************";
-            else :
-                #Set the result status of execution
-                tdkTestObj.setResultStatus("FAILURE");
-                print "**************************************************";
-                print "TEST STEP 3: Get the Ap Enable status after push operation for 5GHz";
-                print "EXPECTED RESULT 3: Should return either Enabled or Disabled";
-                print "ACTUAL RESULT 3: %s" %details;
-                #Get the result of execution
-                print "[TEST EXECUTION RESULT] : FAILURE";
-                print "**************************************************";
-            #Revert back to original Enable status
-            tdkTestObj, actualresult, details = ApEnable(obj,"pushApEnable",oldEnable);
-            print "details: %s" %details;
-            if expectedresult in actualresult :
-                print "Ap Enable status reverted back";
-                tdkTestObj.setResultStatus("SUCCESS");
+	    expectedresult="SUCCESS";
+	    tdkTestObj, actualresult, details = ApEnable(obj,"getApEnable",0, idx);
+	    if expectedresult in actualresult :
+		#Set the result status of execution
+		tdkTestObj.setResultStatus("SUCCESS");
+		print "**************************************************";
+		print "TEST STEP 1: Get the initial Ap Enable status for 5GHz";
+		print "EXPECTED RESULT 1: Should return either Enabled or Disabled";
+		print "ACTUAL RESULT 1: %s" %details;
+		#Get the result of execution
+		print "[TEST EXECUTION RESULT] : SUCCESS";
+		print "**************************************************";
+		enable = details.split(":")[1].strip()
+		print "Initial Ap Enable:" ,enable;
+		if "Enabled" in enable:
+		    print "Access Point is Enabled";
+		    tdkTestObj.setResultStatus("SUCCESS");
+		    oldEnable = 1
+		    newEnable = 0
+		else:
+		    print "Access Point is Disabled";
+		    oldEnable = 0
+		    newEnable = 1
 
-            else:
-                print "Couldn't revert Ap enable status";
-                tdkTestObj.setResultStatus("FAILURE");
-        else:
-            #Set the result status of execution
-            tdkTestObj.setResultStatus("FAILURE");
-            print "**************************************************";
-            print "TEST STEP 2: Push Ap Enable using wifi_pushApEnable for 5GHz";
-            print "EXPECTED RESULT 2: Should successfully push the Ap Enable to %d"%newEnable;
-            print "ACTUAL RESULT 2: %s" %details;
-            #Get the result of execution
-            print "[TEST EXECUTION RESULT] : FAILURE";
-            print "**************************************************";
-    else:
-        #Set the result status of execution
-        tdkTestObj.setResultStatus("FAILURE");
-        print "**************************************************";
-        print "TEST STEP 1: Get the initial Ap Enable status for 5GHz";
-        print "EXPECTED RESULT 1: Should return either Enabled or Disabled";
-        print "ACTUAL RESULT 1: %s" %details;
-        #Get the result of execution
-        print "[TEST EXECUTION RESULT] : FAILURE";
-        print "**************************************************";
+		#Toggle the enable status using wifi_pushApEnable()
+		tdkTestObj, actualresult, details = ApEnable(obj,"pushApEnable",newEnable, idx);
+		if expectedresult in actualresult :
+		    #Set the result status of execution
+		    tdkTestObj.setResultStatus("SUCCESS");
+		    print "**************************************************";
+		    print "TEST STEP 2: Push Ap Enable using wifi_pushApEnable for 5GHz";
+		    print "EXPECTED RESULT 2: Should successfully push the Ap Enable to %d"%newEnable;
+		    print "ACTUAL RESULT 2: %s" %details;
+		    #Get the result of execution
+		    print "[TEST EXECUTION RESULT] : SUCCESS";
+		    print "**************************************************";
+
+		    # Get the New AP enable status
+		    tdkTestObj, actualresult, details = ApEnable(obj,"getApEnable",0, idx);
+		    print "details: %s" %details;
+		    if expectedresult in actualresult :
+			#Set the result status of execution
+			tdkTestObj.setResultStatus("SUCCESS");
+			print "**************************************************";
+			print "TEST STEP 3: Get the Ap Enable status after push operation for 5GHz";
+			print "EXPECTED RESULT 3: Should return either Enabled or Disabled";
+			print "ACTUAL RESULT 3: %s" %details;
+			#Get the result of execution
+			print "[TEST EXECUTION RESULT] : SUCCESS";
+			print "**************************************************";
+			if enable not in details.split(":")[1].strip():
+			    #Set the result status of execution
+			     tdkTestObj.setResultStatus("SUCCESS");
+			     print "**************************************************";
+			     print "TEST STEP 4: Check Ap Enable status is equal to the push value for 5GHz";
+			     print "EXPECTED RESULT 4: Ap Enable status should be equal to the push value";
+			     print "ACTUAL RESULT 4: Ap Enable status is equal to the push value" ;
+			     #Get the result of execution
+			     print "[TEST EXECUTION RESULT] : SUCCESS";
+			     print "**************************************************";
+			else:
+			    #Set the result status of execution
+			     tdkTestObj.setResultStatus("FAILURE");
+			     print "**************************************************";
+			     print "TEST STEP 4: Check Ap Enable status is equal to the push value for 5GHz";
+			     print "EXPECTED RESULT 4: Ap Enable status should be equal to the push value";
+			     print "ACTUAL RESULT 4: Ap Enable status is NOT equal to the push value" ;
+			     #Get the result of execution
+			     print "[TEST EXECUTION RESULT] : FAILURE";
+			     print "**************************************************";
+		    else :
+			#Set the result status of execution
+			tdkTestObj.setResultStatus("FAILURE");
+			print "**************************************************";
+			print "TEST STEP 3: Get the Ap Enable status after push operation for 5GHz";
+			print "EXPECTED RESULT 3: Should return either Enabled or Disabled";
+			print "ACTUAL RESULT 3: %s" %details;
+			#Get the result of execution
+			print "[TEST EXECUTION RESULT] : FAILURE";
+			print "**************************************************";
+		    #Revert back to original Enable status
+		    tdkTestObj, actualresult, details = ApEnable(obj,"pushApEnable",oldEnable, idx);
+		    print "details: %s" %details;
+		    if expectedresult in actualresult :
+			print "Ap Enable status reverted back";
+			tdkTestObj.setResultStatus("SUCCESS");
+
+		    else:
+			print "Couldn't revert Ap enable status";
+			tdkTestObj.setResultStatus("FAILURE");
+		else:
+		    #Set the result status of execution
+		    tdkTestObj.setResultStatus("FAILURE");
+		    print "**************************************************";
+		    print "TEST STEP 2: Push Ap Enable using wifi_pushApEnable for 5GHz";
+		    print "EXPECTED RESULT 2: Should successfully push the Ap Enable to %d"%newEnable;
+		    print "ACTUAL RESULT 2: %s" %details;
+		    #Get the result of execution
+		    print "[TEST EXECUTION RESULT] : FAILURE";
+		    print "**************************************************";
+	    else:
+		#Set the result status of execution
+		tdkTestObj.setResultStatus("FAILURE");
+		print "**************************************************";
+		print "TEST STEP 1: Get the initial Ap Enable status for 5GHz";
+		print "EXPECTED RESULT 1: Should return either Enabled or Disabled";
+		print "ACTUAL RESULT 1: %s" %details;
+		#Get the result of execution
+		print "[TEST EXECUTION RESULT] : FAILURE";
+		print "**************************************************";
     obj.unloadModule("wifihal");
 
 else:
