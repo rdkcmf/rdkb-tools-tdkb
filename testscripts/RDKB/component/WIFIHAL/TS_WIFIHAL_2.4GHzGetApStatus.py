@@ -77,6 +77,8 @@ apIndex   :    0</input_parameters>
 import tdklib;
 from wifiUtility import *;
 
+radio = "2.4G"
+
 #Test component to be tested
 obj = tdklib.TDKScriptingLibrary("wifihal","1");
 
@@ -92,36 +94,43 @@ print "[LIB LOAD STATUS]  :  %s" %loadmodulestatus
 if "SUCCESS" in loadmodulestatus.upper():
     obj.setLoadModuleStatus("SUCCESS");
 
-    expectedresult="SUCCESS";
-    apIndex = 0
-    getMethod = "getApStatus"
-    primitive = 'WIFIHAL_GetOrSetParamStringValue'
+    tdkTestObjTemp, idx = getIndex(obj, radio);
+    ## Check if a invalid index is returned
+    if idx == -1:
+        print "Failed to get radio index for radio %s\n" %radio;
+        tdkTestObjTemp.setResultStatus("FAILURE");
+    else: 
 
-    #Calling the method from wifiUtility to execute test case and set result status for the test.
-    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, "0", getMethod)
+	    expectedresult="SUCCESS";
+	    apIndex = idx
+	    getMethod = "getApStatus"
+	    primitive = 'WIFIHAL_GetOrSetParamStringValue'
 
-    #List of AP status
-    success_values = ['Up', 'Disable']
+	    #Calling the method from wifiUtility to execute test case and set result status for the test.
+	    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, "0", getMethod)
 
-    if expectedresult in actualresult:
-       status_received = details.split(":")[1].strip()
-       if status_received in success_values:
-           print "wifi_getApStatus function successful, %s"%details
-           tdkTestObj.setResultStatus("SUCCESS");
-           print "TEST STEP 1: Validate the wifi_getApStatus Function";
-           print "EXPECTED RESULT 1: wifi_getApStatus should return a string which should be Up/Disabled";
-           print "ACTUAL RESULT 1: AP Status string received: %s"%status_received;
-           print "[TEST EXECUTION RESULT] : SUCCESS";
-       else:
-           print "getApStatus() failed, %s"%details
-           tdkTestObj.setResultStatus("FAILURE");
-           print "TEST STEP 1: Validate the wifi_getApStatus Function";
-           print "EXPECTED RESULT 1: wifi_getApStatus should return a string which should be Up/Disabled";
-           print "ACTUAL RESULT 1: Failed to get AP Status: %s"%status_received;
-           print "[TEST EXECUTION RESULT] : FAILURE";
-    else:
-       print "getApStatus() failed"
-       tdkTestObj.setResultStatus("FAILURE");
+	    #List of AP status
+	    success_values = ['Up', 'Disable']
+
+	    if expectedresult in actualresult:
+	       status_received = details.split(":")[1].strip()
+	       if status_received in success_values:
+		   print "wifi_getApStatus function successful, %s"%details
+		   tdkTestObj.setResultStatus("SUCCESS");
+		   print "TEST STEP 1: Validate the wifi_getApStatus Function";
+		   print "EXPECTED RESULT 1: wifi_getApStatus should return a string which should be Up/Disabled";
+		   print "ACTUAL RESULT 1: AP Status string received: %s"%status_received;
+		   print "[TEST EXECUTION RESULT] : SUCCESS";
+	       else:
+		   print "getApStatus() failed, %s"%details
+		   tdkTestObj.setResultStatus("FAILURE");
+		   print "TEST STEP 1: Validate the wifi_getApStatus Function";
+		   print "EXPECTED RESULT 1: wifi_getApStatus should return a string which should be Up/Disabled";
+		   print "ACTUAL RESULT 1: Failed to get AP Status: %s"%status_received;
+		   print "[TEST EXECUTION RESULT] : FAILURE";
+	    else:
+	       print "getApStatus() failed"
+	       tdkTestObj.setResultStatus("FAILURE");
 
     obj.unloadModule("wifihal");
 

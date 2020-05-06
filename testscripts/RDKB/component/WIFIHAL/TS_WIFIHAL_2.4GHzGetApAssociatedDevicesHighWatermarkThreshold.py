@@ -73,6 +73,8 @@ apIndex      :   0</input_parameters>
 import tdklib;
 from wifiUtility import *;
 
+radio = "2.4G"
+
 #Test component to be tested
 obj = tdklib.TDKScriptingLibrary("wifihal","1");
 
@@ -89,79 +91,87 @@ if "SUCCESS" in loadmodulestatus.upper():
     obj.setLoadModuleStatus("SUCCESS");
 
     expectedresult="SUCCESS";
-    apIndex = 0
-    getMethod = "getApAssociatedDevicesHighWatermarkThreshold"
-    primitive = 'WIFIHAL_GetOrSetParamUIntValue'
 
-    #Calling the method from wifiUtility to execute test case and set result status for the test.
-    tdkTestObj, actualresult, details1 = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, 0, getMethod)
+    tdkTestObjTemp, idx = getIndex(obj, radio);
+    ## Check if a invalid index is returned
+    if idx == -1:
+        print "Failed to get radio index for radio %s\n" %radio;
+        tdkTestObjTemp.setResultStatus("FAILURE");
+    else: 
 
-    #Default Threshold value.
-    defaultThresholdValue = 50
+	    apIndex = idx
+	    getMethod = "getApAssociatedDevicesHighWatermarkThreshold"
+	    primitive = 'WIFIHAL_GetOrSetParamUIntValue'
 
-    if expectedresult in actualresult:
-        tdkTestObj.setResultStatus("SUCCESS");
-        thresholdValue = details1.split(":")[1].strip();
-        print "TEST STEP 1: To get the HighWatermarkThreshold value by invoking wifi_getApAssociatedDevicesHighWatermarkThreshold() HAL API";
-        print "EXPECTED RESULT 1: To get the HighWatermarkThreshold value successfully";
-        print "ACTUAL RESULT 1:  HighWatermarkThreshold value : %s"%thresholdValue;
-        print "[TEST EXECUTION RESULT] : SUCCESS";
-        getMethodToCheck = "getApMaxAssociatedDevices"
+	    #Calling the method from wifiUtility to execute test case and set result status for the test.
+	    tdkTestObj, actualresult, details1 = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, 0, getMethod)
 
-        #Calling the method from wifiUtility to execute test case and set result status for the test.
-        tdkTestObj, actualresult, details2 = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, 0, getMethodToCheck)
+	    #Default Threshold value.
+	    defaultThresholdValue = 50
 
-        if expectedresult in actualresult:
-            tdkTestObj.setResultStatus("SUCCESS");
-            maxAssociatedDeviceValue = details2.split(":")[1].strip();
-            print "TEST STEP 2:  To get the MaxAssociatedDevices value by invoking wifi_getApMaxAssociatedDevices() HAL API";
-            print "EXPECTED RESULT 2: To get the MaxAssociatedDevices value successfully";
-            print "ACTUAL RESULT 2: MaxAssociatedDevices value : %s"%maxAssociatedDeviceValue;
-            print "[TEST EXECUTION RESULT] : SUCCESS";
-            print "HighWatermarkThreshold value : %s"%thresholdValue;
-            print "MaxAssociatedDevices value : %s"%maxAssociatedDeviceValue;
-            if int(maxAssociatedDeviceValue)==0:
-               print "maxAssociatedDeviceValue is 0. thresholdValue is expected to be equal to  defaultThresholdValue  %d"%defaultThresholdValue;
-               if int(thresholdValue) == defaultThresholdValue :
-                   tdkTestObj.setResultStatus("SUCCESS");
-                   print "TEST STEP 3: To check if  HighWatermarkThreshold value is equal to %d  which is the default value"%defaultThresholdValue;
-                   print "EXPECTED RESULT3:thresholdValue should be equal to defaultThresholdValue";
-                   print "ACTUAL RESULT 3:thresholdValue is equal to defaultThresholdValue";
-                   print "[TEST EXECUTION RESULT] : SUCCESS";
-               else:
-                   tdkTestObj.setResultStatus("FAILURE");
-                   print "TEST STEP 3: To check if  HighWatermarkThreshold value is equal to %d  which is the default value"%defaultThresholdValue;
-                   print "EXPECTED RESULT3:thresholdValue should be equal to defaultThresholdValue";
-                   print "ACTUAL RESULT 3:thresholdValue is not equal to defaultThresholdValue";
-                   print "[TEST EXECUTION RESULT] :FAILURE";
-            else:
-                print"maxAssociatedDeviceValue is not equal to 0. thresholdValue is expected to be less than or equal to  maxAssociatedDeviceValue";
-                if int(thresholdValue) <= int(maxAssociatedDeviceValue):
-                   tdkTestObj.setResultStatus("SUCCESS");
-                   print "TEST STEP 4: To check if  HighWatermarkThreshold value is less than or  equal to MaxAssociatedDevices";
-                   print "EXPECTED RESULT 4: thresholdValue should be less than or equal to maxAssociatedDeviceValue";
-                   print "ACTUAL RESULT 4:thresholdValue is less than or equal to maxAssociatedDeviceValue";
-                   print "[TEST EXECUTION RESULT] : SUCCESS";
-                else :
-                   tdkTestObj.setResultStatus("FAILURE");
-                   print "TEST STEP 4: To check if  HighWatermarkThreshold value is less than or equal to MaxAssociatedDevices";
-                   print "EXPECTED RESULT 4: thresholdValue should be less than or equal to maxAssociatedDeviceValue";
-                   print "ACTUAL RESULT 4: thresholdValue is not less than  or equal to maxAssociatedDeviceValue";
-                   print "[TEST EXECUTION RESULT] : FAILURE";
+	    if expectedresult in actualresult:
+		tdkTestObj.setResultStatus("SUCCESS");
+		thresholdValue = details1.split(":")[1].strip();
+		print "TEST STEP 1: To get the HighWatermarkThreshold value by invoking wifi_getApAssociatedDevicesHighWatermarkThreshold() HAL API";
+		print "EXPECTED RESULT 1: To get the HighWatermarkThreshold value successfully";
+		print "ACTUAL RESULT 1:  HighWatermarkThreshold value : %s"%thresholdValue;
+		print "[TEST EXECUTION RESULT] : SUCCESS";
+		getMethodToCheck = "getApMaxAssociatedDevices"
+
+		#Calling the method from wifiUtility to execute test case and set result status for the test.
+		tdkTestObj, actualresult, details2 = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, 0, getMethodToCheck)
+
+		if expectedresult in actualresult:
+		    tdkTestObj.setResultStatus("SUCCESS");
+		    maxAssociatedDeviceValue = details2.split(":")[1].strip();
+		    print "TEST STEP 2:  To get the MaxAssociatedDevices value by invoking wifi_getApMaxAssociatedDevices() HAL API";
+		    print "EXPECTED RESULT 2: To get the MaxAssociatedDevices value successfully";
+		    print "ACTUAL RESULT 2: MaxAssociatedDevices value : %s"%maxAssociatedDeviceValue;
+		    print "[TEST EXECUTION RESULT] : SUCCESS";
+		    print "HighWatermarkThreshold value : %s"%thresholdValue;
+		    print "MaxAssociatedDevices value : %s"%maxAssociatedDeviceValue;
+		    if int(maxAssociatedDeviceValue)==0:
+		       print "maxAssociatedDeviceValue is 0. thresholdValue is expected to be equal to  defaultThresholdValue  %d"%defaultThresholdValue;
+		       if int(thresholdValue) == defaultThresholdValue :
+			   tdkTestObj.setResultStatus("SUCCESS");
+			   print "TEST STEP 3: To check if  HighWatermarkThreshold value is equal to %d  which is the default value"%defaultThresholdValue;
+			   print "EXPECTED RESULT3:thresholdValue should be equal to defaultThresholdValue";
+			   print "ACTUAL RESULT 3:thresholdValue is equal to defaultThresholdValue";
+			   print "[TEST EXECUTION RESULT] : SUCCESS";
+		       else:
+			   tdkTestObj.setResultStatus("FAILURE");
+			   print "TEST STEP 3: To check if  HighWatermarkThreshold value is equal to %d  which is the default value"%defaultThresholdValue;
+			   print "EXPECTED RESULT3:thresholdValue should be equal to defaultThresholdValue";
+			   print "ACTUAL RESULT 3:thresholdValue is not equal to defaultThresholdValue";
+			   print "[TEST EXECUTION RESULT] :FAILURE";
+		    else:
+			print"maxAssociatedDeviceValue is not equal to 0. thresholdValue is expected to be less than or equal to  maxAssociatedDeviceValue";
+			if int(thresholdValue) <= int(maxAssociatedDeviceValue):
+			   tdkTestObj.setResultStatus("SUCCESS");
+			   print "TEST STEP 4: To check if  HighWatermarkThreshold value is less than or  equal to MaxAssociatedDevices";
+			   print "EXPECTED RESULT 4: thresholdValue should be less than or equal to maxAssociatedDeviceValue";
+			   print "ACTUAL RESULT 4:thresholdValue is less than or equal to maxAssociatedDeviceValue";
+			   print "[TEST EXECUTION RESULT] : SUCCESS";
+			else :
+			   tdkTestObj.setResultStatus("FAILURE");
+			   print "TEST STEP 4: To check if  HighWatermarkThreshold value is less than or equal to MaxAssociatedDevices";
+			   print "EXPECTED RESULT 4: thresholdValue should be less than or equal to maxAssociatedDeviceValue";
+			   print "ACTUAL RESULT 4: thresholdValue is not less than  or equal to maxAssociatedDeviceValue";
+			   print "[TEST EXECUTION RESULT] : FAILURE";
 
 
-        else:
-            tdkTestObj.setResultStatus("FAILURE");
-            print "TEST STEP 2:  To get the MaxAssociatedDevices value by invoking wifi_getApMaxAssociatedDevices() HAL API";
-            print "EXPECTED RESULT 2: To get the MaxAssociatedDevices value successfully";
-            print "ACTUAL RESULT 2: Failed to get MaxAssociatedDevices value : %s"%details2;
-            print "[TEST EXECUTION RESULT] : FAILURE";
-    else:
-        tdkTestObj.setResultStatus("FAILURE");
-        print "TEST STEP 1: To get the HighWatermarkThreshold value by invoking wifi_getApAssociatedDevicesHighWatermarkThreshold() HAL API";
-        print "EXPECTED RESULT 1: To get the HighWatermarkThreshold value successfully";
-        print "ACTUAL RESULT 1:  Failed to get HighWatermarkThreshold value : %s"%details1;
-        print "[TEST EXECUTION RESULT] : FAILURE";
+		else:
+		    tdkTestObj.setResultStatus("FAILURE");
+		    print "TEST STEP 2:  To get the MaxAssociatedDevices value by invoking wifi_getApMaxAssociatedDevices() HAL API";
+		    print "EXPECTED RESULT 2: To get the MaxAssociatedDevices value successfully";
+		    print "ACTUAL RESULT 2: Failed to get MaxAssociatedDevices value : %s"%details2;
+		    print "[TEST EXECUTION RESULT] : FAILURE";
+	    else:
+		tdkTestObj.setResultStatus("FAILURE");
+		print "TEST STEP 1: To get the HighWatermarkThreshold value by invoking wifi_getApAssociatedDevicesHighWatermarkThreshold() HAL API";
+		print "EXPECTED RESULT 1: To get the HighWatermarkThreshold value successfully";
+		print "ACTUAL RESULT 1:  Failed to get HighWatermarkThreshold value : %s"%details1;
+		print "[TEST EXECUTION RESULT] : FAILURE";
     obj.unloadModule("wifihal");
 
 else:
