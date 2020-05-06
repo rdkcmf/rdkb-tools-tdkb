@@ -67,6 +67,8 @@ radioIndex : 1</input_parameters>
 import tdklib;
 from wifiUtility import *;
 
+radio = "2.4G"
+
 #Test component to be tested
 obj = tdklib.TDKScriptingLibrary("wifihal","1");
 
@@ -84,23 +86,30 @@ print "[LIB LOAD STATUS]  :  %s" %loadmodulestatus
 if "SUCCESS" in loadmodulestatus.upper():
     obj.setLoadModuleStatus("SUCCESS");
 
-    expectedresult = "SUCCESS"
-    radioIndex = 0
-    setMethod = "setRadioCtsProtectionEnable"
-    primitive = 'WIFIHAL_GetOrSetParamBoolValue'
-
-    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, 1, setMethod)
-
-    if expectedresult in actualresult:
-            tdkTestObj.setResultStatus("SUCCESS");
-            print "TEST STEP : Set the RadioCtsProtectionEnable"
-            print "EXPECTED RESULT : Set operation should return SUCCESS"
-            print "ACTUAL RESULT : Set operation returned SUCCESS"
+    tdkTestObjTemp, idx = getIndex(obj, radio);
+    ## Check if a invalid index is returned
+    if idx == -1:
+        print "Failed to get radio index for radio %s\n" %radio;
+        tdkTestObjTemp.setResultStatus("FAILURE");
     else:
-            tdkTestObj.setResultStatus("FAILURE");
-            print "TEST STEP : Set the RadioCtsProtectionEnable"
-            print "EXPECTED RESULT : Set operation should return SUCCESS"
-            print "ACTUAL RESULT : Set operation returned FAILURE"
+
+	    expectedresult = "SUCCESS"
+	    radioIndex = idx;
+	    setMethod = "setRadioCtsProtectionEnable"
+	    primitive = 'WIFIHAL_GetOrSetParamBoolValue'
+
+	    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, 1, setMethod)
+
+	    if expectedresult in actualresult:
+		    tdkTestObj.setResultStatus("SUCCESS");
+		    print "TEST STEP : Set the RadioCtsProtectionEnable"
+		    print "EXPECTED RESULT : Set operation should return SUCCESS"
+		    print "ACTUAL RESULT : Set operation returned SUCCESS"
+	    else:
+		    tdkTestObj.setResultStatus("FAILURE");
+		    print "TEST STEP : Set the RadioCtsProtectionEnable"
+		    print "EXPECTED RESULT : Set operation should return SUCCESS"
+		    print "ACTUAL RESULT : Set operation returned FAILURE"
     obj.unloadModule("wifihal");
 else:
     obj.setLoadModuleStatus("FAILURE");
