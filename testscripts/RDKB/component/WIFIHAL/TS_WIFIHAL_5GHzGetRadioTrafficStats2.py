@@ -69,6 +69,8 @@
 import tdklib;
 from wifiUtility import *;
 
+radio = "5G"
+
 #Test component to be tested
 obj = tdklib.TDKScriptingLibrary("wifihal","1");
 
@@ -83,29 +85,37 @@ print "[LIB LOAD STATUS]  :  %s" %loadmodulestatus
 
 if "SUCCESS" in loadmodulestatus.upper():
     obj.setLoadModuleStatus("SUCCESS");
-    #Getting the Radio Traffic state Info
-    expectedresult="SUCCESS";
-    radioIndex = 1;
-    primitive = 'WIFIHAL_GetRadioTrafficStats2'
-    tdkTestObj = obj.createTestStep(primitive);
-    tdkTestObj.addParameter("radioIndex",radioIndex);
-    tdkTestObj.executeTestCase(expectedresult);
-    actualresult = tdkTestObj.getResult();
-    details = tdkTestObj.getResultDetails();
-    if expectedresult in actualresult:
-        tdkTestObj.setResultStatus("SUCCESS");
-        print "TEST STEP 1: Get the RadioTrafficStats for 5GHz";
-        print "EXPECTED RESULT 1: wifi_getRadioTrafficStats2 should return the Radio traffic statistics for 5GHz";
-        print "ACTUAL RESULT 1: wifi_getRadioTrafficStats2 operation returned SUCCESS";
-        print "Actual result is :",details;
-        print "[TEST EXECUTION RESULT] : SUCCESS";
-    else:
-        tdkTestObj.setResultStatus("FAILURE");
-        print "TEST STEP 1: Get the RadioTrafficStats for 5GHz";
-        print "EXPECTED RESULT 1: wifi_getRadioTrafficStats2 should return the Radio traffic statistics for 5GHz";
-        print "ACTUAL RESULT 1: Failed to get the values for 5GHz";
-        print "Actual result is :",details;
-        print "[TEST EXECUTION RESULT] : FAILURE";
+
+    tdkTestObjTemp, idx = getIndex(obj, radio);
+    ## Check if a invalid index is returned
+    if idx == -1:
+        print "Failed to get radio index for radio %s\n" %radio;
+        tdkTestObjTemp.setResultStatus("FAILURE");
+    else: 
+
+	    #Getting the Radio Traffic state Info
+	    expectedresult="SUCCESS";
+	    radioIndex = idx;
+	    primitive = 'WIFIHAL_GetRadioTrafficStats2'
+	    tdkTestObj = obj.createTestStep(primitive);
+	    tdkTestObj.addParameter("radioIndex",idx);
+	    tdkTestObj.executeTestCase(expectedresult);
+	    actualresult = tdkTestObj.getResult();
+	    details = tdkTestObj.getResultDetails();
+	    if expectedresult in actualresult:
+		tdkTestObj.setResultStatus("SUCCESS");
+		print "TEST STEP 1: Get the RadioTrafficStats for 5GHz";
+		print "EXPECTED RESULT 1: wifi_getRadioTrafficStats2 should return the Radio traffic statistics for 5GHz";
+		print "ACTUAL RESULT 1: wifi_getRadioTrafficStats2 operation returned SUCCESS";
+		print "Actual result is :",details;
+		print "[TEST EXECUTION RESULT] : SUCCESS";
+	    else:
+		tdkTestObj.setResultStatus("FAILURE");
+		print "TEST STEP 1: Get the RadioTrafficStats for 5GHz";
+		print "EXPECTED RESULT 1: wifi_getRadioTrafficStats2 should return the Radio traffic statistics for 5GHz";
+		print "ACTUAL RESULT 1: Failed to get the values for 5GHz";
+		print "Actual result is :",details;
+		print "[TEST EXECUTION RESULT] : FAILURE";
     obj.unloadModule("wifihal");
 else:
         print "Failed to load the module";
