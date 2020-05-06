@@ -73,6 +73,8 @@ radioIndex : 0</input_parameters>
 import tdklib; 
 from wifiUtility import *;
 
+radio = "2.4G"
+
 #Test component to be tested
 obj = tdklib.TDKScriptingLibrary("wifihal","1");
 
@@ -89,79 +91,86 @@ print "[LIB LOAD STATUS]  :  %s" %loadmodulestatus
 if "SUCCESS" in loadmodulestatus.upper():
     obj.setLoadModuleStatus("SUCCESS");
 
-    expectedresult="SUCCESS";
-    apIndex = 0
-    getMethod = "getApSecurityKeyPassphrase"
-    primitive = 'WIFIHAL_GetOrSetParamStringValue'
+    tdkTestObjTemp, idx = getIndex(obj, radio);
+    ## Check if a invalid index is returned
+    if idx == -1:
+        print "Failed to get radio index for radio %s\n" %radio;
+        tdkTestObjTemp.setResultStatus("FAILURE");
+    else:
 
-    #Calling the method from wifiUtility to execute test case and set result status for the test.
-    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, "0", getMethod)
+	    expectedresult="SUCCESS";
+	    apIndex = idx;
+	    getMethod = "getApSecurityKeyPassphrase"
+	    primitive = 'WIFIHAL_GetOrSetParamStringValue'
 
-    if expectedresult in actualresult :
-        initPassphrase = details.split(":")[1].strip()
+	    #Calling the method from wifiUtility to execute test case and set result status for the test.
+	    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, "0", getMethod)
 
-        expectedresult="SUCCESS";
-        apIndex = 0
-        setMethod = "setApSecurityKeyPassphrase"
-        primitive = 'WIFIHAL_GetOrSetParamStringValue'
-        setPhrase = "qtn01234"
+	    if expectedresult in actualresult :
+		initPassphrase = details.split(":")[1].strip()
 
-        #Calling the method from wifiUtility to execute test case and set result status for the test.
-        tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, setPhrase, setMethod)
+		expectedresult="SUCCESS";
+		apIndex = idx;
+		setMethod = "setApSecurityKeyPassphrase"
+		primitive = 'WIFIHAL_GetOrSetParamStringValue'
+		setPhrase = "qtn01234"
 
-        if expectedresult in actualresult :
-            expectedresult="SUCCESS";
-            apIndex = 0
-            getMethod = "getApSecurityKeyPassphrase"
-            primitive = 'WIFIHAL_GetOrSetParamStringValue'
+		#Calling the method from wifiUtility to execute test case and set result status for the test.
+		tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, setPhrase, setMethod)
 
-            #Calling the method from wifiUtility to execute test case and set result status for the test.
-            tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, "0", getMethod)
+		if expectedresult in actualresult :
+		    expectedresult="SUCCESS";
+		    apIndex = idx;
+		    getMethod = "getApSecurityKeyPassphrase"
+		    primitive = 'WIFIHAL_GetOrSetParamStringValue'
 
-            if expectedresult in actualresult :
-                finalPassphrase = details.split(":")[1].strip()
-                tdkTestObj.setResultStatus("SUCCESS");
+		    #Calling the method from wifiUtility to execute test case and set result status for the test.
+		    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, "0", getMethod)
 
-                if finalPassphrase == setPhrase:
-	            tdkTestObj.setResultStatus("SUCCESS");
-	            print "TEST STEP : Compare the set and get values of KeyPassphrase"
-                    print "EXPECTED RESULT :Set and get values of KeyPassphrase should be the same"
-		    print "ACTUAL RESULT : Set and get values are the same"
-		    print "Set KeyPassphrase : ",setPhrase
-		    print "Get KeyPassphrase : ",finalPassphrase
-		    print "TEST EXECUTION RESULT : SUCCESS"
+		    if expectedresult in actualresult :
+			finalPassphrase = details.split(":")[1].strip()
+			tdkTestObj.setResultStatus("SUCCESS");
+
+			if finalPassphrase == setPhrase:
+			    tdkTestObj.setResultStatus("SUCCESS");
+			    print "TEST STEP : Compare the set and get values of KeyPassphrase"
+			    print "EXPECTED RESULT :Set and get values of KeyPassphrase should be the same"
+			    print "ACTUAL RESULT : Set and get values are the same"
+			    print "Set KeyPassphrase : ",setPhrase
+			    print "Get KeyPassphrase : ",finalPassphrase
+			    print "TEST EXECUTION RESULT : SUCCESS"
+			else:
+			    tdkTestObj.setResultStatus("FAILURE");
+			    print "TEST STEP : Compare the set and get values of KeyPassphrase"
+			    print "EXPECTED RESULT :Set and get values of KeyPassphrase should be the same"
+			    print "ACTUAL RESULT : Set and get values are NOT the same"
+			    print "Set KeyPassphrase : ",setPhrase
+			    print "Get KeyPassphrase : ",finalPassphrase
+			    print "TEST EXECUTION RESULT : FAILURE"
+		    else:
+			tdkTestObj.setResultStatus("FAILURE");
+			print "wifi_getApSecurityKeyPassphrase() function failed"
+
+		    expectedresult="SUCCESS";
+		    apIndex = idx;
+		    setMethod = "setApSecurityKeyPassphrase"
+		    primitive = 'WIFIHAL_GetOrSetParamStringValue'
+
+		    #Calling the method from wifiUtility to execute test case and set result status for the test.
+		    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, initPassphrase, setMethod)
+
+		    if expectedresult in actualresult :
+			tdkTestObj.setResultStatus("SUCCESS");
+			print "Successfully revered the KeyPassphrase to initial value"
+		    else:
+			tdkTestObj.setResultStatus("FAILURE");
+			print "Unable to revert the KeyPassphrase"
 		else:
 		    tdkTestObj.setResultStatus("FAILURE");
-		    print "TEST STEP : Compare the set and get values of KeyPassphrase"
-		    print "EXPECTED RESULT :Set and get values of KeyPassphrase should be the same"
-		    print "ACTUAL RESULT : Set and get values are NOT the same"
-		    print "Set KeyPassphrase : ",setPhrase
-		    print "Get KeyPassphrase : ",finalPassphrase
-		    print "TEST EXECUTION RESULT : FAILURE"
+		    print "wifi_setApSecurityKeyPassphrase() call failed"
 	    else:
-	        tdkTestObj.setResultStatus("FAILURE");
-	        print "wifi_getApSecurityKeyPassphrase() function failed"
-
-            expectedresult="SUCCESS";
-            apIndex = 0
-            setMethod = "setApSecurityKeyPassphrase"
-            primitive = 'WIFIHAL_GetOrSetParamStringValue'
-
-            #Calling the method from wifiUtility to execute test case and set result status for the test.
-            tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, initPassphrase, setMethod)
-
-            if expectedresult in actualresult :
-	        tdkTestObj.setResultStatus("SUCCESS");
-	        print "Successfully revered the KeyPassphrase to initial value"
-	    else:
-	        tdkTestObj.setResultStatus("FAILURE");
-	        print "Unable to revert the KeyPassphrase"
-	else:
-	    tdkTestObj.setResultStatus("FAILURE");
-	    print "wifi_setApSecurityKeyPassphrase() call failed"
-    else:
-        print "wifi_getApSecurityKeyPassphrase() function failed"
-        tdkTestObj.setResultStatus("FAILURE");
+		print "wifi_getApSecurityKeyPassphrase() function failed"
+		tdkTestObj.setResultStatus("FAILURE");
     obj.unloadModule("wifihal");
 
 else:

@@ -73,6 +73,8 @@ wifi_setApRtsThreshold() using WIFIHAL_GetOrSetParamUIntValue and set a value
 import tdklib; 
 from wifiUtility import *;
 
+radio = "2.4G"
+
 #Test component to be tested
 obj = tdklib.TDKScriptingLibrary("wifihal","1");
 
@@ -89,52 +91,59 @@ print "[LIB LOAD STATUS]  :  %s" %loadmodulestatus ;
 if "SUCCESS" in loadmodulestatus.upper():
     obj.setLoadModuleStatus("SUCCESS");
 
-    expectedresult="SUCCESS";
-    getMethod = "getApRtsThresholdSupported"
-    apIndex = 0
-    primitive = 'WIFIHAL_GetOrSetParamBoolValue'
+    tdkTestObjTemp, idx = getIndex(obj, radio);
+    ## Check if a invalid index is returned
+    if idx == -1:
+        print "Failed to get radio index for radio %s\n" %radio;
+        tdkTestObjTemp.setResultStatus("FAILURE");
+    else:
 
-    #Calling the method from wifiUtility to execute test case and set result status for the test.
-    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, 0, getMethod)
-
-    if expectedresult in actualresult:
-        supportState = details.split(":")[1].strip()
-	print "TEST STEP 1: Check if ApRtsThreshold ie, packet size threshold is supported"
-	print "EXPECTED RESULT 1: getApRtsThresholdSupported should return SUCCESS"
-	print "ACTUAL RESULT 1: getApRtsThresholdSupported is SUCCESS"
-	tdkTestObj.setResultStatus("SUCCESS");
-
-	if supportState == "Enabled":
-	    print "getApRtsThreshold is Supported"
-            expectedresult="SUCCESS";
-            setMethod = "setApRtsThreshold"
-	    apIndex = 0
-	    setThreshold = 1000
-	    primitive = 'WIFIHAL_GetOrSetParamUIntValue'
+	    expectedresult="SUCCESS";
+	    getMethod = "getApRtsThresholdSupported"
+	    apIndex = idx;
+	    primitive = 'WIFIHAL_GetOrSetParamBoolValue'
 
 	    #Calling the method from wifiUtility to execute test case and set result status for the test.
-	    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, setThreshold, setMethod)
+	    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, 0, getMethod)
 
 	    if expectedresult in actualresult:
-	        print "TEST STEP 2: Set the ApRtsThreshold ie, packet size threshold in bytes to apply RTS/CTS backoff rules"
-	        print "EXPECTED RESULT 2: Set operation should return SUCCESS"
-	        print "ACTUAL RESULT 2: setApRtsThreshold is SUCCESS and sets aside ",setThreshold, "bytes to apply RTS/CTS backoff rules"
-	        tdkTestObj.setResultStatus("SUCCESS");
+		supportState = details.split(":")[1].strip()
+		print "TEST STEP 1: Check if ApRtsThreshold ie, packet size threshold is supported"
+		print "EXPECTED RESULT 1: getApRtsThresholdSupported should return SUCCESS"
+		print "ACTUAL RESULT 1: getApRtsThresholdSupported is SUCCESS"
+		tdkTestObj.setResultStatus("SUCCESS");
 
+		if supportState == "Enabled":
+		    print "getApRtsThreshold is Supported"
+		    expectedresult="SUCCESS";
+		    setMethod = "setApRtsThreshold"
+		    apIndex = idx;
+		    setThreshold = 1000
+		    primitive = 'WIFIHAL_GetOrSetParamUIntValue'
+
+		    #Calling the method from wifiUtility to execute test case and set result status for the test.
+		    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, setThreshold, setMethod)
+
+		    if expectedresult in actualresult:
+			print "TEST STEP 2: Set the ApRtsThreshold ie, packet size threshold in bytes to apply RTS/CTS backoff rules"
+			print "EXPECTED RESULT 2: Set operation should return SUCCESS"
+			print "ACTUAL RESULT 2: setApRtsThreshold is SUCCESS and sets aside ",setThreshold, "bytes to apply RTS/CTS backoff rules"
+			tdkTestObj.setResultStatus("SUCCESS");
+
+		    else:
+			print "TEST STEP 2: Set the ApRtsThreshold ie, packet size threshold in bytes to apply RTS/CTS backoff rules"
+			print "EXPECTED RESULT 2: Set operation should return SUCCESS"
+			print "ACTUAL RESULT 2: setApRtsThreshold FAILED"
+			tdkTestObj.setResultStatus("FAILURE");
+			
+		elif supportState == "Disabled":
+		    print "getApRtsThreshold is NOT Supported"
+		    tdkTestObj.setResultStatus("SUCCESS");
 	    else:
-	        print "TEST STEP 2: Set the ApRtsThreshold ie, packet size threshold in bytes to apply RTS/CTS backoff rules"
-	        print "EXPECTED RESULT 2: Set operation should return SUCCESS"
-	        print "ACTUAL RESULT 2: setApRtsThreshold FAILED"
-	        tdkTestObj.setResultStatus("FAILURE");
-		
-	elif supportState == "Disabled":
-	    print "getApRtsThreshold is NOT Supported"
-	    tdkTestObj.setResultStatus("SUCCESS");
-    else:
-        print "TEST STEP 1: Check if ApRtsThreshold ie, packet size threshold is supported"
-        print "EXPECTED RESULT 1: getApRtsThresholdSupported should return SUCCESS"
-        print "ACTUAL RESULT 1: getApRtsThresholdSupported FAILED"
-        tdkTestObj.setResultStatus("FAILURE");
+		print "TEST STEP 1: Check if ApRtsThreshold ie, packet size threshold is supported"
+		print "EXPECTED RESULT 1: getApRtsThresholdSupported should return SUCCESS"
+		print "ACTUAL RESULT 1: getApRtsThresholdSupported FAILED"
+		tdkTestObj.setResultStatus("FAILURE");
     obj.unloadModule("wifihal");
 
 else:

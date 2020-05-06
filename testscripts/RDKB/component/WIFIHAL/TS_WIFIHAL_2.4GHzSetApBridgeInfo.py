@@ -74,6 +74,9 @@ subnet : "255.255.255.1"</input_parameters>
 '''
 # use tdklib library,which provides a wrapper for tdk testcase script 
 import tdklib; 
+from wifiUtility import *;
+
+radio = "2.4G"
 
 #Test component to be tested
 obj = tdklib.TDKScriptingLibrary("wifihal","1");
@@ -91,106 +94,113 @@ print "[LIB LOAD STATUS]  :  %s" %loadmodulestatus
 if "SUCCESS" in loadmodulestatus.upper():
     obj.setLoadModuleStatus("SUCCESS");
 
-    #Prmitive test case which associated to this Script
-    tdkTestObj = obj.createTestStep('WIFIHAL_GetOrSetApBridgeInfo');
-    #Giving the method name to invoke the api wifi_getApBridgeInfo()
-    tdkTestObj.addParameter("methodName","getApBridgeInfo");
-    #Radio index is 0 for 2.4GHz and 1 for 5GHz
-    tdkTestObj.addParameter("radioIndex",0);
-    expectedresult="SUCCESS";
-    tdkTestObj.executeTestCase(expectedresult);
-    actualresult = tdkTestObj.getResult();
-    details = tdkTestObj.getResultDetails();
-    if expectedresult in actualresult:
-	tdkTestObj.setResultStatus("SUCCESS");
-        print "TEST STEP 1: Get the ApBridgeInfo for 2.4GHz";
-        print "EXPECTED RESULT 1: Should get the ApBridgeInfo for 2.4GHz";
-        print "ACTUAL RESULT 1: %s" %details;
-        #Get the result of execution
-        print "[TEST EXECUTION RESULT] : SUCCESS";
-	bridgeName = details.split(":")[1].split(",")[0].split("=")[1];
-	IP = details.split(":")[1].split(",")[1].split("=")[1];
-	subnet = details.split(":")[1].split(",")[2].split("=")[1];
-
-        #Prmitive test case which associated to this Script
-        tdkTestObj = obj.createTestStep('WIFIHAL_GetOrSetApBridgeInfo');
-        #Giving the method name to invoke the api wifi_setApBridgeInfo()
-        tdkTestObj.addParameter("methodName","setApBridgeInfo");
-        #Radio index is 0 for 2.4GHz and 1 for 5GHz
-        tdkTestObj.addParameter("radioIndex",0);
-        tdkTestObj.addParameter("bridgeName","newBranch0");
-        tdkTestObj.addParameter("IP","1.1.1.1");
-        tdkTestObj.addParameter("subnet","255.255.255.1");
-        expectedresult="SUCCESS";
-        tdkTestObj.executeTestCase(expectedresult);
-        actualresult = tdkTestObj.getResult();
-        details = tdkTestObj.getResultDetails();
-        if expectedresult in actualresult:
-            tdkTestObj.setResultStatus("SUCCESS");
-            print "TEST STEP 2: Set the ApBridgeInfo for 2.4GHz";
-            print "EXPECTED RESULT 2: Should set the ApBridgeInfo for 2.4GHz";
-            print "ACTUAL RESULT 2: %s" %details;
-            #Get the result of execution
-            print "[TEST EXECUTION RESULT] : SUCCESS";
+    tdkTestObjTemp, idx = getIndex(obj, radio);
+    ## Check if a invalid index is returned
+    if idx == -1:
+        print "Failed to get radio index for radio %s\n" %radio;
+        tdkTestObjTemp.setResultStatus("FAILURE");
+    else:
 
 	    #Prmitive test case which associated to this Script
 	    tdkTestObj = obj.createTestStep('WIFIHAL_GetOrSetApBridgeInfo');
-    	    #Giving the method name to invoke the api wifi_getApBridgeInfo()
+	    #Giving the method name to invoke the api wifi_getApBridgeInfo()
 	    tdkTestObj.addParameter("methodName","getApBridgeInfo");
 	    #Radio index is 0 for 2.4GHz and 1 for 5GHz
-	    tdkTestObj.addParameter("radioIndex",0);
+	    tdkTestObj.addParameter("radioIndex",idx);
 	    expectedresult="SUCCESS";
 	    tdkTestObj.executeTestCase(expectedresult);
 	    actualresult = tdkTestObj.getResult();
 	    details = tdkTestObj.getResultDetails();
 	    if expectedresult in actualresult:
-        	tdkTestObj.setResultStatus("SUCCESS");
-	        print "TEST STEP 3: Get the previously set ApBridgeInfo for 2.4GHz";
-	        print "EXPECTED RESULT 3: Should get the previously set ApBridgeInfo for 2.4GHz";
-	        print "ACTUAL RESULT 3: %s" %details;
-	        #Get the result of execution
-	        print "[TEST EXECUTION RESULT] : SUCCESS";	
-	    else:
-        	tdkTestObj.setResultStatus("FAILURE");
-	        print "TEST STEP 3: Get the previously set ApBridgeInfo for 2.4GHz";
-	        print "EXPECTED RESULT 3: Should get the previously set ApBridgeInfo for 2.4GHz";
-	        print "ACTUAL RESULT 3: %s" %details;
-	        #Get the result of execution
-	        print "[TEST EXECUTION RESULT] : FAILURE";	
-
-            #Prmitive test case which associated to this Script
-            tdkTestObj = obj.createTestStep('WIFIHAL_GetOrSetApBridgeInfo');
-    	    #Giving the method name to invoke the api wifi_setApBridgeInfo()
-            tdkTestObj.addParameter("methodName","setApBridgeInfo");
-            #Radio index is 0 for 2.4GHz and 1 for 5GHz
-            tdkTestObj.addParameter("radioIndex",0);
-            tdkTestObj.addParameter("bridgeName",bridgeName);
-            tdkTestObj.addParameter("IP",IP);
-            tdkTestObj.addParameter("subnet",subnet);
-            expectedresult="SUCCESS";
-            tdkTestObj.executeTestCase(expectedresult);
-            actualresult = tdkTestObj.getResult();
-            details = tdkTestObj.getResultDetails();
-            if expectedresult in actualresult:
 		tdkTestObj.setResultStatus("SUCCESS");
-		print "Successfully reverted to initial values"
+		print "TEST STEP 1: Get the ApBridgeInfo for 2.4GHz";
+		print "EXPECTED RESULT 1: Should get the ApBridgeInfo for 2.4GHz";
+		print "ACTUAL RESULT 1: %s" %details;
+		#Get the result of execution
+		print "[TEST EXECUTION RESULT] : SUCCESS";
+		bridgeName = details.split(":")[1].split(",")[0].split("=")[1];
+		IP = details.split(":")[1].split(",")[1].split("=")[1];
+		subnet = details.split(":")[1].split(",")[2].split("=")[1];
+
+		#Prmitive test case which associated to this Script
+		tdkTestObj = obj.createTestStep('WIFIHAL_GetOrSetApBridgeInfo');
+		#Giving the method name to invoke the api wifi_setApBridgeInfo()
+		tdkTestObj.addParameter("methodName","setApBridgeInfo");
+		#Radio index is 0 for 2.4GHz and 1 for 5GHz
+		tdkTestObj.addParameter("radioIndex",idx);
+		tdkTestObj.addParameter("bridgeName","newBranch0");
+		tdkTestObj.addParameter("IP","1.1.1.1");
+		tdkTestObj.addParameter("subnet","255.255.255.1");
+		expectedresult="SUCCESS";
+		tdkTestObj.executeTestCase(expectedresult);
+		actualresult = tdkTestObj.getResult();
+		details = tdkTestObj.getResultDetails();
+		if expectedresult in actualresult:
+		    tdkTestObj.setResultStatus("SUCCESS");
+		    print "TEST STEP 2: Set the ApBridgeInfo for 2.4GHz";
+		    print "EXPECTED RESULT 2: Should set the ApBridgeInfo for 2.4GHz";
+		    print "ACTUAL RESULT 2: %s" %details;
+		    #Get the result of execution
+		    print "[TEST EXECUTION RESULT] : SUCCESS";
+
+		    #Prmitive test case which associated to this Script
+		    tdkTestObj = obj.createTestStep('WIFIHAL_GetOrSetApBridgeInfo');
+		    #Giving the method name to invoke the api wifi_getApBridgeInfo()
+		    tdkTestObj.addParameter("methodName","getApBridgeInfo");
+		    #Radio index is 0 for 2.4GHz and 1 for 5GHz
+		    tdkTestObj.addParameter("radioIndex",idx);
+		    expectedresult="SUCCESS";
+		    tdkTestObj.executeTestCase(expectedresult);
+		    actualresult = tdkTestObj.getResult();
+		    details = tdkTestObj.getResultDetails();
+		    if expectedresult in actualresult:
+			tdkTestObj.setResultStatus("SUCCESS");
+			print "TEST STEP 3: Get the previously set ApBridgeInfo for 2.4GHz";
+			print "EXPECTED RESULT 3: Should get the previously set ApBridgeInfo for 2.4GHz";
+			print "ACTUAL RESULT 3: %s" %details;
+			#Get the result of execution
+			print "[TEST EXECUTION RESULT] : SUCCESS";	
+		    else:
+			tdkTestObj.setResultStatus("FAILURE");
+			print "TEST STEP 3: Get the previously set ApBridgeInfo for 2.4GHz";
+			print "EXPECTED RESULT 3: Should get the previously set ApBridgeInfo for 2.4GHz";
+			print "ACTUAL RESULT 3: %s" %details;
+			#Get the result of execution
+			print "[TEST EXECUTION RESULT] : FAILURE";	
+
+		    #Prmitive test case which associated to this Script
+		    tdkTestObj = obj.createTestStep('WIFIHAL_GetOrSetApBridgeInfo');
+		    #Giving the method name to invoke the api wifi_setApBridgeInfo()
+		    tdkTestObj.addParameter("methodName","setApBridgeInfo");
+		    #Radio index is 0 for 2.4GHz and 1 for 5GHz
+		    tdkTestObj.addParameter("radioIndex",idx);
+		    tdkTestObj.addParameter("bridgeName",bridgeName);
+		    tdkTestObj.addParameter("IP",IP);
+		    tdkTestObj.addParameter("subnet",subnet);
+		    expectedresult="SUCCESS";
+		    tdkTestObj.executeTestCase(expectedresult);
+		    actualresult = tdkTestObj.getResult();
+		    details = tdkTestObj.getResultDetails();
+		    if expectedresult in actualresult:
+			tdkTestObj.setResultStatus("SUCCESS");
+			print "Successfully reverted to initial values"
+		    else:
+			tdkTestObj.setResultStatus("FAILURE");
+			print "Unable to revert to initial value"
+		else:
+		    tdkTestObj.setResultStatus("FAILURE");
+		    print "TEST STEP 2: Set the ApBridgeInfo for 2.4GHz";
+		    print "EXPECTED RESULT 2: Should set the ApBridgeInfo for 2.4GHz";
+		    print "ACTUAL RESULT 2: %s" %details;
+		    #Get the result of execution
+		    print "[TEST EXECUTION RESULT] : FAILURE";
 	    else:
 		tdkTestObj.setResultStatus("FAILURE");
-		print "Unable to revert to initial value"
-	else:
-            tdkTestObj.setResultStatus("FAILURE");
-            print "TEST STEP 2: Set the ApBridgeInfo for 2.4GHz";
-            print "EXPECTED RESULT 2: Should set the ApBridgeInfo for 2.4GHz";
-            print "ACTUAL RESULT 2: %s" %details;
-            #Get the result of execution
-            print "[TEST EXECUTION RESULT] : FAILURE";
-    else:
-	tdkTestObj.setResultStatus("FAILURE");
-        print "TEST STEP 1: Get the ApBridgeInfo for 2.4GHz";
-        print "EXPECTED RESULT 1: Should get the ApBridgeInfo for 2.4GHz";
-        print "ACTUAL RESULT 1: %s" %details;
-        #Get the result of execution
-        print "[TEST EXECUTION RESULT] : FAILURE";
+		print "TEST STEP 1: Get the ApBridgeInfo for 2.4GHz";
+		print "EXPECTED RESULT 1: Should get the ApBridgeInfo for 2.4GHz";
+		print "ACTUAL RESULT 1: %s" %details;
+		#Get the result of execution
+		print "[TEST EXECUTION RESULT] : FAILURE";
     obj.unloadModule("wifihal");
 else:
         print "Failed to load the module";
