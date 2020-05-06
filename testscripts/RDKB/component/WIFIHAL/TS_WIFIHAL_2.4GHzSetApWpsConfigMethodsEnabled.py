@@ -73,6 +73,8 @@ ApIndex : 0</input_parameters>
 import tdklib; 
 from wifiUtility import *;
 
+radio = "2.4G"
+
 #Test component to be tested
 obj = tdklib.TDKScriptingLibrary("wifihal","1");
 
@@ -88,80 +90,89 @@ print "[LIB LOAD STATUS]  :  %s" %loadmodulestatus
 if "SUCCESS" in loadmodulestatus.upper():
     obj.setLoadModuleStatus("SUCCESS");
 
-    expectedresult="SUCCESS";
-    apIndex = 0
-    getMethod = "getApWpsConfigMethodsEnabled"
-    primitive = 'WIFIHAL_GetOrSetParamStringValue'
+    tdkTestObjTemp, idx = getIndex(obj, radio);
+    ## Check if a invalid index is returned
+    if idx == -1:
+        print "Failed to get radio index for radio %s\n" %radio;
+        tdkTestObjTemp.setResultStatus("FAILURE");
+    else: 
 
-    #Calling the method from wifiUtility to execute test case and set result status for the test.
-    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, "0", getMethod)
+	    expectedresult="SUCCESS";
+	    apIndex = idx
+	    getMethod = "getApWpsConfigMethodsEnabled"
+	    primitive = 'WIFIHAL_GetOrSetParamStringValue'
 
-    #Calling the method from wifiUtility to execute test case and set result status for the test. Fetching the WPS Config Mode Supported.
-    tdkTestObj1, actualresult1, details1 = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, "0", "getApWpsConfigMethodsSupported")
+	    #Calling the method from wifiUtility to execute test case and set result status for the test.
+	    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, "0", getMethod)
 
-    if expectedresult in actualresult and expectedresult in actualresult1:
-        supportedWpsConfigModes = list(details1.split(":")[1].strip().split(','))
-        supportedWpsConfigModes = map(str.strip, supportedWpsConfigModes)
-        initConfigMethod = details.split(":")[1].strip()
-        initConfigMethodList = map(str.strip, list(details.split(":")[1].strip().split(',')))
+	    #Calling the method from wifiUtility to execute test case and set result status for the test. Fetching the WPS Config Mode Supported.
+	    tdkTestObj1, actualresult1, details1 = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, "0", "getApWpsConfigMethodsSupported")
 
-        for setConfigMethod in supportedWpsConfigModes:
-            if setConfigMethod in initConfigMethodList:
-                continue;
-            else:
-                expectedresult="SUCCESS";
-                apIndex = 0
-                setMethod = "setApWpsConfigMethodsEnabled"
-                primitive = 'WIFIHAL_GetOrSetParamStringValue'
+	    if expectedresult in actualresult and expectedresult in actualresult1:
+		supportedWpsConfigModes = list(details1.split(":")[1].strip().split(','))
+		supportedWpsConfigModes = map(str.strip, supportedWpsConfigModes)
+		initConfigMethod = details.split(":")[1].strip()
+		initConfigMethodList = map(str.strip, list(details.split(":")[1].strip().split(',')))
 
-                #Calling the method to execute wifi_setApWpsConfigMethodsEnabled()
-                tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, setConfigMethod, setMethod)
+		for setConfigMethod in supportedWpsConfigModes:
+		    if setConfigMethod in initConfigMethodList:
+			continue;
+		    else:
+			expectedresult="SUCCESS";
+			apIndex = idx
+			setMethod = "setApWpsConfigMethodsEnabled"
+			primitive = 'WIFIHAL_GetOrSetParamStringValue'
 
-                if expectedresult in actualresult:
-                    expectedresult="SUCCESS";
-                    apIndex = 0
-                    getMethod = "getApWpsConfigMethodsEnabled"
-                    primitive = 'WIFIHAL_GetOrSetParamStringValue'
+			#Calling the method to execute wifi_setApWpsConfigMethodsEnabled()
+			tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, setConfigMethod, setMethod)
 
-                    #Calling the method from wifiUtility to execute test case and set result status for the test.
-                    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, "0", getMethod)
+			if expectedresult in actualresult:
+			    expectedresult="SUCCESS";
+			    apIndex = idx
+			    getMethod = "getApWpsConfigMethodsEnabled"
+			    primitive = 'WIFIHAL_GetOrSetParamStringValue'
 
-                    if expectedresult in actualresult:
-                        finalConfigMethod = details.split(":")[1].strip()
-                        if finalConfigMethod == setConfigMethod:
-                            tdkTestObj.setResultStatus("SUCCESS");
-                            print "TEST STEP: Compare the set and get values of ApWpsConfigMethodsEnabled"
-                            print "EXPECTED RESULT: Set and get values of ApWpsConfigMethodsEnabled should be same"
-                            print "ACTUAL RESULT: Set and get values of ApWpsConfigMethodsEnabled are the same"
-                            print "setConfigMethod = ",setConfigMethod
-                            print "getConfigMethod = ",finalConfigMethod
-                            print "TEST EXECUTION RESULT : SUCCESS"
-                        else:
-                            tdkTestObj.setResultStatus("FAILURE");
-                            print "TEST STEP: Compare the set and get values of ApWpsConfigMethodsEnabled"
-                            print "EXPECTED RESULT: Set and get values of ApWpsConfigMethodsEnabled should be same"
-                            print "ACTUAL RESULT: Set and get values of ApWpsConfigMethodsEnabled are NOT the same"
-                            print "setConfigMethod = ",setConfigMethod
-                            print "getConfigMethod = ",finalConfigMethod
-                            print "TEST EXECUTION RESULT : FAILURE"
+			    #Calling the method from wifiUtility to execute test case and set result status for the test.
+			    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, "0", getMethod)
 
-                        #Revert the ConfigMethod back to initial value
-                        tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, initConfigMethod, setMethod)
-                        if expectedresult in actualresult:
-                            print "Successfully reverted the ApWpsConfigMethod to initial value"
-                            tdkTestObj.setResultStatus("SUCCESS");
-                        else:
-                            print "Unable to revert the ApWpsConfigMethod"
-                            tdkTestObj.setResultStatus("FAILURE");
-                    else:
-                        print "wifi_getApWpsConfigMethodsEnabled() call failed after set operation"
-                        tdkTestObj.setResultStatus("FAILURE");
-                else:
-                    print "wifi_setApWpsConfigMethodsEnabled() call failed"
-                    tdkTestObj.setResultStatus("FAILURE");
-            break;
-    else:
-        print "wifi_getApWpsConfigMethodsEnabled() failed"
-        tdkTestObj.setResultStatus("FAILURE");
+			    if expectedresult in actualresult:
+				finalConfigMethod = details.split(":")[1].strip()
+				if finalConfigMethod == setConfigMethod:
+				    tdkTestObj.setResultStatus("SUCCESS");
+				    print "TEST STEP: Compare the set and get values of ApWpsConfigMethodsEnabled"
+				    print "EXPECTED RESULT: Set and get values of ApWpsConfigMethodsEnabled should be same"
+				    print "ACTUAL RESULT: Set and get values of ApWpsConfigMethodsEnabled are the same"
+				    print "setConfigMethod = ",setConfigMethod
+				    print "getConfigMethod = ",finalConfigMethod
+				    print "TEST EXECUTION RESULT : SUCCESS"
+				else:
+				    tdkTestObj.setResultStatus("FAILURE");
+				    print "TEST STEP: Compare the set and get values of ApWpsConfigMethodsEnabled"
+				    print "EXPECTED RESULT: Set and get values of ApWpsConfigMethodsEnabled should be same"
+				    print "ACTUAL RESULT: Set and get values of ApWpsConfigMethodsEnabled are NOT the same"
+				    print "setConfigMethod = ",setConfigMethod
+				    print "getConfigMethod = ",finalConfigMethod
+				    print "TEST EXECUTION RESULT : FAILURE"
+
+				#Revert the ConfigMethod back to initial value
+				tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, initConfigMethod, setMethod)
+				if expectedresult in actualresult:
+				    print "Successfully reverted the ApWpsConfigMethod to initial value"
+				    tdkTestObj.setResultStatus("SUCCESS");
+				else:
+				    print "Unable to revert the ApWpsConfigMethod"
+				    tdkTestObj.setResultStatus("FAILURE");
+			    else:
+				print "wifi_getApWpsConfigMethodsEnabled() call failed after set operation"
+				tdkTestObj.setResultStatus("FAILURE");
+			else:
+			    print "wifi_setApWpsConfigMethodsEnabled() call failed"
+			    tdkTestObj.setResultStatus("FAILURE");
+		    break;
+	    else:
+		print "wifi_getApWpsConfigMethodsEnabled() failed"
+		tdkTestObj.setResultStatus("FAILURE");
     obj.unloadModule("wifihal");
-
+else:
+	print "Failed to load wifi module";
+	obj.setLoadModuleStatus("FAILURE");
