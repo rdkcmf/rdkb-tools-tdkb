@@ -33,7 +33,6 @@
   <remarks/>
   <skip>false</skip>
   <box_types>
-    <box_type>Broadband</box_type>
   </box_types>
   <rdk_versions>
     <rdk_version>RDKB</rdk_version>
@@ -42,13 +41,13 @@
     <test_case_id>TC_EPONHAL_11</test_case_id>
     <test_objective>Get the  Manufacturer Info using dpoe_getManufacturerInfo() and check if the received details is non empty.</test_objective>
     <test_type>Positive</test_type>
-    <test_setup>Broadband</test_setup>
+    <test_setup></test_setup>
     <pre_requisite>1.Ccsp Components  should be in a running state else invoke cosa_start.sh manually that includes all the ccsp components and TDK Component
 2.TDK Agent should be in running state or invoke it through StartTdk.sh script</pre_requisite>
     <api_or_interface_used>dpoe_getManufacturerInfo() </api_or_interface_used>
     <input_parameters>None</input_parameters>
     <automation_approch>1. Load eponhal module
-2. Invoke  dpoe_getManufacturerInfo() 
+2. Invoke  dpoe_getManufacturerInfo()
 3. Check if the details are non empty
 3. Unload eponhal module</automation_approch>
     <expected_output>The output of dpoe_getManufacturerInfo()  should be non empty holding the information</expected_output>
@@ -121,6 +120,4 @@ else:
     print "Failed to load the module";
     obj.setLoadModuleStatus("FAILURE");
     print "Module loading failed";
-
-
 
