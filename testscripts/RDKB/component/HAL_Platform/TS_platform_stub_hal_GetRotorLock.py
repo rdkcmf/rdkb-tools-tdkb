@@ -51,6 +51,9 @@
 2. Get the value form equivalent tr181 parameter Device.Thermal.Fan.RotorLock.
 3. From script invoke platform_stub_hal_GetRotorLock().
 4. Check whether  the tr81 and  hal received value are equivalent
+1 - if  Locked
+0 - if not Locked
+-1 - Value not applicable
 5. Validation of  the result is done within the python script and send the result status to Test Manager.
 6. Test Manager will publish the result in GUI as PASS/FAILURE based on the response from HAL_Platform stub.</automation_approch>
     <expected_output>The tr181 and hal api  should result with the same value.</expected_output>
@@ -94,10 +97,9 @@ if "SUCCESS" in (loadmodulestatus.upper() and  tr181loadmodulestatus.upper()):
     actualresult = tdkTestObj.getResult();
     Tr181RotorLock = " ";
     Tr181RotorLock = tdkTestObj.getResultDetails();
-    Tr181RotorLock = int(Tr181RotorLock)
-    if expectedresult in actualresult and (Tr181RotorLock == -1 or Tr181RotorLock == 0 or  Tr181RotorLock == 1):
+    if expectedresult in actualresult :
        print "TEST STEP 1: Get the Fan Rotor Lock value using tr181 parameter";
-       print "EXPECTED RESULT 1: Should get the Fan Rotor Lock value from either of -1,0,1 ";
+       print "EXPECTED RESULT 1: Should get the Fan Rotor Lock value";
        print "ACTUAL RESULT 1: Fan Rotor Lock value is :",Tr181RotorLock;
        #Get the result of execution
        print "[TEST EXECUTION RESULT] : SUCCESS";
@@ -118,10 +120,16 @@ if "SUCCESS" in (loadmodulestatus.upper() and  tr181loadmodulestatus.upper()):
           tdkTestObj.setResultStatus("SUCCESS")
 
           HalRotorLock = details.split(":")[1].strip()
+          #-1 - Value not applicable
+
+          if int(HalRotorLock) ==  -1:
+             HalRotorLock  = "Not_Applicable"
+
+
           print "RotorLock from api call is :",HalRotorLock
           print "RotorLock from tr181 query is :" ,Tr181RotorLock
 
-          if int(HalRotorLock) == Tr181RotorLock :
+          if HalRotorLock == Tr181RotorLock :
              tdkTestObj.setResultStatus("SUCCESS");
              print "TEST STEP 3: Get the Fan Rotor Lock value using HAL call api";
              print "EXPECTED RESULT 3: Should get the value from HAL Fan Rotor Lock and from tr181 equal";
@@ -142,7 +150,7 @@ if "SUCCESS" in (loadmodulestatus.upper() and  tr181loadmodulestatus.upper()):
            tdkTestObj.setResultStatus("FAILURE");
     else:
         print "TEST STEP 1: Get the Fan Rotor Lock value using tr181 parameter";
-        print "EXPECTED RESULT 1: Should get the Fan Rotor Lock value from either of -1,0,1 ";
+        print "EXPECTED RESULT 1: Should get the Fan Rotor Lock value";
         print "ACTUAL RESULT 1: Failed to get the Fan Rotor Lock value is :",Tr181RotorLock;
         #Get the result of execution
         print "[TEST EXECUTION RESULT] : FAILURE";
