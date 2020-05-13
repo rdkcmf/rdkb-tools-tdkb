@@ -33,11 +33,11 @@
   <!--  -->
   <status>FREE</status>
   <!--  -->
-  <synopsis>To enable rabid framework and check if rabid process is running</synopsis>
+  <synopsis>To enable Device FingerPrint and check if rabid process is running and disable Device FingerPrint and check if rabid process is not running</synopsis>
   <!--  -->
   <groups_id />
   <!--  -->
-  <execution_time>3</execution_time>
+  <execution_time>7</execution_time>
   <!--  -->
   <long_duration>false</long_duration>
   <!--  -->
@@ -57,17 +57,19 @@
   </rdk_versions>
   <test_cases>
     <test_case_id>TC_PAM_156</test_case_id>
-    <test_objective>To enable rabid framework and check if rabid process is running</test_objective>
+    <test_objective>To enable Device FingerPrint and check if rabid process is running and disable Device FingerPrint and check if rabid process is not running</test_objective>
     <test_type>Positive</test_type>
     <test_setup>Broadband</test_setup>
     <pre_requisite>1.Ccsp Components in DUT should be in a running state that includes component under test Cable Modem
 2.TDK Agent should be in running state or invoke it through StartTdk.sh script</pre_requisite>
     <api_or_interface_used>None</api_or_interface_used>
-    <input_parameters>Device.DeviceInfo.X_RDKCENTRAL-COM_RFC.Feature.RabidFramework.Enable</input_parameters>
+    <input_parameters>Device.DeviceInfo.X_RDKCENTRAL-COM_DeviceFingerPrint.Enable</input_parameters>
     <automation_approch>1.Load module
-2.Enable rabid framework
-3.Check if rabid process is running</automation_approch>
-    <expected_output>After enabling rabid framework rabid process should be running</expected_output>
+2.Get value of Device.DeviceInfo.X_RDKCENTRAL-COM_DeviceFingerPrint.Enable
+3.If it is true,Check if rabid process is running
+4.If it is false,Check if rabid process is not running
+5.Toggle the value and check if process is running or not</automation_approch>
+    <expected_output>After enabling Device FingerPrint rabid process should be running and after disabling Device FingerPrint rabid process should not be running</expected_output>
     <priority>High</priority>
     <test_stub_interface>None</test_stub_interface>
     <test_script>TS_PAM_CheckRabidProcess</test_script>
@@ -81,12 +83,11 @@
 import tdklib;
 import time;
 from tdkbVariables import *;
-
+MAX_RETRY = 10;
 
 #Test component to be tested
 obj = tdklib.TDKScriptingLibrary("pam","RDKB");
 obj1 = tdklib.TDKScriptingLibrary("sysutil","RDKB");
-
 
 #IP and Port of box, No need to change,
 #This will be replaced with correspoing Box Ip and port while executing script
@@ -95,20 +96,17 @@ port = <port>
 obj.configureTestCase(ip,port,'TS_PAM_CheckRabidProcess');
 obj1.configureTestCase(ip,port,'TS_PAM_CheckRabidProcess');
 
-
 #Get the result of connection with test component and STB
 loadmodulestatus =obj.getLoadModuleResult();
 loadmodulestatus1 =obj1.getLoadModuleResult();
 print "[LIB LOAD STATUS]  :  %s" %loadmodulestatus ;
 print "[LIB LOAD STATUS]  :  %s" %loadmodulestatus1 ;
 
-
-
 if "SUCCESS" in loadmodulestatus.upper() and "SUCCESS" in loadmodulestatus1.upper():
     #Set the result status of execution
     obj.setLoadModuleStatus("SUCCESS");
     tdkTestObj = obj.createTestStep('pam_GetParameterValues');
-    tdkTestObj.addParameter("ParamName","Device.DeviceInfo.X_RDKCENTRAL-COM_RFC.Feature.RabidFramework.Enable");
+    tdkTestObj.addParameter("ParamName","Device.DeviceInfo.X_RDKCENTRAL-COM_DeviceFingerPrint.Enable");
     expectedresult="SUCCESS";
 
     #Execute the test case in STB
@@ -119,26 +117,12 @@ if "SUCCESS" in loadmodulestatus.upper() and "SUCCESS" in loadmodulestatus1.uppe
     if expectedresult in actualresult:
         #Set the result status of execution
         tdkTestObj.setResultStatus("SUCCESS");
-        print "TEST STEP 1: Get the RabidFramework Enable status";
-        print "ACTUAL RESULT 1: RabidFramework Enable status :%s" %orgValue;
+        print "TEST STEP 1: Get the DeviceFingerPrint Enable status";
+        print "EXPECTED RESULT 1: Should get the  DeviceFingerPrint Enable status"
+        print "ACTUAL RESULT 1: DeviceFingerPrint Enable status :%s" %orgValue;
         #Get the result of execution
         print "[TEST EXECUTION RESULT] : SUCCESS"
-        tdkTestObj = obj.createTestStep('pam_SetParameterValues');
-        tdkTestObj.addParameter("ParamName","Device.DeviceInfo.X_RDKCENTRAL-COM_RFC.Feature.RabidFramework.Enable");
-        tdkTestObj.addParameter("ParamValue","true");
-        tdkTestObj.addParameter("Type","bool");
-        expectedresult="SUCCESS";
-        #Execute the test case in DUT
-        tdkTestObj.executeTestCase(expectedresult);
-        actualresult = tdkTestObj.getResult();
-        details = tdkTestObj.getResultDetails();
-        if expectedresult in actualresult:
-            tdkTestObj.setResultStatus("SUCCESS");
-            print "TEST STEP 2: Enable the rabid framework";
-            print "ACTUAL RESULT 2:%s" %details;
-            #Get the result of execution
-            print "[TEST EXECUTION RESULT] : SUCCESS"
-            time.sleep(30);
+        if orgValue == "true":
             #check whether the process is running or not
             query="sh %s/tdk_platform_utility.sh checkProcess rabid" %TDK_PATH
             print "query:%s" %query
@@ -150,53 +134,190 @@ if "SUCCESS" in loadmodulestatus.upper() and "SUCCESS" in loadmodulestatus1.uppe
             pid = tdkTestObj.getResultDetails().strip().replace("\\n","");
             if expectedresult in actualresult and pid:
                 tdkTestObj.setResultStatus("SUCCESS");
-                print "TEST STEP 3:Check if rabid process is running";
-                print "ACTUAL RESULT 3: PID of Rabid process %s" %pid;
+                print "TEST STEP 2:Check if rabid process is running";
+                print "EXPECTED RESUT 2: Should get the PID of Rabid if process is running";
+                print "ACTUAL RESULT 2: PID of Rabid process %s" %pid;
                 #Get the result of execution
                 print "[TEST EXECUTION RESULT] : SUCCESS";
+                tdkTestObj = obj.createTestStep('pam_SetParameterValues');
+                tdkTestObj.addParameter("ParamName","Device.DeviceInfo.X_RDKCENTRAL-COM_DeviceFingerPrint.Enable");
+                tdkTestObj.addParameter("ParamValue","false");
+                tdkTestObj.addParameter("Type","bool");
+                expectedresult="SUCCESS";
+                #Execute the test case in DUT
+                tdkTestObj.executeTestCase(expectedresult);
+                actualresult = tdkTestObj.getResult();
+                details = tdkTestObj.getResultDetails();
+                if expectedresult in actualresult:
+                    tdkTestObj.setResultStatus("SUCCESS");
+                    print "TEST STEP 3: Disable the DeviceFingerPrint";
+                    print "EXPECTED  RESULT 3: Should disable the DeviceFingerPrint";
+                    print "ACTUAL RESULT 3:%s" %details;
+                    #Get the result of execution
+                    print "[TEST EXECUTION RESULT] : SUCCESS"
+                    #check whether the process is running or not
+                    query="sh %s/tdk_platform_utility.sh checkProcess rabid" %TDK_PATH
+                    print "query:%s" %query
+                    tdkTestObj = obj1.createTestStep('ExecuteCmd');
+                    tdkTestObj.addParameter("command", query)
+                    expectedresult="SUCCESS";
+                    tdkTestObj.executeTestCase("SUCCESS");
+                    actualresult = tdkTestObj.getResult();
+                    pid = tdkTestObj.getResultDetails().strip().replace("\\n","");
+                    print "Check for every 10 secs whether the process is not up"
+                    retryCount = 0;
+                    while retryCount < MAX_RETRY:
+                        tdkTestObj.executeTestCase("SUCCESS");
+                        actualresult = tdkTestObj.getResult();
+                        pid = tdkTestObj.getResultDetails().strip().replace("\\n","");
+                        if expectedresult in actualresult and pid == "":
+                            break;
+                        else:
+                            time.sleep(10);
+                            retryCount = retryCount + 1;
+                    if expectedresult in actualresult and pid == "":
+                        tdkTestObj.setResultStatus("SUCCESS");
+                        print "TEST STEP 4:Check if rabid process is not running";
+                        print "EXPECTED RESULT 4: Rabid process should not be running";
+                        print "ACTUAL RESULT 4: Rabid process is not running";
+                        #Get the result of execution
+                        print "[TEST EXECUTION RESULT] : SUCCESS";
+                    else:
+                        tdkTestObj.setResultStatus("FAILURE");
+                        print "TEST STEP 4:Check if rabid process is not running";
+                        print "EXPECTED RESULT 4: Rabid process should not be running";
+                        print "ACTUAL RESULT 4: Rabid process is running";
+                        #Get the result of execution
+                        print "[TEST EXECUTION RESULT] : FAILURE";
+                else:
+                    tdkTestObj.setResultStatus("FAILURE");
+                    print "TEST STEP 3: Disable the DeviceFingerPrint";
+                    print "EXPECTED RESULT 3: Should Disable the DeviceFingerPrint";
+                    print "ACTUAL RESULT 3:%s" %details;
+                    #Get the result of execution
+                    print "[TEST EXECUTION RESULT] : FAILURE"
             else:
                 tdkTestObj.setResultStatus("FAILURE");
-                print "TEST STEP 3:Check if rabid process is running";
-                print "ACTUAL RESULT 3: Rabid process is not running";
+                print "TEST STEP 2:Check if rabid process is running";
+                print "EXPECTED RESULT 2: rabid process should be running";
+                print "ACTUAL RESULT 2: Rabid process is not running";
                 #Get the result of execution
                 print "[TEST EXECUTION RESULT] : FAILURE";
-            tdkTestObj = obj.createTestStep('pam_SetParameterValues');
-            tdkTestObj.addParameter("ParamName","Device.DeviceInfo.X_RDKCENTRAL-COM_RFC.Feature.RabidFramework.Enable");
-            tdkTestObj.addParameter("ParamValue",orgValue);
-            tdkTestObj.addParameter("Type","bool");
+        else:
+            #check whether the process is running or not
+            query="sh %s/tdk_platform_utility.sh checkProcess rabid" %TDK_PATH
+            print "query:%s" %query
+            tdkTestObj = obj1.createTestStep('ExecuteCmd');
+            tdkTestObj.addParameter("command", query)
             expectedresult="SUCCESS";
-            #Execute the test case in DUT
-            tdkTestObj.executeTestCase(expectedresult);
+            tdkTestObj.executeTestCase("SUCCESS");
             actualresult = tdkTestObj.getResult();
-            details = tdkTestObj.getResultDetails();
-            if expectedresult in actualresult:
+            pid = tdkTestObj.getResultDetails().strip().replace("\\n","");
+            if expectedresult in actualresult and pid == "":
                 tdkTestObj.setResultStatus("SUCCESS");
-                print "TEST STEP :Revert the rabid framework enable status";
-                print "ACTUAL RESULT :%s" %details;
+                print "TEST STEP 5:Check if rabid process is not running";
+                print "EXPECTED RESULT 5: rabid process should not be running";
+                print "ACTUAL RESULT 5: Rabid process is not running";
                 #Get the result of execution
-                print "[TEST EXECUTION RESULT] : SUCCESS"
+                print "[TEST EXECUTION RESULT] : SUCCESS";
+                tdkTestObj = obj.createTestStep('pam_SetParameterValues');
+                tdkTestObj.addParameter("ParamName","Device.DeviceInfo.X_RDKCENTRAL-COM_DeviceFingerPrint.Enable");
+                tdkTestObj.addParameter("ParamValue","true");
+                tdkTestObj.addParameter("Type","bool");
+                expectedresult="SUCCESS";
+                #Execute the test case in DUT
+                tdkTestObj.executeTestCase(expectedresult);
+                actualresult = tdkTestObj.getResult();
+                details = tdkTestObj.getResultDetails();
+                if expectedresult in actualresult:
+                    tdkTestObj.setResultStatus("SUCCESS");
+                    print "TEST STEP 6: Enable the DeviceFingerPrint";
+                    print "EXPECTED RESULT 6: Should Enable the DeviceFingerPrint";
+                    print "ACTUAL RESULT 6:%s" %details;
+                    #Get the result of execution
+                    print "[TEST EXECUTION RESULT] : SUCCESS"
+                    #check whether the process is running or not
+                    query="sh %s/tdk_platform_utility.sh checkProcess rabid" %TDK_PATH
+                    print "query:%s" %query
+                    tdkTestObj = obj1.createTestStep('ExecuteCmd');
+                    tdkTestObj.addParameter("command", query)
+                    expectedresult="SUCCESS";
+                    tdkTestObj.executeTestCase("SUCCESS");
+                    actualresult = tdkTestObj.getResult();
+                    pid = tdkTestObj.getResultDetails().strip().replace("\\n","");
+                    print "Check for every 10 secs whether the process is up"
+                    retryCount = 0;
+                    while retryCount < MAX_RETRY:
+                        tdkTestObj.executeTestCase("SUCCESS");
+                        actualresult = tdkTestObj.getResult();
+                        pid = tdkTestObj.getResultDetails().strip().replace("\\n","");
+                        if expectedresult in actualresult and pid:
+                            break;
+                        else:
+                            time.sleep(10);
+                            retryCount = retryCount + 1;
+                    if expectedresult in actualresult and pid:
+                        tdkTestObj.setResultStatus("SUCCESS");
+                        print "TEST STEP 7:Check if rabid process is running";
+                        print "EXPECTED RESULT 7: Rabid process should be running";
+                        print "ACTUAL RESULT 7: Rabid process is running with PID:%s" %pid;
+                        #Get the result of execution
+                        print "[TEST EXECUTION RESULT] : SUCCESS";
+                    else:
+                        tdkTestObj.setResultStatus("FAILURE");
+                        print "TEST STEP 7:Check if rabid process is running";
+                        print "EXPECTED RESULT 7: Rabid process should be running";
+                        print "ACTUAL RESULT 7: Rabid process is not running";
+                        #Get the result of execution
+                        print "[TEST EXECUTION RESULT] : FAILURE";
+                else:
+                    tdkTestObj.setResultStatus("FAILURE");
+                    print "TEST STEP 3: Enable the DeviceFingerPrint";
+                    print "EXPECTED RESULT 3:Should Enable the Device Finger Print ";
+                    print "ACTUAL RESULT 3:%s" %details;
+                    #Get the result of execution
+                    print "[TEST EXECUTION RESULT] : FAILURE"
             else:
                 tdkTestObj.setResultStatus("FAILURE");
-                print "TEST STEP :Revert the rabid framework enable status";
-                print "ACTUAL RESULT :%s" %details;
+                print "TEST STEP 2:Check if rabid process is not running";
+                print "EXPECTED RESULT 2: Rabid process shoul not be running";
+                print "ACTUAL RESULT 2: Rabid process is running";
                 #Get the result of execution
-                print "[TEST EXECUTION RESULT] : FAILURE"
+                print "[TEST EXECUTION RESULT] : FAILURE";
+
+        tdkTestObj = obj.createTestStep('pam_SetParameterValues');
+        tdkTestObj.addParameter("ParamName","Device.DeviceInfo.X_RDKCENTRAL-COM_DeviceFingerPrint.Enable");
+        tdkTestObj.addParameter("ParamValue",orgValue);
+        tdkTestObj.addParameter("Type","bool");
+        expectedresult="SUCCESS";
+        #Execute the test case in DUT
+        tdkTestObj.executeTestCase(expectedresult);
+        actualresult = tdkTestObj.getResult();
+        details = tdkTestObj.getResultDetails();
+        if expectedresult in actualresult:
+            tdkTestObj.setResultStatus("SUCCESS");
+            print "TEST STEP 8:Revert the DeviceFingerPrint enable status";
+            print "EXPECTED RESULT 8: Revert operation should be suceess";
+            print "ACTUAL RESULT 8:%s" %details;
+            #Get the result of execution
+            print "[TEST EXECUTION RESULT] : SUCCESS"
         else:
             tdkTestObj.setResultStatus("FAILURE");
-            print "TEST STEP 2: Enable the rabid framework";
-            print "ACTUAL RESULT 2:%s" %details;
+            print "TEST STEP 8:Revert the DeviceFingerPrint enable status";
+            print "EXPECTED RESULT 8: Revert operation should be suceess";
+            print "ACTUAL RESULT8 :%s" %details;
             #Get the result of execution
             print "[TEST EXECUTION RESULT] : FAILURE"
     else:
         tdkTestObj.setResultStatus("FAILURE");
-        print "TEST STEP 1: Get the RabidFramework Enable status";
-        print "ACTUAL RESULT 1: Failed to get RabidFramework Enable status";
+        print "TEST STEP 1: Get the DeviceFingerPrint Enable status";
+        print "EXPECTEE RESULT 1: Should get the DeviceFingerPrint Enable status";
+        print "ACTUAL RESULT 1: Failed to get DeviceFingerPrint Enable status";
         print "[TEST EXECUTION RESULT] : FAILURE";
     obj.unloadModule("pam");
     obj1.unloadModule("sysutil");
-    
+
 else:
     print "Failed to load pam module";
     obj.setLoadModuleStatus("FAILURE");
     print "Module loading failed";
-
