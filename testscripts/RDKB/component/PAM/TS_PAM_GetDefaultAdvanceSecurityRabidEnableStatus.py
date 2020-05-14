@@ -23,7 +23,7 @@
   <!-- Do not edit id. This will be auto filled while exporting. If you are adding a new script keep the id empty -->
   <version>2</version>
   <!-- Do not edit version. This will be auto incremented while updating. If you are adding a new script you can keep the vresion as 1 -->
-  <name>TS_PAM_GetDefaultRabidFrameworkStatus</name>
+  <name>TS_PAM_GetDefaultAdvanceSecurityRabidEnableStatus</name>
   <!-- If you are adding a new script you can specify the script name. Script Name should be unique same as this file name with out .py extension -->
   <primitive_test_id> </primitive_test_id>
   <!-- Do not change primitive_test_id if you are editing an existing script. -->
@@ -33,7 +33,7 @@
   <!--  -->
   <status>FREE</status>
   <!--  -->
-  <synopsis>To get default RabidFrameworkStatus as false</synopsis>
+  <synopsis>To get default Advance security RabidEnable as 1 via syscfg</synopsis>
   <!--  -->
   <groups_id />
   <!--  -->
@@ -50,8 +50,6 @@
   <box_types>
     <box_type>Broadband</box_type>
     <!--  -->
-    <box_type>RPI</box_type>
-    <!--  -->
   </box_types>
   <rdk_versions>
     <rdk_version>RDKB</rdk_version>
@@ -59,21 +57,21 @@
   </rdk_versions>
   <test_cases>
     <test_case_id>TC_PAM_158</test_case_id>
-    <test_objective>To get default RabidFrameworkStatus as false</test_objective>
+    <test_objective>To get default Advance security RabidEnable as 1 via syscfg</test_objective>
     <test_type>Positive</test_type>
-    <test_setup>Broadband,RPI</test_setup>
+    <test_setup>Broadband</test_setup>
     <pre_requisite>1.Ccsp Components in DUT should be in a running state that includes component under test Cable Modem
 2.TDK Agent should be in running state or invoke it through StartTdk.sh script</pre_requisite>
     <api_or_interface_used>None</api_or_interface_used>
-    <input_parameters>Device.DeviceInfo.X_RDKCENTRAL-COM_RFC.Feature.RabidFramework.Enable</input_parameters>
+    <input_parameters>None</input_parameters>
     <automation_approch>1.Load module
 2.Do a factory reset
-3.Check if default RabidFrameworkStatus is false
+3.Check if default Advance security RabidEnable as 1 via syscfg
 4.Unload module</automation_approch>
-    <expected_output>Default RabidFrameworkStatus should be false</expected_output>
+    <expected_output>Default Advance security RabidEnable should be 1 via syscfg</expected_output>
     <priority>High</priority>
     <test_stub_interface>PAM</test_stub_interface>
-    <test_script>TS_PAM_GetDefaultRabidFrameworkStatus</test_script>
+    <test_script>TS_PAM_GetDefaultAdvanceSecurityRabidEnableStatus</test_script>
     <skipped>No</skipped>
     <release_version>M71</release_version>
     <remarks>None</remarks>
@@ -86,21 +84,27 @@ from wifiUtility import *;
 
 #Test component to be tested
 pamobj = tdklib.TDKScriptingLibrary("pam","1");
+obj1 = tdklib.TDKScriptingLibrary("sysutil","1");
 
 
 #IP and Port of box, No need to change,
 #This will be replaced with correspoing Box Ip and port while executing script
 ip = <ipaddress>
 port = <port>
-pamobj.configureTestCase(ip,port,'TS_PAM_GetDefaultRabidFrameworkStatus');
+pamobj.configureTestCase(ip,port,'TS_PAM_GetDefaultAdvanceSecurityRabidEnableStatus');
+obj1.configureTestCase(ip,port,'TS_PAM_GetDefaultAdvanceSecurityRabidEnableStatus');
 
 
 loadmodulestatus1 =pamobj.getLoadModuleResult();
+loadmodulestatus2 =obj1.getLoadModuleResult();
+
 
 print "[LIB LOAD STATUS]  :  %s" %loadmodulestatus1
+print "[LIB LOAD STATUS]  :  %s" %loadmodulestatus2
 
 
-if "SUCCESS" in loadmodulestatus1.upper():
+
+if "SUCCESS" in loadmodulestatus1.upper() and loadmodulestatus2.upper():
     pamobj.setLoadModuleStatus("SUCCESS");
     #save device's current state before it goes for reboot
     pamobj.saveCurrentState();
@@ -123,25 +127,26 @@ if "SUCCESS" in loadmodulestatus1.upper():
         print "[TEST EXECUTION RESULT] : SUCCESS";
         #Restore the device state saved before reboot
         pamobj.restorePreviousStateAfterReboot();
-        tdkTestObj = pamobj.createTestStep("pam_GetParameterValues");
-        tdkTestObj.addParameter("ParamName","Device.DeviceInfo.X_RDKCENTRAL-COM_RFC.Feature.RabidFramework.Enable");
+        tdkTestObj = obj1.createTestStep('ExecuteCmd');
+        cmd = "syscfg show | grep Advsecurity_RabidEnable | cut -d = -f 2";
+        tdkTestObj.addParameter("command",cmd);
+
+        #Execute the test case in DUT
         tdkTestObj.executeTestCase(expectedresult);
         actualresult = tdkTestObj.getResult();
-        details = tdkTestObj.getResultDetails().strip().replace("\\n","");
-
-        if expectedresult in actualresult and "false" in details:
-            #Set the result status of execution
+        details = tdkTestObj.getResultDetails().strip().replace("\\n", "");
+        if expectedresult in actualresult and details == "1":
             tdkTestObj.setResultStatus("SUCCESS");
-            print "TEST STEP 2:Should get the default Rabid framework enable status as false";
-            print "ACTUAL RESULT 2:Default Rabid framework enable status %s" %details;
+            print "TEST STEP 4:Check if Advance security RabidEnable is 1";
+            print "ACTUAL RESULT 4:Advance security RabidEnable is 1";
             #Get the result of execution
-            print "[TEST EXECUTION RESULT] : SUCCESS" ;
+            print "[TEST EXECUTION RESULT] : SUCCESS";
         else:
             tdkTestObj.setResultStatus("FAILURE");
-            print "TEST STEP 2:Should get the default Rabid framework enable status as false";
-            print "ACTUAL RESULT 2:Default Rabid framework enable status %s" %details;
+            print "TEST STEP 4:Check if Advance security RabidEnable is 1";
+            print "ACTUAL RESULT 4:Advance security RabidEnable is not 1";
             #Get the result of execution
-            print "[TEST EXECUTION RESULT] : FAILURE" ;
+            print "[TEST EXECUTION RESULT] : FAILURE";
     else:
         #Set the result status of execution
         tdkTestObj.setResultStatus("FAILURE");
@@ -151,6 +156,7 @@ if "SUCCESS" in loadmodulestatus1.upper():
         print "[TEST EXECUTION RESULT] : FAILURE";
 
     pamobj.unloadModule("pam");
+    obj1.unloadModule("sysutil");
 
 else:
     print "Failed to load wifi module";
