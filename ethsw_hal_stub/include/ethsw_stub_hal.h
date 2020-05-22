@@ -50,6 +50,12 @@ class ethsw_stub_hal : public RDKTestStubInterface, public AbstractServer<ethsw_
 			this->bindAndAddMethod(Procedure("ethsw_stub_hal_SetPortAdminStatus", PARAMS_BY_NAME, JSON_STRING, "PortID", JSON_INTEGER, "adminstatus", JSON_STRING, NULL), &ethsw_stub_hal::ethsw_stub_hal_SetPortAdminStatus);
 			this->bindAndAddMethod(Procedure("ethsw_stub_hal_SetPortCfg", PARAMS_BY_NAME, JSON_STRING, "PortID", JSON_INTEGER, "linkrate", JSON_INTEGER, "mode", JSON_STRING, NULL), &ethsw_stub_hal::ethsw_stub_hal_SetPortCfg);
 			this->bindAndAddMethod(Procedure("ethsw_stub_hal_Get_AssociatedDevice", PARAMS_BY_NAME, JSON_STRING, "flag", JSON_INTEGER,  NULL), &ethsw_stub_hal::ethsw_stub_hal_Get_AssociatedDevice);
+                        this->bindAndAddMethod(Procedure("ethsw_stub_hal_Get_EthWanInterfaceName", PARAMS_BY_NAME, JSON_STRING, "flag", JSON_INTEGER,  NULL), &ethsw_stub_hal::ethsw_stub_hal_Get_EthWanInterfaceName);
+                        this->bindAndAddMethod(Procedure("ethsw_stub_hal_Get_EthWanEnable", PARAMS_BY_NAME, JSON_STRING, "flag", JSON_INTEGER,  NULL), &ethsw_stub_hal::ethsw_stub_hal_Get_EthWanEnable);
+                        this->bindAndAddMethod(Procedure("ethsw_stub_hal_Set_EthWanEnable", PARAMS_BY_NAME, JSON_STRING, "enable", JSON_INTEGER, NULL), &ethsw_stub_hal::ethsw_stub_hal_Set_EthWanEnable);
+                        this->bindAndAddMethod(Procedure("ethsw_stub_hal_Get_EthWanPort", PARAMS_BY_NAME, JSON_STRING, "flag", JSON_INTEGER,  NULL), &ethsw_stub_hal::ethsw_stub_hal_Get_EthWanPort);
+                        this->bindAndAddMethod(Procedure("ethsw_stub_hal_Set_EthWanPort", PARAMS_BY_NAME, JSON_STRING, "port", JSON_INTEGER, NULL), &ethsw_stub_hal::ethsw_stub_hal_Set_EthWanPort);
+                        this->bindAndAddMethod(Procedure("ethsw_stub_hal_Get_EthWanLinkStatus", PARAMS_BY_NAME, JSON_STRING, NULL), &ethsw_stub_hal::ethsw_stub_hal_Get_EthWanLinkStatus);
 		}
 
 		bool initialize(IN const char* szVersion);
@@ -66,5 +72,11 @@ class ethsw_stub_hal : public RDKTestStubInterface, public AbstractServer<ethsw_
 		void ethsw_stub_hal_SetPortAdminStatus(IN const Json::Value& req, OUT Json::Value& response);
 		void ethsw_stub_hal_SetPortCfg(IN const Json::Value& req, OUT Json::Value& response);
 		void ethsw_stub_hal_Get_AssociatedDevice(IN const Json::Value& req, OUT Json::Value& response);
+                void ethsw_stub_hal_Get_EthWanInterfaceName(IN const Json::Value& req, OUT Json::Value& response);
+                void ethsw_stub_hal_Get_EthWanEnable(IN const Json::Value& req, OUT Json::Value& response);
+                void ethsw_stub_hal_Set_EthWanEnable(IN const Json::Value& req, OUT Json::Value& response);
+                void ethsw_stub_hal_Get_EthWanPort(IN const Json::Value& req, OUT Json::Value& response);
+                void ethsw_stub_hal_Set_EthWanPort(IN const Json::Value& req, OUT Json::Value& response);
+                void ethsw_stub_hal_Get_EthWanLinkStatus(IN const Json::Value& req, OUT Json::Value& response);
 };
 #endif
