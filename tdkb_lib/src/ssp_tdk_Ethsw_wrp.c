@@ -23,6 +23,8 @@
 #define MAXBITRATE_10000 10000
 #define MAXBITRATE_AUTO  1
 #define INVALID_VALUE -1
+#define ETH_WAN_LINK_UP 1
+#define ETH_WAN_LINK_DOWN 0
 
 /************************************************************************************************************
  * Function Name : ssp_ethsw_stub_hal_GetAdminPortStatus
@@ -565,3 +567,200 @@ int ssp_ethsw_stub_hal_Get_AssociatedDevice(unsigned long int *array_size,eth_de
 
         return result;
 }
+
+
+/*****************************************************************************************************************
+ * Function Name : ssp_ethsw_stub_hal_Get_EthWanInterfaceName
+ * Description   : This function will Retrieve the interface name of ethwan
+ * @param [in]   : interface - buffer to hold interface name
+                   isNegativeScenario - for negative scenario
+ * @param [out]  : return status an integer value 0-success and 1-Failure
+ ******************************************************************************************************************/
+int ssp_ethsw_stub_hal_Get_EthWanInterfaceName( char* interface, int isNegativeScenario)
+{
+        int result = RETURN_ERR;
+
+        DEBUG_PRINT(DEBUG_TRACE, "Entering the ssp_ethsw_stub_hal_Get_EthWanInterfaceName wrapper\n");
+
+        if(isNegativeScenario)
+        {
+                result = GWP_GetEthWanInterfaceName(NULL);
+        }
+        else
+        {
+                result = GWP_GetEthWanInterfaceName(interface);
+        }
+
+        if(result == RETURN_OK)
+        {
+                DEBUG_PRINT(DEBUG_TRACE, "ssp_ethsw_stub_hal_Get_EthWanInterfaceName function returns value : %s\n", interface);
+        }
+        else
+        {
+                DEBUG_PRINT(DEBUG_ERROR, "ssp_ethsw_stub_hal_Get_EthWanInterfaceName function returns failure\n");
+        }
+
+        DEBUG_PRINT(DEBUG_TRACE, "Exiting ssp_ethsw_stub_hal_Get_EthWanInterfaceName wrapper\n");
+        return result;
+}
+
+
+/*****************************************************************************************************************
+ * Function Name : ssp_ethsw_stub_hal_Get_EthWanEnable
+ * Description   : This function will Retrieve the ethwan enable status
+ * @param [in]   : enableStatus - buffer to hold enable state
+                   isNegativeScenario - for negative scenario
+ * @param [out]  : return status an integer value 0-success and 1-Failure
+ ******************************************************************************************************************/
+int ssp_ethsw_stub_hal_Get_EthWanEnable( unsigned char* enableStatus, int isNegativeScenario)
+{
+        int result = RETURN_ERR;
+
+        DEBUG_PRINT(DEBUG_TRACE, "Entering the ssp_ethsw_stub_hal_Get_EthWanEnable wrapper\n");
+
+        if(isNegativeScenario)
+        {
+                result = CcspHalExtSw_getEthWanEnable(NULL);
+        }
+        else
+        {
+                result = CcspHalExtSw_getEthWanEnable(enableStatus);
+        }
+
+        if(result == RETURN_OK)
+        {
+                DEBUG_PRINT(DEBUG_ERROR, "ssp_ethsw_stub_hal_Get_EthWanEnable function returns enableStatus as %d\n", *enableStatus);
+        }
+        else
+        {
+                DEBUG_PRINT(DEBUG_ERROR, "ssp_ethsw_stub_hal_Get_EthWanEnable function returns failure\n");
+        }
+
+        DEBUG_PRINT(DEBUG_TRACE, "Exiting ssp_ethsw_stub_hal_Get_EthWanEnable wrapper\n");
+        return result;
+}
+
+
+/*****************************************************************************************************************
+ * Function Name : ssp_ethsw_stub_hal_Set_EthWanEnable
+ * Description   : This function will set the ethwan enable status
+ * @param [in]   : enableStatus - enable state value to be set
+                   isNegativeScenario - for negative scenario
+ * @param [out]  : return status an integer value 0-success and 1-Failure
+ ******************************************************************************************************************/
+int ssp_ethsw_stub_hal_Set_EthWanEnable( unsigned char enableStatus)
+{
+        int result = RETURN_ERR;
+
+        DEBUG_PRINT(DEBUG_TRACE, "Entering the ssp_ethsw_stub_hal_Set_EthWanEnable wrapper\n");
+
+        if(CcspHalExtSw_setEthWanEnable(enableStatus) == RETURN_OK)
+        {
+                DEBUG_PRINT(DEBUG_ERROR, "ssp_ethsw_stub_hal_Set_EthWanEnable function returns success\n");
+                result = RETURN_OK;
+        }
+        else
+        {
+                DEBUG_PRINT(DEBUG_ERROR, "ssp_ethsw_stub_hal_Set_EthWanEnable function returns failure\n");
+        }
+
+        DEBUG_PRINT(DEBUG_TRACE, "Exiting ssp_ethsw_stub_hal_Set_EthWanEnable wrapper\n");
+        return result;
+}
+
+/*****************************************************************************************************************
+ * Function Name : ssp_ethsw_stub_hal_Get_EthWanPort
+ * Description   : This function will Retrieve the ethwan port number
+ * @param [in]   : portNum - buffer to hold ethwan port number
+                   isNegativeScenario - for negative scenario
+ * @param [out]  : return status an integer value 0-success and 1-Failure
+ ******************************************************************************************************************/
+int ssp_ethsw_stub_hal_Get_EthWanPort( unsigned int* portNum, int isNegativeScenario)
+{
+        int result = RETURN_ERR;
+
+        DEBUG_PRINT(DEBUG_TRACE, "Entering the ssp_ethsw_stub_hal_Get_EthWanPort wrapper\n");
+
+        if(isNegativeScenario)
+        {
+                result = CcspHalExtSw_getEthWanPort(NULL);
+        }
+        else
+        {
+                result = CcspHalExtSw_getEthWanPort(portNum);
+        }
+
+        if(result == RETURN_OK)
+        {
+                DEBUG_PRINT(DEBUG_ERROR, "ssp_ethsw_stub_hal_Get_EthWanPort function returns port number as %lu\n", *portNum);
+        }
+        else
+        {
+                DEBUG_PRINT(DEBUG_ERROR, "ssp_ethsw_stub_hal_Get_EthWanPort function returns failure\n");
+        }
+
+        DEBUG_PRINT(DEBUG_TRACE, "Exiting ssp_ethsw_stub_hal_Get_EthWanPort wrapper\n");
+        return result;
+}
+
+
+/*****************************************************************************************************************
+ * Function Name : ssp_ethsw_stub_hal_Set_EthWanPort
+ * Description   : This function will set the ethwan port number
+ * @param [in]   : portNum - ethwan port number value to be set
+                   isNegativeScenario - for negative scenario
+ * @param [out]  : return status an integer value 0-success and 1-Failure
+ ******************************************************************************************************************/
+int ssp_ethsw_stub_hal_Set_EthWanPort( unsigned int portNum)
+{
+        int result = RETURN_ERR;
+
+        DEBUG_PRINT(DEBUG_TRACE, "Entering the ssp_ethsw_stub_hal_Set_EthWanPort wrapper\n");
+
+        if(CcspHalExtSw_setEthWanPort(portNum) == RETURN_OK)
+        {
+                DEBUG_PRINT(DEBUG_ERROR, "ssp_ethsw_stub_hal_Set_EthWanPort function returns success\n");
+                result = RETURN_OK;
+        }
+        else
+        {
+                DEBUG_PRINT(DEBUG_ERROR, "ssp_ethsw_stub_hal_Set_EthWanPort function returns failure\n");
+        }
+
+        DEBUG_PRINT(DEBUG_TRACE, "Exiting ssp_ethsw_stub_hal_Set_EthWanPort wrapper\n");
+        return result;
+}
+
+/*****************************************************************************************************************
+ * Function Name : ssp_ethsw_stub_hal_Get_EthWanLinkStatus
+ * Description   : This function will Retrieve the ethwan link status
+ * @param [in]   : linkstatus - buffer to hold ethwan link status
+ * @param [out]  : return status an integer value 0-success and 1-Failure
+ ******************************************************************************************************************/
+int ssp_ethsw_stub_hal_Get_EthWanLinkStatus(int* linkStatus)
+{
+        int result = RETURN_ERR;
+
+        DEBUG_PRINT(DEBUG_TRACE, "Entering the ssp_ethsw_stub_hal_Get_EthWanLinkStatus wrapper\n");
+
+        *linkStatus = GWP_GetEthWanLinkStatus();
+
+        if (*linkStatus == ETH_WAN_LINK_UP)
+        {
+                DEBUG_PRINT(DEBUG_TRACE, "ssp_ethsw_stub_hal_Get_EthWanLinkStatus function returns status as ETH_WAN_LINK_UP \n");
+                result = RETURN_OK;
+        }
+        else if (*linkStatus == ETH_WAN_LINK_DOWN)
+        {
+                DEBUG_PRINT(DEBUG_TRACE, "ssp_ethsw_stub_hal_Get_EthWanLinkStatus function returns status as ETH_WAN_LINK_DOWN \n");
+                result = RETURN_OK;
+        }
+        else
+        {
+                DEBUG_PRINT(DEBUG_ERROR, "ssp_ethsw_stub_hal_Get_EthWanLinkStatus function returns failure status: %d\n", *linkStatus);
+        }
+
+        DEBUG_PRINT(DEBUG_TRACE, "Exiting ssp_ethsw_stub_hal_Get_EthWanLinkStatus wrapper\n");
+        return result;
+}
+

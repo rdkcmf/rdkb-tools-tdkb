@@ -442,6 +442,217 @@ void ethsw_stub_hal::ethsw_stub_hal_Get_AssociatedDevice(IN const Json::Value& r
                 return;
         }
 }
+
+
+/*********************************************************************************************
+ *Function name : ethsw_stub_hal_Get_EthWanInterfaceName
+ *Description   : This function will invoke the SSP  HAL wrapper to get the ethwan interface name
+ *@param [in]   : req - flag(for negative scenario)
+ *@param [out]  : response - filled with SUCCESS or FAILURE based on the return value
+ ************************************************************************************************/
+void ethsw_stub_hal::ethsw_stub_hal_Get_EthWanInterfaceName(IN const Json::Value& req, OUT Json::Value& response)
+{
+        char interface[MAX_STRING_SIZE] = {0};
+        char resultDetails[MAX_BUFFER_SIZE_TO_SEND] = {0};
+        int isNegativeScenario = 0;
+
+        DEBUG_PRINT(DEBUG_TRACE,"Inside Function ethsw_stub_hal_Get_EthWanInterfaceName stub \n");
+
+        if(&req["flag"])
+        {
+                isNegativeScenario = req["flag"].asInt();
+        }
+
+        if(ssp_ethsw_stub_hal_Get_EthWanInterfaceName(interface, isNegativeScenario) == RETURN_SUCCESS)
+        {
+                sprintf(resultDetails, "%s", interface);
+                response["result"] = "SUCCESS";
+                response["details"] = resultDetails;
+                return;
+        }
+        else
+        {
+                response["result"] = "FAILURE";
+                response["details"] = "ethsw_stub_hal_Get_EthWanInterfaceName function has failed.Please check logs";
+                return;
+        }
+}
+
+
+/*********************************************************************************************
+ *Function name : ethsw_stub_hal_Get_EthWanEnable
+ *Description   : This function will invoke the SSP  HAL wrapper to get the ethwan enable status
+ *@param [in]   : req - flag(for negative scenario)
+ *@param [out]  : response - filled with SUCCESS or FAILURE based on the return value
+ ************************************************************************************************/
+void ethsw_stub_hal::ethsw_stub_hal_Get_EthWanEnable(IN const Json::Value& req, OUT Json::Value& response)
+{
+        unsigned char enableState = 0;
+        char resultDetails[MAX_BUFFER_SIZE_TO_SEND] = {0};
+        int isNegativeScenario = 0;
+
+        DEBUG_PRINT(DEBUG_TRACE,"Inside Function ethsw_stub_hal_Get_EthWanEnable stub \n");
+
+        if(&req["flag"])
+        {
+                isNegativeScenario = req["flag"].asInt();
+        }
+
+        if(ssp_ethsw_stub_hal_Get_EthWanEnable(&enableState, isNegativeScenario) == RETURN_SUCCESS)
+        {
+                sprintf(resultDetails, "%d", enableState);
+                response["result"] = "SUCCESS";
+                response["details"] = resultDetails;
+                return;
+        }
+        else
+        {
+                response["result"] = "FAILURE";
+                response["details"] = "ethsw_stub_hal_Get_EthWanEnable function has failed.Please check logs";
+                return;
+        }
+}
+
+
+/***************************************************************************************
+ *Function name : ethsw_stub_hal_Set_EthWanEnable
+ *Description   : This function will invoke the SSP HAL wrapper to Set EthWanEnable state
+ *@param [in]   : req - It will give the eth wan enable state to be set
+ *@param [out]  : response - filled with SUCCESS or FAILURE based on the return value
+ ******************************************************************************************/
+void ethsw_stub_hal::ethsw_stub_hal_Set_EthWanEnable(IN const Json::Value& req, OUT Json::Value& response)
+{
+        unsigned char enableState = 0;
+
+        DEBUG_PRINT(DEBUG_TRACE,"Inside Function ethsw_stub_hal_Set_EthWanEnable stub\n");
+
+        if(&req["enable"] == NULL)
+        {
+                response["result"] = "FAILURE";
+                response["details"] = "NULL parameter as input argument";
+                return;
+        }
+
+        enableState = req["enable"].asInt();
+
+        DEBUG_PRINT(DEBUG_TRACE, "enableState = %d\n", enableState);
+
+        if(ssp_ethsw_stub_hal_Set_EthWanEnable(enableState) == RETURN_SUCCESS)
+        {
+                response["result"] = "SUCCESS";
+                response["details"] = "ethsw_stub_hal_Set_EthWanEnable function has passed";
+                return;
+        }
+        else
+        {
+                response["result"] = "FAILURE";
+                response["details"] = "ethsw_stub_hal_Set_EthWanEnable function has failed.Please check logs";
+                return;
+        }
+}
+
+
+/*********************************************************************************************
+ *Function name : ethsw_stub_hal_Get_EthWanPort
+ *Description   : This function will invoke the SSP  HAL wrapper to get the ethwan port number
+ *@param [in]   : req - flag(for negative scenario)
+ *@param [out]  : response - filled with SUCCESS or FAILURE based on the return value
+ ************************************************************************************************/
+void ethsw_stub_hal::ethsw_stub_hal_Get_EthWanPort(IN const Json::Value& req, OUT Json::Value& response)
+{
+        unsigned int portNum = 0;
+        char resultDetails[MAX_BUFFER_SIZE_TO_SEND] = {0};
+        int isNegativeScenario = 0;
+
+        DEBUG_PRINT(DEBUG_TRACE,"Inside Function ethsw_stub_hal_Get_EthWanPort stub \n");
+
+        if(&req["flag"])
+        {
+                isNegativeScenario = req["flag"].asInt();
+        }
+
+        if(ssp_ethsw_stub_hal_Get_EthWanPort(&portNum, isNegativeScenario) == RETURN_SUCCESS)
+        {
+                sprintf(resultDetails, "%u", portNum);
+                response["result"] = "SUCCESS";
+                response["details"] = resultDetails;
+                return;
+        }
+        else
+        {
+                response["result"] = "FAILURE";
+                response["details"] = "ethsw_stub_hal_Get_EthWanPort function has failed.Please check logs";
+                return;
+        }
+}
+
+
+/***************************************************************************************
+ *Function name : ethsw_stub_hal_Set_EthWanPort
+ *Description   : This function will invoke the SSP HAL wrapper to Set EthWanPort number
+ *@param [in]   : req - It will give the eth wan port number to be set
+ *@param [out]  : response - filled with SUCCESS or FAILURE based on the return value
+ ******************************************************************************************/
+void ethsw_stub_hal::ethsw_stub_hal_Set_EthWanPort(IN const Json::Value& req, OUT Json::Value& response)
+{
+        unsigned int portNum = 0;
+
+        DEBUG_PRINT(DEBUG_TRACE,"Inside Function ethsw_stub_hal_Set_EthWanPort stub\n");
+
+        if(&req["port"] == NULL)
+        {
+                response["result"] = "FAILURE";
+                response["details"] = "NULL parameter as input argument";
+                return;
+        }
+
+        portNum = req["port"].asInt();
+
+        DEBUG_PRINT(DEBUG_TRACE, "portNum = %d\n", portNum);
+
+        if(ssp_ethsw_stub_hal_Set_EthWanPort(portNum) == RETURN_SUCCESS)
+        {
+                response["result"] = "SUCCESS";
+                response["details"] = "ethsw_stub_hal_Set_EthWanPort function has passed";
+                return;
+        }
+        else
+        {
+                response["result"] = "FAILURE";
+                response["details"] = "ethsw_stub_hal_Set_EthWanPort function has failed.Please check logs";
+                return;
+        }
+}
+
+
+/*********************************************************************************************
+ *Function name : ethsw_stub_hal_Get_EthWanLinkStatus
+ *Description   : This function will invoke the SSP  HAL wrapper to get the ethwan link status
+ *@param [in]   :
+ *@param [out]  : response - filled with SUCCESS or FAILURE based on the return value
+ ************************************************************************************************/
+void ethsw_stub_hal::ethsw_stub_hal_Get_EthWanLinkStatus(IN const Json::Value& req, OUT Json::Value& response)
+{
+        int linkStatus = 0;
+        char resultDetails[MAX_BUFFER_SIZE_TO_SEND] = {0};
+
+        DEBUG_PRINT(DEBUG_TRACE,"Inside Function ethsw_stub_hal_Get_EthLinkStatus stub \n");
+
+        if(ssp_ethsw_stub_hal_Get_EthWanLinkStatus(&linkStatus) == RETURN_SUCCESS)
+        {
+                sprintf(resultDetails, "%d", linkStatus);
+                response["result"] = "SUCCESS";
+                response["details"] = resultDetails;
+                return;
+        }
+        else
+        {
+                response["result"] = "FAILURE";
+                response["details"] = "ethsw_stub_hal_Get_EthWanLinkStatus function has failed.Please check logs";
+                return;
+        }
+}
+
 /***************************************************************************************************
  *Function Name   : CreateObject
  *Description     : This function is used to create a new object of the class "ethsw_stub_hal".

@@ -30,6 +30,12 @@ extern "C"
 	int ssp_ethsw_stub_hal_SetPortAdminStatus(int portId, char *pAdminStatus);
 	int ssp_ethsw_stub_hal_SetAgingSpeed(int portId, int agingSpeed);
 	int ssp_ethsw_stub_hal_Get_AssociatedDevice(unsigned long int *array_size,eth_device_t *eth_device_conf, int isNegativeScenario);
+        int ssp_ethsw_stub_hal_Get_EthWanInterfaceName(char *interface, int isNegativeScenario);
+        int ssp_ethsw_stub_hal_Get_EthWanEnable(unsigned char *enableStatus, int isNegativeScenario);
+        int ssp_ethsw_stub_hal_Set_EthWanEnable(unsigned char enableStatus);
+        int ssp_ethsw_stub_hal_Get_EthWanPort(unsigned int *portNum, int isNegativeScenario);
+        int ssp_ethsw_stub_hal_Set_EthWanPort(unsigned int portNum);
+        int ssp_ethsw_stub_hal_Get_EthWanLinkStatus(int* linkStatus);
 #ifdef __cplusplus
 }
 #endif
