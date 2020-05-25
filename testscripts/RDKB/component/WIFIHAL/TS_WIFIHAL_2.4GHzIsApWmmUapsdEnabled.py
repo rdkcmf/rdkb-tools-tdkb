@@ -81,6 +81,8 @@ CheckPoint
 import tdklib; 
 from wifiUtility import *;
 
+radio = "2.4G"
+
 #Test component to be tested
 obj = tdklib.TDKScriptingLibrary("wifihal","1");
 
@@ -96,72 +98,79 @@ print "[LIB LOAD STATUS]  :  %s" %loadmodulestatus
 if "SUCCESS" in loadmodulestatus.upper():
     obj.setLoadModuleStatus("SUCCESS");
 
-    expectedresult="SUCCESS";
-    apIndex = 0
-    getMethod = "getApUAPSDCapability"
-    primitive = 'WIFIHAL_GetOrSetParamBoolValue'
-
-    #Calling the method from wifiUtility to execute test case and set result status for the test.
-    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, 0, getMethod)
-
-    if expectedresult in actualresult:
-        ApUAPSDCapability = details.split(":")[1].strip()
-        if ApUAPSDCapability == "Enabled":
+    tdkTestObjTemp, idx = getIndex(obj, radio);
+    ## Check if a invalid index is returned
+    if idx == -1:
+        print "Failed to get radio index for radio %s\n" %radio;
+        tdkTestObjTemp.setResultStatus("FAILURE");
+    else: 
 
 	    expectedresult="SUCCESS";
-	    apIndex = 0
-	    getMethod = "getApWmmUapsdEnable"
+	    apIndex = idx
+	    getMethod = "getApUAPSDCapability"
 	    primitive = 'WIFIHAL_GetOrSetParamBoolValue'
+
+	    #Calling the method from wifiUtility to execute test case and set result status for the test.
 	    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, 0, getMethod)
-	
-	    if expectedresult in actualresult :
-        	tdkTestObj.setResultStatus("SUCCESS");
-	        enable = details.split(":")[1].strip()
-        	if "Enabled" in enable:
-	            print "Automatic Power Save Delivery for AP is Enabled"
-        	    oldEnable = 1
-	            newEnable = 0
-	        else:
-        	    print "Automatic Power Save Delivery for AP is Disabled"
-		    oldEnable = 0
-        	    newEnable = 1
 
-	        setMethod = "setApWmmUapsdEnable"
-        	#Toggle the enable status using set
-	        tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, newEnable, setMethod) 
+	    if expectedresult in actualresult:
+		ApUAPSDCapability = details.split(":")[1].strip()
+		if ApUAPSDCapability == "Enabled":
 
-        	if expectedresult in actualresult :
-	            print "Enable state toggled using set"
-        	    # Get the New enable status
-	            tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, 0, getMethod) 
+		    expectedresult="SUCCESS";
+		    apIndex = idx
+		    getMethod = "getApWmmUapsdEnable"
+		    primitive = 'WIFIHAL_GetOrSetParamBoolValue'
+		    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, 0, getMethod)
+		
+		    if expectedresult in actualresult :
+			tdkTestObj.setResultStatus("SUCCESS");
+			enable = details.split(":")[1].strip()
+			if "Enabled" in enable:
+			    print "Automatic Power Save Delivery for AP is Enabled"
+			    oldEnable = 1
+			    newEnable = 0
+			else:
+			    print "Automatic Power Save Delivery for AP is Disabled"
+			    oldEnable = 0
+			    newEnable = 1
 
-	            if expectedresult in actualresult and enable not in details.split(":")[1].strip():
-        	        print "getApWmmUapsdEnable Success, verified along with setApWmmUapsdEnable() api"
-                	#Revert back to original Enable status
-	                tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, oldEnable, setMethod)
-	
-        	        if expectedresult in actualresult :
-                	    print "Enable status reverted back";
-	                else:
-        	            print "Couldn't revert enable status"
-                	    tdkTestObj.setResultStatus("FAILURE");
-	            else:
-        	        print "getApWmmUapsdEnable() failed after set function"
+			setMethod = "setApWmmUapsdEnable"
+			#Toggle the enable status using set
+			tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, newEnable, setMethod) 
+
+			if expectedresult in actualresult :
+			    print "Enable state toggled using set"
+			    # Get the New enable status
+			    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, 0, getMethod) 
+
+			    if expectedresult in actualresult and enable not in details.split(":")[1].strip():
+				print "getApWmmUapsdEnable Success, verified along with setApWmmUapsdEnable() api"
+				#Revert back to original Enable status
+				tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, oldEnable, setMethod)
+		
+				if expectedresult in actualresult :
+				    print "Enable status reverted back";
+				else:
+				    print "Couldn't revert enable status"
+				    tdkTestObj.setResultStatus("FAILURE");
+			    else:
+				print "getApWmmUapsdEnable() failed after set function"
+				tdkTestObj.setResultStatus("FAILURE");
+			else:
+			    print "setApWmmUapsdEnable() failed"
+			    tdkTestObj.setResultStatus("FAILURE");
+		    else:
+			print "getApWmmUapsdEnable() failed"
 			tdkTestObj.setResultStatus("FAILURE");
-	        else:
-		    print "setApWmmUapsdEnable() failed"
-	            tdkTestObj.setResultStatus("FAILURE");
+		elif ApUAPSDCapability == "Disabled":
+		    print "wifi_getApUAPSDCapability function called successfully and %s"%details
+		    tdkTestObj.setResultStatus("SUCCESS");
+		    print "ApUAPSDCapability received: %s"%ApUAPSDCapability;
+		    print "ApUAPSDCapability is disabled"
 	    else:
-		print "getApWmmUapsdEnable() failed"
-	        tdkTestObj.setResultStatus("FAILURE");
-        elif ApUAPSDCapability == "Disabled":
-            print "wifi_getApUAPSDCapability function called successfully and %s"%details
-            tdkTestObj.setResultStatus("SUCCESS");
-            print "ApUAPSDCapability received: %s"%ApUAPSDCapability;
-            print "ApUAPSDCapability is disabled"
-    else:
-        print "wifi_getApUAPSDCapability function call failed";
-        tdkTestObj.setResultStatus("FAILURE");
+		print "wifi_getApUAPSDCapability function call failed";
+		tdkTestObj.setResultStatus("FAILURE");
 
     obj.unloadModule("wifihal");
 
