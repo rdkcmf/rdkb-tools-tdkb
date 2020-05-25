@@ -93,6 +93,9 @@ radioIndex   :   0</input_parameters>
 import tdklib;
 from wifiUtility import *;
 
+
+radio = "2.4G"
+
 #Test component to be tested
 obj = tdklib.TDKScriptingLibrary("wifihal","1");
 
@@ -108,43 +111,50 @@ print "[LIB LOAD STATUS]  :  %s"%loadmodulestatus
 if "SUCCESS" in loadmodulestatus.upper():
     obj.setLoadModuleStatus("SUCCESS");
 
-    expectedresult="SUCCESS"
-    radioIndex = 0
-    primitive = 'WIFIHAL_GetOrSetParamStringValue'
+    tdkTestObjTemp, idx = getIndex(obj, radio);
+    ## Check if a invalid index is returned
+    if idx == -1:
+        print "Failed to get radio index for radio %s\n" %radio;
+        tdkTestObjTemp.setResultStatus("FAILURE");
+    else: 
 
-    getMethod = "getSupportedDataTransmitRates"
-    #Calling the method from wifiUtility to execute test case and set result status for the test.
-    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, "0", getMethod)
-
-    getMethod = "getRadioBasicDataTransmitRates"
-    #Calling the method from wifiUtility to execute test case and set result status for the test.
-    tdkTestObj1, actualresult1, details1 = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, "0", getMethod)
-
-    if expectedresult in actualresult:
-        supportedTransmitRate = list(details.split(":")[1].strip().split(","))
-        if expectedresult in actualresult1:
-            actualTransmitRate = list(details1.split(":")[1].strip().split(","))
-            for item in actualTransmitRate:
-                if item in supportedTransmitRate:
-                    print "getRadioBasicDataTransmitRates function successful and %s"%details1
-                    tdkTestObj1.setResultStatus("SUCCESS");
-                    print "TEST STEP 1: Validate the wifi_getRadioBasicDataTransmitRates Function";
-                    print "EXPECTED RESULT 1: wifi_getRadioBasicDataTransmitRates should return a data transmit rate value for Radio 2.4GHz";
-                    print "ACTUAL RESULT 1: Data Transmit Rate string received: %s"%item;
-                    print "[TEST EXECUTION RESULT] : SUCCESS";
-                else:
-                    print "getRadioBasicDataTransmitRates() failed %s"%details1
-                    tdkTestObj1.setResultStatus("FAILURE");
-                    print "TEST STEP 1: Validate the wifi_getRadioBasicDataTransmitRates Function";
-                    print "EXPECTED RESULT 1: wifi_getRadioBasicDataTransmitRates should return a data transmit rate value for Radio 2.4GHz";
-                    print "ACTUAL RESULT 1:Failed to receive Data Transmit Rates: %s"%item;
-                    print "[TEST EXECUTION RESULT] : FAILURE";
-        else:
-            print "getRadioBasicDataTransmitRates() failed"
-            tdkTestObj1.setResultStatus("FAILURE");
-    else:
-        print "getSupportedDataTransmitRates() failed"
-        tdkTestObj.setResultStatus("FAILURE");
+	    expectedresult="SUCCESS"
+	    radioIndex = idx
+	    primitive = 'WIFIHAL_GetOrSetParamStringValue'
+	
+	    getMethod = "getSupportedDataTransmitRates"
+	    #Calling the method from wifiUtility to execute test case and set result status for the test.
+	    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, "0", getMethod)
+	
+	    getMethod = "getRadioBasicDataTransmitRates"
+	    #Calling the method from wifiUtility to execute test case and set result status for the test.
+	    tdkTestObj1, actualresult1, details1 = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, "0", getMethod)
+	
+	    if expectedresult in actualresult:
+		supportedTransmitRate = list(details.split(":")[1].strip().split(","))
+		if expectedresult in actualresult1:
+		    actualTransmitRate = list(details1.split(":")[1].strip().split(","))
+		    for item in actualTransmitRate:
+			if item in supportedTransmitRate:
+			    print "getRadioBasicDataTransmitRates function successful and %s"%details1
+			    tdkTestObj1.setResultStatus("SUCCESS");
+			    print "TEST STEP 1: Validate the wifi_getRadioBasicDataTransmitRates Function";
+			    print "EXPECTED RESULT 1: wifi_getRadioBasicDataTransmitRates should return a data transmit rate value for Radio 2.4GHz";
+			    print "ACTUAL RESULT 1: Data Transmit Rate string received: %s"%item;
+			    print "[TEST EXECUTION RESULT] : SUCCESS";
+			else:
+			    print "getRadioBasicDataTransmitRates() failed %s"%details1
+			    tdkTestObj1.setResultStatus("FAILURE");
+			    print "TEST STEP 1: Validate the wifi_getRadioBasicDataTransmitRates Function";
+			    print "EXPECTED RESULT 1: wifi_getRadioBasicDataTransmitRates should return a data transmit rate value for Radio 2.4GHz";
+			    print "ACTUAL RESULT 1:Failed to receive Data Transmit Rates: %s"%item;
+			    print "[TEST EXECUTION RESULT] : FAILURE";
+		else:
+		    print "getRadioBasicDataTransmitRates() failed"
+		    tdkTestObj1.setResultStatus("FAILURE");
+	    else:
+		print "getSupportedDataTransmitRates() failed"
+		tdkTestObj.setResultStatus("FAILURE");
     obj.unloadModule("wifihal");
 
 else:

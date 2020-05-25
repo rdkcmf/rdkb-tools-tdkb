@@ -87,6 +87,9 @@ radioIndex :0</input_parameters>
 '''
 #use tdklib library,which provides a wrapper for tdk testcase script 
 import tdklib; 
+from wifiUtility import *;
+
+radio = "2.4G"
 
 #Test component to be tested
 obj = tdklib.TDKScriptingLibrary("wifihal","1");
@@ -104,40 +107,47 @@ print "[LIB LOAD STATUS]  :  %s" %loadmodulestatus ;
 if "SUCCESS" in loadmodulestatus.upper():
     obj.setLoadModuleStatus("SUCCESS");
 
-    #Script to load the configuration file of the component
-    tdkTestObj = obj.createTestStep("WIFIHAL_GetOrSetParamStringValue");
-    #Giving the method name to invoke the api for getting Radio Channel bandwidth. ie,wifi_getRadioOperatingChannelBandwidth()
-    tdkTestObj.addParameter("methodName","getChannelBandwidth");
-    #Radio index is 0 for 2.4GHz and 1 for 5GHz
-    tdkTestObj.addParameter("radioIndex",0);
-    expectedresult="SUCCESS";
-    tdkTestObj.executeTestCase(expectedresult);
-    actualresult = tdkTestObj.getResult();
-    details = tdkTestObj.getResultDetails();
-    ExpectedList = ["20MHz", "40MHz", "80MHz", "160MHz", "Auto"];
-    if expectedresult in actualresult :
-	Bandwidth= details.split(":")[1];
-        Bandwidth=Bandwidth.split("\\n")[0];
-        print Bandwidth;
-	if Bandwidth in ExpectedList:
-            #Set the result status of execution
-            tdkTestObj.setResultStatus("SUCCESS");
-            print "TEST STEP 1: Get the Radio channel bandwidth for 2.4GHz";
-            print "EXPECTED RESULT 1: Should get the Radio channel bandwidth for 2.4GHz";
-            print "ACTUAL RESULT 1: %s" %Bandwidth;
-            #Get the result of execution
-            print "[TEST EXECUTION RESULT] : SUCCESS";
-	else:
-	    tdkTestObj.setResultStatus("FAILURE");
-	    print "Operating Channel bandwidth is not from the expected list"
-    else:
-	#Set the result status of execution
-        tdkTestObj.setResultStatus("FAILURE");
-        print "TEST STEP 1: Get the Radio channel bandwidth for 2.4GHz";
-        print "EXPECTED RESULT 1: Should get the Radio channel bandwidth for 2.4GHz";
-        print "ACTUAL RESULT 1: %s" %Bandwidth;
-        #Get the result of execution
-        print "[TEST EXECUTION RESULT] : FAILURE";
+    tdkTestObjTemp, idx = getIndex(obj, radio);
+    ## Check if a invalid index is returned
+    if idx == -1:
+        print "Failed to get radio index for radio %s\n" %radio;
+        tdkTestObjTemp.setResultStatus("FAILURE");
+    else: 
+
+	    #Script to load the configuration file of the component
+	    tdkTestObj = obj.createTestStep("WIFIHAL_GetOrSetParamStringValue");
+	    #Giving the method name to invoke the api for getting Radio Channel bandwidth. ie,wifi_getRadioOperatingChannelBandwidth()
+	    tdkTestObj.addParameter("methodName","getChannelBandwidth");
+	    #Radio index is 0 for 2.4GHz and 1 for 5GHz
+	    tdkTestObj.addParameter("radioIndex",idx);
+	    expectedresult="SUCCESS";
+	    tdkTestObj.executeTestCase(expectedresult);
+	    actualresult = tdkTestObj.getResult();
+	    details = tdkTestObj.getResultDetails();
+	    ExpectedList = ["20MHz", "40MHz", "80MHz", "160MHz", "Auto"];
+	    if expectedresult in actualresult :
+		Bandwidth= details.split(":")[1];
+		Bandwidth=Bandwidth.split("\\n")[0];
+		print Bandwidth;
+		if Bandwidth in ExpectedList:
+		    #Set the result status of execution
+		    tdkTestObj.setResultStatus("SUCCESS");
+		    print "TEST STEP 1: Get the Radio channel bandwidth for 2.4GHz";
+		    print "EXPECTED RESULT 1: Should get the Radio channel bandwidth for 2.4GHz";
+		    print "ACTUAL RESULT 1: %s" %Bandwidth;
+		    #Get the result of execution
+		    print "[TEST EXECUTION RESULT] : SUCCESS";
+		else:
+		    tdkTestObj.setResultStatus("FAILURE");
+		    print "Operating Channel bandwidth is not from the expected list"
+	    else:
+		#Set the result status of execution
+		tdkTestObj.setResultStatus("FAILURE");
+		print "TEST STEP 1: Get the Radio channel bandwidth for 2.4GHz";
+		print "EXPECTED RESULT 1: Should get the Radio channel bandwidth for 2.4GHz";
+		print "ACTUAL RESULT 1: %s" %Bandwidth;
+		#Get the result of execution
+		print "[TEST EXECUTION RESULT] : FAILURE";
     obj.unloadModule("wifihal");
 else:
         print "Failed to load the module";
