@@ -71,6 +71,8 @@ radioIndex : 0</input_parameters>
 import tdklib;
 from wifiUtility import *;
 
+radio = "2.4G"
+
 #Test component to be tested
 obj = tdklib.TDKScriptingLibrary("wifihal","1");
 
@@ -86,40 +88,47 @@ print "[LIB LOAD STATUS]  :  %s" %loadmodulestatus
 if "SUCCESS" in loadmodulestatus.upper():
     obj.setLoadModuleStatus("SUCCESS");
 
-    expectedresult="SUCCESS";
-    radioIndex = 0
-    getMethod = "getRadioReverseDirectionGrantSupported"
-    primitive = 'WIFIHAL_GetOrSetParamBoolValue'
-    #Getting if ReverseDirectionGrant is supported or not
-    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, 0, getMethod)
+    tdkTestObjTemp, idx = getIndex(obj, radio);
+    ## Check if a invalid index is returned
+    if idx == -1:
+        print "Failed to get radio index for radio %s\n" %radio;
+        tdkTestObjTemp.setResultStatus("FAILURE");
+    else: 
 
-    if expectedresult in actualresult :
-        tdkTestObj.setResultStatus("SUCCESS");
-        enable = details.split(":")[1].strip()
-        if "Enabled" in enable:
-            expectedresult="SUCCESS";
-            radioIndex = 0
-            getMethod = "getRadioReverseDirectionGrantEnable"
-            primitive = 'WIFIHAL_GetOrSetParamBoolValue'
-            #Getting the default enable state
-            tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, 0, getMethod)
+	    expectedresult="SUCCESS";
+	    radioIndex = idx
+	    getMethod = "getRadioReverseDirectionGrantSupported"
+	    primitive = 'WIFIHAL_GetOrSetParamBoolValue'
+	    #Getting if ReverseDirectionGrant is supported or not
+	    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, 0, getMethod)
 
-            if expectedresult in actualresult :
-                tdkTestObj.setResultStatus("SUCCESS");
-                enable = details.split(":")[1].strip()
-                if "Enabled" in enable:
-                    print "Reverse Direction Grant is Enabled for Radio 2.4GHz"
-                else:
-                    print "Reverse Direction Grant is Disabled for Radio 2.4GHz"
-            else:
-                print "getRadioReverseDirectionGrantEnable() failed"
-                tdkTestObj.setResultStatus("FAILURE");
-	else:
-	    print "RadioReverseDirectionGrant feature not supported"
-	    tdkTestObj.setResultStatus("SUCCESS");
-    else:
-        print "getRadioReverseDirectionGrantSupported() failed"
-        tdkTestObj.setResultStatus("FAILURE");
+	    if expectedresult in actualresult :
+		tdkTestObj.setResultStatus("SUCCESS");
+		enable = details.split(":")[1].strip()
+		if "Enabled" in enable:
+		    expectedresult="SUCCESS";
+		    radioIndex = idx
+		    getMethod = "getRadioReverseDirectionGrantEnable"
+		    primitive = 'WIFIHAL_GetOrSetParamBoolValue'
+		    #Getting the default enable state
+		    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, 0, getMethod)
+
+		    if expectedresult in actualresult :
+			tdkTestObj.setResultStatus("SUCCESS");
+			enable = details.split(":")[1].strip()
+			if "Enabled" in enable:
+			    print "Reverse Direction Grant is Enabled for Radio 2.4GHz"
+			else:
+			    print "Reverse Direction Grant is Disabled for Radio 2.4GHz"
+		    else:
+			print "getRadioReverseDirectionGrantEnable() failed"
+			tdkTestObj.setResultStatus("FAILURE");
+		else:
+		    print "RadioReverseDirectionGrant feature not supported"
+		    tdkTestObj.setResultStatus("SUCCESS");
+	    else:
+		print "getRadioReverseDirectionGrantSupported() failed"
+		tdkTestObj.setResultStatus("FAILURE");
 
     obj.unloadModule("wifihal");
 
