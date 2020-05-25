@@ -74,6 +74,8 @@ radioIndex : 0</input_parameters>
 import tdklib; 
 from wifiUtility import *;
 
+radio = "2.4G"
+
 #Test component to be tested
 obj = tdklib.TDKScriptingLibrary("wifihal","1");
 
@@ -90,67 +92,74 @@ print "[LIB LOAD STATUS]  :  %s" %loadmodulestatus
 if "SUCCESS" in loadmodulestatus.upper():
     obj.setLoadModuleStatus("SUCCESS");
 
-    expectedresult="SUCCESS";
-    radioIndex = 0
-    getMethod = "getSupportedDataTransmitRates"
-    primitive = "WIFIHAL_GetOrSetParamStringValue"
-    #Invoke the api wifi_getRadioSupportedDataTransmitRates() using wifiUtility function
-    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, "0", getMethod)
-
-    if expectedresult in actualresult :
-        supportedRates = details.split(":")[1].strip().split(",")
-
-	expectedresult="SUCCESS";
-        radioIndex = 0
-        getMethod = "getOperationalDataTransmitRates"
-        #Invoke the api wifi_getRadioOperationalDataTransmitRates() using wifiUtility function
-        tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, "0", getMethod)
-        if expectedresult in actualresult :
-            initOperRates = details.split(":")[1].strip()
-
-            r = range(1,100);
-            for setOperRate in r:
-	        if str(setOperRate) not in supportedRates:
-  		    expectedresult="FAILURE";
-		    radioIndex = 0
-                    setMethod = "setOperationalDataTransmitRates"
-                    print "Set OperationalDataTransmitRate = %s"%setOperRate
-                    #Invoke the api wifi_setRadioOperationalDataTransmitRates() using wifiUtility function
-                    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, str(setOperRate), setMethod)
-                    if expectedresult in actualresult :
-			print "TEST STEP: To set a data transmit rate not present in SupportedDataTransmitRates list"
-			print "EXPECTED RESULT: Should not set the invalid value"
-                        print "ACTUAL RESULT : Unable to set Invalid OperationalDataTransmitRates with value %s"%setOperRate
-			print "TEST EXECUTION RESULT: SUCCESS"
-			tdkTestObj.setResultStatus("SUCCESS");
-		    else:	
-			print "TEST STEP: To set a data transmit rate not present in SupportedDataTransmitRates list"
-			print "EXPECTED RESULT: Should not set the invalid value"
-                        print "ACTUAL RESULT : Sets the Invalid OperationalDataTransmitRates with value %s"%setOperRate
-			print "TEST EXECUTION RESULT: FAILURE"
-			tdkTestObj.setResultStatus("FAILURE");
-
-			#Revert the data transmit rate to initial value
-			expectedresult="SUCCESS";
-			radioIndex = 0
-			setMethod = "setOperationalDataTransmitRates"
-			#Invoke the api wifi_setRadioOperationalDataTransmitRates() using wifiUtility function
-			tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, initOperRates, setMethod)
-			if expectedresult in actualresult :
-			    print "Successfully reverted to initial value"
-			    tdkTestObj.setResultStatus("SUCCESS");
-			else:
-			    print "Unable to revert to initial value"
-			    tdkTestObj.setResultStatus("FAILURE");
-		    break;
-		else:
-		    continue;	
-	else:
-	    print "wifi_getRadioOperationalDataTransmitRates() call failed"
-	    tdkTestObj.setResultStatus("FAILURE");
+    tdkTestObjTemp, idx = getIndex(obj, radio);
+    ## Check if a invalid index is returned
+    if idx == -1:
+        print "Failed to get radio index for radio %s\n" %radio;
+        tdkTestObjTemp.setResultStatus("FAILURE");
     else:
-	print "wifi_getRadioSupportedDataTransmitRates() call failed"
-	tdkTestObj.setResultStatus("FAILURE");
+
+	    expectedresult="SUCCESS";
+	    radioIndex = idx;
+	    getMethod = "getSupportedDataTransmitRates"
+	    primitive = "WIFIHAL_GetOrSetParamStringValue"
+	    #Invoke the api wifi_getRadioSupportedDataTransmitRates() using wifiUtility function
+	    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, "0", getMethod)
+
+	    if expectedresult in actualresult :
+		supportedRates = details.split(":")[1].strip().split(",")
+
+		expectedresult="SUCCESS";
+		radioIndex = idx;
+		getMethod = "getOperationalDataTransmitRates"
+		#Invoke the api wifi_getRadioOperationalDataTransmitRates() using wifiUtility function
+		tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, "0", getMethod)
+		if expectedresult in actualresult :
+		    initOperRates = details.split(":")[1].strip()
+
+		    r = range(1,100);
+		    for setOperRate in r:
+			if str(setOperRate) not in supportedRates:
+			    expectedresult="FAILURE";
+			    radioIndex = idx;
+			    setMethod = "setOperationalDataTransmitRates"
+			    print "Set OperationalDataTransmitRate = %s"%setOperRate
+			    #Invoke the api wifi_setRadioOperationalDataTransmitRates() using wifiUtility function
+			    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, str(setOperRate), setMethod)
+			    if expectedresult in actualresult :
+				print "TEST STEP: To set a data transmit rate not present in SupportedDataTransmitRates list"
+				print "EXPECTED RESULT: Should not set the invalid value"
+				print "ACTUAL RESULT : Unable to set Invalid OperationalDataTransmitRates with value %s"%setOperRate
+				print "TEST EXECUTION RESULT: SUCCESS"
+				tdkTestObj.setResultStatus("SUCCESS");
+			    else:	
+				print "TEST STEP: To set a data transmit rate not present in SupportedDataTransmitRates list"
+				print "EXPECTED RESULT: Should not set the invalid value"
+				print "ACTUAL RESULT : Sets the Invalid OperationalDataTransmitRates with value %s"%setOperRate
+				print "TEST EXECUTION RESULT: FAILURE"
+				tdkTestObj.setResultStatus("FAILURE");
+
+				#Revert the data transmit rate to initial value
+				expectedresult="SUCCESS";
+				radioIndex = idx;
+				setMethod = "setOperationalDataTransmitRates"
+				#Invoke the api wifi_setRadioOperationalDataTransmitRates() using wifiUtility function
+				tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, initOperRates, setMethod)
+				if expectedresult in actualresult :
+				    print "Successfully reverted to initial value"
+				    tdkTestObj.setResultStatus("SUCCESS");
+				else:
+				    print "Unable to revert to initial value"
+				    tdkTestObj.setResultStatus("FAILURE");
+			    break;
+			else:
+			    continue;	
+		else:
+		    print "wifi_getRadioOperationalDataTransmitRates() call failed"
+		    tdkTestObj.setResultStatus("FAILURE");
+	    else:
+		print "wifi_getRadioSupportedDataTransmitRates() call failed"
+		tdkTestObj.setResultStatus("FAILURE");
 
     obj.unloadModule("wifihal");
 

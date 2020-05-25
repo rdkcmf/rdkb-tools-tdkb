@@ -89,6 +89,9 @@ radioIndex :0</input_parameters>
 '''
 # use tdklib library,which provides a wrapper for tdk testcase script 
 import tdklib; 
+from wifiUtility import *;
+
+radio = "2.4G"
 
 #Test component to be tested
 obj = tdklib.TDKScriptingLibrary("wifihal","1");
@@ -106,121 +109,128 @@ print "[LIB LOAD STATUS]  :  %s" %loadmodulestatus
 if "SUCCESS" in loadmodulestatus.upper():
     obj.setLoadModuleStatus("SUCCESS");
 
-    bandWidthList = ['20MHz','40MHz','80MHz','160MHz','Auto'];
-    #Script to load the configuration file of the component
-    tdkTestObj = obj.createTestStep("WIFIHAL_GetOrSetParamStringValue");
-    #Giving the method name to invoke the api for getting current operating channel bandwidth, wifi_getRadioOperatingChannelBandwidth()
-    tdkTestObj.addParameter("methodName","getChannelBandwidth");
-    #Radio index is 0 for 2.4GHz and 1 for 5GHz
-    tdkTestObj.addParameter("radioIndex",0);
-    expectedresult="SUCCESS";
-    tdkTestObj.executeTestCase(expectedresult);
-    actualresult = tdkTestObj.getResult();
-    details = tdkTestObj.getResultDetails();
-    if expectedresult in actualresult :
-	print "TEST STEP : Get current radio operating channel bandwidth"
-	print "EXPECTED RESULT: Should successfully get the radio operating channel bandwidth"
-	print "ACTUAL RESULT: getChannelBandwidth : %s"%details;
-	print "TEST EXECUTION RESULT :SUCCESS"
-        getBandWidth = details.split(":")[1].strip()
-        getBW=getBandWidth.split("\\n")[0];
-        if getBW in bandWidthList:
-            tdkTestObj.setResultStatus("SUCCESS");
-            print "OperatingChannelBandwidth is from the list %s"%bandWidthList
-            for setBW in bandWidthList:
-	        if getBW == setBW:
-		    continue;
-	        else:
-                    #Script to load the configuration file of the component
-    		    tdkTestObj = obj.createTestStep("WIFIHAL_GetOrSetParamStringValue");
-		    #Giving the method name to invoke the api to set the operating channel bandwidth, wifi_setRadioOperatingChannelBandwidth()
-	            tdkTestObj.addParameter("methodName","setChannelBandwidth");
-	            #Radio index is 0 for 2.4GHz and 1 for 5GHz
-	            tdkTestObj.addParameter("radioIndex",0);
-	            tdkTestObj.addParameter("param",setBW);
-		    expectedresult="SUCCESS";
-	            tdkTestObj.executeTestCase(expectedresult);
-                    actualresult = tdkTestObj.getResult();
-	            details = tdkTestObj.getResultDetails();
-	            if expectedresult in actualresult :
-			print "TEST STEP : Set radio operating channel bandwidth to new value: %s" %setBW;
-			print "EXPECTED RESULT: Should successfully set the radio operating channel bandwidth"
-			print "ACTUAL RESULT: setChannelBandwidth: %s" %details;
-			print "TEST EXECUTION RESULT :SUCCESS"
-	                tdkTestObj.setResultStatus("SUCCESS");
+    tdkTestObjTemp, idx = getIndex(obj, radio);
+    ## Check if a invalid index is returned
+    if idx == -1:
+        print "Failed to get radio index for radio %s\n" %radio;
+        tdkTestObjTemp.setResultStatus("FAILURE");
+    else:
 
-			#Get the previously set Channel bandwidth
-			#Script to load the configuration file of the component
-                        tdkTestObj = obj.createTestStep("WIFIHAL_GetOrSetParamStringValue");
-                        #Giving the method name to invoke the api to get current operating channel bandwidth,wifi_getRadioOperatingChannelBandwidth()
-                        tdkTestObj.addParameter("methodName","getChannelBandwidth");
-                        #Radio index is 0 for 2.4GHz and 1 for 5GHz
-                        tdkTestObj.addParameter("radioIndex",0);
-                        expectedresult="SUCCESS";
-                        tdkTestObj.executeTestCase(expectedresult);
-                        actualresult = tdkTestObj.getResult();
-                        details = tdkTestObj.getResultDetails();
-                        if expectedresult in actualresult :
-		            print "TEST STEP : Get the previously set radio operating channel bandwidth"
-		            print "EXPECTED RESULT: Should successfully get the radio operating channel bandwidth"
-		            print "ACTUAL RESULT: getChannelBandwidth : %s"%details;
-	 	            print "TEST EXECUTION RESULT :SUCCESS"
-			    getBandWidth = details.split(":")[1].strip()
-			    tdkTestObj.setResultStatus("SUCCESS");
-			    if setBW == getBandWidth:
+	    bandWidthList = ['20MHz','40MHz','80MHz','160MHz','Auto'];
+	    #Script to load the configuration file of the component
+	    tdkTestObj = obj.createTestStep("WIFIHAL_GetOrSetParamStringValue");
+	    #Giving the method name to invoke the api for getting current operating channel bandwidth, wifi_getRadioOperatingChannelBandwidth()
+	    tdkTestObj.addParameter("methodName","getChannelBandwidth");
+	    #Radio index is 0 for 2.4GHz and 1 for 5GHz
+	    tdkTestObj.addParameter("radioIndex",idx);
+	    expectedresult="SUCCESS";
+	    tdkTestObj.executeTestCase(expectedresult);
+	    actualresult = tdkTestObj.getResult();
+	    details = tdkTestObj.getResultDetails();
+	    if expectedresult in actualresult :
+		print "TEST STEP : Get current radio operating channel bandwidth"
+		print "EXPECTED RESULT: Should successfully get the radio operating channel bandwidth"
+		print "ACTUAL RESULT: getChannelBandwidth : %s"%details;
+		print "TEST EXECUTION RESULT :SUCCESS"
+		getBandWidth = details.split(":")[1].strip()
+		getBW=getBandWidth.split("\\n")[0];
+		if getBW in bandWidthList:
+		    tdkTestObj.setResultStatus("SUCCESS");
+		    print "OperatingChannelBandwidth is from the list %s"%bandWidthList
+		    for setBW in bandWidthList:
+			if getBW == setBW:
+			    continue;
+			else:
+			    #Script to load the configuration file of the component
+			    tdkTestObj = obj.createTestStep("WIFIHAL_GetOrSetParamStringValue");
+			    #Giving the method name to invoke the api to set the operating channel bandwidth, wifi_setRadioOperatingChannelBandwidth()
+			    tdkTestObj.addParameter("methodName","setChannelBandwidth");
+			    #Radio index is 0 for 2.4GHz and 1 for 5GHz
+			    tdkTestObj.addParameter("radioIndex",idx);
+			    tdkTestObj.addParameter("param",setBW);
+			    expectedresult="SUCCESS";
+			    tdkTestObj.executeTestCase(expectedresult);
+			    actualresult = tdkTestObj.getResult();
+			    details = tdkTestObj.getResultDetails();
+			    if expectedresult in actualresult :
+				print "TEST STEP : Set radio operating channel bandwidth to new value: %s" %setBW;
+				print "EXPECTED RESULT: Should successfully set the radio operating channel bandwidth"
+				print "ACTUAL RESULT: setChannelBandwidth: %s" %details;
+				print "TEST EXECUTION RESULT :SUCCESS"
 				tdkTestObj.setResultStatus("SUCCESS");
-				print "EXPECTED RESULT: Set and Get channel bandwidths should be the same"
-				print "ACTUAL RESULT: Set and Get channel bandwidths are the same"
+
+				#Get the previously set Channel bandwidth
+				#Script to load the configuration file of the component
+				tdkTestObj = obj.createTestStep("WIFIHAL_GetOrSetParamStringValue");
+				#Giving the method name to invoke the api to get current operating channel bandwidth,wifi_getRadioOperatingChannelBandwidth()
+				tdkTestObj.addParameter("methodName","getChannelBandwidth");
+				#Radio index is 0 for 2.4GHz and 1 for 5GHz
+				tdkTestObj.addParameter("radioIndex",idx);
+				expectedresult="SUCCESS";
+				tdkTestObj.executeTestCase(expectedresult);
+				actualresult = tdkTestObj.getResult();
+				details = tdkTestObj.getResultDetails();
+				if expectedresult in actualresult :
+				    print "TEST STEP : Get the previously set radio operating channel bandwidth"
+				    print "EXPECTED RESULT: Should successfully get the radio operating channel bandwidth"
+				    print "ACTUAL RESULT: getChannelBandwidth : %s"%details;
+				    print "TEST EXECUTION RESULT :SUCCESS"
+				    getBandWidth = details.split(":")[1].strip()
+				    tdkTestObj.setResultStatus("SUCCESS");
+				    if setBW == getBandWidth:
+					tdkTestObj.setResultStatus("SUCCESS");
+					print "EXPECTED RESULT: Set and Get channel bandwidths should be the same"
+					print "ACTUAL RESULT: Set and Get channel bandwidths are the same"
+					
+				    else:
+					tdkTestObj.setResultStatus("FAILURE");
+					print "EXPECTED RESULT: Set and Get channel bandwidths should be the same"
+					print "ACTUAL RESULT: Set and Get channel bandwidths are not the same" 
+				else:
+				    tdkTestObj.setResultStatus("FAILURE");
+				    print "Get operation after set failed"
+
+				#Reverting back to inital channel bandwidth
+				#Script to load the configuration file of the component^M
+				tdkTestObj = obj.createTestStep("WIFIHAL_GetOrSetParamStringValue");
+				#Giving the method name to invoke the api to set the operating channel bandwidth, wifi_setRadioOperatingChannelBandwidth()^M
+				tdkTestObj.addParameter("methodName","setChannelBandwidth");
+				#Radio index is 0 for 2.4GHz and 1 for 5GHz^M
+				tdkTestObj.addParameter("radioIndex",idx);
+				tdkTestObj.addParameter("param",getBW);
+				expectedresult="SUCCESS";
+				tdkTestObj.executeTestCase(expectedresult);
+				actualresult = tdkTestObj.getResult();
+				details = tdkTestObj.getResultDetails();
+				print "setting channel bandwidth to %s" %getBW;
+				if expectedresult in actualresult :
+				    print "TEST STEP: Reverting to initial channel bandwidth"
+				    print "setChannelBandwidth: %s" %details;
+				    tdkTestObj.setResultStatus("SUCCESS");
+				    print "Reverting to initial channel bandwidth SUCCESS"
+				else:
+				    print "TEST STEP: Reverting to initial channel bandwidth"
+				    print "setChannelBandwidth: %s" %details;
+				    tdkTestObj.setResultStatus("FAILURE");
+				    print "Reverting to initial channel bandwidth FAILED"
 				
 			    else:
+				print "TEST STEP : Set radio operating channel bandwidth to new value"
+				print "EXPECTED RESULT: Should successfully set the radio operating channel bandwidth"
+				print "ACTUAL RESULT: setChannelBandwidth: %s" %details;
+				print "TEST EXECUTION RESULT :FAILURE"
 				tdkTestObj.setResultStatus("FAILURE");
-				print "EXPECTED RESULT: Set and Get channel bandwidths should be the same"
-				print "ACTUAL RESULT: Set and Get channel bandwidths are not the same" 
-			else:
-			    tdkTestObj.setResultStatus("FAILURE");
-			    print "Get operation after set failed"
-
-			#Reverting back to inital channel bandwidth
-                        #Script to load the configuration file of the component^M
-                        tdkTestObj = obj.createTestStep("WIFIHAL_GetOrSetParamStringValue");
-                        #Giving the method name to invoke the api to set the operating channel bandwidth, wifi_setRadioOperatingChannelBandwidth()^M
-                        tdkTestObj.addParameter("methodName","setChannelBandwidth");
-                        #Radio index is 0 for 2.4GHz and 1 for 5GHz^M
-                        tdkTestObj.addParameter("radioIndex",0);
-                        tdkTestObj.addParameter("param",getBW);
-                        expectedresult="SUCCESS";
-                        tdkTestObj.executeTestCase(expectedresult);
-                        actualresult = tdkTestObj.getResult();
-                        details = tdkTestObj.getResultDetails();
-			print "setting channel bandwidth to %s" %getBW;
-                        if expectedresult in actualresult :
-			    print "TEST STEP: Reverting to initial channel bandwidth"
-                            print "setChannelBandwidth: %s" %details;
-                            tdkTestObj.setResultStatus("SUCCESS");
-			    print "Reverting to initial channel bandwidth SUCCESS"
-			else:
-			    print "TEST STEP: Reverting to initial channel bandwidth"
-                            print "setChannelBandwidth: %s" %details;
-                            tdkTestObj.setResultStatus("FAILURE");
-			    print "Reverting to initial channel bandwidth FAILED"
-			
-		    else:
-			print "TEST STEP : Set radio operating channel bandwidth to new value"
-			print "EXPECTED RESULT: Should successfully set the radio operating channel bandwidth"
-			print "ACTUAL RESULT: setChannelBandwidth: %s" %details;
-			print "TEST EXECUTION RESULT :FAILURE"
-	                tdkTestObj.setResultStatus("FAILURE");
-			print "Failed to set the channel bandwidth as %s " %setBW;
-		    break;
-        else:
-            print "OperatingChannelBandwidth is not from the list %s"%bandWidthList
-            tdkTestObj.setResultStatus("FAILURE");
-    else:
-	print "TEST STEP : Get current radio operating channel bandwidth"
-	print "EXPECTED RESULT: Should successfully get the radio operating channel bandwidth"
-	print "ACTUAL RESULT: getChannelBandwidth : %s"%details;
-	print "TEST EXECUTION RESULT :FAILURE"
-	tdkTestObj.setResultStatus("FAILURE");	
+				print "Failed to set the channel bandwidth as %s " %setBW;
+			    break;
+		else:
+		    print "OperatingChannelBandwidth is not from the list %s"%bandWidthList
+		    tdkTestObj.setResultStatus("FAILURE");
+	    else:
+		print "TEST STEP : Get current radio operating channel bandwidth"
+		print "EXPECTED RESULT: Should successfully get the radio operating channel bandwidth"
+		print "ACTUAL RESULT: getChannelBandwidth : %s"%details;
+		print "TEST EXECUTION RESULT :FAILURE"
+		tdkTestObj.setResultStatus("FAILURE");	
 
     obj.unloadModule("wifihal");
 else:

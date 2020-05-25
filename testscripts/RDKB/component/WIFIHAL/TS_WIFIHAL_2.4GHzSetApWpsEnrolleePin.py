@@ -69,6 +69,8 @@ import tdklib;
 from wifiUtility import *;
 import time;
 
+radio = "2.4G"
+
 #Test component to be tested
 obj = tdklib.TDKScriptingLibrary("wifihal","1");
 
@@ -78,9 +80,9 @@ ip = <ipaddress>
 port = <port>
 obj.configureTestCase(ip,port,'TS_WIFIHAL_2.4GHzSetApWpsEnrolleePin');
 
-def setEnrolleepin():
+def setEnrolleepin(radioIndex):
     expectedresult = "SUCCESS"
-    radioIndex = 0
+    
     setMethod = "setApWpsEnrolleePin"
     primitive = 'WIFIHAL_GetOrSetParamStringValue'
     setPIN = "12345670"
@@ -106,63 +108,70 @@ print "[LIB LOAD STATUS]  :  %s" %loadmodulestatus
 if "SUCCESS" in loadmodulestatus.upper():
     obj.setLoadModuleStatus("SUCCESS");
 
-    expectedresult="SUCCESS";
-    apIndex = 0
-    getMethod = "getApWpsEnable"
-    primitive = 'WIFIHAL_GetOrSetParamBoolValue'
-    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, 0, getMethod)
-
-    if expectedresult in actualresult :
-        tdkTestObj.setResultStatus("SUCCESS");
-        enable = details.split(":")[1].strip()
-        if "Enabled" in enable:
-            print "Access point WPS is enabled"
-            setEnrolleepin();
-        else:
-            print "Access point WPS is Disabled"
-            oldEnable = 0
-            newEnable = 1
-            setMethod = "setApWpsEnable"
-            print "Invoke setApWpsEnable() to enable WPS"
-            #Toggle the enable status using set
-            tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, newEnable, setMethod)
-
-            if expectedresult in actualresult :
-                tdkTestObj.setResultStatus("SUCCESS");
-                print "Access point WPS is enabled"
-                time.sleep(20);
-                getMethod = "getApWpsEnable"
-                primitive = 'WIFIHAL_GetOrSetParamBoolValue'
-                print "Invoke getApWpsEnable() to get WPS"
-                tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, 0, getMethod)
-
-                if expectedresult in actualresult :
-                    tdkTestObj.setResultStatus("SUCCESS");
-                    enable = details.split(":")[1].strip()
-                    print "AP WPS Status:",enable;
-                    if "Enabled" in enable:
-                        print "Access point WPS is enabled"
-                        setEnrolleepin();
-                    else:
-                        print "setApWpsEnable has returned false success"
-                        tdkTestObj.setResultStatus("FAILURE");
-                else:
-                    print "getApWpsEnable operation failed"
-                    tdkTestObj.setResultStatus("FAILURE");
-                #revert the WPS to initial value
-                tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, oldEnable, setMethod)
-                if expectedresult in actualresult :
-                    print "WPS is reverted back to initial value"
-                    tdkTestObj.setResultStatus("SUCCESS");
-                else:
-                    print "Unable to revert WPS to initial value"
-                    tdkTestObj.setResultStatus("FAILURE");
-            else:
-                tdkTestObj.setResultStatus("FAILURE");
-                print "Unable to enable WPS"
+    tdkTestObjTemp, idx = getIndex(obj, radio);
+    ## Check if a invalid index is returned
+    if idx == -1:
+        print "Failed to get radio index for radio %s\n" %radio;
+        tdkTestObjTemp.setResultStatus("FAILURE");
     else:
-        print "getApWpsEnable operation failed"
-        tdkTestObj.setResultStatus("FAILURE");
+
+	    expectedresult="SUCCESS";
+	    apIndex = idx;
+	    getMethod = "getApWpsEnable"
+	    primitive = 'WIFIHAL_GetOrSetParamBoolValue'
+	    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, 0, getMethod)
+
+	    if expectedresult in actualresult :
+		tdkTestObj.setResultStatus("SUCCESS");
+		enable = details.split(":")[1].strip()
+		if "Enabled" in enable:
+		    print "Access point WPS is enabled"
+		    setEnrolleepin(idx);
+		else:
+		    print "Access point WPS is Disabled"
+		    oldEnable = 0
+		    newEnable = 1
+		    setMethod = "setApWpsEnable"
+		    print "Invoke setApWpsEnable() to enable WPS"
+		    #Toggle the enable status using set
+		    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, newEnable, setMethod)
+
+		    if expectedresult in actualresult :
+			tdkTestObj.setResultStatus("SUCCESS");
+			print "Access point WPS is enabled"
+			time.sleep(20);
+			getMethod = "getApWpsEnable"
+			primitive = 'WIFIHAL_GetOrSetParamBoolValue'
+			print "Invoke getApWpsEnable() to get WPS"
+			tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, 0, getMethod)
+
+			if expectedresult in actualresult :
+			    tdkTestObj.setResultStatus("SUCCESS");
+			    enable = details.split(":")[1].strip()
+			    print "AP WPS Status:",enable;
+			    if "Enabled" in enable:
+				print "Access point WPS is enabled"
+				setEnrolleepin(idx);
+			    else:
+				print "setApWpsEnable has returned false success"
+				tdkTestObj.setResultStatus("FAILURE");
+			else:
+			    print "getApWpsEnable operation failed"
+			    tdkTestObj.setResultStatus("FAILURE");
+			#revert the WPS to initial value
+			tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, oldEnable, setMethod)
+			if expectedresult in actualresult :
+			    print "WPS is reverted back to initial value"
+			    tdkTestObj.setResultStatus("SUCCESS");
+			else:
+			    print "Unable to revert WPS to initial value"
+			    tdkTestObj.setResultStatus("FAILURE");
+		    else:
+			tdkTestObj.setResultStatus("FAILURE");
+			print "Unable to enable WPS"
+	    else:
+		print "getApWpsEnable operation failed"
+		tdkTestObj.setResultStatus("FAILURE");
     obj.unloadModule("wifihal");
 else:
     obj.setLoadModuleStatus("FAILURE");
