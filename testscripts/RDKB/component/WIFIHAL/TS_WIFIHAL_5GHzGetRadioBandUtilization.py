@@ -64,6 +64,8 @@ radioIndex = 1</input_parameters>
 '''
 # use tdklib library,which provides a wrapper for tdk testcase script
 import tdklib;
+from wifiUtility import *;
+radio = "5G"
 
 #Test component to be tested
 obj = tdklib.TDKScriptingLibrary("wifihal","1");
@@ -81,37 +83,44 @@ print "[LIB LOAD STATUS]  :  %s" %loadmodulestatus ;
 if "SUCCESS" in loadmodulestatus.upper():
     obj.setLoadModuleStatus("SUCCESS");
 
-    #Script to load the configuration file of the component
-    tdkTestObj = obj.createTestStep("WIFIHAL_GetOrSetParamIntValue");
-    #Giving the method name to invoke the api for getting RadioMCS. ie,wifi_getRadioMCS()
-    tdkTestObj.addParameter("methodName","getRadioBandUtilization");
-    #Radio index is 0 for 2.4GHz and 1 for 5GHz
-    tdkTestObj.addParameter("radioIndex",1);
-    expectedresult="SUCCESS";
-    tdkTestObj.executeTestCase(expectedresult);
-    actualresult = tdkTestObj.getResult();
-    details = tdkTestObj.getResultDetails();
-    if expectedresult in actualresult :
-        radioBandUtilization = int(details.split(":")[1]);
-        if 0 < radioBandUtilization < 100 :
-            #Set the result status of execution
-            tdkTestObj.setResultStatus("SUCCESS");
-            print "TEST STEP 1: Get the Radio band utilization in percentage";
-            print "EXPECTED RESULT 1: Should get the Radio band utilization in percentage";
-            print "ACTUAL RESULT 1: %s" %details;
-            #Get the result of execution
-            print "[TEST EXECUTION RESULT] : SUCCESS";
-        else:
-            tdkTestObj.setResultStatus("FAILURE");
-            print "FAILURE: Radio band utilization value not in the expected range"
-    else:
-        #Set the result status of execution
-        tdkTestObj.setResultStatus("FAILURE");
-        print "TEST STEP 1: Get the Radio band utilization in percentage"
-        print "EXPECTED RESULT 1: Should get the Radio band utilization in percentage"
-        print "ACTUAL RESULT 1: %s" %details;
-        #Get the result of execution
-        print "[TEST EXECUTION RESULT] : FAILURE";
+    tdkTestObjTemp, idx = getIndex(obj, radio);
+    ## Check if a invalid index is returned
+    if idx == -1:
+        print "Failed to get radio index for radio %s\n" %radio;
+        tdkTestObjTemp.setResultStatus("FAILURE");
+    else: 
+
+	    #Script to load the configuration file of the component
+	    tdkTestObj = obj.createTestStep("WIFIHAL_GetOrSetParamIntValue");
+	    #Giving the method name to invoke the api for getting RadioMCS. ie,wifi_getRadioMCS()
+	    tdkTestObj.addParameter("methodName","getRadioBandUtilization");
+	    #Radio index is 0 for 2.4GHz and 1 for 5GHz
+	    tdkTestObj.addParameter("radioIndex",idx);
+	    expectedresult="SUCCESS";
+	    tdkTestObj.executeTestCase(expectedresult);
+	    actualresult = tdkTestObj.getResult();
+	    details = tdkTestObj.getResultDetails();
+	    if expectedresult in actualresult :
+		radioBandUtilization = int(details.split(":")[1]);
+		if 0 < radioBandUtilization < 100 :
+		    #Set the result status of execution
+		    tdkTestObj.setResultStatus("SUCCESS");
+		    print "TEST STEP 1: Get the Radio band utilization in percentage";
+		    print "EXPECTED RESULT 1: Should get the Radio band utilization in percentage";
+		    print "ACTUAL RESULT 1: %s" %details;
+		    #Get the result of execution
+		    print "[TEST EXECUTION RESULT] : SUCCESS";
+		else:
+		    tdkTestObj.setResultStatus("FAILURE");
+		    print "FAILURE: Radio band utilization value not in the expected range"
+	    else:
+		#Set the result status of execution
+		tdkTestObj.setResultStatus("FAILURE");
+		print "TEST STEP 1: Get the Radio band utilization in percentage"
+		print "EXPECTED RESULT 1: Should get the Radio band utilization in percentage"
+		print "ACTUAL RESULT 1: %s" %details;
+		#Get the result of execution
+		print "[TEST EXECUTION RESULT] : FAILURE";
     obj.unloadModule("wifihal");
 else:
         print "Failed to load the module";

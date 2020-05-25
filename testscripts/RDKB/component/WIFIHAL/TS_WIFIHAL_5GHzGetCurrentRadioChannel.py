@@ -73,6 +73,8 @@ radioIndex : 1</input_parameters>
 import tdklib; 
 from wifiUtility import *
 
+radio = "5G"
+
 #Test component to be tested
 obj = tdklib.TDKScriptingLibrary("wifihal","1");
 
@@ -88,29 +90,36 @@ print "[LIB LOAD STATUS]  :  %s" %loadmodulestatus
 if "SUCCESS" in loadmodulestatus.upper():
     obj.setLoadModuleStatus("SUCCESS");
 
-    expectedresult="SUCCESS";
-    radioIndex = 1
-    getMethod = "getRadioChannelsInUse"
-    primitive = 'WIFIHAL_GetOrSetParamStringValue'
-    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, "0", getMethod)
+    tdkTestObjTemp, idx = getIndex(obj, radio);
+    ## Check if a invalid index is returned
+    if idx == -1:
+        print "Failed to get radio index for radio %s\n" %radio;
+        tdkTestObjTemp.setResultStatus("FAILURE");
+    else: 
 
-    if expectedresult in actualresult :
-        channelsInUse = details.split(":")[1].strip().split(",")
+	    expectedresult="SUCCESS";
+	    radioIndex = idx
+	    getMethod = "getRadioChannelsInUse"
+	    primitive = 'WIFIHAL_GetOrSetParamStringValue'
+	    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, "0", getMethod)
 
-        getMethod = "getRadioChannel"
-        primitive = 'WIFIHAL_GetOrSetParamULongValue'
-        tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, 0, getMethod)
-        if expectedresult in actualresult :
-            currChannel = details.split(":")[1].strip()
-	    if currChannel in channelsInUse :
-		print "Current channel number available in channels in use list"
+	    if expectedresult in actualresult :
+		channelsInUse = details.split(":")[1].strip().split(",")
+
+		getMethod = "getRadioChannel"
+		primitive = 'WIFIHAL_GetOrSetParamULongValue'
+		tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, 0, getMethod)
+		if expectedresult in actualresult :
+		    currChannel = details.split(":")[1].strip()
+		    if currChannel in channelsInUse :
+			print "Current channel number available in channels in use list"
+		    else:
+			print "Current channel number not available in channels in use list"
+			tdkTestObj.setResultStatus("FAILURE");
+		else:
+		    print "getRadioChannel() call failed"
 	    else:
-		print "Current channel number not available in channels in use list"
-		tdkTestObj.setResultStatus("FAILURE");
-	else:
-	    print "getRadioChannel() call failed"
-    else:
-	print "getRadioChannelsInUse() call failed"
+		print "getRadioChannelsInUse() call failed"
 
     obj.unloadModule("wifihal");
 

@@ -70,6 +70,8 @@ radioIndex : 1</input_parameters>
 import tdklib;
 from wifiUtility import *
 
+radio = "5G"
+
 #Test component to be tested
 obj = tdklib.TDKScriptingLibrary("wifihal","1");
 
@@ -85,24 +87,31 @@ print "[LIB LOAD STATUS]  :  %s" %loadmodulestatus
 if "SUCCESS" in loadmodulestatus.upper():
     obj.setLoadModuleStatus("SUCCESS");
 
-    bandWidthList = "20MHz, 40MHz, 80MHz, 160MHz, Auto"
-    expectedresult="SUCCESS";
-    radioIndex = 1
-    getMethod = "getChannelBandwidth"
-    primitive = 'WIFIHAL_GetOrSetParamStringValue'
-    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, "0", getMethod)
+    tdkTestObjTemp, idx = getIndex(obj, radio);
+    ## Check if a invalid index is returned
+    if idx == -1:
+        print "Failed to get radio index for radio %s\n" %radio;
+        tdkTestObjTemp.setResultStatus("FAILURE");
+    else: 
 
-    if expectedresult in actualresult :
-        bandWidth = details.split(":")[1].strip()
-        bandWidth=bandWidth.split("\\n")[0];
-        print bandWidth;
-	if bandWidth in bandWidthList:
-	    print "OperatingChannelBandwidth is from the list %s"%bandWidthList
-	else:
-	    print "OperatingChannelBandwidth is not from the list %s"%bandWidthList
-	    tdkTestObj.setResultStatus("FAILURE");
-    else:
-	print "GetOperatingChannelBandwidth() failed"
+	    bandWidthList = "20MHz, 40MHz, 80MHz, 160MHz, Auto"
+	    expectedresult="SUCCESS";
+	    radioIndex = idx
+	    getMethod = "getChannelBandwidth"
+	    primitive = 'WIFIHAL_GetOrSetParamStringValue'
+	    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, "0", getMethod)
+
+	    if expectedresult in actualresult :
+		bandWidth = details.split(":")[1].strip()
+		bandWidth=bandWidth.split("\\n")[0];
+		print bandWidth;
+		if bandWidth in bandWidthList:
+		    print "OperatingChannelBandwidth is from the list %s"%bandWidthList
+		else:
+		    print "OperatingChannelBandwidth is not from the list %s"%bandWidthList
+		    tdkTestObj.setResultStatus("FAILURE");
+	    else:
+		print "GetOperatingChannelBandwidth() failed"
 
     obj.unloadModule("wifihal");
 

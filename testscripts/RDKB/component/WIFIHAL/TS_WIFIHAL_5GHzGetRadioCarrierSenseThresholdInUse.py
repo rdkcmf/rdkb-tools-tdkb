@@ -75,6 +75,8 @@ CheckPoint
 import tdklib;
 from wifiUtility import *;
 
+radio = "5G"
+
 #Test component to be tested
 obj = tdklib.TDKScriptingLibrary("wifihal","1");
 
@@ -90,57 +92,64 @@ print "[LIB LOAD STATUS]  :  %s" %loadmodulestatus
 if "SUCCESS" in loadmodulestatus.upper():
     obj.setLoadModuleStatus("SUCCESS");
 
-    expectedresult="SUCCESS";
-    apIndex = 1
-    getMethod = "getRadioCarrierSenseThresholdRange"
-    primitive = 'WIFIHAL_GetOrSetParamIntValue'
+    tdkTestObjTemp, idx = getIndex(obj, radio);
+    ## Check if a invalid index is returned
+    if idx == -1:
+        print "Failed to get radio index for radio %s\n" %radio;
+        tdkTestObjTemp.setResultStatus("FAILURE");
+    else: 
 
-    #Calling the method from wifiUtility to execute test case and get the result of getRadioCarrierSenseThresholdRange()
-    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, 0, getMethod)
+	    expectedresult="SUCCESS";
+	    apIndex = idx
+	    getMethod = "getRadioCarrierSenseThresholdRange"
+	    primitive = 'WIFIHAL_GetOrSetParamIntValue'
 
-    if expectedresult in actualresult:
-        CarrierSenseThresholdRange = details.split(":")[1].strip()
-        tdkTestObj.setResultStatus("SUCCESS");
-        print "TEST STEP 1: Get the Carrier Sense Threshold Range";
-        print "EXPECTED RESULT 1: Function Should return a Carrier Sense Threshold value";
-        print "ACTUAL RESULT 1: Carrier Sense Threshold Range Received Successfully,value is:",CarrierSenseThresholdRange;
-        print "[TEST EXECUTION RESULT] : SUCCESS";
+	    #Calling the method from wifiUtility to execute test case and get the result of getRadioCarrierSenseThresholdRange()
+	    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, 0, getMethod)
 
-        #Calling the method from wifiUtility to execute test case and get the result of wifi_getRadioCarrierSenseThresholdInUse()
-        expectedresult="SUCCESS";
-        apIndex = 1
-        getMethod = "getRadioCarrierSenseThresholdInUse"
-        primitive = 'WIFIHAL_GetOrSetParamIntValue'
-        tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, 0, getMethod)
-        if expectedresult in actualresult:
-            tdkTestObj.setResultStatus("SUCCESS");
-            CarrierSenseThresholdInUse = details.split(":")[1].strip()
-            print "TEST STEP 2: Get the Carrier Sense Threshold In use";
-            print "EXPECTED RESULT 2: Function Should return a Carrier Sense Threshold value";
-            print "ACTUAL RESULT 2: Carrier Sense Threshold In use Received Successfully,value is:",CarrierSenseThresholdInUse;
-            print "[TEST EXECUTION RESULT] : SUCCESS";
+	    if expectedresult in actualresult:
+		CarrierSenseThresholdRange = details.split(":")[1].strip()
+		tdkTestObj.setResultStatus("SUCCESS");
+		print "TEST STEP 1: Get the Carrier Sense Threshold Range";
+		print "EXPECTED RESULT 1: Function Should return a Carrier Sense Threshold value";
+		print "ACTUAL RESULT 1: Carrier Sense Threshold Range Received Successfully,value is:",CarrierSenseThresholdRange;
+		print "[TEST EXECUTION RESULT] : SUCCESS";
 
-            #Comparing the Carrier Sense ThresholdInUse with Carrier Sense ThresholdRange
-            if CarrierSenseThresholdInUse < CarrierSenseThresholdRange :
-                tdkTestObj.setResultStatus("SUCCESS");
-                print "CarrierSenseThresholdInUse is inside the CarrierSenseThreshold Range"
-                print "[TEST EXECUTION RESULT] : SUCCESS";
-            else:
-                tdkTestObj.setResultStatus("FAILURE");
-                print "CarrierSenseThresholdInUse is outside the CarrierSenseThreshold Range"
-                print "[TEST EXECUTION RESULT] : FAILURE";
-        else:
-            tdkTestObj.setResultStatus("FAILURE");
-            print "TEST STEP 2: Get the Carrier Sense Threshold In use";
-            print "EXPECTED RESULT 2: Function Should return a Carrier Sense Threshold value";
-            print "ACTUAL RESULT 2: Failed to get the Carrier Sense Threshold In use";
-            print "[TEST EXECUTION RESULT] : FAILURE";
-    else:
-        tdkTestObj.setResultStatus("FAILURE");
-        print "TEST STEP 1: Get the Carrier Sense Threshold Range";
-        print "EXPECTED RESULT 1: Function Should return a Carrier Sense Threshold value";
-        print "ACTUAL RESULT 1: Failed to get the the Carrier Sense Threshold Range"
-        print "[TEST EXECUTION RESULT] : FAILURE";
+		#Calling the method from wifiUtility to execute test case and get the result of wifi_getRadioCarrierSenseThresholdInUse()
+		expectedresult="SUCCESS";
+		apIndex = idx
+		getMethod = "getRadioCarrierSenseThresholdInUse"
+		primitive = 'WIFIHAL_GetOrSetParamIntValue'
+		tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, 0, getMethod)
+		if expectedresult in actualresult:
+		    tdkTestObj.setResultStatus("SUCCESS");
+		    CarrierSenseThresholdInUse = details.split(":")[1].strip()
+		    print "TEST STEP 2: Get the Carrier Sense Threshold In use";
+		    print "EXPECTED RESULT 2: Function Should return a Carrier Sense Threshold value";
+		    print "ACTUAL RESULT 2: Carrier Sense Threshold In use Received Successfully,value is:",CarrierSenseThresholdInUse;
+		    print "[TEST EXECUTION RESULT] : SUCCESS";
+
+		    #Comparing the Carrier Sense ThresholdInUse with Carrier Sense ThresholdRange
+		    if CarrierSenseThresholdInUse < CarrierSenseThresholdRange :
+			tdkTestObj.setResultStatus("SUCCESS");
+			print "CarrierSenseThresholdInUse is inside the CarrierSenseThreshold Range"
+			print "[TEST EXECUTION RESULT] : SUCCESS";
+		    else:
+			tdkTestObj.setResultStatus("FAILURE");
+			print "CarrierSenseThresholdInUse is outside the CarrierSenseThreshold Range"
+			print "[TEST EXECUTION RESULT] : FAILURE";
+		else:
+		    tdkTestObj.setResultStatus("FAILURE");
+		    print "TEST STEP 2: Get the Carrier Sense Threshold In use";
+		    print "EXPECTED RESULT 2: Function Should return a Carrier Sense Threshold value";
+		    print "ACTUAL RESULT 2: Failed to get the Carrier Sense Threshold In use";
+		    print "[TEST EXECUTION RESULT] : FAILURE";
+	    else:
+		tdkTestObj.setResultStatus("FAILURE");
+		print "TEST STEP 1: Get the Carrier Sense Threshold Range";
+		print "EXPECTED RESULT 1: Function Should return a Carrier Sense Threshold value";
+		print "ACTUAL RESULT 1: Failed to get the the Carrier Sense Threshold Range"
+		print "[TEST EXECUTION RESULT] : FAILURE";
     obj.unloadModule("wifihal");
 
 else:

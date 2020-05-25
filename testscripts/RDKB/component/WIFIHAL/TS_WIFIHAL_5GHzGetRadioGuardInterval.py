@@ -70,6 +70,8 @@ radioIndex : 1</input_parameters>
 import tdklib;
 from wifiUtility import *
 
+radio = "5G"
+
 #Test component to be tested
 obj = tdklib.TDKScriptingLibrary("wifihal","1");
 
@@ -85,23 +87,30 @@ print "[LIB LOAD STATUS]  :  %s" %loadmodulestatus
 if "SUCCESS" in loadmodulestatus.upper():
     obj.setLoadModuleStatus("SUCCESS");
 
-    expectedresult="SUCCESS";
-    radioIndex = 1
-    getMethod = "getRadioGuardInterval"
-    primitive = 'WIFIHAL_GetOrSetParamStringValue'
-    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, "0", getMethod)
+    tdkTestObjTemp, idx = getIndex(obj, radio);
+    ## Check if a invalid index is returned
+    if idx == -1:
+        print "Failed to get radio index for radio %s\n" %radio;
+        tdkTestObjTemp.setResultStatus("FAILURE");
+    else: 
 
-    if expectedresult in actualresult :
-        interval = details.split(":")[1].strip("nsec")
+	    expectedresult="SUCCESS";
+	    radioIndex = idx
+	    getMethod = "getRadioGuardInterval"
+	    primitive = 'WIFIHAL_GetOrSetParamStringValue'
+	    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, "0", getMethod)
 
-        if interval == "Auto" or 100 <= int(interval) <= 800 :
-            print "RadioGuardInterval is from the valid range";
-            tdkTestObj.setResultStatus("SUCCESS");
-        else:
-            print "RadioGuardInterval is not from the valid range";
-            tdkTestObj.setResultStatus("FAILURE");
-    else:
-        print "getRadioGuardInterval() failed"
+	    if expectedresult in actualresult :
+		interval = details.split(":")[1].strip("nsec")
+
+		if interval == "Auto" or 100 <= int(interval) <= 800 :
+		    print "RadioGuardInterval is from the valid range";
+		    tdkTestObj.setResultStatus("SUCCESS");
+		else:
+		    print "RadioGuardInterval is not from the valid range";
+		    tdkTestObj.setResultStatus("FAILURE");
+	    else:
+		print "getRadioGuardInterval() failed"
 
     obj.unloadModule("wifihal");
 
