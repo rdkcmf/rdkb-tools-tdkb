@@ -76,6 +76,40 @@
           <parameter name="flag" value="0"/>
         </parameters>
       </primitiveTest>
+      <primitiveTest name="ethsw_stub_hal_Get_EthWanInterfaceName" id=" " version="1">
+        <function>ethsw_stub_hal_Get_EthWanInterfaceName</function>
+        <parameters>
+          <parameter name="flag" value="0"/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest name="ethsw_stub_hal_Get_EthWanEnable" id=" " version="1">
+        <function>ethsw_stub_hal_Get_EthWanEnable</function>
+        <parameters>
+          <parameter name="flag" value="0"/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest name="ethsw_stub_hal_Set_EthWanEnable" id=" " version="1">
+        <function>ethsw_stub_hal_Set_EthWanEnable</function>
+        <parameters>
+          <parameter name="enable" value="0"/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest name="ethsw_stub_hal_Get_EthWanPort" id=" " version="1">
+        <function>ethsw_stub_hal_Get_EthWanPort</function>
+        <parameters>
+          <parameter name="flag" value="0"/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest name="ethsw_stub_hal_Set_EthWanPort" id=" " version="1">
+        <function>ethsw_stub_hal_Set_EthWanPort</function>
+        <parameters>
+          <parameter name="port" value="1"/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest name="ethsw_stub_hal_Get_EthWanLinkStatus" id="" version="1">
+        <function>ethsw_stub_hal_Get_EthWanLinkStatus</function>
+        <parameters/>
+      </primitiveTest>
     </primitiveTests>
   </module>
 </xml>
