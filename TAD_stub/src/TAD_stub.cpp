@@ -464,6 +464,43 @@ void TADstub::TADstub_GetState(IN const Json::Value& req, OUT Json::Value& respo
     }
 }
 
+/***************************************************************************
+ *Function name : TADstub_SetOnly
+ *Descrption    : TAD Component Set Param Value API functionality checking
+ * @param [in]  req - ParamName : Holds the name of the parameter
+ * @param [in]  req - ParamValue : Holds the value of the parameter
+ * @param [in]  req - Type : Holds the Type of the parameter
+ * @param [out] response - filled with SUCCESS or FAILURE based on the return value
+ *
+ *****************************************************************************/
+void TADstub::TADstub_SetOnly(IN const Json::Value& req, OUT Json::Value& response)
+{
+    DEBUG_PRINT(DEBUG_TRACE,"TADstub_SetOnly --->Entry \n");
+    int setResult=0;
+    char ParamName[MAX_PARAM_SIZE];
+    char ParamValue[MAX_PARAM_SIZE];
+    char Type[MAX_PARAM_SIZE];
+    strcpy(ParamName,req["ParamName"].asCString());
+    strcpy(ParamValue,req["ParamValue"].asCString());
+    strcpy(Type,req["Type"].asCString());
+
+    setResult=ssp_setParameterValue(&ParamName[0],&ParamValue[0],&Type[0],1);
+    if(setResult==0)
+    {
+        DEBUG_PRINT(DEBUG_TRACE,"Parameter Values have been set\n");
+        printf("Set has been validated successfully\n");
+        response["result"] = "SUCCESS";
+        response["details"] = "Set has been validated successfully";
+        return;
+    }
+    else
+    {
+        response["result"] = "FAILURE";
+        response["details"] = "FAILURE : Parameter value is not SET. Set returns failure";
+        return;
+    }
+    return;
+}
 
 /**************************************************************************
  * Function Name        : CreateObject
