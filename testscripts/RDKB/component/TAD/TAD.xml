@@ -16,11 +16,10 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 -->
-<?xml version="1.0" encoding="UTF-8"?>
-<xml>
-  <module name="TAD" testGroup="Component">
+<?xml version="1.0" encoding="UTF-8"?><xml>
+  <module testGroup="Component" name="TAD">
     <primitiveTests>
-      <primitiveTest id=" " name="TADstub_Get" version="3">
+      <primitiveTest name="TADstub_Get" id=" " version="3">
         <function>TADstub_Get</function>
         <parameters>
           <parameter name="paramName" value="null"/>
@@ -42,26 +41,26 @@
           <parameter name="Type" value="null"/>
         </parameters>
       </primitiveTest>
-      <primitiveTest id=" " name="TADstub_GetCfg" version="1">
+      <primitiveTest name="TADstub_GetCfg" id=" " version="1">
         <function>TADstub_GetCfg</function>
         <parameters>
           <parameter name="mode" value=""/>
         </parameters>
       </primitiveTest>
-      <primitiveTest id=" " name="TADstub_SetCfg" version="1">
+      <primitiveTest name="TADstub_SetCfg" id=" " version="1">
         <function>TADstub_SetCfg</function>
         <parameters>
           <parameter name="host" value=""/>
           <parameter name="mode" value=""/>
         </parameters>
       </primitiveTest>
-      <primitiveTest id=" " name="TADstub_GetState" version="1">
+      <primitiveTest name="TADstub_GetState" id=" " version="1">
         <function>TADstub_GetState</function>
         <parameters>
           <parameter name="mode" value=""/>
         </parameters>
       </primitiveTest>
-      <primitiveTest id=" " name="TADstub_Start" version="1">
+      <primitiveTest name="TADstub_Start" id=" " version="1">
         <function>TADstub_Start</function>
         <parameters>
           <parameter name="mode" value=""/>
@@ -77,6 +76,15 @@
         <function>TADstub_Init</function>
         <parameters/>
       </primitiveTest>
+      <primitiveTest name="TADstub_SetOnly" id=" " version="1">
+        <function>TADstub_SetOnly</function>
+        <parameters>
+          <parameter name="ParamName" value=" "/>
+          <parameter name="ParamValue" value=" "/>
+          <parameter name="Type" value=" "/>
+        </parameters>
+      </primitiveTest>
     </primitiveTests>
   </module>
 </xml>
+
