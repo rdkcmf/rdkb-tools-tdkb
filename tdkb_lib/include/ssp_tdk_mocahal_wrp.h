@@ -39,6 +39,11 @@ extern "C"
     int ssp_MoCAHAL_GetFullMeshRates(unsigned long ifIndex, moca_mesh_table_t *pDeviceArray, unsigned long *pulCount);
     int ssp_MoCAHAL_GetFlowStatistics(unsigned long ifIndex, moca_flow_table_t *pDeviceArray, unsigned long *pulCount);
     int ssp_MoCAHAL_GetResetCount(unsigned long *resetcnt);
+    int ssp_MoCAHAL_GetIfAcaConfig(int ifIndex, moca_aca_cfg_t *acaCfg);
+    int ssp_MoCAHAL_SetIfAcaConfig(int ifIndex, moca_aca_cfg_t acaCfg);
+    int ssp_MoCAHAL_GetIfAcaStatus(int ifIndex, moca_aca_stat_t *pAcaStat);
+    int ssp_MoCAHAL_CancelIfAca(int ifIndex);
+    int ssp_MoCAHAL_GetIfScmod(int ifIndex, int *pNumOfEntries, moca_scmod_stat_t **ppscmodStat);
 #ifdef __cplusplus
 }
 #endif
