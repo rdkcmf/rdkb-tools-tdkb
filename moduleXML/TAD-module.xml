@@ -28,7 +28,7 @@
   <!-- Excecution time out of module -->
     <testGroup>Component</testGroup>
   <!-- Logs File Names of module -->
-    <logFileNames>[]</logFileNames>
+    <logFileNames>[/rdklogs/logs/TDMlog.txt.1, /rdklogs/logs/SelfHeal.txt.0, /rdklogs/logs/SelfHeal.txt.1, /rdklogs/logs/TDMlog.txt.0]</logFileNames>
   <!-- Crash File Names of the module -->
     <crashFileNames>[]</crashFileNames>
   <!-- Total functions corresponding module  -->
@@ -42,6 +42,7 @@
       <function name='TADstub_Start' />
       <function name='TADstub_Stop' />
       <function name='TADstub_SetDiagnosticsState' />
+      <function name='TADstub_SetOnly' />
     </functions>
   <!-- Total parameters corresponding module  -->
     <parameters>
@@ -58,6 +59,9 @@
       <parameter funName='TADstub_SetDiagnosticsState' parameterName='ParamName' parameterType='STRING' range='A-Z' />
       <parameter funName='TADstub_SetDiagnosticsState' parameterName='ParamValue' parameterType='STRING' range='A-Z' />
       <parameter funName='TADstub_SetDiagnosticsState' parameterName='Type' parameterType='STRING' range='A-Z' />
+      <parameter funName='TADstub_SetOnly' parameterName='ParamValue' parameterType='STRING' range='A-Z' />
+      <parameter funName='TADstub_SetOnly' parameterName='Type' parameterType='STRING' range='A-Z' />
+      <parameter funName='TADstub_SetOnly' parameterName='ParamName' parameterType='STRING' range='A-Z' />
     </parameters>
   </module>
 </xml>
