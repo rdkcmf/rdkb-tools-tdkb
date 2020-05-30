@@ -332,6 +332,15 @@
           <parameter name="apIndex" value="0"/>
         </parameters>
       </primitiveTest>
+      <primitiveTest name="WIFIHAL_SetApScanFilter" id=" " version="1">
+        <function>WIFIHAL_SetApScanFilter</function>
+        <parameters>
+          <parameter name="apIndex" value=""/>
+          <parameter name="essid" value=""/>
+          <parameter name="methodName" value=""/>
+          <parameter name="mode" value=""/>
+        </parameters>
+      </primitiveTest>
     </primitiveTests>
   </module>
 </xml>

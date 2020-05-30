@@ -44,6 +44,7 @@ class MoCAHAL : public RDKTestStubInterface, public AbstractServer<MoCAHAL>
          MoCAHAL(TcpSocketServer &ptrRpcServer) : AbstractServer <MoCAHAL>(ptrRpcServer)
                 {
                   this->bindAndAddMethod(Procedure("MoCAHAL_GetIfConfig", PARAMS_BY_NAME, JSON_STRING,"ifIndex", JSON_INTEGER, "paramType", JSON_STRING, NULL), &MoCAHAL::MoCAHAL_GetIfConfig);
+                  this->bindAndAddMethod(Procedure("MoCAHAL_SetIfConfig", PARAMS_BY_NAME, JSON_STRING, "ifIndex", JSON_INTEGER, "paramType", JSON_STRING, "privacyEnable", JSON_INTEGER, "keyPassphrase", JSON_STRING, "autoPowerEnable", JSON_INTEGER, "autoPowerRate", JSON_INTEGER, NULL), &MoCAHAL::MoCAHAL_SetIfConfig);
                   this->bindAndAddMethod(Procedure("MoCAHAL_IfGetDynamicInfo", PARAMS_BY_NAME, JSON_STRING,"ifIndex", JSON_INTEGER, "paramType", JSON_STRING, NULL), &MoCAHAL::MoCAHAL_IfGetDynamicInfo);
                   this->bindAndAddMethod(Procedure("MoCAHAL_IfGetStaticInfo", PARAMS_BY_NAME, JSON_STRING,"ifIndex", JSON_INTEGER, "paramType", JSON_STRING, NULL), &MoCAHAL::MoCAHAL_IfGetStaticInfo);
                   this->bindAndAddMethod(Procedure("MoCAHAL_IfGetStats", PARAMS_BY_NAME, JSON_STRING,"ifIndex", JSON_INTEGER, "paramType", JSON_STRING, NULL), &MoCAHAL::MoCAHAL_IfGetStats);
@@ -72,6 +73,7 @@ class MoCAHAL : public RDKTestStubInterface, public AbstractServer<MoCAHAL>
 
         /*MoCAHAL Stub Wrapper functions*/
         void MoCAHAL_GetIfConfig(IN const Json::Value& req, OUT Json::Value& response);
+        void MoCAHAL_SetIfConfig(IN const Json::Value& req, OUT Json::Value& response);
         void MoCAHAL_IfGetStaticInfo(IN const Json::Value& req, OUT Json::Value& response);
         void MoCAHAL_IfGetDynamicInfo(IN const Json::Value& req, OUT Json::Value& response);
         void MoCAHAL_IfGetStats(IN const Json::Value& req, OUT Json::Value& response);

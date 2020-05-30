@@ -26,6 +26,7 @@ extern "C"
 {
 #endif
     int ssp_MoCAHAL_GetIfConfig(unsigned long ifIndex, moca_cfg_t *pmoca_config);
+    int ssp_MoCAHAL_SetIfConfig(unsigned long ifIndex, moca_cfg_t *pmoca_config);
     int ssp_MoCAHAL_IfGetDynamicInfo(unsigned long ifIndex, moca_dynamic_info_t *pdynamic_info);
     int ssp_MoCAHAL_IfGetStaticInfo(unsigned long ifIndex, moca_static_info_t *pstatic_info);
     int ssp_MoCAHAL_IfGetStats(unsigned long ifIndex, moca_stats_t *pmoca_stats);
