@@ -47,6 +47,33 @@ int ssp_MoCAHAL_GetIfConfig(unsigned long ifIndex, moca_cfg_t *pmoca_config)
     }
 }
 
+/*******************************************************************************************
+ *
+ * Function Name        : ssp_MoCAHAL_SetIfConfig
+ * Description          : This function invokes MoCA hal api moca_SetIfConfig()
+ * @param [in] req-     : ifIndex - index of the MoCA interface
+                          pmoca_config - buffer to set the moca_config values
+ * @param [out] response - filled with SUCCESS or FAILURE based on the output status of operation
+ *
+ ********************************************************************************************/
+int ssp_MoCAHAL_SetIfConfig(unsigned long ifIndex, moca_cfg_t *pmoca_config)
+{
+    printf("\n ssp_MoCAHAL_SetIfConfig----> Entry\n");
+    int return_status = 0;
+
+    return_status = moca_SetIfConfig(ifIndex, pmoca_config);
+    if(return_status != SSP_SUCCESS)
+    {
+     printf("\nssp_MoCAHAL_SetIfConfig::Failed\n");
+     return SSP_FAILURE;
+    }
+    else
+    {
+     printf("\n ssp_MoCAHAL_SetIfConfig::Success\n");
+     return SSP_SUCCESS;
+    }
+}
+
 
 /*******************************************************************************************
  *

@@ -116,6 +116,68 @@ void MoCAHAL::MoCAHAL_GetIfConfig(IN const Json::Value& req, OUT Json::Value& re
     }
 }
 
+/*******************************************************************************************
+ *
+ * Function Name        : MoCAHAL_SetIfConfig
+ * Description          : This function Sets the MoCA Configuration Parameters
+ *
+ * @param [in] req-    : ifIndex - index of the MoCA interface
+                       : paramType - To indicate negative test scenario. it has to be set as NULL for negative sceanario
+		       : privacyEnable -  Enable/Disable Link Privacy. A Password is required when Privacy is enabled
+		       : keyPassphrase - Privacy Password. This field is valid only if the Link Privacy is enabled
+		       : autoPowerRate - PowerCtrlPhyTarget Used as a reference to achieve the PHY rate by adjusting  power
+		       : autoPowerEnable - Enable/Disable adjusting Power to achieve the Target PHY rate
+
+ * @param [out] response - filled with SUCCESS or FAILURE based on the output status of operation
+ *
+ ********************************************************************************************/
+
+void MoCAHAL::MoCAHAL_SetIfConfig(IN const Json::Value& req, OUT Json::Value& response)
+{
+    DEBUG_PRINT(DEBUG_TRACE,"\n MoCAHAL_SetIfConfig --->Entry\n");
+    int ifIndex = 0;
+    int returnValue = 0;
+    moca_cfg_t moca_config;
+    char paramType[10] = {'\0'};
+    char key[18] = {'\0'};
+    int  privacyEnable = 0, autoPowerRate  = 0, autoPowerEnable;
+
+    strcpy(paramType, req["paramType"].asCString());
+    ifIndex = req["ifIndex"].asInt();
+
+    returnValue = ssp_MoCAHAL_GetIfConfig(ifIndex, &moca_config);
+
+    privacyEnable = req["privacyEnable"].asInt();
+    autoPowerRate = req["autoPowerRate"].asInt();
+    autoPowerEnable = req["autoPowerEnable"].asInt();
+    strcpy(key, req["keyPassphrase"].asCString());
+
+    moca_config.PrivacyEnabledSetting = privacyEnable;
+    memset(moca_config.KeyPassphrase, 0, 18);
+    memcpy(moca_config.KeyPassphrase, key, strlen(key));
+    moca_config.AutoPowerControlPhyRate = autoPowerRate;
+    moca_config.AutoPowerControlEnable = autoPowerEnable;
+
+    if(strcmp(paramType, "NULL"))
+        returnValue = ssp_MoCAHAL_SetIfConfig(ifIndex, &moca_config);
+    else
+        returnValue = ssp_MoCAHAL_SetIfConfig(ifIndex, NULL);
+    if(0 == returnValue)
+    {
+        response["result"]="SUCCESS";
+        response["details"]="MoCAHAL_SetIfConfig operation success";
+        DEBUG_PRINT(DEBUG_TRACE,"\n MoCAHAL_SetIfConfig ---->Execution success\n");
+        return;
+    }
+    else
+    {
+        response["result"]="FAILURE";
+        response["details"]="MoCAHAL_SetIfConfig operation failed";
+        DEBUG_PRINT(DEBUG_TRACE,"\n MoCAHAL_SetIfConfig ---->Error in execution\n");
+        return;
+    }
+}
+
 
 /*******************************************************************************************
  *
