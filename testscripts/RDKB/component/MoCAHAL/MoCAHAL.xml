@@ -114,6 +114,55 @@
           <parameter name="paramType" value=""/>
         </parameters>
       </primitiveTest>
+      <primitiveTest name="MoCAHAL_SetIfConfig" id=" " version="1">
+        <function>MoCAHAL_SetIfConfig</function>
+        <parameters>
+          <parameter name="autoPowerEnable" value=""/>
+          <parameter name="autoPowerRate" value=""/>
+          <parameter name="ifIndex" value=""/>
+          <parameter name="keyPassphrase" value=""/>
+          <parameter name="paramType" value=""/>
+          <parameter name="privacyEnable" value=""/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest name="MoCAHAL_GetIfAcaConfig" id=" " version="1">
+        <function>MoCAHAL_GetIfAcaConfig</function>
+        <parameters>
+          <parameter name="ifIndex" value=""/>
+          <parameter name="paramType" value=""/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest name="MoCAHAL_GetIfScmod" id=" " version="1">
+        <function>MoCAHAL_GetIfScmod</function>
+        <parameters>
+          <parameter name="ifIndex" value=""/>
+          <parameter name="paramType" value=""/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest name="MoCAHAL_GetIfAcaStatus" id=" " version="1">
+        <function>MoCAHAL_GetIfAcaStatus</function>
+        <parameters>
+          <parameter name="ifIndex" value=""/>
+          <parameter name="paramType" value=""/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest name="MoCAHAL_CancelIfAca" id=" " version="1">
+        <function>MoCAHAL_CancelIfAca</function>
+        <parameters>
+          <parameter name="ifIndex" value=""/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest name="MoCAHAL_SetIfAcaConfig" id=" " version="1">
+        <function>MoCAHAL_SetIfAcaConfig</function>
+        <parameters>
+          <parameter name="ACAStart" value=""/>
+          <parameter name="channel" value=""/>
+          <parameter name="ifIndex" value=""/>
+          <parameter name="nodeId" value=""/>
+          <parameter name="probeType" value=""/>
+          <parameter name="reportNodes" value=""/>
+        </parameters>
+      </primitiveTest>
     </primitiveTests>
   </module>
 </xml>
