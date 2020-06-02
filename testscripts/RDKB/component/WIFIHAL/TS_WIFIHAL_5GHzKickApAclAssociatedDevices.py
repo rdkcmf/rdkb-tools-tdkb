@@ -69,6 +69,8 @@ radioIndex : 1</input_parameters>
 import tdklib;
 from wifiUtility import *;
 
+radio = "5G"
+
 #Test component to be tested
 obj = tdklib.TDKScriptingLibrary("wifihal","1");
 
@@ -83,27 +85,35 @@ print "[LIB LOAD STATUS]  :  %s" %loadmodulestatus
 
 if "SUCCESS" in loadmodulestatus.upper():
     obj.setLoadModuleStatus("SUCCESS");
-    #Calling primitive WIFIHAL_GetOrSetParamBoolValue that in turn will call wifi_kickApAclAssociatedDevices() and remove all existing connection.
-    expectedresult="SUCCESS";
-    radioIndex = 1
-    getMethod = "kickApAclAssociatedDevices"
-    primitive = 'WIFIHAL_GetOrSetParamBoolValue'
-    newEnable = 1
-    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, newEnable, getMethod)
 
-    if expectedresult in actualresult :
-       tdkTestObj.setResultStatus("SUCCESS");
-       print "TEST STEP 1: Remove the all existing wifi connection associated with this device for 5 GHz"
-       print "EXPECTED RESULT 1: The api wifi_kickApAclAssociatedDevices() should return SUCCESS for 5 GHz"
-       print "ACTUAL RESULT  1: The api wifi_kickApAclAssociatedDevices() returned  SUCCESS for 5 GHz"
-       print "TEST EXECUTION RESULT : SUCCESS"
-       print "Details is",details
-    else:
-       tdkTestObj.setResultStatus("FAILURE");
-       print "TEST STEP 1: Remove the all existing wifi connection associated with this device for 5 GHz"
-       print "EXPECTED RESULT 1: The api wifi_kickApAclAssociatedDevices() should return SUCCESS for 5 GHz"
-       print "ACTUAL RESULT 1: The api wifi_kickApAclAssociatedDevices() returned  FAILURE for 5 GHz"
-       print "TEST EXECUTION RESULT : FAILURE"
+    tdkTestObjTemp, idx = getIndex(obj, radio);
+    ## Check if a invalid index is returned
+    if idx == -1:
+        print "Failed to get radio index for radio %s\n" %radio;
+        tdkTestObjTemp.setResultStatus("FAILURE");
+    else: 
+
+	    #Calling primitive WIFIHAL_GetOrSetParamBoolValue that in turn will call wifi_kickApAclAssociatedDevices() and remove all existing connection.
+	    expectedresult="SUCCESS";
+	    radioIndex = idx
+	    getMethod = "kickApAclAssociatedDevices"
+	    primitive = 'WIFIHAL_GetOrSetParamBoolValue'
+	    newEnable = 1
+	    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, newEnable, getMethod)
+
+	    if expectedresult in actualresult :
+	       tdkTestObj.setResultStatus("SUCCESS");
+	       print "TEST STEP 1: Remove the all existing wifi connection associated with this device for 5 GHz"
+	       print "EXPECTED RESULT 1: The api wifi_kickApAclAssociatedDevices() should return SUCCESS for 5 GHz"
+	       print "ACTUAL RESULT  1: The api wifi_kickApAclAssociatedDevices() returned  SUCCESS for 5 GHz"
+	       print "TEST EXECUTION RESULT : SUCCESS"
+	       print "Details is",details
+	    else:
+	       tdkTestObj.setResultStatus("FAILURE");
+	       print "TEST STEP 1: Remove the all existing wifi connection associated with this device for 5 GHz"
+	       print "EXPECTED RESULT 1: The api wifi_kickApAclAssociatedDevices() should return SUCCESS for 5 GHz"
+	       print "ACTUAL RESULT 1: The api wifi_kickApAclAssociatedDevices() returned  FAILURE for 5 GHz"
+	       print "TEST EXECUTION RESULT : FAILURE"
     obj.unloadModule("wifihal");
 
 else:
