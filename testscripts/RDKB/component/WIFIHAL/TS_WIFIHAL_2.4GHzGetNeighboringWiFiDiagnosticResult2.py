@@ -66,6 +66,8 @@
 '''
 # use tdklib library,which provides a wrapper for tdk testcase script
 import tdklib;
+from wifiUtility import *;
+radio = "2.4G"
 
 #Test component to be tested
 obj = tdklib.TDKScriptingLibrary("wifihal","1");
@@ -83,38 +85,46 @@ print "[LIB LOAD STATUS]  :  %s" %loadmodulestatus
 if "SUCCESS" in loadmodulestatus.upper():
     obj.setLoadModuleStatus("SUCCESS");
 
-    #Prmitive test case which associated to this Script
-    tdkTestObj = obj.createTestStep('WIFIHAL_GetNeighboringWiFiDiagnosticResult2');
-    tdkTestObj.addParameter("radioIndex", 0);
-    expectedresult="SUCCESS";
-    tdkTestObj.executeTestCase(expectedresult);
-    actualresult = tdkTestObj.getResult();
-    details = tdkTestObj.getResultDetails();
+    tdkTestObjTemp, idx = getIndex(obj, radio);
+    ## Check if a invalid index is returned
+    if idx == -1:
+        print "Failed to get radio index for radio %s\n" %radio;
+        tdkTestObjTemp.setResultStatus("FAILURE");
 
-    if expectedresult in actualresult :
-	details = details.split(":ap_")[1].strip();
-        tdkTestObj.setResultStatus("SUCCESS");
-        print "TEST STEP : Get the NeighboringWiFiDiagnosticResult"
-        print "EXPECTED RESULT : Should successfully get the NeighboringWiFiDiagnosticResult"
-        print "ACTUAL RESULT : Successfully gets the NeighboringWiFiDiagnosticResult"
-        print "Details: "
-        detailList = details.split(",")
-        detailApList = details.split(",ap_")
-        for i in range(0,17):
-	    print detailApList[i]
-	output_array_size = detailList[-1].split('=')[1];
-	print "output_array_size=",output_array_size
-	print "Identified %s neighboring access points"%output_array_size
-        #Get the result of execution
-        print "[TEST EXECUTION RESULT] : SUCCESS";
-    else:
-        tdkTestObj.setResultStatus("FAILURE");
-        print "TEST STEP : Get the NeighboringWiFiDiagnosticResult"
-        print "EXPECTED RESULT : Should successfully get the NeighboringWiFiDiagnosticResult"
-        print "ACTUAL RESULT : Failed to get the NeighboringWiFiDiagnosticResult"
-        print "Details: %s"%details
-        #Get the result of execution
-        print "[TEST EXECUTION RESULT] : FAILURE";
+    else: 
+
+	    #Prmitive test case which associated to this Script
+	    tdkTestObj = obj.createTestStep('WIFIHAL_GetNeighboringWiFiDiagnosticResult2');
+	    tdkTestObj.addParameter("radioIndex", idx);
+	    expectedresult="SUCCESS";
+	    tdkTestObj.executeTestCase(expectedresult);
+	    actualresult = tdkTestObj.getResult();
+	    details = tdkTestObj.getResultDetails();
+
+	    if expectedresult in actualresult :
+		details = details.split(":ap_")[1].strip();
+		tdkTestObj.setResultStatus("SUCCESS");
+		print "TEST STEP : Get the NeighboringWiFiDiagnosticResult"
+		print "EXPECTED RESULT : Should successfully get the NeighboringWiFiDiagnosticResult"
+		print "ACTUAL RESULT : Successfully gets the NeighboringWiFiDiagnosticResult"
+		print "Details: "
+		detailList = details.split(",")
+		detailApList = details.split(",ap_")
+		for i in range(0,17):
+		    print detailApList[i]
+		output_array_size = detailList[-1].split('=')[1];
+		print "output_array_size=",output_array_size
+		print "Identified %s neighboring access points"%output_array_size
+		#Get the result of execution
+		print "[TEST EXECUTION RESULT] : SUCCESS";
+	    else:
+		tdkTestObj.setResultStatus("FAILURE");
+		print "TEST STEP : Get the NeighboringWiFiDiagnosticResult"
+		print "EXPECTED RESULT : Should successfully get the NeighboringWiFiDiagnosticResult"
+		print "ACTUAL RESULT : Failed to get the NeighboringWiFiDiagnosticResult"
+		print "Details: %s"%details
+		#Get the result of execution
+		print "[TEST EXECUTION RESULT] : FAILURE";
 
     obj.unloadModule("wifihal");
 else:

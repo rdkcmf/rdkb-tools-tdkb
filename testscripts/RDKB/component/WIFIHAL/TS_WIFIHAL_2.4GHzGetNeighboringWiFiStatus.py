@@ -86,6 +86,8 @@ wifi_startNeighborScan()</api_or_interface_used>
 import tdklib;
 import random;
 import time;
+from wifiUtility import *;
+radio = "2.4G"
 
 #Test component to be tested
 obj = tdklib.TDKScriptingLibrary("wifihal","1");
@@ -103,57 +105,65 @@ print "[LIB LOAD STATUS]  :  %s" %loadmodulestatus ;
 if "SUCCESS" in loadmodulestatus.upper():
     obj.setLoadModuleStatus("SUCCESS");
 
-    #Prmitive test case which is associated to this Script
-    tdkTestObj = obj.createTestStep('WIFIHAL_StartNeighborScan');
-    tdkTestObj.addParameter("apIndex", 0);
-    #Scan mode '0' only active, so checking it alone 
-    tdkTestObj.addParameter("scan_mode", 1);
-    value = random.randrange(10,20);
-    tdkTestObj.addParameter("dwell_time", value);
-    expectedresult="SUCCESS";
-    tdkTestObj.executeTestCase(expectedresult);
-    actualresult = tdkTestObj.getResult();
-    details = tdkTestObj.getResultDetails();
+    tdkTestObjTemp, idx = getIndex(obj, radio);
+    ## Check if a invalid index is returned
+    if idx == -1:
+        print "Failed to get radio index for radio %s\n" %radio;
+        tdkTestObjTemp.setResultStatus("FAILURE");
+    else: 
 
-    if expectedresult in actualresult :
-        print "TEST STEP : Successfully start the wifi_startNeighborScan"
-        print "EXPECTED RESULT : Should successfully start the wifi_startNeighborScan"
-        print "ACTUAL RESULT : Successfully started wifi_startNeighborScan"
-        print "Output details: %s" %details;
+	    #Prmitive test case which is associated to this Script
+	    tdkTestObj = obj.createTestStep('WIFIHAL_StartNeighborScan');
+	    tdkTestObj.addParameter("apIndex", idx);
+	    #Scan mode '0' only active, so checking it alone 
+	    tdkTestObj.addParameter("scan_mode", 1);
+	    value = random.randrange(10,20);
+	    tdkTestObj.addParameter("dwell_time", value);
+	    expectedresult="SUCCESS";
+	    tdkTestObj.executeTestCase(expectedresult);
+	    actualresult = tdkTestObj.getResult();
+	    details = tdkTestObj.getResultDetails();
 
-	time.sleep(7)
-        #Script to load the configuration file of the component
-        tdkTestObj = obj.createTestStep("WIFIHAL_GetNeighboringWiFiStatus");
-        tdkTestObj.addParameter("radioIndex",0);
-        expectedresult="SUCCESS";
-        tdkTestObj.executeTestCase(expectedresult);
-        actualresult = tdkTestObj.getResult();
-        details = tdkTestObj.getResultDetails();
-        if expectedresult in actualresult:
-            #Set the result status of execution
-            tdkTestObj.setResultStatus("SUCCESS");
-            print "TEST STEP 2: Get the neighboring wifi status for 2.4GHz";
-            print "EXPECTED RESULT 2: Should get the neighboring wifi status for 2.4GHz";
-            print "ACTUAL RESULT 2: %s" %details;
-            #Get the result of execution
-            print "[TEST EXECUTION RESULT] : SUCCESS";
-        else:
-            #Set the result status of execution
-            tdkTestObj.setResultStatus("FAILURE");
-            print "TEST STEP 2: Get the neighboring wifi status for 2.4GHz";
-            print "EXPECTED RESULT 2: Should get the neighboring wifi status for 2.4GHz";
-            print "ACTUAL RESULT 2: %s" %details;
-            #Get the result of execution
-            print "[TEST EXECUTION RESULT] : FAILURE";
+	    if expectedresult in actualresult :
+		print "TEST STEP : Successfully start the wifi_startNeighborScan"
+		print "EXPECTED RESULT : Should successfully start the wifi_startNeighborScan"
+		print "ACTUAL RESULT : Successfully started wifi_startNeighborScan"
+		print "Output details: %s" %details;
 
-    else:
-        tdkTestObj.setResultStatus("FAILURE");
-        print "TEST STEP : Get the wifi_startNeighborScan"
-        print "EXPECTED RESULT : Should successfully get the result of wifi_startNeighborScan"
-        print "ACTUAL RESULT : Failed to get the result of wifi_startNeighborScan"
-        print "Output details: %s" %details;
-        #Get the result of execution
-        print "[TEST EXECUTION RESULT] : FAILURE";
+		time.sleep(7)
+		#Script to load the configuration file of the component
+		tdkTestObj = obj.createTestStep("WIFIHAL_GetNeighboringWiFiStatus");
+		tdkTestObj.addParameter("radioIndex",idx);
+		expectedresult="SUCCESS";
+		tdkTestObj.executeTestCase(expectedresult);
+		actualresult = tdkTestObj.getResult();
+		details = tdkTestObj.getResultDetails();
+		if expectedresult in actualresult:
+		    #Set the result status of execution
+		    tdkTestObj.setResultStatus("SUCCESS");
+		    print "TEST STEP 2: Get the neighboring wifi status for 2.4GHz";
+		    print "EXPECTED RESULT 2: Should get the neighboring wifi status for 2.4GHz";
+		    print "ACTUAL RESULT 2: %s" %details;
+		    #Get the result of execution
+		    print "[TEST EXECUTION RESULT] : SUCCESS";
+		else:
+		    #Set the result status of execution
+		    tdkTestObj.setResultStatus("FAILURE");
+		    print "TEST STEP 2: Get the neighboring wifi status for 2.4GHz";
+		    print "EXPECTED RESULT 2: Should get the neighboring wifi status for 2.4GHz";
+		    print "ACTUAL RESULT 2: %s" %details;
+		    #Get the result of execution
+		    print "[TEST EXECUTION RESULT] : FAILURE";
+
+	    else:
+		tdkTestObj.setResultStatus("FAILURE");
+		print "TEST STEP : Get the wifi_startNeighborScan"
+		print "EXPECTED RESULT : Should successfully get the result of wifi_startNeighborScan"
+		print "ACTUAL RESULT : Failed to get the result of wifi_startNeighborScan"
+		print "Output details: %s" %details;
+		#Get the result of execution
+		print "[TEST EXECUTION RESULT] : FAILURE";
     obj.unloadModule("wifihal");
 else:
         print "Failed to load the module";
+        obj.setLoadModuleStatus("FAILURE");
