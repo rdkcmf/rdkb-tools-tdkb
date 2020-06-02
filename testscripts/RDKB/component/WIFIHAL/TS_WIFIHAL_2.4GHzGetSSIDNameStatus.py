@@ -68,6 +68,8 @@ radioIndex : 0</input_parameters>
 import tdklib;
 from wifiUtility import *;
 
+radio = "2.4G"
+
 #Test component to be tested
 obj = tdklib.TDKScriptingLibrary("wifihal","1");
 
@@ -83,59 +85,66 @@ print "[LIB LOAD STATUS]  :  %s" %loadmodulestatus
 if "SUCCESS" in loadmodulestatus.upper():
     obj.setLoadModuleStatus("SUCCESS");
 
-    expectedresult="SUCCESS";
+    tdkTestObjTemp, idx = getIndex(obj, radio);
+    ## Check if a invalid index is returned
+    if idx == -1:
+        print "Failed to get radio index for radio %s\n" %radio;
+        tdkTestObjTemp.setResultStatus("FAILURE");
+    else: 
 
-    #Checking for AP Index 0, Similar way we can check for other APs
-    apIndex = 0
-    getMethod = "getSSIDName"
-    primitive = 'WIFIHAL_GetOrSetParamStringValue'
+	    expectedresult="SUCCESS";
 
-    #Calling the method from wifiUtility to execute test case and set result status for the test.
-    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, "0", getMethod)
+	    #Checking for AP Index 0, Similar way we can check for other APs
+	    apIndex = idx
+	    getMethod = "getSSIDName"
+	    primitive = 'WIFIHAL_GetOrSetParamStringValue'
 
-    if expectedresult in actualresult:
-        ssidName = details.split(":")[1].strip()
-	if len(ssidName) <= 32:
-            print "Wifi_getSSIDName() function called successfully and %s"%details
-            tdkTestObj.setResultStatus("SUCCESS");
-            print "TEST STEP 1: Get the SSID name from wifi hal api";
-            print "EXPECTED RESULT 1: wifigetSSIDName should return a string value of SSID";
-            print "ACTUAL RESULT 1: SSID string received: %s"%ssidName;
-            print "[TEST EXECUTION RESULT] : SUCCESS";
+	    #Calling the method from wifiUtility to execute test case and set result status for the test.
+	    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, "0", getMethod)
 
-    	    apIndex = 0
-    	    getMethod = "getSSIDNameStatus"
-    	    primitive = 'WIFIHAL_GetOrSetParamStringValue'
+	    if expectedresult in actualresult:
+		ssidName = details.split(":")[1].strip()
+		if len(ssidName) <= 32:
+		    print "Wifi_getSSIDName() function called successfully and %s"%details
+		    tdkTestObj.setResultStatus("SUCCESS");
+		    print "TEST STEP 1: Get the SSID name from wifi hal api";
+		    print "EXPECTED RESULT 1: wifigetSSIDName should return a string value of SSID";
+		    print "ACTUAL RESULT 1: SSID string received: %s"%ssidName;
+		    print "[TEST EXECUTION RESULT] : SUCCESS";
 
-    	    #Calling the method from wifiUtility to execute test case and set result status for the test.
-    	    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, "0", getMethod)
+		    apIndex = idx
+		    getMethod = "getSSIDNameStatus"
+		    primitive = 'WIFIHAL_GetOrSetParamStringValue'
 
-    	    if expectedresult in actualresult:
-    	        ssidNameStatus = details.split(":")[1].strip()
-    	        if ssidNameStatus == ssidName:
-    	            print "Wifi_getSSIDNameStatus() function called successfully and %s"%details
-    	            tdkTestObj.setResultStatus("SUCCESS");
-    	            print "TEST STEP 2: Validate the wifi_getSSIDNameStatus Function";
-    	            print "EXPECTED RESULT 2: wifigetSSIDNameStatus should return a string value of SSID";
-    	            print "ACTUAL RESULT 2: SSID string received: %s"%ssidName;
-    	            print "[TEST EXECUTION RESULT] : SUCCESS";
-        	else:
-        	    print "wifi_getSSIDName function failed, %s"%details
-        	    tdkTestObj.setResultStatus("FAILURE");
-        	    print "TEST STEP 2: Validate the wifi_getSSIDName Function";
-        	    print "EXPECTED RESULT 2: wifigetSSIDName should return a string value of SSID";
-        	    print "ACTUAL RESULT 2:Failed to receive SSID string: %s"%ssidName;
-        	    print "[TEST EXECUTION RESULT] : FAILURE";
-	else:
-            print "wifi_getSSIDName function failed, %s"%details
-            tdkTestObj.setResultStatus("FAILURE");
-            print "TEST STEP 1: Get the SSID name from wifi hal api";
-            print "EXPECTED RESULT 1: wifigetSSIDName should return a string value of SSID";
-            print "ACTUAL RESULT 1:Failed to receive SSID string: %s"%ssidName;
-            print "[TEST EXECUTION RESULT] : FAILURE";
-    else:
-        print "wifi_getSSIDNameStatus function failed";
-        tdkTestObj.setResultStatus("FAILURE");
+		    #Calling the method from wifiUtility to execute test case and set result status for the test.
+		    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, "0", getMethod)
+
+		    if expectedresult in actualresult:
+			ssidNameStatus = details.split(":")[1].strip()
+			if ssidNameStatus == ssidName:
+			    print "Wifi_getSSIDNameStatus() function called successfully and %s"%details
+			    tdkTestObj.setResultStatus("SUCCESS");
+			    print "TEST STEP 2: Validate the wifi_getSSIDNameStatus Function";
+			    print "EXPECTED RESULT 2: wifigetSSIDNameStatus should return a string value of SSID";
+			    print "ACTUAL RESULT 2: SSID string received: %s"%ssidName;
+			    print "[TEST EXECUTION RESULT] : SUCCESS";
+			else:
+			    print "wifi_getSSIDName function failed, %s"%details
+			    tdkTestObj.setResultStatus("FAILURE");
+			    print "TEST STEP 2: Validate the wifi_getSSIDName Function";
+			    print "EXPECTED RESULT 2: wifigetSSIDName should return a string value of SSID";
+			    print "ACTUAL RESULT 2:Failed to receive SSID string: %s"%ssidName;
+			    print "[TEST EXECUTION RESULT] : FAILURE";
+		else:
+		    print "wifi_getSSIDName function failed, %s"%details
+		    tdkTestObj.setResultStatus("FAILURE");
+		    print "TEST STEP 1: Get the SSID name from wifi hal api";
+		    print "EXPECTED RESULT 1: wifigetSSIDName should return a string value of SSID";
+		    print "ACTUAL RESULT 1:Failed to receive SSID string: %s"%ssidName;
+		    print "[TEST EXECUTION RESULT] : FAILURE";
+	    else:
+		print "wifi_getSSIDNameStatus function failed";
+		tdkTestObj.setResultStatus("FAILURE");
     obj.unloadModule("wifihal");
 
 else:

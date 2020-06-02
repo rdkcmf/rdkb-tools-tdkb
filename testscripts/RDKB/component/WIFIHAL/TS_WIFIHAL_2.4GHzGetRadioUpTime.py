@@ -67,6 +67,8 @@ RadioIndex : 0</input_parameters>
 import tdklib; 
 from wifiUtility import *
 
+radio = "2.4G"
+
 #Test component to be tested
 obj = tdklib.TDKScriptingLibrary("wifihal","1");
 
@@ -84,30 +86,37 @@ print "[LIB LOAD STATUS]  :  %s" %loadmodulestatus
 if "SUCCESS" in loadmodulestatus.upper():
     obj.setLoadModuleStatus("SUCCESS");
 
-    expectedresult = "SUCCESS"
-    radioIndex = 0
-    getMethod = "getRadioUpTime"
-    primitive = 'WIFIHAL_GetOrSetParamULongValue'
+    tdkTestObjTemp, idx = getIndex(obj, radio);
+    ## Check if a invalid index is returned
+    if idx == -1:
+        print "Failed to get radio index for radio %s\n" %radio;
+        tdkTestObjTemp.setResultStatus("FAILURE");
+    else: 
 
-    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, 0, getMethod)
+	    expectedresult = "SUCCESS"
+	    radioIndex = idx
+	    getMethod = "getRadioUpTime"
+	    primitive = 'WIFIHAL_GetOrSetParamULongValue'
 
-    if expectedresult in actualresult:
-	upTime = details.split(":")[1].strip()
-	if int(upTime) > 0:
-            tdkTestObj.setResultStatus("SUCCESS");
-            print "TEST STEP : Check if Radio Up Time is greater than 0"
-            print "EXPECTED RESULT : Radio up time should is greater than 0"
-            print "ACTUAL RESULT : Radio up time is greater than 0"
-	    print "Radio UpTime = %s"%upTime
-        else:
-            tdkTestObj.setResultStatus("FAILURE");
-            print "TEST STEP : Check if Radio Up Time is greater than 0"
-            print "EXPECTED RESULT : Radio up time should is greater than 0"
-            print "ACTUAL RESULT : Radio up time is greater than 0"
-	    print "Radio UpTime = %s"%upTime
-    else:
-        tdkTestObj.setResultStatus("FAILURE");
-        print "wifi_getRadioUpTime() call failed"
+	    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, 0, getMethod)
+
+	    if expectedresult in actualresult:
+		upTime = details.split(":")[1].strip()
+		if int(upTime) > 0:
+		    tdkTestObj.setResultStatus("SUCCESS");
+		    print "TEST STEP : Check if Radio Up Time is greater than 0"
+		    print "EXPECTED RESULT : Radio up time should is greater than 0"
+		    print "ACTUAL RESULT : Radio up time is greater than 0"
+		    print "Radio UpTime = %s"%upTime
+		else:
+		    tdkTestObj.setResultStatus("FAILURE");
+		    print "TEST STEP : Check if Radio Up Time is greater than 0"
+		    print "EXPECTED RESULT : Radio up time should is greater than 0"
+		    print "ACTUAL RESULT : Radio up time is greater than 0"
+		    print "Radio UpTime = %s"%upTime
+	    else:
+		tdkTestObj.setResultStatus("FAILURE");
+		print "wifi_getRadioUpTime() call failed"
     obj.unloadModule("wifihal");
 else:
     obj.setLoadModuleStatus("FAILURE");
