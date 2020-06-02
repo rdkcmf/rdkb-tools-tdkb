@@ -936,7 +936,7 @@ void MoCAHAL::MoCAHAL_GetIfAcaStatus(IN const Json::Value& req, OUT Json::Value&
 
     if(RETURN_SUCCESS == returnValue)
     {
-        sprintf(details, "Value returned is :Assessment Type=%s(%d), ACA Status=%d, Total Power=%d dBm, ACATrapCompleted=%d", (acaStat.acaCfg.Type == 0)? "QUIET":"EVM", acaStat.acaCfg.Type, acaStat.stat, acaStat.RxPower, acaStat.ACATrapCompleted);
+        sprintf(details, "Value returned is :ACA status -> ACA Status=%d, Total Power=%d dBm, ACATrapCompleted=%d \n ACA Config->  Assessment Type=%s(%d), NodeId= %u, Channel= %u, ReportNodes= %u, ACAStart= %d", acaStat.stat, acaStat.RxPower, acaStat.ACATrapCompleted, (acaStat.acaCfg.Type == 0)? "QUIET":"EVM", acaStat.acaCfg.Type, acaStat.acaCfg.NodeID, acaStat.acaCfg.Channel, acaStat.acaCfg.ReportNodes, acaStat.acaCfg.ACAStart);
 	aca_status_print_report(acaStat);
         response["result"]="SUCCESS";
         response["details"]=details;
