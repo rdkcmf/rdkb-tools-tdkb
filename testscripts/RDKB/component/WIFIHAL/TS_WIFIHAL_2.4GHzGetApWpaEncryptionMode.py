@@ -94,6 +94,8 @@ import tdklib;
 from wifiUtility import *;
 from tdkbVariables import *;
 
+radio = "2.4G"
+
 #Test component to be tested
 obj = tdklib.TDKScriptingLibrary("wifihal","1");
 sysobj = tdklib.TDKScriptingLibrary("sysutil","1");
@@ -115,78 +117,86 @@ if "SUCCESS" in loadmodulestatus.upper() and "SUCCESS" in sysloadmodulestatus.up
     obj.setLoadModuleStatus("SUCCESS");
     sysobj.setLoadModuleStatus("SUCCESS");
 
-    tdkTestObj = sysobj.createTestStep('ExecuteCmd');
-    expectedresult="SUCCESS";
-    supportedApWpaEncryptionModes = "sh %s/tdk_utility.sh parseConfigFile SUPPORTED_APWPA_ENCRYPTIONMODES" %TDK_PATH;
-    tdkTestObj.addParameter("command", supportedApWpaEncryptionModes);
-    tdkTestObj.executeTestCase(expectedresult);
-    actualresult = tdkTestObj.getResult();
-    supportedApWpaEncryptionModes = tdkTestObj.getResultDetails().strip();
-    supportedApWpaEncryptionModes = supportedApWpaEncryptionModes.replace("\\n", "");
-    if supportedApWpaEncryptionModes and expectedresult in actualresult:
-        tdkTestObj.setResultStatus("SUCCESS");
-        supportedModes = supportedApWpaEncryptionModes.split(",");
-        print "**************************************************";
-        print "TEST STEP 1: Get the list of supported ApWpaEncryption Modes from /etc/tdk_platform.properties file";
-        print "EXPECTED RESULT 1: Should get the list of supported ApWpaEncryption Modes";
-        print "ACTUAL RESULT 1: Got the list of supported ApWpaEncryption Modes as %s" %supportedModes;
-        #Get the result of execution
-        print "[TEST EXECUTION RESULT] : SUCCESS";
-        print "**************************************************";
 
-        expectedresult="SUCCESS";
-        apIndex = 0
-        getMethod = "getApWpaEncryptionMode"
-        primitive = 'WIFIHAL_GetOrSetParamStringValue'
-
-        #Calling the method from wifiUtility to execute test case and set result status for the test.
-        tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, "0", getMethod)
-
-        if expectedresult in actualresult:
-            mode = details.split(":")[1].strip()
-            tdkTestObj.setResultStatus("SUCCESS");
-            print "**************************************************";
-            print "TEST STEP 2: Get the Ap Wpa EncryptionMode for 2.4GHz";
-            print "EXPECTED RESULT 2: Should successfully get the Ap Wpa EncryptionMode for 2.4GHz";
-            print "ACTUAL RESULT 2: Successfully got the Ap Wpa EncryptionMode as %s for 2.4GHz"%mode;
-            #Get the result of execution
-            print "[TEST EXECUTION RESULT] : SUCCESS";
-            print "**************************************************";
-            if mode in supportedModes:
-                tdkTestObj.setResultStatus("SUCCESS");
-                print "**************************************************";
-	        print "TEST STEP 3: To check whether the received Ap Wpa EncryptionMode is from the list of supported ApWpaEncryption Modes";
-                print "EXPECTED RESULT 3: The received Ap Wpa EncryptionMode should be from the list of supported ApWpaEncryption Modes";
-                print "ACTUAL RESULT 3: The received Ap Wpa EncryptionMode is from the list of supported ApWpaEncryption Modes";
-                print "[TEST EXECUTION RESULT] : SUCCESS";
-                print "**************************************************";
-            else:
-                tdkTestObj.setResultStatus("FAILURE");
-                print "**************************************************";
-                print "TEST STEP 3: To check whether the received Ap Wpa EncryptionMode is from the list of supported ApWpaEncryption Modes";
-                print "EXPECTED RESULT 3: The received Ap Wpa EncryptionMode should be from the list of supported ApWpaEncryption Modes";
-                print "ACTUAL RESULT 3: The received Ap Wpa EncryptionMode is NOT from the list of supported ApWpaEncryption Modes";
-                print "[TEST EXECUTION RESULT] : FAILURE";
-                print "**************************************************";
-        else:
-            tdkTestObj.setResultStatus("FAILURE");
-            print "**************************************************";
-            print "TEST STEP 2: Get the Ap Wpa EncryptionMode for 2.4GHz";
-            print "EXPECTED RESULT 2: Should successfully get the Ap Wpa EncryptionMode for 2.4GHz";
-            print "ACTUAL RESULT 2: Failed to get the Ap Wpa EncryptionMode for 2.4GHz";
-            print details;
-            #Get the result of execution
-            print "[TEST EXECUTION RESULT] : FAILURE";
-            print "**************************************************";
+    tdkTestObjTemp, idx = getIndex(obj, radio);
+    ## Check if a invalid index is returned
+    if idx == -1:
+        print "Failed to get radio index for radio %s\n" %radio;
+        tdkTestObjTemp.setResultStatus("FAILURE");
     else:
-        tdkTestObj.setResultStatus("FAILURE");
-        print "**************************************************";
-        print "TEST STEP 1: Get the list of supported ApWpaEncryption Modes from /etc/tdk_platform.properties file";
-        print "EXPECTED RESULT 1: Should get the list of supported ApWpaEncryption Modes";
-        print "ACTUAL RESULT 1: Failed to get the list of supported ApWpaEncryption Modes from /etc/tdk_platform.properties file";
-        #Get the result of execution
-        print "[TEST EXECUTION RESULT] : FAILURE";
-        print "**************************************************";
+	 
+	    tdkTestObj = sysobj.createTestStep('ExecuteCmd');
+	    expectedresult="SUCCESS";
+	    supportedApWpaEncryptionModes = "sh %s/tdk_utility.sh parseConfigFile SUPPORTED_APWPA_ENCRYPTIONMODES" %TDK_PATH;
+	    tdkTestObj.addParameter("command", supportedApWpaEncryptionModes);
+	    tdkTestObj.executeTestCase(expectedresult);
+	    actualresult = tdkTestObj.getResult();
+	    supportedApWpaEncryptionModes = tdkTestObj.getResultDetails().strip();
+	    supportedApWpaEncryptionModes = supportedApWpaEncryptionModes.replace("\\n", "");
+	    if supportedApWpaEncryptionModes and expectedresult in actualresult:
+		tdkTestObj.setResultStatus("SUCCESS");
+		supportedModes = supportedApWpaEncryptionModes.split(",");
+		print "**************************************************";
+		print "TEST STEP 1: Get the list of supported ApWpaEncryption Modes from /etc/tdk_platform.properties file";
+		print "EXPECTED RESULT 1: Should get the list of supported ApWpaEncryption Modes";
+		print "ACTUAL RESULT 1: Got the list of supported ApWpaEncryption Modes as %s" %supportedModes;
+		#Get the result of execution
+		print "[TEST EXECUTION RESULT] : SUCCESS";
+		print "**************************************************";
+
+		expectedresult="SUCCESS";
+		apIndex = idx
+		getMethod = "getApWpaEncryptionMode"
+		primitive = 'WIFIHAL_GetOrSetParamStringValue'
+
+		#Calling the method from wifiUtility to execute test case and set result status for the test.
+		tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, "0", getMethod)
+
+		if expectedresult in actualresult:
+		    mode = details.split(":")[1].strip()
+		    tdkTestObj.setResultStatus("SUCCESS");
+		    print "**************************************************";
+		    print "TEST STEP 2: Get the Ap Wpa EncryptionMode for 2.4GHz";
+		    print "EXPECTED RESULT 2: Should successfully get the Ap Wpa EncryptionMode for 2.4GHz";
+		    print "ACTUAL RESULT 2: Successfully got the Ap Wpa EncryptionMode as %s for 2.4GHz"%mode;
+		    #Get the result of execution
+		    print "[TEST EXECUTION RESULT] : SUCCESS";
+		    print "**************************************************";
+		    if mode in supportedModes:
+			tdkTestObj.setResultStatus("SUCCESS");
+			print "**************************************************";
+			print "TEST STEP 3: To check whether the received Ap Wpa EncryptionMode is from the list of supported ApWpaEncryption Modes";
+			print "EXPECTED RESULT 3: The received Ap Wpa EncryptionMode should be from the list of supported ApWpaEncryption Modes";
+			print "ACTUAL RESULT 3: The received Ap Wpa EncryptionMode is from the list of supported ApWpaEncryption Modes";
+			print "[TEST EXECUTION RESULT] : SUCCESS";
+			print "**************************************************";
+		    else:
+			tdkTestObj.setResultStatus("FAILURE");
+			print "**************************************************";
+			print "TEST STEP 3: To check whether the received Ap Wpa EncryptionMode is from the list of supported ApWpaEncryption Modes";
+			print "EXPECTED RESULT 3: The received Ap Wpa EncryptionMode should be from the list of supported ApWpaEncryption Modes";
+			print "ACTUAL RESULT 3: The received Ap Wpa EncryptionMode is NOT from the list of supported ApWpaEncryption Modes";
+			print "[TEST EXECUTION RESULT] : FAILURE";
+			print "**************************************************";
+		else:
+		    tdkTestObj.setResultStatus("FAILURE");
+		    print "**************************************************";
+		    print "TEST STEP 2: Get the Ap Wpa EncryptionMode for 2.4GHz";
+		    print "EXPECTED RESULT 2: Should successfully get the Ap Wpa EncryptionMode for 2.4GHz";
+		    print "ACTUAL RESULT 2: Failed to get the Ap Wpa EncryptionMode for 2.4GHz";
+		    print details;
+		    #Get the result of execution
+		    print "[TEST EXECUTION RESULT] : FAILURE";
+		    print "**************************************************";
+	    else:
+		tdkTestObj.setResultStatus("FAILURE");
+		print "**************************************************";
+		print "TEST STEP 1: Get the list of supported ApWpaEncryption Modes from /etc/tdk_platform.properties file";
+		print "EXPECTED RESULT 1: Should get the list of supported ApWpaEncryption Modes";
+		print "ACTUAL RESULT 1: Failed to get the list of supported ApWpaEncryption Modes from /etc/tdk_platform.properties file";
+		#Get the result of execution
+		print "[TEST EXECUTION RESULT] : FAILURE";
+		print "**************************************************";
 
     obj.unloadModule("wifihal");
     sysobj.unloadModule("sysutil");

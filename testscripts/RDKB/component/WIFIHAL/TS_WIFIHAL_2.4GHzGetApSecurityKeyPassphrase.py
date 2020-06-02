@@ -79,6 +79,8 @@ CheckPoint
 import tdklib; 
 from wifiUtility import *;
 
+radio = "2.4G"
+
 #Test component to be tested
 obj = tdklib.TDKScriptingLibrary("wifihal","1");
 
@@ -94,34 +96,41 @@ print "[LIB LOAD STATUS]  :  %s" %loadmodulestatus
 if "SUCCESS" in loadmodulestatus.upper():
     obj.setLoadModuleStatus("SUCCESS");
 
-    expectedresult="SUCCESS";
-    apIndex = 0
-    getMethod = "getApSecurityKeyPassphrase"
-    primitive = 'WIFIHAL_GetOrSetParamStringValue'
+    tdkTestObjTemp, idx = getIndex(obj, radio);
+    ## Check if a invalid index is returned
+    if idx == -1:
+        print "Failed to get radio index for radio %s\n" %radio;
+        tdkTestObjTemp.setResultStatus("FAILURE");
+    else: 
 
-    #Calling the method from wifiUtility to execute test case and set result status for the test.
-    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, "0", getMethod)
+	    expectedresult="SUCCESS";
+	    apIndex = idx
+	    getMethod = "getApSecurityKeyPassphrase"
+	    primitive = 'WIFIHAL_GetOrSetParamStringValue'
 
-    if expectedresult in actualresult :
-        keyPassphrase = details.split(":")[1].strip()
-        if ( len(keyPassphrase) >= 8 and len(keyPassphrase) <= 63 ):
-            print "wifi_getApSecurityKeyPassphrase function successful, %s"%details
-            tdkTestObj.setResultStatus("SUCCESS");
-            print "TEST STEP 1: Validate the wifi_getApSecurityKeyPassphrase Function";
-            print "EXPECTED RESULT 1: wifi_getApSecurityKeyPassphrase should return a string";
-            print "ACTUAL RESULT 1: Passpharse string Returned: %s"%keyPassphrase;
-            print "[TEST EXECUTION RESULT] : SUCCESS";
+	    #Calling the method from wifiUtility to execute test case and set result status for the test.
+	    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, "0", getMethod)
 
-        else:
-            print "wifi_getApSecurityKeyPassphrase() function failed, %s"%details
-            tdkTestObj.setResultStatus("FAILURE");
-            print "TEST STEP 1: Validate the wifi_getApSecurityKeyPassphrase Function";
-            print "EXPECTED RESULT 1: wifi_getApSecurityKeyPassphrase should return a string";
-            print "ACTUAL RESULT 1: Passpharse Failed to return a string value: %s"%keyPassphrase;
-            print "[TEST EXECUTION RESULT] : FAILURE";
-    else:
-	print "wifi_getApSecurityKeyPassphrase() function failed"
-        tdkTestObj.setResultStatus("FAILURE");
+	    if expectedresult in actualresult :
+		keyPassphrase = details.split(":")[1].strip()
+		if ( len(keyPassphrase) >= 8 and len(keyPassphrase) <= 63 ):
+		    print "wifi_getApSecurityKeyPassphrase function successful, %s"%details
+		    tdkTestObj.setResultStatus("SUCCESS");
+		    print "TEST STEP 1: Validate the wifi_getApSecurityKeyPassphrase Function";
+		    print "EXPECTED RESULT 1: wifi_getApSecurityKeyPassphrase should return a string";
+		    print "ACTUAL RESULT 1: Passpharse string Returned: %s"%keyPassphrase;
+		    print "[TEST EXECUTION RESULT] : SUCCESS";
+
+		else:
+		    print "wifi_getApSecurityKeyPassphrase() function failed, %s"%details
+		    tdkTestObj.setResultStatus("FAILURE");
+		    print "TEST STEP 1: Validate the wifi_getApSecurityKeyPassphrase Function";
+		    print "EXPECTED RESULT 1: wifi_getApSecurityKeyPassphrase should return a string";
+		    print "ACTUAL RESULT 1: Passpharse Failed to return a string value: %s"%keyPassphrase;
+		    print "[TEST EXECUTION RESULT] : FAILURE";
+	    else:
+		print "wifi_getApSecurityKeyPassphrase() function failed"
+		tdkTestObj.setResultStatus("FAILURE");
     obj.unloadModule("wifihal");
 
 else:
