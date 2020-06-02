@@ -77,6 +77,8 @@ ssidIndex  :    1</input_parameters>
 import tdklib;
 from wifiUtility import *;
 
+radio = "5G"
+
 #Test component to be tested
 obj = tdklib.TDKScriptingLibrary("wifihal","1");
 
@@ -92,38 +94,45 @@ print "[LIB LOAD STATUS]  :  %s" %loadmodulestatus
 if "SUCCESS" in loadmodulestatus.upper():
     obj.setLoadModuleStatus("SUCCESS");
 
-    expectedresult="SUCCESS";
+    tdkTestObjTemp, idx = getIndex(obj, radio);
+    ## Check if a invalid index is returned
+    if idx == -1:
+        print "Failed to get radio index for radio %s\n" %radio;
+        tdkTestObjTemp.setResultStatus("FAILURE");
+    else: 
 
-    #Checking for SSID Index 1
-    ssidIndex = 1
-    getMethod = "getSSIDRadioIndex"
-    primitive = 'WIFIHAL_GetOrSetParamIntValue'
+	    expectedresult="SUCCESS";
 
-    #Expected Radio Index for SSID Index 1,3,5,7,9,11,13,15
-    defaultRadioIndex = 1
+	    #Checking for SSID Index 1
+	    ssidIndex = idx
+	    getMethod = "getSSIDRadioIndex"
+	    primitive = 'WIFIHAL_GetOrSetParamIntValue'
 
-    #Calling the method from wifiUtility to execute test case and set result status for the test.
-    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, ssidIndex, 0, getMethod)
+	    #Expected Radio Index for SSID Index 1,3,5,7,9,11,13,15
+	    defaultRadioIndex = idx
 
-    if expectedresult in actualresult:
-        radioIndex = details.split(":")[1].strip()
-        if defaultRadioIndex == int(radioIndex):
-            print "getSSIDRadioIndex function successful, value return is %s"%details
-            tdkTestObj.setResultStatus("SUCCESS");
-            print "TEST STEP 1: Get the radio index assocated with the SSID entry";
-            print "EXPECTED RESULT 1: Function Should return a Radio Index value(int)";
-            print "ACTUAL RESULT 1: Radio index received Successfully: %s"%radioIndex;
-            print "[TEST EXECUTION RESULT] : SUCCESS";
-        else:
-            print "getSSIDRadioIndex function fails, value return is %s"%details 
-            tdkTestObj.setResultStatus("FAILURE");
-            print "TEST STEP 1: Get the radio index assocated with the SSID entry";
-            print "EXPECTED RESULT 1: Function Should return a Radio Index value(int)";
-            print "ACTUAL RESULT 1: Failed to receive Radio index: %s"%radioIndex;
-            print "[TEST EXECUTION RESULT] : FAILURE";
-    else:
-        print "getSSIDRadioIndex function failed";
-        tdkTestObj.setResultStatus("FAILURE");
+	    #Calling the method from wifiUtility to execute test case and set result status for the test.
+	    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, ssidIndex, 0, getMethod)
+
+	    if expectedresult in actualresult:
+		radioIndex = details.split(":")[1].strip()
+		if defaultRadioIndex == int(radioIndex):
+		    print "getSSIDRadioIndex function successful, value return is %s"%details
+		    tdkTestObj.setResultStatus("SUCCESS");
+		    print "TEST STEP 1: Get the radio index assocated with the SSID entry";
+		    print "EXPECTED RESULT 1: Function Should return a Radio Index value(int)";
+		    print "ACTUAL RESULT 1: Radio index received Successfully: %s"%radioIndex;
+		    print "[TEST EXECUTION RESULT] : SUCCESS";
+		else:
+		    print "getSSIDRadioIndex function fails, value return is %s"%details 
+		    tdkTestObj.setResultStatus("FAILURE");
+		    print "TEST STEP 1: Get the radio index assocated with the SSID entry";
+		    print "EXPECTED RESULT 1: Function Should return a Radio Index value(int)";
+		    print "ACTUAL RESULT 1: Failed to receive Radio index: %s"%radioIndex;
+		    print "[TEST EXECUTION RESULT] : FAILURE";
+	    else:
+		print "getSSIDRadioIndex function failed";
+		tdkTestObj.setResultStatus("FAILURE");
     obj.unloadModule("wifihal");
 
 else:
