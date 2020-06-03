@@ -18,6 +18,9 @@
 */
 
 #include "MoCAHAL.h"
+#define MAX_BUFFER_SIZE 1024
+#define RETURN_SUCCESS 0
+#define RETURN_FAILURE 1
 
 /***************************************************************************
  *Function name : initialize
@@ -716,6 +719,354 @@ void MoCAHAL::MoCAHAL_GetResetCount(IN const Json::Value& req, OUT Json::Value& 
     }
 }
 
+
+/*******************************************************************************************
+ *
+ * Function Name        : MoCAHAL_GetIfAcaConfig
+ * Description          : Gets the MoCA interface ACA config
+ *
+ * @param [in] req-    : ifIndex - index of the MoCA interface
+                       : paramType - To indicate negative test scenario. it has to be set as NULL for negative sceanario
+ * @param [out] response - filled with SUCCESS or FAILURE based on the output staus of operation
+ *
+ ********************************************************************************************/
+void MoCAHAL::MoCAHAL_GetIfAcaConfig(IN const Json::Value& req, OUT Json::Value& response)
+{
+    DEBUG_PRINT(DEBUG_TRACE,"\n MoCAHAL_GetIfAcaConfig--->Entry\n");
+    int ifIndex = 0;
+    int returnValue = RETURN_FAILURE;
+    char details[MAX_BUFFER_SIZE] = {'\0'};
+    moca_aca_cfg_t acaCfg = {0};
+    char paramType[10] = "NULL";
+
+    if(&req["paramType"])
+    {
+        strcpy(paramType, req["paramType"].asCString());
+    }
+
+    if(&req["ifIndex"] == NULL)
+    {
+            response["result"] = "FAILURE";
+            response["details"] = "NULL parameter as input argument";
+            return;
+    }
+    ifIndex = req["ifIndex"].asInt();
+
+    DEBUG_PRINT(DEBUG_TRACE,"\n MoCAHAL_GetIfAcaConfig--->entering ssp\n");
+    if(strcmp(paramType, "NULL"))
+        returnValue = ssp_MoCAHAL_GetIfAcaConfig(ifIndex, &acaCfg);
+    else
+        returnValue = ssp_MoCAHAL_GetIfAcaConfig(ifIndex, NULL);
+
+    if(RETURN_SUCCESS == returnValue)
+    {
+        sprintf(details, "Value returned is :NodeID=%lu, ProbeType=%d, Channel=%lu, ReportNodes=%lu, ACAStart=%d", acaCfg.NodeID, acaCfg.Type, acaCfg.Channel, acaCfg.ReportNodes, acaCfg.ACAStart);
+        response["result"]="SUCCESS";
+        response["details"]=details;
+        DEBUG_PRINT(DEBUG_TRACE,"\n MoCAHAL_GetIfAcaConfig-->Execution success\n");
+        return;
+    }
+    else
+    {
+        sprintf(details, "MoCAHAL_GetIfAcaConfig operation failed");
+        response["result"]="FAILURE";
+        response["details"]=details;
+        DEBUG_PRINT(DEBUG_TRACE,"\n MoCAHAL_GetIfAcaConfig--->Error in execution\n");
+        return;
+    }
+}
+
+/****************************************************************************************
+Utility function to parse and print the output of SC Mode
+*****************************************************************************************/
+static void print_subcarriers(UCHAR ScMod[])
+{
+   int subCarrier1;
+   int print_nums = 1;
+
+   for (subCarrier1 = 0; subCarrier1 < 512; subCarrier1++)
+   {
+      if (print_nums)
+      {
+         printf("%3d - %3d:  ", subCarrier1, subCarrier1 + 31 );
+         print_nums = 0;
+      }
+      printf ("%x", ScMod[subCarrier1]) ;
+      if (((subCarrier1 + 1) % 32) == 0) {
+         printf ("\n") ;
+         print_nums = 1;
+      }
+   }
+   printf("\n");
+}
+
+
+/*******************************************************************************************
+ *
+ * Function Name        : MoCAHAL_GetIfScmod
+ * Description          : Gets the MoCA SC Mode status
+ *
+ * @param [in] req-    : ifIndex - index of the MoCA interface
+                       : paramType - To indicate negative test scenario. it has to be set as NULL for negative sceanario
+ * @param [out] response - filled with SUCCESS or FAILURE based on the output staus of operation
+ *
+ ********************************************************************************************/
+void MoCAHAL::MoCAHAL_GetIfScmod(IN const Json::Value& req, OUT Json::Value& response)
+{
+    DEBUG_PRINT(DEBUG_TRACE,"\n MoCAHAL_GetIfScmod--->Entry\n");
+    int ifIndex = 0, i=0;
+    int returnValue = RETURN_FAILURE;
+    char details[MAX_BUFFER_SIZE] = {'\0'};
+    moca_scmod_stat_t *pscmodStat = NULL;
+    char paramType[10] = "NULL";
+    int numOfEntries = 0;
+
+    if(&req["paramType"])
+    {
+        strcpy(paramType, req["paramType"].asCString());
+    }
+
+    if(&req["ifIndex"] == NULL)
+    {
+            response["result"] = "FAILURE";
+            response["details"] = "NULL parameter as input argument";
+            return;
+    }
+    ifIndex = req["ifIndex"].asInt();
+
+    DEBUG_PRINT(DEBUG_TRACE,"\n MoCAHAL_GetIfScmod--->entering ssp\n");
+    if(strcmp(paramType, "NULL"))
+        returnValue = ssp_MoCAHAL_GetIfScmod(ifIndex, &numOfEntries, &pscmodStat);
+    else
+        returnValue = ssp_MoCAHAL_GetIfScmod(ifIndex, &numOfEntries, NULL);
+
+    if(RETURN_SUCCESS == returnValue && pscmodStat != NULL)
+    {
+        for(i = 0; i < numOfEntries; i++)
+        {
+            if (strlen(details) < 512)
+            {
+                printf("TxNode:%d, RxNode:%d, Channel:%d\n",
+                        pscmodStat[i].TxNode, pscmodStat[i].RxNode, pscmodStat[i].Channel);
+
+                printf("Mod\n");
+                print_subcarriers(pscmodStat[i].Mod);
+                printf("Nper\n");
+                print_subcarriers(pscmodStat[i].Nper);
+                printf("Vlper\n");
+                print_subcarriers(pscmodStat[i].Vlper);
+                printf("\n");
+                sprintf((details + strlen(details)), "TxNode=%d, RxNode=%d, Channel=%d", pscmodStat[i].TxNode, pscmodStat[i].RxNode, pscmodStat[i].Channel);
+            }
+            else break;
+        }
+
+        free(pscmodStat);
+        response["result"]="SUCCESS";
+        response["details"]=details;
+        DEBUG_PRINT(DEBUG_TRACE,"\n MoCAHAL_GetIfScmod-->Execution success\n");
+        return;
+    }
+    else
+    {
+        sprintf(details, "MoCAHAL_GetIfScmod operation failed");
+        response["result"]="FAILURE";
+        response["details"]=details;
+        DEBUG_PRINT(DEBUG_TRACE,"\n MoCAHAL_GetIfScmod--->Error in execution\n");
+        return;
+    }
+}
+
+/****************************************************************************************
+Utility function to parse and print the output of ACA status
+*****************************************************************************************/
+static void aca_status_print_report(moca_aca_stat_t acaStat)
+{
+   int i;
+   printf("Assessment Type         %s(%d)\n", (acaStat.acaCfg.Type == 0)? "QUIET":"EVM", acaStat.acaCfg.Type);
+   printf("ACA Status:             %d\n", acaStat.stat);
+   printf("Total Power:            %d dBm\n", acaStat.RxPower);
+   printf("ACATrapCompleted:            %d\n", acaStat.ACATrapCompleted);
+
+   printf("Power profile:          ");
+   for (i = 0; i < 512; i++) {
+      printf("%4d ", acaStat.ACAPowProfile[i]);
+      if (i % 8 == 7) printf("\n                    ");
+   }
+   printf("\n");
+}
+
+/*******************************************************************************************
+ *
+ * Function Name        : MoCAHAL_GetIfAcaStatus
+ * Description          : Gets the MoCA interface ACA status
+ *
+ * @param [in] req-    : ifIndex - index of the MoCA interface
+                       : paramType - To indicate negative test scenario. it has to be set as NULL for negative sceanario
+ * @param [out] response - filled with SUCCESS or FAILURE based on the output staus of operation
+ *
+ ********************************************************************************************/
+void MoCAHAL::MoCAHAL_GetIfAcaStatus(IN const Json::Value& req, OUT Json::Value& response)
+{
+    DEBUG_PRINT(DEBUG_TRACE,"\n MoCAHAL_GetIfAcaStatus--->Entry\n");
+    int ifIndex = 0;
+    int returnValue = RETURN_FAILURE;
+    char details[MAX_BUFFER_SIZE] = {'\0'};
+    moca_aca_stat_t acaStat;
+    char paramType[10] = "NULL";
+
+    if(&req["paramType"])
+    {
+        strcpy(paramType, req["paramType"].asCString());
+    }
+
+    if(&req["ifIndex"] == NULL)
+    {
+            response["result"] = "FAILURE";
+            response["details"] = "NULL parameter as input argument";
+            return;
+    }
+    ifIndex = req["ifIndex"].asInt();
+
+    DEBUG_PRINT(DEBUG_TRACE,"\n MoCAHAL_GetIfAcaStatus--->entering ssp\n");
+    if(strcmp(paramType, "NULL"))
+        returnValue = ssp_MoCAHAL_GetIfAcaStatus(ifIndex, &acaStat);
+    else
+        returnValue = ssp_MoCAHAL_GetIfAcaConfig(ifIndex, NULL);
+
+    if(RETURN_SUCCESS == returnValue)
+    {
+        sprintf(details, "Value returned is :Assessment Type=%s(%d), ACA Status=%d, Total Power=%d dBm, ACATrapCompleted=%d", (acaStat.acaCfg.Type == 0)? "QUIET":"EVM", acaStat.acaCfg.Type, acaStat.stat, acaStat.RxPower, acaStat.ACATrapCompleted);
+	aca_status_print_report(acaStat);
+        response["result"]="SUCCESS";
+        response["details"]=details;
+        DEBUG_PRINT(DEBUG_TRACE,"\n MoCAHAL_GetIfAcaStatus-->Execution success\n");
+        return;
+    }
+    else
+    {
+        sprintf(details, "MoCAHAL_GetIfAcaStatus operation failed");
+        response["result"]="FAILURE";
+        response["details"]=details;
+        DEBUG_PRINT(DEBUG_TRACE,"\n MoCAHAL_GetIfAcaStatus--->Error in execution\n");
+        return;
+    }
+}
+
+
+/*******************************************************************************************
+ *
+ * Function Name        : MoCAHAL_CancelIfAca
+ * Description          : Cancels the ACA process
+ *
+ * @param [in] req-    : ifIndex - index of the MoCA interface
+ * @param [out] response - filled with SUCCESS or FAILURE based on the output staus of operation
+ *
+ ********************************************************************************************/
+void MoCAHAL::MoCAHAL_CancelIfAca(IN const Json::Value& req, OUT Json::Value& response)
+{
+    DEBUG_PRINT(DEBUG_TRACE,"\n MoCAHAL_CancelIfAca--->Entry\n");
+    int ifIndex = 0;
+    int returnValue = RETURN_FAILURE;
+
+    if(&req["ifIndex"] == NULL)
+    {
+            response["result"] = "FAILURE";
+            response["details"] = "NULL parameter as input argument";
+            return;
+    }
+    ifIndex = req["ifIndex"].asInt();
+
+    DEBUG_PRINT(DEBUG_TRACE,"\n MoCAHAL_CancelIfAca--->entering ssp\n");
+
+    returnValue = ssp_MoCAHAL_CancelIfAca(ifIndex);
+
+    if(RETURN_SUCCESS == returnValue)
+    {
+        response["result"]="SUCCESS";
+        response["details"]="MoCAHAL_CancelIfAca returns SUCCESS";
+        DEBUG_PRINT(DEBUG_TRACE,"\n MoCAHAL_CancelIfAca--->Execution success\n");
+        return;
+    }
+    else
+    {
+        response["result"]="FAILURE";
+        response["details"]="MoCAHAL_CancelIfAca operation failed";
+        DEBUG_PRINT(DEBUG_TRACE,"\n MoCAHAL_CancelIfAca--->Error in execution\n");
+        return;
+    }
+}
+
+
+/*******************************************************************************************
+ *
+ * Function Name        : MoCAHAL_SetIfAcaConfig
+ * Description          : Sets the MoCA Configuration Parameters to start the ACA process
+ *
+ * @param [in] req-    : ifIndex - index of the MoCA interface
+                        : nodeId - The NodeID where we want to start the ACA testing
+                        : channel - The Channel on which ACA test should start
+                        : reportNodes - MoCA Nodes that are requested to be part of the channel assessment
+                        : probeType - The Probe Type could be Enum EVM=1 or Quite=0
+                        : ACAStart - To start ACA
+ * @param [out] response - filled with SUCCESS or FAILURE based on the output staus of operation
+ *
+ ********************************************************************************************/
+void MoCAHAL::MoCAHAL_SetIfAcaConfig(IN const Json::Value& req, OUT Json::Value& response)
+{
+    DEBUG_PRINT(DEBUG_TRACE,"\n MoCAHAL_SetIfAcaConfig--->Entry\n");
+    int ifIndex = 0;
+    char details[MAX_BUFFER_SIZE] = {'\0'};
+    moca_aca_cfg_t acaCfg = {0};
+    int returnValue = RETURN_FAILURE;
+
+    if(&req["ifIndex"] == NULL || &req["nodeId"] == NULL || &req["channel"] == NULL || &req["reportNodes"] == NULL || &req["probeType"] == NULL || &req["ACAStart"] == NULL)
+    {
+            response["result"] = "FAILURE";
+            response["details"] = "NULL parameter as input argument";
+            return;
+    }
+    ifIndex = req["ifIndex"].asInt();
+    acaCfg.NodeID = req["nodeId"].asInt();
+    acaCfg.Channel = req["channel"].asInt();
+    acaCfg.ReportNodes = req["reportNodes"].asInt();
+    acaCfg.Type = (PROBE_TYPE)req["probeType"].asInt();
+    acaCfg.ACAStart = req["ACAStart"].asInt();
+
+    DEBUG_PRINT(DEBUG_TRACE,"\nValues to be set are :NodeID=%lu, ProbeType=%d, Channel=%lu, ReportNodes=%lu, ACAStart=%d", acaCfg.NodeID, acaCfg.Type, acaCfg.Channel, acaCfg.ReportNodes, acaCfg.ACAStart);
+    DEBUG_PRINT(DEBUG_TRACE,"\n MoCAHAL_SetIfAcaConfig--->entering ssp\n");
+
+    returnValue = ssp_MoCAHAL_SetIfAcaConfig(ifIndex, acaCfg);
+
+    if(RETURN_SUCCESS == returnValue)
+    {
+       returnValue = ssp_MoCAHAL_GetIfAcaConfig(ifIndex, &acaCfg);
+       if(RETURN_SUCCESS == returnValue)
+       {
+            sprintf(details, "Value returned is :NodeID=%lu, ProbeType=%d, Channel=%lu, ReportNodes=%lu, ACAStart=%d", acaCfg.NodeID, acaCfg.Type, acaCfg.Channel, acaCfg.ReportNodes, acaCfg.ACAStart);
+            response["result"]="SUCCESS";
+            response["details"]=details;
+            DEBUG_PRINT(DEBUG_TRACE,"\n MoCAHAL_SetIfAcaConfig--->Execution success\n");
+            return;
+       }
+       else
+       {
+            response["result"]="FAILURE";
+            response["details"]="Get ACA config in MoCAHAL_SetIfAcaConfig failed";
+            return;
+       }
+    }
+    else
+    {
+        sprintf(details, "MoCAHAL_SetIfAcaConfig opeeration failed");
+        response["result"]="FAILURE";
+        response["details"]=details;
+        DEBUG_PRINT(DEBUG_TRACE,"\n MoCAHAL_SetIfAcaConfig---->Error in execution\n");
+        return;
+    }
+}
+
+
 /**************************************************************************
  * Function Name : cleanup
  * Description   : This function will be used to clean the log details.
@@ -737,4 +1088,3 @@ extern "C" void DestroyObject(MoCAHAL *stubobj)
     DEBUG_PRINT(DEBUG_LOG,"Destroying MoCAHAL object\n");
     delete stubobj;
 }
-

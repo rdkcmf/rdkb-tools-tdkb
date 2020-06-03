@@ -387,3 +387,139 @@ int ssp_MoCAHAL_GetResetCount(unsigned long *resetcnt)
      return SSP_SUCCESS;
     }
 }
+
+/*******************************************************************************************
+ *
+ * Function Name        : ssp_MoCAHAL_GetIfAcaConfig
+ * Description          : This function invokes MoCA hal api moca_GetIfAcaConfig()
+ * @param [in] req-     : ifIndex - index of the MoCA interface
+                          acaCfg - pointer to the buffer to get moca interface aca config
+ * @param [out] response - filled with SUCCESS or FAILURE based on the output staus of operation
+ *
+ ********************************************************************************************/
+int ssp_MoCAHAL_GetIfAcaConfig(int ifIndex, moca_aca_cfg_t *acaCfg)
+{
+    printf("\n ssp_MoCAHAL_GetIfAcaConfig---> Entry\n");
+    int return_status = 0;
+
+    //return_status = moca_GetIfAcaConfigs(ifIndex, acaCfg);
+    if(return_status != SSP_SUCCESS)
+    {
+     printf("\nssp_MoCAHAL_GetIfAcaConfig::Failed\n");
+     return SSP_FAILURE;
+    }
+    else
+    {
+     printf("\n ssp_MoCAHAL_GetIfAcaConfig::Success\n");
+     return SSP_SUCCESS;
+    }
+}
+
+/*******************************************************************************************
+ *
+ * Function Name        : ssp_MoCAHAL_CancelIfAca
+ * Description          : This function invokes MoCA hal api moca_cancelIfAca()
+ * @param [in] req-     : ifIndex - index of the MoCA interface
+ * @param [out] response - filled with SUCCESS or FAILURE based on the output staus of operation
+ *
+ ********************************************************************************************/
+int ssp_MoCAHAL_CancelIfAca(int ifIndex)
+{
+    printf("\n ssp_MoCAHAL_CancelIfAca---> Entry\n");
+    int return_status = 0;
+
+    return_status = moca_cancelIfAca(ifIndex);
+    if(return_status != SSP_SUCCESS)
+    {
+     printf("\nssp_MoCAHAL_CancelIfAca::Failed\n");
+     return SSP_FAILURE;
+    }
+    else
+    {
+     printf("\n ssp_MoCAHAL_CancelIfAca::Success\n");
+     return SSP_SUCCESS;
+    }
+}
+
+
+/*******************************************************************************************
+ *
+ * Function Name        : ssp_MoCAHAL_GetIfAcaStatus
+ * Description          : This function invokes MoCA hal api moca_getIfAcaStatus()
+ * @param [in] req-     : ifIndex - index of the MoCA interface
+                          acaCfg - pointer to the buffer to get moca interface aca status
+ * @param [out] response - filled with SUCCESS or FAILURE based on the output staus of operation
+ *
+ ********************************************************************************************/
+int ssp_MoCAHAL_GetIfAcaStatus(int ifIndex, moca_aca_stat_t *acaStatus)
+{
+    printf("\n ssp_MoCAHAL_GetIfAcaStatus---> Entry\n");
+    int return_status = 0;
+
+    return_status = moca_getIfAcaStatus(ifIndex, acaStatus);
+    if(return_status != SSP_SUCCESS)
+    {
+     printf("\nssp_MoCAHAL_GetIfAcaStatus::Failed\n");
+     return SSP_FAILURE;
+    }
+    else
+    {
+     printf("\n ssp_MoCAHAL_GetIfAcaStatus::Success\n");
+     return SSP_SUCCESS;
+    }
+}
+
+
+/*******************************************************************************************
+ *
+ * Function Name        : ssp_MoCAHAL_SetIfAcaConfig
+ * Description          : This function invokes MoCA hal api moca_SetIfAcaConfig()
+ * @param [in] req-     : ifIndex - index of the MoCA interface
+                          acaCfg -  moca interface aca config
+ * @param [out] response - filled with SUCCESS or FAILURE based on the output staus of operation
+ *
+ ********************************************************************************************/
+int ssp_MoCAHAL_SetIfAcaConfig(int ifIndex, moca_aca_cfg_t acaCfg)
+{
+    printf("\n ssp_MoCAHAL_SetIfAcaConfig---> Entry\n");
+    int return_status = 0;
+
+    return_status = moca_setIfAcaConfig(ifIndex, acaCfg);
+    if(return_status != SSP_SUCCESS)
+    {
+     printf("\nssp_MoCAHAL_SetIfAcaConfig::Failed\n");
+     return SSP_FAILURE;
+    }
+    else
+    {
+     printf("\n ssp_MoCAHAL_SetIfAcaConfig::Success\n");
+     return SSP_SUCCESS;
+    }
+}
+
+/*******************************************************************************************
+ *
+ * Function Name        : ssp_MoCAHAL_GetIfScmod
+ * Description          : This function invokes MoCA hal api moca_GetIfScmod()
+ * @param [in] req-     : ifIndex - index of the MoCA interface
+                          acaCfg - pointer to the buffer to get the MoCA SCMODE status
+ * @param [out] response - filled with SUCCESS or FAILURE based on the output staus of operation
+ *
+ ********************************************************************************************/
+int ssp_MoCAHAL_GetIfScmod(int ifIndex, int *pNumOfEntries, moca_scmod_stat_t **ppscmodStat)
+{
+    printf("\n ssp_MoCAHAL_GetIfScmod---> Entry\n");
+    int return_status = 0;
+
+    return_status = moca_getIfScmod(ifIndex, pNumOfEntries, ppscmodStat);
+    if(return_status != SSP_SUCCESS)
+    {
+     printf("\nssp_MoCAHAL_GetIfScmod::Failed\n");
+     return SSP_FAILURE;
+    }
+    else
+    {
+     printf("\n ssp_MoCAHAL_GetIfScmod::Success\n");
+     return SSP_SUCCESS;
+    }
+}

@@ -57,6 +57,11 @@ class MoCAHAL : public RDKTestStubInterface, public AbstractServer<MoCAHAL>
                   this->bindAndAddMethod(Procedure("MoCAHAL_GetFullMeshRates", PARAMS_BY_NAME, JSON_STRING,"ifIndex", JSON_INTEGER, "count", JSON_INTEGER, "paramType", JSON_STRING, NULL), &MoCAHAL::MoCAHAL_GetFullMeshRates);
                   this->bindAndAddMethod(Procedure("MoCAHAL_GetFlowStatistics", PARAMS_BY_NAME, JSON_STRING,"ifIndex", JSON_INTEGER, "paramType", JSON_STRING, NULL), &MoCAHAL::MoCAHAL_GetFlowStatistics);
                   this->bindAndAddMethod(Procedure("MoCAHAL_GetResetCount", PARAMS_BY_NAME, JSON_STRING, "paramType", JSON_STRING, NULL), &MoCAHAL::MoCAHAL_GetResetCount);
+                  this->bindAndAddMethod(Procedure("MoCAHAL_GetIfAcaConfig", PARAMS_BY_NAME, JSON_STRING,"ifIndex", JSON_INTEGER, "paramType", JSON_STRING, NULL), &MoCAHAL::MoCAHAL_GetIfAcaConfig);
+                  this->bindAndAddMethod(Procedure("MoCAHAL_GetIfScmod", PARAMS_BY_NAME, JSON_STRING,"ifIndex", JSON_INTEGER, "paramType", JSON_STRING, NULL), &MoCAHAL::MoCAHAL_GetIfScmod);
+                  this->bindAndAddMethod(Procedure("MoCAHAL_GetIfAcaStatus", PARAMS_BY_NAME, JSON_STRING,"ifIndex", JSON_INTEGER, "paramType", JSON_STRING, NULL), &MoCAHAL::MoCAHAL_GetIfAcaStatus);
+                  this->bindAndAddMethod(Procedure("MoCAHAL_CancelIfAca", PARAMS_BY_NAME, JSON_STRING,"ifIndex", JSON_INTEGER, NULL), &MoCAHAL::MoCAHAL_CancelIfAca);
+                  this->bindAndAddMethod(Procedure("MoCAHAL_SetIfAcaConfig", PARAMS_BY_NAME, JSON_STRING,"ifIndex", JSON_INTEGER, "nodeId", JSON_INTEGER, "probeType", JSON_INTEGER, "channel", JSON_INTEGER, "reportNodes", JSON_INTEGER, "ACAStart", JSON_INTEGER, NULL), &MoCAHAL::MoCAHAL_SetIfAcaConfig);
 		}
 
         /*inherited functions*/
@@ -80,5 +85,10 @@ class MoCAHAL : public RDKTestStubInterface, public AbstractServer<MoCAHAL>
         void MoCAHAL_GetFullMeshRates(IN const Json::Value& req, OUT Json::Value& response);
         void MoCAHAL_GetFlowStatistics(IN const Json::Value& req, OUT Json::Value& response);
         void MoCAHAL_GetResetCount(IN const Json::Value& req, OUT Json::Value& response);
+        void MoCAHAL_GetIfAcaConfig(IN const Json::Value& req, OUT Json::Value& response);
+        void MoCAHAL_GetIfAcaStatus(IN const Json::Value& req, OUT Json::Value& response);
+        void MoCAHAL_CancelIfAca(IN const Json::Value& req, OUT Json::Value& response);
+        void MoCAHAL_GetIfScmod(IN const Json::Value& req, OUT Json::Value& response);
+        void MoCAHAL_SetIfAcaConfig(IN const Json::Value& req, OUT Json::Value& response);
 };
 #endif //__MoCAHAL_STUB_H__
