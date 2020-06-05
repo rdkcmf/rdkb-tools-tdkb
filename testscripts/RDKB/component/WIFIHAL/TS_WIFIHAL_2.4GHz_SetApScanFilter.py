@@ -211,7 +211,7 @@ if "SUCCESS" in (loadmodulestatus.upper() and  sysutilloadmodulestatus.upper()):
         tdkTestObj.setResultStatus("FAILURE");
         print "TEST STEP 1: Get Scan Filter mode"
         print "EXPECTED RESULT 1: Should successfully get Scan Filter mode"
-        print "ACTUAL RESULT 1: Failed to get Scan Filter mode %s"%details
+        print "ACTUAL RESULT 1: Failed to get Scan Filter mode %s"%initial_result
         #Get the result of execution
         print "[TEST EXECUTION RESULT] : FAILURE";
 
