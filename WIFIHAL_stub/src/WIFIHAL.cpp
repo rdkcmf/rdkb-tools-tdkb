@@ -1608,10 +1608,10 @@ void WIFIHAL::WIFIHAL_GetNeighboringWiFiStatus(IN const Json::Value& req, OUT Js
 {
     DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_GetNeighboringWiFiStatus ----->Entry\n");
 
-    wifi_neighbor_ap2_t *neighbor_ap2;
-    unsigned int output_array_size;
+    wifi_neighbor_ap2_t *neighbor_ap2 = NULL;
+    unsigned int output_array_size = 0;
     int radioIndex = 0;
-    int returnValue;
+    int returnValue = 1;
     char details[1000] = {'\0'};
 
     radioIndex = req["radioIndex"].asInt();
@@ -1619,10 +1619,19 @@ void WIFIHAL::WIFIHAL_GetNeighboringWiFiStatus(IN const Json::Value& req, OUT Js
     returnValue = ssp_WIFIHALGetNeighboringWiFiStatus(radioIndex, &neighbor_ap2, &output_array_size);
     if(0 == returnValue)
     {
-        sprintf(details, "Value returned is :ap_SSID=%s,ap_BSSID=%s,ap_Mode=%s,ap_Channel=%d,ap_SignalStrength=%d,ap_SecurityModeEnabled=%s,ap_EncryptionMode=%s,ap_OperatingFrequencyBand=%s,ap_SupportedStandards=%s,ap_OperatingStandards=%s,ap_OperatingChannelBandwidth=%s,ap_BeaconPeriod=%d,ap_Noise=%d,ap_BasicDataTransferRates=%s,ap_SupportedDataTransferRates=%s,ap_DTIMPeriod=%d,ap_ChannelUtilization=%d,output_array_size=%u",neighbor_ap2->ap_SSID,neighbor_ap2->ap_BSSID,neighbor_ap2->ap_Mode,neighbor_ap2->ap_Channel,neighbor_ap2->ap_SignalStrength,neighbor_ap2->ap_SecurityModeEnabled,neighbor_ap2->ap_EncryptionMode,neighbor_ap2->ap_OperatingFrequencyBand,neighbor_ap2->ap_SupportedStandards,neighbor_ap2->ap_OperatingStandards,neighbor_ap2->ap_OperatingChannelBandwidth,neighbor_ap2->ap_BeaconPeriod,neighbor_ap2->ap_Noise,neighbor_ap2->ap_BasicDataTransferRates,neighbor_ap2->ap_SupportedDataTransferRates,neighbor_ap2->ap_DTIMPeriod,neighbor_ap2->ap_ChannelUtilization,output_array_size);
-        response["result"]="SUCCESS";
-        response["details"]=details;
-        return;
+        if(neighbor_ap2 != NULL and output_array_size > 0)
+        {
+            sprintf(details, "Value returned is :ap_SSID=%s,ap_BSSID=%s,ap_Mode=%s,ap_Channel=%d,ap_SignalStrength=%d,ap_SecurityModeEnabled=%s,ap_EncryptionMode=%s,ap_OperatingFrequencyBand=%s,ap_SupportedStandards=%s,ap_OperatingStandards=%s,ap_OperatingChannelBandwidth=%s,ap_BeaconPeriod=%d,ap_Noise=%d,ap_BasicDataTransferRates=%s,ap_SupportedDataTransferRates=%s,ap_DTIMPeriod=%d,ap_ChannelUtilization=%d,output_array_size=%u",neighbor_ap2->ap_SSID,neighbor_ap2->ap_BSSID,neighbor_ap2->ap_Mode,neighbor_ap2->ap_Channel,neighbor_ap2->ap_SignalStrength,neighbor_ap2->ap_SecurityModeEnabled,neighbor_ap2->ap_EncryptionMode,neighbor_ap2->ap_OperatingFrequencyBand,neighbor_ap2->ap_SupportedStandards,neighbor_ap2->ap_OperatingStandards,neighbor_ap2->ap_OperatingChannelBandwidth,neighbor_ap2->ap_BeaconPeriod,neighbor_ap2->ap_Noise,neighbor_ap2->ap_BasicDataTransferRates,neighbor_ap2->ap_SupportedDataTransferRates,neighbor_ap2->ap_DTIMPeriod,neighbor_ap2->ap_ChannelUtilization,output_array_size);
+            response["result"]="SUCCESS";
+            response["details"]=details;
+            return;
+        }
+        else
+        {
+            response["result"]="SUCCESS";
+            response["details"]="No neighbouring WiFi found by wifi_getNeighboringWiFiStatus";
+            return;
+        }
     }
     else
     {
@@ -1640,7 +1649,7 @@ void WIFIHAL::WIFIHAL_GetNeighboringWiFiStatus(IN const Json::Value& req, OUT Js
  * Description          : This function invokes WiFi hal get api which are
                           related to wifi_getRadioChannelStats()
 
- * @param [in] req-     : radioIndex : radio index of the wifi
+ * @param [in] req-     : radioIndex : radio index of the wifi	
  * @param [out] response - filled with SUCCESS or FAILURE based on the output status of operation
  *
  ********************************************************************************************/
