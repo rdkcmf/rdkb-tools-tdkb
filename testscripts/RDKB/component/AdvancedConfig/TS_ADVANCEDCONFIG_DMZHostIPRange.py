@@ -2,7 +2,7 @@
 # If not stated otherwise in this file or this component's Licenses.txt
 # file the following copyright and licenses apply:
 #
-# Copyright 2016 RDK Management
+# Copyright 2020 RDK Management
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,27 +17,47 @@
 # limitations under the License.
 ##########################################################################
 '''
-<?xml version="1.0" encoding="UTF-8"?><xml>
-  <id/>
-  <version>4</version>
+<?xml version='1.0' encoding='utf-8'?>
+<xml>
+  <id></id>
+  <!-- Do not edit id. This will be auto filled while exporting. If you are adding a new script keep the id empty -->
+  <version>5</version>
+  <!-- Do not edit version. This will be auto incremented while updating. If you are adding a new script you can keep the vresion as 1 -->
   <name>TS_ADVANCEDCONFIG_DMZHostIPRange</name>
-  <primitive_test_id/>
+  <!-- If you are adding a new script you can specify the script name. Script Name should be unique same as this file name with out .py extension -->
+  <primitive_test_id> </primitive_test_id>
+  <!-- Do not change primitive_test_id if you are editing an existing script. -->
   <primitive_test_name>AdvancedConfig_Set</primitive_test_name>
-  <primitive_test_version>1</primitive_test_version>
+  <!--  -->
+  <primitive_test_version>2</primitive_test_version>
+  <!--  -->
   <status>FREE</status>
-  <synopsis/>
-  <groups_id/>
+  <!--  -->
+  <synopsis>To validate set of an IP address out of local IP address range as DMZ internal ip</synopsis>
+  <!--  -->
+  <groups_id />
+  <!--  -->
   <execution_time>1</execution_time>
+  <!--  -->
   <long_duration>false</long_duration>
-  <remarks/>
+  <!--  -->
+  <advanced_script>false</advanced_script>
+  <!-- execution_time is the time out time for test execution -->
+  <remarks></remarks>
+  <!-- Reason for skipping the tests if marked to skip -->
   <skip>false</skip>
+  <!--  -->
   <box_types>
-    <box_type>RPI</box_type>
     <box_type>Broadband</box_type>
+    <!--  -->
     <box_type>Emulator</box_type>
+    <!--  -->
+    <box_type>RPI</box_type>
+    <!--  -->
   </box_types>
   <rdk_versions>
     <rdk_version>RDKB</rdk_version>
+    <!--  -->
   </rdk_versions>
   <test_cases>
     <test_case_id>TC_ADVANCEDCONFIG_3</test_case_id>
@@ -71,23 +91,23 @@ Type: string, Value: 192.168.27.30</input_parameters>
 6.Responses(printf) from TDK Component,Ccsp Library function and advancedcongifstub would be logged in Agent Console log based on the debug info redirected to agent console   
 7.advancedconfigstub will validate the available result (from ssp_setParameterValue as zero) with expected result (zero) and the result is updated in agent console log and json output variable
 8.TestManager will publish the result in GUI as SUCCESS/FAILURE based on the response from AdvancedConfig_Set function</automation_approch>
-    <except_output>Checkpoint 1:
+    <expected_output>Checkpoint 1:
 Check the failure in setting DMZ host as Gateway IP DMZ host IP address out of local IP address range 
 CheckPoint 2:
 Success log should be available in Agent Console Log
 CheckPoint 3:
 TDK agent Test Function will log the test case result as SUCCESS based on API response 
 CheckPoint 4:
-TestManager GUI will publish the result as SUCCESS in Execution page</except_output>
+TestManager GUI will publish the result as SUCCESS in Execution page</expected_output>
     <priority>High</priority>
     <test_stub_interface>none</test_stub_interface>
     <test_script>TS_ADVANCEDCONFIG_DMZHostIPRange</test_script>
     <skipped>No</skipped>
-    <release_version/>
-    <remarks/>
+    <release_version></release_version>
+    <remarks></remarks>
   </test_cases>
+  <script_tags />
 </xml>
-
 '''
 # use tdklib library,which provides a wrapper for tdk testcase script
 import tdklib;
@@ -108,60 +128,86 @@ print "[LIB LOAD STATUS]  :  %s" %loadModuleresult;
 
 if "SUCCESS" in loadModuleresult.upper():
         obj.setLoadModuleStatus("SUCCESS");
-        tdkTestObj = obj.createTestStep("AdvancedConfig_Set");
 
-        #Input Parameters
-        tdkTestObj.addParameter("paramName","Device.NAT.X_CISCO_COM_DMZ.Enable");
-        tdkTestObj.addParameter("paramValue","true");
-        tdkTestObj.addParameter("paramType","boolean");
-        expectedresult = "SUCCESS";
+	tdkTestObj = obj.createTestStep("AdvancedConfig_Get");
+        tdkTestObj.addParameter("paramName","Device.X_CISCO_COM_DeviceControl.LanManagementEntry.1.LanIPAddress");
+        expectedresult="SUCCESS";
         tdkTestObj.executeTestCase(expectedresult);
-        actualresult = tdkTestObj.getResult();
+        actualresult= tdkTestObj.getResult();
+        tdkTestObj.setResultStatus("SUCCESS");
+        details = tdkTestObj.getResultDetails();
 
         if expectedresult in actualresult:
-                #Set the result status of execution
-                tdkTestObj.setResultStatus("SUCCESS");
-                details = tdkTestObj.getResultDetails();
-                print "[TEST STEP 1]: Enabling DMZ";
-                print "[EXPECTED RESULT 1]: Should enable DMZ";
-                print "[ACTUAL RESULT 1]: %s" %details;
-                print "[TEST EXECUTION RESULT] : %s" %actualresult;
-                print "DMZ is Enabled\n"
-                tdkTestObj = obj.createTestStep("AdvancedConfig_Set");
-                tdkTestObj.addParameter("paramName","Device.NAT.X_CISCO_COM_DMZ.InternalIP");
-                tdkTestObj.addParameter("paramValue","192.168.27.30");
-                tdkTestObj.addParameter("paramType","string");
-                expectedresult = "FAILURE";
-                tdkTestObj.executeTestCase(expectedresult);
-                actualresult = tdkTestObj.getResult();
-                if expectedresult in actualresult:
-                        #Set the result status of execution
-                        tdkTestObj.setResultStatus("SUCCESS");
-                        details = tdkTestObj.getResultDetails();
-                        details = tdkTestObj.getResultDetails();
-                        print "[TEST STEP 2]: Setting DMZ internalIP";
-                        print "[EXPECTED RESULT 2]: Should not set the DMZ internal IP";
-                        print "[ACTUAL RESULT 2]: %s" %details;
-                        print "[TEST EXECUTION RESULT] : %s" %actualresult;
-                        print "DMZ host ip cannot be set out of local ip address range and error should be thrown \n"
-                else:
-                        tdkTestObj.setResultStatus("FAILURE");
-                        details = tdkTestObj.getResultDetails();
-                        print "[TEST STEP 2]: Setting DMZ internalIP";
-                        print "[EXPECTED RESULT 2]: Should not set the DMZ internal IP";
-                        print "[ACTUAL RESULT 2]: %s" %details;
-                        print "[TEST EXECUTION RESULT] : %s" %actualresult;
-                        print "The IP value given out of range is set and hence a failure\n"
+            tdkTestObj.setResultStatus("SUCCESS");
+            defaultIp = details.split(':')[1].strip();
+            print "[TEST STEP ]: Get the default gateway address";
+            print "[EXPECTED RESULT ]: Should get the default gateway address";
+            print "[ACTUAL RESULT ]: The default gateway address: %s" %(defaultIp)
+            print "[TEST EXECUTION RESULT] : %s" %actualresult
+            if defaultIp == "10.0.0.1":
+                ip_to_set = "192.168.27.30"
+            else:
+                ip_to_set = "10.0.0.30"
+            tdkTestObj = obj.createTestStep("AdvancedConfig_Set");
 
+            #Input Parameters
+            tdkTestObj.addParameter("paramName","Device.NAT.X_CISCO_COM_DMZ.Enable");
+            tdkTestObj.addParameter("paramValue","true");
+            tdkTestObj.addParameter("paramType","boolean");
+            expectedresult = "SUCCESS";
+            tdkTestObj.executeTestCase(expectedresult);
+            actualresult = tdkTestObj.getResult();
 
+            if expectedresult in actualresult:
+                    #Set the result status of execution
+                    tdkTestObj.setResultStatus("SUCCESS");
+                    details = tdkTestObj.getResultDetails();
+                    print "[TEST STEP 1]: Enabling DMZ";
+                    print "[EXPECTED RESULT 1]: Should enable DMZ";
+                    print "[ACTUAL RESULT 1]: %s" %details;
+                    print "[TEST EXECUTION RESULT] : %s" %actualresult;
+                    print "DMZ is Enabled\n"
+                    tdkTestObj = obj.createTestStep("AdvancedConfig_Set");
+                    tdkTestObj.addParameter("paramName","Device.NAT.X_CISCO_COM_DMZ.InternalIP");
+                    tdkTestObj.addParameter("paramValue", ip_to_set);
+                    tdkTestObj.addParameter("paramType","string");
+                    expectedresult = "FAILURE";
+                    tdkTestObj.executeTestCase(expectedresult);
+                    actualresult = tdkTestObj.getResult();
+                    if expectedresult in actualresult:
+                            #Set the result status of execution
+                            tdkTestObj.setResultStatus("SUCCESS");
+                            details = tdkTestObj.getResultDetails();
+                            details = tdkTestObj.getResultDetails();
+                            print "[TEST STEP 2]: Setting DMZ internalIP";
+                            print "[EXPECTED RESULT 2]: Should not set the DMZ internal IP";
+                            print "[ACTUAL RESULT 2]: %s" %details;
+                            print "[TEST EXECUTION RESULT] : SUCCESS"
+                            print "DMZ host ip cannot be set out of local ip address range and error should be thrown \n"
+                    else:
+                            tdkTestObj.setResultStatus("FAILURE");
+                            details = tdkTestObj.getResultDetails();
+                            print "[TEST STEP 2]: Setting DMZ internalIP";
+                            print "[EXPECTED RESULT 2]: Should not set the DMZ internal IP";
+                            print "[ACTUAL RESULT 2]: %s" %details;
+                            print "[TEST EXECUTION RESULT] : FAILURE";
+                            print "The IP value given out of range is set and hence a failure\n"
+            else:
+                    tdkTestObj.setResultStatus("FAILURE");
+                    details = tdkTestObj.getResultDetails();
+                    print "[TEST STEP 1]: Enabling DMZ";
+                    print "[EXPECTED RESULT 1]: Should enable DMZ";
+                    print "[ACTUAL RESULT 1]: %s" %details;
+                    print "[TEST EXECUTION RESULT] : %s" %actualresult;
+                    print "Failure in setting the DMZ as true\n "
         else:
-                tdkTestObj.setResultStatus("FAILURE");
-                details = tdkTestObj.getResultDetails();
-                print "[TEST STEP 1]: Enabling DMZ";
-                print "[EXPECTED RESULT 1]: Should enable DMZ";
-                print "[ACTUAL RESULT 1]: %s" %details;
-                print "[TEST EXECUTION RESULT] : %s" %actualresult;
-                print "Failure in setting the DMZ as true\n "
+            tdkTestObj.setResultStatus("FAILURE");
+            defaultIp = details.split(':')[1].strip();
+            print "[TEST STEP ]: Get the default gateway address";
+            print "[EXPECTED RESULT ]: Should get the default gateway address";
+            print "[ACTUAL RESULT ]: Failed to get default gateway ip";
+            print "[TEST EXECUTION RESULT] : %s" %actualresult
+
 
         obj.unloadModule("advancedconfig");
 else:
