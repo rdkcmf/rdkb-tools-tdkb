@@ -2,7 +2,7 @@
 # If not stated otherwise in this file or this component's Licenses.txt
 # file the following copyright and licenses apply:
 #
-# Copyright 2016 RDK Management
+# Copyright 2020 RDK Management
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@
 <xml>
   <id></id>
   <!-- Do not edit id. This will be auto filled while exporting. If you are adding a new script keep the id empty -->
-  <version>9</version>
+  <version>10</version>
   <!-- Do not edit version. This will be auto incremented while updating. If you are adding a new script you can keep the vresion as 1 -->
   <name>TS_ADVANCEDCONFIG_DuplicatePortTriggeringRulesNotAllowed</name>
   <!-- If you are adding a new script you can specify the script name. Script Name should be unique same as this file name with out .py extension -->
@@ -33,7 +33,7 @@
   <!--  -->
   <status>FREE</status>
   <!--  -->
-  <synopsis></synopsis>
+  <synopsis>Check if duplicate port trigger rule is allowed or not</synopsis>
   <!--  -->
   <groups_id />
   <!--  -->
@@ -89,14 +89,14 @@ Input:
 7.Responses(printf) from TDK Component,Ccsp Library function and advancedcongifstub would be logged in Agent Console log based on the debug info redirected to agent console   
 8.advancedconfigstub will validate the available result (from ssp_setParameterValue as zero) with expected result (zero) and the result is updated in agent console log and json output variable
 9.TestManager will publish the result in GUI as SUCCESS/FAILURE based on the response from AdvancedConfig_Set and AdvancedConfig_AddObject functions.</automation_approch>
-    <except_output>Checkpoint 1:
+    <expected_output>Checkpoint 1:
 Check if Duplicate port Triggering rules are not allowed
 CheckPoint 2:
 Success log should be available in Agent Console Log
 CheckPoint 3:
 TDK agent Test Function will log the test case result as SUCCESS based on API response 
 CheckPoint 4:
-TestManager GUI will publish the result as SUCCESS in Execution page</except_output>
+TestManager GUI will publish the result as SUCCESS in Execution page</expected_output>
     <priority>High</priority>
     <test_stub_interface>none</test_stub_interface>
     <test_script>TS_ADVANCEDCONFIG_DuplicatePortTriggeringRulesNotAllowed</test_script>
@@ -175,7 +175,7 @@ if "SUCCESS" in loadmodulestatus.upper():
                                 print "[EXPECTED RESULT 3]: Should set external port successfully";
                                 print "[ACTUAL RESULT 3]: %s" %details;
                                 print "[TEST EXECUTION RESULT] : %s" %actualresult;
-                                print "Added port mapping rule successfully\n"
+                                print "Added port triggering rule successfully\n"
                                 ## Add New Table ##
                                 tdkTestObj = obj.createTestStep("AdvancedConfig_AddObject");
                                 tdkTestObj.addParameter("paramName","Device.NAT.X_CISCO_COM_PortTriggers.Trigger.");
@@ -206,7 +206,7 @@ if "SUCCESS" in loadmodulestatus.upper():
 	                                print "[EXPECTED RESULT 5]: Should not set external port with duplicate value";
         	                        print "[ACTUAL RESULT 5]: %s" %details;
                 	                print "[TEST EXECUTION RESULT] : %s" %actualresult;
-                        	        print "Port mapping rule is not added\n"
+                        	        print "Port triggering rule is not added\n"
                                     else:
                                         tdkTestObj.setResultStatus("FAILURE");
                                         details = tdkTestObj.getResultDetails();
@@ -214,7 +214,7 @@ if "SUCCESS" in loadmodulestatus.upper():
                                         print "[EXPECTED RESULT 5]: Should not set external port with duplicate value";
                                         print "[ACTUAL RESULT 5]: %s" %details;
                                         print "[TEST EXECUTION RESULT] : %s" %actualresult;
-                                        print "Port mapping rule is added\n"
+                                        print "Port triggering rule is added\n"
                                 else:
                                     tdkTestObj.setResultStatus("FAILURE");
                                     details = tdkTestObj.getResultDetails();
