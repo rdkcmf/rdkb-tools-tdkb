@@ -349,6 +349,62 @@ void TDKB_TR181Stub::TDKB_TR181Stub_DelObject(IN const Json::Value& req, OUT Jso
     return;
 }
 
+/***************************************************************************
+ *Function name :TDKB_TR181Stub _SetOnly
+ *Descrption    : Component Set Param Value API functionality checking
+ * @param [in]  req - ParamName : Holds the name of the parameter
+ * @param [in]  req - ParamValue : Holds the value of the parameter
+ * @param [in]  req - Type : Holds the Type of the parameter
+ * @param [out] response - filled with SUCCESS or FAILURE based on the return value
+ *
+ *****************************************************************************/
+void TDKB_TR181Stub::TDKB_TR181Stub_SetOnly(IN const Json::Value& req, OUT Json::Value& response)
+{
+    DEBUG_PRINT(DEBUG_TRACE,"Inside Function TDKB_TR181Stub_SetOnly \n");
+    int size_ret=0,i=0,setResult=0;
+    char Details[80] = {'\0'};
+    string ParamName=req["ParamName"].asCString();
+    string ParamValue=req["ParamValue"].asCString();
+    string Type=req["Type"].asCString();
+    int apRet = 0;
+    int commit = 1;
+    setResult=ssp_setParameterValue(&ParamName[0],&ParamValue[0],&Type[0],1);
+    if(setResult==0)
+    {
+        if ((!ParamName.compare(0, 20, "Device.WiFi.Radio.1.")) || (!ParamName.compare(0, 26, "Device.WiFi.AccessPoint.1.")) || (!ParamName.compare(0,19,"Device.WiFi.SSID.1.")) || (!ParamName.compare(0, 26, "Device.WiFi.AccessPoint.3.")) || (!ParamName.compare(0,19,"Device.WiFi.SSID.3.")))
+        {
+            printf("Apply the wifi settings for 2.4GHZ\n");
+            apRet = ssp_setParameterValue("Device.WiFi.Radio.1.X_CISCO_COM_ApplySetting","true","boolean",commit);
+        }
+        else if ((!ParamName.compare(0, 20, "Device.WiFi.Radio.2.")) || (!ParamName.compare(0, 26, "Device.WiFi.AccessPoint.2.")) || (!ParamName.compare(0,19,"Device.WiFi.SSID.2.")) || (!ParamName.compare(0, 26, "Device.WiFi.AccessPoint.4.")) || (!ParamName.compare(0,19,"Device.WiFi.SSID.4.")))
+        {
+            printf("Apply the wifi settings for 5GHZ\n");
+            apRet = ssp_setParameterValue("Device.WiFi.Radio.2.X_CISCO_COM_ApplySetting","true","boolean",commit);
+        }
+
+        if(apRet == 0)
+        {
+            DEBUG_PRINT(DEBUG_TRACE,"Parameter Values have been set\n");
+        }
+        else
+        {
+            sprintf(Details,"FAILURE : WiFi Applysetting failed. Set returns failure with errorcode :%d", setResult);
+            response["result"] = "FAILURE";
+            response["details"] = Details;
+            return;
+        }
+       printf("Set has been validated successfully\n");
+       response["result"] = "SUCCESS";
+       response["details"] = "Set has been validated successfully";
+       return;
+    }
+
+    response["result"] = "FAILURE";
+    response["details"] = "FAILURE : Parameter Value has not been set";
+    return;
+}
+
+
 /**************************************************************************
  * Function Name        : CreateObject
  * Description  : This function will be used to create a new object for the

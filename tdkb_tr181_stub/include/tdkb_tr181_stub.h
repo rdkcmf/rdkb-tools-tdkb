@@ -50,6 +50,8 @@ class TDKB_TR181Stub : public RDKTestStubInterface, public AbstractServer<TDKB_T
                         this->bindAndAddMethod(Procedure("TDKB_TR181Stub_AddObject", PARAMS_BY_NAME, JSON_STRING, "paramName", JSON_STRING, NULL), &TDKB_TR181Stub::TDKB_TR181Stub_AddObject);
 			this->bindAndAddMethod(Procedure("TDKB_TR181Stub_SetMultiple", PARAMS_BY_NAME, JSON_STRING, "paramList", JSON_STRING, NULL), &TDKB_TR181Stub::TDKB_TR181Stub_SetMultiple);
                         this->bindAndAddMethod(Procedure("TDKB_TR181Stub_DelObject", PARAMS_BY_NAME, JSON_STRING, "paramName", JSON_STRING, NULL), &TDKB_TR181Stub::TDKB_TR181Stub_DelObject);
+                        this->bindAndAddMethod(Procedure("TDKB_TR181Stub_SetOnly", PARAMS_BY_NAME,JSON_STRING,"ParamName", JSON_STRING,"ParamValue", JSON_STRING, "Type", JSON_STRING, NULL), &TDKB_TR181Stub::TDKB_TR181Stub_SetOnly);
+
                 }
         /*inherited functions*/
         bool initialize(IN const char* szVersion);
@@ -62,5 +64,6 @@ class TDKB_TR181Stub : public RDKTestStubInterface, public AbstractServer<TDKB_T
 	void TDKB_TR181Stub_SetMultiple(IN const Json::Value& req, OUT Json::Value& response);
         void TDKB_TR181Stub_AddObject(IN const Json::Value& req, OUT Json::Value& response);
         void TDKB_TR181Stub_DelObject(IN const Json::Value& req, OUT Json::Value& response);
+        void TDKB_TR181Stub_SetOnly(IN const Json::Value& req, OUT Json::Value& response);
 };
 #endif //__TDKB_TR181_STUB_H__

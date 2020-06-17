@@ -1,0 +1,39 @@
+<?xml version='1.0' encoding='utf-8'?>
+<xml>
+  <module>
+  <!-- Module Name  -->
+    <moduleName>TDKB_TR181</moduleName>
+  <!-- Category of the module  -->
+    <category>RDKB</category>
+  <!-- Excecution time out of module -->
+    <executionTimeOut>2</executionTimeOut>
+  <!-- Excecution time out of module -->
+    <testGroup>Component</testGroup>
+  <!-- Logs File Names of module -->
+    <logFileNames>[]</logFileNames>
+  <!-- Crash File Names of the module -->
+    <crashFileNames>[]</crashFileNames>
+  <!-- Total functions corresponding module  -->
+    <functions>
+      <function name='TDKB_TR181Stub_Get' />
+      <function name='TDKB_TR181Stub_Set' />
+      <function name='TDKB_TR181Stub_AddObject' />
+      <function name='TDKB_TR181Stub_DelObject' />
+      <function name='TDKB_TR181Stub_SetMultiple' />
+      <function name='TDKB_TR181Stub_SetOnly' />
+    </functions>
+  <!-- Total parameters corresponding module  -->
+    <parameters>
+      <parameter funName='TDKB_TR181Stub_Get' parameterName='ParamName' parameterType='STRING' range='A-Z' />
+      <parameter funName='TDKB_TR181Stub_Set' parameterName='ParamName' parameterType='STRING' range='A-Z' />
+      <parameter funName='TDKB_TR181Stub_Set' parameterName='Type' parameterType='STRING' range='A-Z' />
+      <parameter funName='TDKB_TR181Stub_Set' parameterName='ParamValue' parameterType='STRING' range='A-Z' />
+      <parameter funName='TDKB_TR181Stub_AddObject' parameterName='paramName' parameterType='STRING' range='A-Z' />
+      <parameter funName='TDKB_TR181Stub_DelObject' parameterName='paramName' parameterType='STRING' range='A-Z' />
+      <parameter funName='TDKB_TR181Stub_SetMultiple' parameterName='paramList' parameterType='STRING' range='A-Z' />
+      <parameter funName='TDKB_TR181Stub_SetOnly' parameterName='ParamValue' parameterType='STRING' range='A-Z' />
+      <parameter funName='TDKB_TR181Stub_SetOnly' parameterName='Type' parameterType='STRING' range='A-Z' />
+      <parameter funName='TDKB_TR181Stub_SetOnly' parameterName='ParamName' parameterType='STRING' range='A-Z' />
+    </parameters>
+  </module>
+</xml>
