@@ -19,17 +19,17 @@
 <?xml version="1.0" encoding="UTF-8"?><xml>
   <module name="MTAHAL" testGroup="Component">
     <primitiveTests>
-      <primitiveTest id=" " name="MTAHAL_GetParamCharValue" version="3">
+      <primitiveTest name="MTAHAL_GetParamCharValue" id=" " version="5">
         <function>MTAHAL_GetParamCharValue</function>
         <parameters>
-          <parameter name="paramName" value="0"/>
+          <parameter name="paramName" value="  "/>
         </parameters>
       </primitiveTest>
-      <primitiveTest id=" " name="MTAHAL_GetParamUlongValue" version="2">
+      <primitiveTest name="MTAHAL_GetParamUlongValue" id=" " version="4">
         <function>MTAHAL_GetParamUlongValue</function>
         <parameters>
-          <parameter name="paramName" value="0"/>
-          <parameter name="paramType" value=""/>
+          <parameter name="paramName" value=" "/>
+          <parameter name="paramType" value=" "/>
         </parameters>
       </primitiveTest>
       <primitiveTest id=" " name="MTAHAL_SetParamUlongValue" version="2">
@@ -89,21 +89,29 @@
           <parameter name="paramType" value=""/>
         </parameters>
       </primitiveTest>
-      <primitiveTest id="" name="MTAHAL_GetDhcpStatus" version="1">
+      <primitiveTest name="MTAHAL_GetDhcpStatus" id=" " version="2">
         <function>MTAHAL_GetDhcpStatus</function>
-        <parameters/>
+        <parameters>
+          <parameter name="flag" value="0"/>
+        </parameters>
       </primitiveTest>
-      <primitiveTest id="" name="MTAHAL_GetConfigFileStatus" version="1">
+      <primitiveTest name="MTAHAL_GetConfigFileStatus" id=" " version="2">
         <function>MTAHAL_GetConfigFileStatus</function>
-        <parameters/>
+        <parameters>
+          <parameter name="flag" value="0"/>
+        </parameters>
       </primitiveTest>
-      <primitiveTest name="MTAHAL_GetLineRegisterStatus" id="" version="1">
+      <primitiveTest name="MTAHAL_GetLineRegisterStatus" id=" " version="2">
         <function>MTAHAL_GetLineRegisterStatus</function>
-        <parameters/>
+        <parameters>
+          <parameter name="flag" value="0"/>
+        </parameters>
       </primitiveTest>
-      <primitiveTest name="MTAHAL_GetHandsets" id="" version="1">
+      <primitiveTest name="MTAHAL_GetHandsets" id=" " version="2">
         <function>MTAHAL_GetHandsets</function>
-        <parameters/>
+        <parameters>
+          <parameter name="flag" value="0"/>
+        </parameters>
       </primitiveTest>
       <primitiveTest id="" name="MTAHAL_InitDB" version="1">
         <function>MTAHAL_InitDB</function>
@@ -113,9 +121,11 @@
         <function>MTAHAL_devResetNow</function>
         <parameters/>
       </primitiveTest>
-      <primitiveTest id="" name="MTAHAL_getMtaOperationalStatus" version="1">
+      <primitiveTest name="MTAHAL_getMtaOperationalStatus" id=" " version="2">
         <function>MTAHAL_getMtaOperationalStatus</function>
-        <parameters/>
+        <parameters>
+          <parameter name="flag" value="0"/>
+        </parameters>
       </primitiveTest>
       <primitiveTest id=" " name="MTAHAL_start_provisioning" version="1">
         <function>MTAHAL_start_provisioning</function>
