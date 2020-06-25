@@ -1905,5 +1905,30 @@ int ssp_CMHAL_GetStatusOfdmaUsTable(char* paramName, char* value, int *numberofE
 
 }
 
-
-
+/*******************************************************************************************
+ *
+ * Function Name        : ssp_CMHAL_IsEnergyDetected
+ * Description          : This function will invoke the hal api of CM to get the Engery Detected status
+ *
+ * @param [in]          : energyDetected: returns the value of the parameter
+ * @param [out]         : return status an integer value 0-success and 1-Failure
+ ********************************************************************************************/
+int ssp_CMHAL_IsEnergyDetected(char* energyDetected)
+{
+    print("ssp_CMHAL_IsEnergyDetected Function Entry \n");
+    int return_status = 0;
+    return_status = docsis_IsEnergyDetected(energyDetected);
+    if(SSP_SUCCESS == return_status)
+    {
+        if(energyDetected != NULL)
+        {
+            printf("energyDetected = %d\n",energyDetected);
+            return SSP_SUCCESS;
+        }
+    }
+    else
+    {
+        printf("Call docsis_IsEnergyDetected returns error");
+        return SSP_FAILURE;
+    }
+}

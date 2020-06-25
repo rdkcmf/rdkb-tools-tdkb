@@ -56,7 +56,7 @@
     <!--  -->
   </rdk_versions>
   <test_cases>
-    <test_case_id>TC_WIFIHAL_362</test_case_id>
+    <test_case_id>TC_WIFIHAL_368</test_case_id>
     <test_objective>Validte the WIFi HAL API wifi_setApScanFilter for the 2.4GHz AccessPoint</test_objective>
     <test_type>Positive</test_type>
     <test_setup>Broadband</test_setup>
