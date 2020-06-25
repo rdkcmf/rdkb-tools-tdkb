@@ -67,6 +67,7 @@ class CMHAL : public RDKTestStubInterface,  public AbstractServer<CMHAL>
                   this->bindAndAddMethod(Procedure("CMHAL_GetDsOfdmChanTable", PARAMS_BY_NAME, JSON_STRING,"paramName", JSON_STRING,NULL), &CMHAL::CMHAL_GetDsOfdmChanTable);
                   this->bindAndAddMethod(Procedure("CMHAL_GetUsOfdmChanTable", PARAMS_BY_NAME, JSON_STRING,"paramName", JSON_STRING,NULL), &CMHAL::CMHAL_GetUsOfdmChanTable);
                   this->bindAndAddMethod(Procedure("CMHAL_GetStatusOfdmaUsTable", PARAMS_BY_NAME, JSON_STRING,"paramName", JSON_STRING,NULL), &CMHAL::CMHAL_GetStatusOfdmaUsTable);
+                  this->bindAndAddMethod(Procedure("CMHAL_IsEnergyDetected", PARAMS_BY_NAME, JSON_STRING,NULL), &CMHAL::CMHAL_IsEnergyDetected);
 		}
 
         /*inherited functions*/
@@ -96,5 +97,6 @@ class CMHAL : public RDKTestStubInterface,  public AbstractServer<CMHAL>
         void CMHAL_GetDsOfdmChanTable(IN const Json::Value& req, OUT Json::Value& response);
         void CMHAL_GetUsOfdmChanTable(IN const Json::Value& req, OUT Json::Value& response);
         void CMHAL_GetStatusOfdmaUsTable(IN const Json::Value& req, OUT Json::Value& response);
+        void CMHAL_IsEnergyDetected(IN const Json::Value& req, OUT Json::Value& response);
 };
 #endif //__CMHAL_STUB_H__

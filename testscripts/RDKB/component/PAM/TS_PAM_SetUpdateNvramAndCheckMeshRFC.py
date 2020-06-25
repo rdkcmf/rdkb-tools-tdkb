@@ -52,7 +52,7 @@
 2. Get the initial values of SysCfg.UpdateNvram, Mesh.Enable, Ovs.Enable and Mesh.PodEthernetBackhaulEnable and store it
 3. Do a factory Reset and verify the factory defaults value for the parameters (SysCfg.UpdateNvram as true, Mesh.Enable as false, Ovs.Enable as false and Mesh.PodEthernetBackhaulEnable as true)
 4. Set the UpdateNvramvalue as false and verify the same using get function
-5. Try to set the values to the parameters (Mesh.Enable as true, Ovs.Enable as true and Mesh.PodEthernetBackhaulEnable as false) and all set operations should success
+5. Toggle the values of parameters Mesh.Enable, Ovs.Enable and Mesh.PodEthernetBackhaulEnable and all set operations should success
 6. Revert back to the original values
 7. Unload the pam module
 </automation_approch>
@@ -315,6 +315,6 @@ if "SUCCESS" in loadmodulestatus.upper():
         print "[TEST EXECUTION RESULT] : FAILURE";
     obj.unloadModule("pam");
 else:
-    print "Failed to load wifi module";
+    print "Failed to load pam module";
     obj.setLoadModuleStatus("FAILURE");
     print "Module loading failed";

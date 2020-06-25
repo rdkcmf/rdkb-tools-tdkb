@@ -132,6 +132,10 @@
           <parameter name="paramName" value=""/>
         </parameters>
       </primitiveTest>
+      <primitiveTest name="CMHAL_IsEnergyDetected" id="" version="1">
+        <function>CMHAL_IsEnergyDetected</function>
+        <parameters/>
+      </primitiveTest>
     </primitiveTests>
   </module>
 </xml>

@@ -50,7 +50,7 @@
     <automation_approch>1. Load the pam module
 2. Get the secured location of syscfg file from platform properties file
 3. Get the initial value of Syscfg.UpdateNvram parameter and store it
-4. If the initial Syscfg.UpdateNvram value was false set falsg as 1 if not set the Syscfg.UpdateNvram value as false then check temporary syscfg file is not present and only secured location syscfg file is present
+4. If the initial Syscfg.UpdateNvram value was false set flag as 1 if not set the Syscfg.UpdateNvram value as false then check temporary syscfg file is not present and only secured location syscfg file is present
 5. Remove the the syscfg files from nvram and secured location and make sure files got removed successfully
 6. Reboot the DUT then check syscfg files got restored in secured location and temporary location since UpdateNvram value was true after reboot
 7. Revert the Syscfg.UpdateNvramvalue to initial value

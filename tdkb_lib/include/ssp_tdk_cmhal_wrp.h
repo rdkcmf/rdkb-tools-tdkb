@@ -45,6 +45,7 @@ extern "C"
     int ssp_CMHAL_GetDsOfdmChanTable(char* paramName, char* value, int *numberofEntries);
     int ssp_CMHAL_GetUsOfdmChanTable(char* paramName, char* value, int *numberofEntries);
     int ssp_CMHAL_GetStatusOfdmaUsTable(char* paramName, char* value, int *numberofEntries);
+    int ssp_CMHAL_IsEnergyDetected(char* energyDetected);
 #ifdef __cplusplus
 }
 #endif
