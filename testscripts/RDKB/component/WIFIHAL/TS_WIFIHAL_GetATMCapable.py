@@ -57,7 +57,7 @@
   </rdk_versions>
   <test_cases>
     <test_case_id>TC_WIFIHAL_361</test_case_id>
-    <test_objective>To get the ATM enable status  in device for 2.4GHz radio using wifi_getATMCapable API .</test_objective>
+    <test_objective>To get the ATM enable status  in device using wifi_getATMCapable API .</test_objective>
     <test_type>Positive</test_type>
     <test_setup>Broadband</test_setup>
     <pre_requisite>1.Ccsp Components  should be in a running state else invoke cosa_start.sh manually that includes all the ccsp components and TDK Component
@@ -69,7 +69,7 @@ no input parameters.</input_parameters>
 2.Get the  ATM capable status of the device attached to the AP by using wifi_getATMCapable,by calling in the wrapper file.
 3. If Disabled from the details(it is unsupported) , it is counted as SUCCESS or else FAILURE.
 4.Unload the module.</automation_approch>
-    <except_output>Should successfully get the ATM capable value from the device for 2.4GHz radio by calling from the wrapper file.</except_output>
+    <except_output>Should successfully get the ATM capable value from the device by calling from the wrapper file.</except_output>
     <priority>High</priority>
     <test_stub_interface>WIFIHAL</test_stub_interface>
     <test_script>TS_WIFIHAL_2.4GHzGetATMCapable</test_script>
