@@ -51,9 +51,10 @@ ApIndex : 0 and 1
 param : 4
 </input_parameters>
     <automation_approch>1. Load wifihal module
-2. Using WIFIHAL_GetOrSetParamIntValue invoke wifi_setApAuthMode() 
-3. Depending upon the output, return SUCCESS or FAILURE
-4. Unload wifihal module</automation_approch>
+2. From Platform properities file, obtain the value for AP_AUTH_MODE_AUTO
+3. Using WIFIHAL_GetOrSetParamIntValue invoke wifi_setApAuthMode() 
+4. Depending upon the output, return SUCCESS or FAILURE
+5. Unload wifihal module</automation_approch>
     <except_output>wifi_setApAuthMode() should return SUCCESS</except_output>
     <priority>High</priority>
     <test_stub_interface>WIFIHAL</test_stub_interface>
@@ -68,46 +69,74 @@ param : 4
 # use tdklib library,which provides a wrapper for tdk testcase script 
 import tdklib; 
 from wifiUtility import *;
+from tdkbVariables import *;
+
+
 
 #Test component to be tested
 obj = tdklib.TDKScriptingLibrary("wifihal","1");
+sysobj = tdklib.TDKScriptingLibrary("sysutil","1");
 
 #IP and Port of box, No need to change,
 #This will be replaced with correspoing Box Ip and port while executing script
 ip = <ipaddress>
 port = <port>
 obj.configureTestCase(ip,port,'TS_WIFIHAL_SetApAuthMode_Auto');
+sysobj.configureTestCase(ip,port,'TS_WIFIHAL_SetApAuthMode_Auto');
 
 loadmodulestatus =obj.getLoadModuleResult();
 print "[LIB LOAD STATUS]  :  %s" %loadmodulestatus
 
-if "SUCCESS" in loadmodulestatus.upper():
+sysloadmodulestatus =sysobj.getLoadModuleResult();
+print "[LIB LOAD STATUS]  :  %s" %sysloadmodulestatus ;
+
+if "SUCCESS" in loadmodulestatus.upper() and sysloadmodulestatus.upper():
     obj.setLoadModuleStatus("SUCCESS");
+    sysobj.setLoadModuleStatus("SUCCESS");
+    tdkTestObj = sysobj.createTestStep('ExecuteCmd');
+    #Getting AP_AUTH_MODE_AUTO value from tdk_platform_properties"
+    cmd= "sh %s/tdk_utility.sh parseConfigFile AP_AUTH_MODE_AUTO" %TDK_PATH;
+    print cmd;
+    expectedresult="SUCCESS";
+    tdkTestObj.addParameter("command",cmd);
+    tdkTestObj.executeTestCase(expectedresult);
+    actualresult = tdkTestObj.getResult();
+    setMode = tdkTestObj.getResultDetails().strip().replace("\\n", "");
+    
+    if expectedresult in actualresult and setMode!= "":
+        print "TEST STEP : Should  get AP_AUTH_MODE_AUTO  from property file"
+        print "ACTUAL RESULT :AP_AUTH_MODE_AUTO from property file :",setMode ;
+        #Get the result of execution
+        print "[TEST EXECUTION RESULT] :SUCCESS";
 
-    for apIndex in range(0,2):
-        expectedresult="SUCCESS";
-        setMethod = "setApAuthMode"
-        #mode mapping as: 1: open, 2: shared, 4:auto
-        setMode = 4
-        primitive = 'WIFIHAL_GetOrSetParamIntValue'
+        for apIndex in range(0,2):
+      
+            primitive = 'WIFIHAL_GetOrSetParamIntValue'
+            expectedresult="SUCCESS";
+            setMethod = "setApAuthMode"
+            setMode = int(setMode)
+            #Calling the method to execute wifi_setApAuthMode()
+            tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, setMode, setMethod)
 
-        #Calling the method to execute wifi_setApAuthMode()
-        tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, setMode, setMethod)
+            if expectedresult in actualresult:
+                print "TEST STEP : Set the authorization mode as Auto for apIndex %s"%apIndex
+                print "EXPECTED RESULT : Should successfully set the authorization mode as Auto"
+                print "ACTUAL RESULT : Successfully sets the authorization mode as Auto"
+                tdkTestObj.setResultStatus("SUCCESS");
 
-        if expectedresult in actualresult:
-            print "TEST STEP : Set the authorization mode as auto for apIndex %s"%apIndex
-            print "EXPECTED RESULT : Should successfully set the authorization mode as auto"
-            print "ACTUAL RESULT : Successfully sets the authorization mode as auto"
-            tdkTestObj.setResultStatus("SUCCESS");
-
-        else:
-            print "TEST STEP : Set the authorization mode as auto for apIndex %s"%apIndex
-            print "EXPECTED RESULT : Should successfully set the authorization mode as auto"
-            print "ACTUAL RESULT : Failed to set the authorization mode as auto"
-            tdkTestObj.setResultStatus("FAILURE");
-
+            else:
+                print "TEST STEP : Set the authorization mode as Auto for apIndex %s"%apIndex
+                print "EXPECTED RESULT : Should successfully set the authorization mode as Auto"
+                print "ACTUAL RESULT : Failed to set the authorization mode as Auto"
+                tdkTestObj.setResultStatus("FAILURE");
+    else:
+        tdkTestObj.setResultStatus("FAILURE");
+        print "TEST STEP : Should  get AP_AUTH_MODE_AUTO  from property file"
+        print "ACTUAL RESULT :AP_AUTH_MODE_AUTO from property file :",setMode ;
+        #Get the result of execution
+        print "[TEST EXECUTION RESULT] :FAILURE";
     obj.unloadModule("wifihal");
-
+    sysobj.unloadModule("sysutil");
 else:
     print "Failed to load wifi module";
     obj.setLoadModuleStatus("FAILURE");

@@ -118,6 +118,7 @@ if "SUCCESS" in loadmodulestatus.upper():
 
 		if expectedresult in actualresult :
 		    possibleCh = details.split(":")[1].strip().split(',')
+                    channel = int(possibleCh[0])
 		    #from possible channel list, select a channel != current channel num:, to do set operation
 		    for index in range(len(possibleCh)):
 			if int(possibleCh[index]) != currChannel:
