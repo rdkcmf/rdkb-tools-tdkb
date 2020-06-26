@@ -33,8 +33,7 @@ int ssp_wifi_init()
     printf("\n ssp_wifi_init-----> Entry\n");
 
     int return_status=0;
-
-#if defined(_COSA_BCM_MIPS_)
+#if defined(_COSA_BCM_MIPS_) || defined(_XB7_PRODUCT_REQ_)
     printf("Invoking wifi_init HAL API\n");
 
     return_status = wifi_init();
@@ -50,7 +49,6 @@ int ssp_wifi_init()
         printf("\nssp_wifi_init::Failed to initialize the WIFI HAL\n");
     }
 #endif
-
     printf("\n ssp_wifi_init----> Exit\n");
 
     return return_status;
@@ -323,6 +321,8 @@ int ssp_WIFIHALGetOrSetParamULongValue(int radioIndex, unsigned long *uLongVar, 
         return_status = wifi_getApAssociatedDevicesHighWatermarkDate(radioIndex, uLongVar);
     else if(!strcmp(method, "getRadioResetCount"))
         return_status = wifi_getRadioResetCount(radioIndex, uLongVar);
+    else if(!strcmp(method, "getRadioPercentageTransmitPower"))
+        return_status = wifi_getRadioPercentageTransmitPower(radioIndex, uLongVar);
     else
     {
         return_status = SSP_FAILURE;
@@ -1832,5 +1832,63 @@ int ssp_WIFIHALGetApAssociatedDeviceDiagnosticResult2(int apIndex, wifi_associat
 }
 
 
+/*******************************************************************************************
+ *
+ * Function Name                    : ssp_WIFIHALGetRadioMode
+ * Description                      : This function invokes WiFi HAL api wifi_getRadioMode
+ *
+ * @param[in] radioIndex            : radio Index value
+              output_string         : operation mode value
 
+ * @param[out] return status        : WiFi HAL operation Success / Failure
+ ********************************************************************************************/
+int ssp_WIFIHALGetRadioMode(int radioIndex, char* output_string, unsigned int *puremode)
+{
+    printf("\n ssp_WIFIHALGetRadioMode ----> Entry\n");
+    printf("radio index:%d\n",radioIndex);
+    int return_status = 0;
+
+    return_status = wifi_getRadioMode(radioIndex, output_string, puremode);
+    if(return_status != SSP_SUCCESS)
+    {
+     printf("\n ssp_WIFIHALGetRadioMode::Failed\n");
+    }
+    else
+    {
+     printf("\n ssp_WIFIHALGetRadioMode Success\n");
+    }
+    printf("\n ssp_WIFIHALGetRadioMode ---> Exit\n");
+    return return_status;
+}
+
+/*******************************************************************************************
+ *
+ * Function Name                    : ssp_WIFIHALSetRadioMode
+ * Description                      : This function invokes WiFi HAL api wifi_setRadioMode
+ *
+ * @param[in] radioIndex            : radio Index value
+              output_string         : operation mode value
+              puremode              : operational standard value
+
+ * @param[out] return status        : WiFi HAL operation Success / Failure
+ ********************************************************************************************/
+int ssp_WIFIHALSetRadioMode(int radioIndex, char* output_string, unsigned int puremode)
+{
+    printf("\n ssp_WIFIHALSetRadioMode ----> Entry\n");
+    printf("radio index:%d\n",radioIndex);
+    int return_status = 0;
+
+    return_status = wifi_setRadioMode(radioIndex, output_string, puremode);
+    if(return_status != SSP_SUCCESS)
+    {
+     printf("\n ssp_WIFIHALSetRadioMode::Failed\n");
+    }
+    else
+    {
+     printf("\n ssp_WIFIHALSetRadioMode success\n");
+
+    }
+    printf("\n ssp_WIFIHALSetRadioMode ---> Exit\n");
+    return return_status;
+}
 
