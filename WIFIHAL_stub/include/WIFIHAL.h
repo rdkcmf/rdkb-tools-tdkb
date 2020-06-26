@@ -444,6 +444,8 @@ extern "C"
     int ssp_WIFIHALGetApAssociatedDeviceTidStatsResult(int  radioIndex,  mac_address_t *clientMacAddress, wifi_associated_dev_tid_stats_t *tid_stats,  unsigned long long *handle);
     int ssp_WIFIHALGetBandSteeringLog(int  record_index, unsigned long *pSteeringTime, char *pClientMAC, int *pSourceSSIDIndex, int *pDestSSIDIndex, int *pSteeringReason);
     int ssp_WIFIHALGetApAssociatedDeviceDiagnosticResult2(int apIndex, wifi_associated_dev2_t **associated_dev_array, unsigned int *dev_cnt);
+    int ssp_WIFIHALGetRadioMode(int radioIndex, char* output_string, unsigned int *puremode);
+    int ssp_WIFIHALSetRadioMode(int radioIndex, char* output_string, unsigned int puremode);
 
 };
 
@@ -500,6 +502,8 @@ class WIFIHAL : public RDKTestStubInterface, public AbstractServer<WIFIHAL>
                   this->bindAndAddMethod(Procedure("WIFIHAL_GetApAssociatedDeviceTidStatsResult",PARAMS_BY_NAME,JSON_STRING,"radioIndex",JSON_INTEGER,"MAC",JSON_STRING,NULL), &WIFIHAL::WIFIHAL_GetApAssociatedDeviceTidStatsResult);
                   this->bindAndAddMethod(Procedure("WIFIHAL_GetBandSteeringLog",PARAMS_BY_NAME,JSON_STRING,"record_index",JSON_INTEGER,NULL), &WIFIHAL::WIFIHAL_GetBandSteeringLog);
                   this->bindAndAddMethod(Procedure("WIFIHAL_GetApAssociatedDeviceDiagnosticResult2",PARAMS_BY_NAME,JSON_STRING,"apIndex",JSON_INTEGER,NULL), &WIFIHAL::WIFIHAL_GetApAssociatedDeviceDiagnosticResult2);
+                  this->bindAndAddMethod(Procedure("WIFIHAL_GetRadioMode",PARAMS_BY_NAME,JSON_STRING,"radioIndex",JSON_INTEGER,NULL), &WIFIHAL::WIFIHAL_GetRadioMode);
+                  this->bindAndAddMethod(Procedure("WIFIHAL_SetRadioMode",PARAMS_BY_NAME,JSON_STRING,"radioIndex",JSON_INTEGER,"chnmode",JSON_STRING,"puremode",JSON_INTEGER,NULL), &WIFIHAL::WIFIHAL_SetRadioMode);
 
                 }
         /*inherited functions*/
@@ -554,6 +558,9 @@ class WIFIHAL : public RDKTestStubInterface, public AbstractServer<WIFIHAL>
         void WIFIHAL_GetApAssociatedDeviceTidStatsResult(IN const Json::Value& req, OUT Json::Value& response);
         void WIFIHAL_GetBandSteeringLog(IN const Json::Value& req, OUT Json::Value& response);
         void WIFIHAL_GetApAssociatedDeviceDiagnosticResult2(IN const Json::Value& req, OUT Json::Value& response);
+        void WIFIHAL_GetRadioMode(IN const Json::Value& req, OUT Json::Value& response);
+        void WIFIHAL_SetRadioMode(IN const Json::Value& req, OUT Json::Value& response);
+
 };
 #endif //__WIFIHAL_STUB_H__
 

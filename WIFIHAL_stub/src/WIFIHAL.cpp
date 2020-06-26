@@ -2544,5 +2544,90 @@ void WIFIHAL::WIFIHAL_GetApAssociatedDeviceDiagnosticResult2(IN const Json::Valu
 }
 
 
+/*******************************************************************************************
+ *
+ * Function Name                    : WIFIHAL_GetRadioMode
+ * Description                      : This function invokes WiFi HAL API wifi_getRadioMode()
+ * @param[in] radioIndex            : WiFi Radio index
+ * @param [out] response            : filled with SUCCESS or FAILURE based on the output status of operation
+ *
+ ********************************************************************************************/
+void WIFIHAL::WIFIHAL_GetRadioMode(IN const Json::Value& req, OUT Json::Value& response)
+{
 
+    DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_GetRadioMode ----->Entry\n");
+    int returnValue = -1;
+    int radioIndex = 1;
+    char details[1000] = {'\0'};
+    radioIndex  = req["radioIndex"].asInt();
+    unsigned int puremode = 0;
+    char opStandard[32] = {'\0'};
+
+    returnValue = ssp_WIFIHALGetRadioMode(radioIndex,opStandard,&puremode);
+    if(0 == returnValue)
+    {
+        sprintf(details, "Value returned is : puremode:%d, opStandard:%s",puremode,opStandard);
+        response["result"]="SUCCESS";
+        response["details"]=details;
+    }
+    else
+    {
+        sprintf(details, "wifi_getRadioMode failed");
+        response["result"]="FAILURE";
+        response["details"]=details;
+    }
+    DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_GetRadioMode ----->Exit\n");
+    return;
+}
+
+/*******************************************************************************************
+ *
+ * Function Name                    : WIFIHAL_SetRadioMode
+ * Description                      : This function invokes WiFi HAL API wifi_setRadioMode()
+ * @param[in] radioIndex            : WiFi Radio index
+              chnmode               : Channel Mode
+              pure mode             : Operation standard values
+ * @param [out] response            : filled with SUCCESS or FAILURE based on the output status of operation
+ *
+ ********************************************************************************************/
+void WIFIHAL::WIFIHAL_SetRadioMode(IN const Json::Value& req, OUT Json::Value& response)
+{
+
+    DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_SetRadioMode ----->Entry\n");
+    int returnValue = -1;
+    int radioIndex = 1;
+    unsigned int puremode = 1;
+    char chnMode[32] = {'\0'};
+    radioIndex  = req["radioIndex"].asInt();
+    strcpy(chnMode,req["chnmode"].asCString());
+    puremode = req["puremode"].asInt();
+
+    returnValue = ssp_WIFIHALSetRadioMode(radioIndex,chnMode,puremode);
+    if(0 == returnValue)
+    {
+        DEBUG_PRINT(DEBUG_TRACE,"\n wifi_setRadioMode operation success\n");
+        returnValue = ssp_WIFIHALApplySettings(radioIndex,"setRadioMode");
+        if(0 == returnValue)
+        {
+            DEBUG_PRINT(DEBUG_TRACE,"\napplyRadioSettings operation success\n");
+            response["result"]="SUCCESS";
+            response["details"]="wifi_setRadioMode operation success";
+        }
+        else
+        {
+            DEBUG_PRINT(DEBUG_TRACE,"\napplyRadioSettings operation failed\n");
+            response["result"]="FAILURE";
+            response["details"]="wifi_applyRadioSettings failed";
+        }
+
+    }
+    else
+    {
+        DEBUG_PRINT(DEBUG_TRACE,"\n wifi_setRadioMode operation success\n");
+        response["result"]="FAILURE";
+        response["details"]="wifi_setRadioMode operation Failed";
+    }
+    DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_SetRadioMode ----->Exit\n");
+    return;
+}
 
