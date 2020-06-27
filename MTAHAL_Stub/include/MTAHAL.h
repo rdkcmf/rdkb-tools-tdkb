@@ -73,8 +73,8 @@ class MTAHAL : public RDKTestStubInterface,  public AbstractServer<MTAHAL>
 
 	MTAHAL(TcpSocketServer &ptrRpcServer) : AbstractServer <MTAHAL>(ptrRpcServer)
     {
-        this->bindAndAddMethod(Procedure("MTAHAL_GetParamCharValue", PARAMS_BY_NAME, JSON_STRING, "paramName", JSON_STRING, NULL), &MTAHAL::MTAHAL_GetParamCharValue);
-        this->bindAndAddMethod(Procedure("MTAHAL_GetParamUlongValue", PARAMS_BY_NAME, JSON_STRING, "paramName", JSON_STRING, "paramType", JSON_STRING,  NULL), &MTAHAL::MTAHAL_GetParamUlongValue);
+        this->bindAndAddMethod(Procedure("MTAHAL_GetParamCharValue", PARAMS_BY_NAME, JSON_STRING, "paramName", JSON_STRING,NULL), &MTAHAL::MTAHAL_GetParamCharValue);
+        this->bindAndAddMethod(Procedure("MTAHAL_GetParamUlongValue", PARAMS_BY_NAME, JSON_STRING, "paramName", JSON_STRING, "paramType", JSON_STRING,NULL), &MTAHAL::MTAHAL_GetParamUlongValue);
         this->bindAndAddMethod(Procedure("MTAHAL_SetParamUlongValue", PARAMS_BY_NAME, JSON_STRING, "paramName", JSON_STRING, "value", JSON_INTEGER, NULL), &MTAHAL::MTAHAL_SetParamUlongValue);
         this->bindAndAddMethod(Procedure("MTAHAL_GetDHCPInfo", PARAMS_BY_NAME, JSON_STRING,"paramType", JSON_STRING, NULL), &MTAHAL::MTAHAL_GetDHCPInfo);
         this->bindAndAddMethod(Procedure("MTAHAL_GetLineTableGetEntry", PARAMS_BY_NAME, JSON_STRING, "value", JSON_INTEGER,"paramType", JSON_STRING, NULL), &MTAHAL::MTAHAL_GetLineTableGetEntry);
@@ -84,13 +84,13 @@ class MTAHAL : public RDKTestStubInterface,  public AbstractServer<MTAHAL>
         this->bindAndAddMethod(Procedure("MTAHAL_GetCALLP", PARAMS_BY_NAME, JSON_STRING, "value", JSON_INTEGER,"paramType", JSON_STRING, NULL), &MTAHAL::MTAHAL_GetCALLP);
         this->bindAndAddMethod(Procedure("MTAHAL_GetDSXLogs", PARAMS_BY_NAME, JSON_STRING,"paramType", JSON_STRING, NULL), &MTAHAL::MTAHAL_GetDSXLogs);
         this->bindAndAddMethod(Procedure("MTAHAL_GetMtaLog", PARAMS_BY_NAME, JSON_STRING,"paramType", JSON_STRING, NULL), &MTAHAL::MTAHAL_GetMtaLog);
-        this->bindAndAddMethod(Procedure("MTAHAL_GetDhcpStatus", PARAMS_BY_NAME, JSON_STRING, NULL), &MTAHAL::MTAHAL_GetDhcpStatus);
-        this->bindAndAddMethod(Procedure("MTAHAL_GetConfigFileStatus", PARAMS_BY_NAME, JSON_STRING, NULL), &MTAHAL::MTAHAL_GetConfigFileStatus);
-        this->bindAndAddMethod(Procedure("MTAHAL_GetLineRegisterStatus", PARAMS_BY_NAME, JSON_STRING, NULL), &MTAHAL::MTAHAL_GetLineRegisterStatus);
-	this->bindAndAddMethod(Procedure("MTAHAL_GetHandsets", PARAMS_BY_NAME, JSON_STRING, NULL), &MTAHAL::MTAHAL_GetHandsets);
+        this->bindAndAddMethod(Procedure("MTAHAL_GetDhcpStatus", PARAMS_BY_NAME, JSON_STRING,"flag",JSON_INTEGER, NULL), &MTAHAL::MTAHAL_GetDhcpStatus);
+        this->bindAndAddMethod(Procedure("MTAHAL_GetConfigFileStatus", PARAMS_BY_NAME, JSON_STRING,"flag",JSON_INTEGER, NULL), &MTAHAL::MTAHAL_GetConfigFileStatus);
+        this->bindAndAddMethod(Procedure("MTAHAL_GetLineRegisterStatus", PARAMS_BY_NAME, JSON_STRING,"flag",JSON_INTEGER, NULL), &MTAHAL::MTAHAL_GetLineRegisterStatus);
+	this->bindAndAddMethod(Procedure("MTAHAL_GetHandsets", PARAMS_BY_NAME, JSON_STRING,"flag",JSON_INTEGER,NULL), &MTAHAL::MTAHAL_GetHandsets);
         this->bindAndAddMethod(Procedure("MTAHAL_InitDB", PARAMS_BY_NAME, JSON_STRING, NULL), &MTAHAL::MTAHAL_InitDB);
         this->bindAndAddMethod(Procedure("MTAHAL_devResetNow", PARAMS_BY_NAME, JSON_STRING, NULL), &MTAHAL::MTAHAL_devResetNow);
-        this->bindAndAddMethod(Procedure("MTAHAL_getMtaOperationalStatus", PARAMS_BY_NAME, JSON_STRING, NULL), &MTAHAL::MTAHAL_getMtaOperationalStatus);
+        this->bindAndAddMethod(Procedure("MTAHAL_getMtaOperationalStatus", PARAMS_BY_NAME, JSON_STRING,"flag",JSON_INTEGER,NULL), &MTAHAL::MTAHAL_getMtaOperationalStatus);
         this->bindAndAddMethod(Procedure("MTAHAL_start_provisioning", PARAMS_BY_NAME, JSON_STRING, "mtaIPMode", JSON_INTEGER, "dhcpOption122Suboption1", JSON_STRING, "dhcpOption122Suboption2", JSON_STRING, "dhcpOption2171CccV6DssID1", JSON_STRING, "dhcpOption2171CccV6DssID2", JSON_STRING, NULL), &MTAHAL::MTAHAL_start_provisioning);
         this->bindAndAddMethod(Procedure("MTAHAL_LineRegisterStatus_callback_register", PARAMS_BY_NAME, JSON_STRING, NULL), &MTAHAL::MTAHAL_LineRegisterStatus_callback_register);
 	}

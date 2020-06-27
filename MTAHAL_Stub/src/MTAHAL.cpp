@@ -73,8 +73,8 @@ void MTAHAL::MTAHAL_GetParamCharValue(IN const Json::Value& req, OUT Json::Value
     char paramName[100] = {'\0'};
     char Details[1024] = {'\0'};
     char value[1024] = {'\0'};
-
     /* Validate the input arguments */
+
     if(&req["paramName"]==NULL)
     {
         response["result"]="FAILURE";
@@ -120,7 +120,6 @@ void MTAHAL::MTAHAL_GetParamUlongValue(IN const Json::Value& req, OUT Json::Valu
     char Details[64] = {'\0'};
     unsigned long value = 0;
     char paramType[10] = {'\0'};
-
 
     /* Validate the input arguments */
     if(&req["paramName"]==NULL)
@@ -182,14 +181,14 @@ void MTAHAL::MTAHAL_SetParamUlongValue(IN const Json::Value& req, OUT Json::Valu
         response["result"]="FAILURE";
         response["details"]="NULL parameter as input argument";
         return;
-    }    
+    }
 
     if(&req["value"]==NULL)
     {
         response["result"]="FAILURE";
         response["details"]="NULL parameter as input argument";
         return;
-    }    
+    }
 
     strcpy(paramName,req["paramName"].asCString());
     value = req["value"].asInt();
@@ -248,7 +247,7 @@ void MTAHAL::MTAHAL_GetDHCPInfo(IN const Json::Value& req, OUT Json::Value& resp
         response["result"]="FAILURE";
         response["details"]="Failed to get the value";
     }
-    
+
     DEBUG_PRINT(DEBUG_TRACE,"\n MTAHAL_GetDHCPInfo --->Exit\n");
     return;
 }
@@ -275,7 +274,7 @@ void MTAHAL::MTAHAL_GetLineTableGetEntry(IN const Json::Value& req, OUT Json::Va
         response["result"]="FAILURE";
         response["details"]="NULL parameter as input argument";
         return;
-    }    
+    }
 
     value = req["value"].asInt();
     strcpy(paramType, req["paramType"].asCString());
@@ -298,7 +297,7 @@ void MTAHAL::MTAHAL_GetLineTableGetEntry(IN const Json::Value& req, OUT Json::Va
         response["result"]="FAILURE";
         response["details"]="Failed to get the value";
     }
-    
+
     DEBUG_PRINT(DEBUG_TRACE,"\n MTAHAL_GetLineTableGetEntry --->Exit\n");
     return;
 }
@@ -322,7 +321,7 @@ void MTAHAL::MTAHAL_TriggerDiagnostics(IN const Json::Value& req, OUT Json::Valu
         response["result"]="FAILURE";
         response["details"]="NULL parameter as input argument";
         return;
-    }    
+    }
 
     value = req["value"].asInt();
 
@@ -338,7 +337,7 @@ void MTAHAL::MTAHAL_TriggerDiagnostics(IN const Json::Value& req, OUT Json::Valu
         response["result"]="FAILURE";
         response["details"]="Failed to get the value";
     }
-    
+
     DEBUG_PRINT(DEBUG_TRACE,"\n MTAHAL_TriggerDiagnostics --->Exit\n");
     return;
 }
@@ -379,8 +378,8 @@ void MTAHAL::MTAHAL_GetServiceFlow(IN const Json::Value& req, OUT Json::Value& r
             {
                 sprintf(d,"FLOW=%u;SFID=%u;ServiceClassName=%s;Direction=%s;ScheduleType=%u;DefaultFlow=%d;NomGrantInterval=%u;UnsolicitGrantSize=%u;TolGrantJitter=%u;NomPollInterval=%u;MinReservedPkt=%u;MaxTrafficRate=%u;MinReservedRate=%u;MaxTrafficBurst=%u;TrafficType=%s;NumberOfPackets=%u;",
                         i,p->SFID,p->ServiceClassName,p->Direction,p->ScheduleType,p->DefaultFlow,p->NomGrantInterval,p->UnsolicitGrantSize,p->TolGrantJitter,p->NomPollInterval,p->MinReservedPkt,p->MaxTrafficRate,p->MinReservedRate,p->MaxTrafficBurst,p->TrafficType,p->NumberOfPackets);
-                d = details + strlen(details);                
-                p++;            
+                d = details + strlen(details);
+                p++;
             }
             free(pFlow);
         }
@@ -417,7 +416,7 @@ void MTAHAL::MTAHAL_GetCalls(IN const Json::Value& req, OUT Json::Value& respons
     int returnValue = 0;
     char details[1024] = {'\0'}, *d;
     unsigned long value = 0;
-    unsigned long count = 0; 
+    unsigned long count = 0;
     PMTAMGMT_MTA_CALLS pCfg = NULL, p;
     int i;
 
@@ -426,7 +425,7 @@ void MTAHAL::MTAHAL_GetCalls(IN const Json::Value& req, OUT Json::Value& respons
         response["result"]="FAILURE";
         response["details"]="NULL parameter as input argument";
         return;
-    }    
+    }
 
     value = req["value"].asInt();
 
@@ -444,7 +443,7 @@ void MTAHAL::MTAHAL_GetCalls(IN const Json::Value& req, OUT Json::Value& respons
                         i+1,p->Codec,p->RemoteCodec,p->CallStartTime,p->CallEndTime,p->CWErrorRate,p->PktLossConcealment,p->JitterBufferAdaptive,p->Originator,p->RemoteIPAddress.Value,p->CallDuration,p->CWErrors,p->SNR,p->MicroReflections,p->DownstreamPower,p->UpstreamPower,p->EQIAverage,p->EQIMinimum,p->EQIMaximum,p->EQIInstantaneous,p->MOS_LQ,p->MOS_CQ,p->EchoReturnLoss,p->SignalLevel,p->NoiseLevel,p->LossRate,p->DiscardRate,p->BurstDensity,p->GapDensity,p->BurstDuration,p->GapDuration,p->RoundTripDelay,p->Gmin,p->RFactor,p->ExternalRFactor,p->JitterBufRate,p->JBNominalDelay,p->JBMaxDelay,p->JBAbsMaxDelay,p->TxPackets,p->TxOctets,p->RxPackets,p->RxOctets,p->PacketLoss,p->IntervalJitter);
                 if (strlen(details) < 512)
                 {
-                    d = details + strlen(details);                
+                    d = details + strlen(details);
                     p++;
                 }
                 else break;
@@ -463,7 +462,7 @@ void MTAHAL::MTAHAL_GetCalls(IN const Json::Value& req, OUT Json::Value& respons
         response["result"]="FAILURE";
         response["details"]="Failed to get the value";
     }
-    
+
     DEBUG_PRINT(DEBUG_TRACE,"\n MTAHAL_GetCalls --->Exit\n");
     return;
 }
@@ -491,7 +490,7 @@ void MTAHAL::MTAHAL_GetCALLP(IN const Json::Value& req, OUT Json::Value& respons
         response["result"]="FAILURE";
         response["details"]="NULL parameter as input argument";
         return;
-    }    
+    }
 
     value = req["value"].asInt();
     strcpy(paramType, req["paramType"].asCString());
@@ -513,7 +512,7 @@ void MTAHAL::MTAHAL_GetCALLP(IN const Json::Value& req, OUT Json::Value& respons
         response["result"]="FAILURE";
         response["details"]="Failed to get the value";
     }
-    
+
     DEBUG_PRINT(DEBUG_TRACE,"\n MTAHAL_GetCALLP --->Exit\n");
     return;
 }
@@ -542,7 +541,7 @@ void MTAHAL::MTAHAL_GetDSXLogs(IN const Json::Value& req, OUT Json::Value& respo
         returnValue = ssp_MTAHAL_GetDSXLogs(&count, &pLog);
     else
         returnValue = ssp_MTAHAL_GetDSXLogs(&count, NULL);
-     
+
     if(0 == returnValue)
     {
         if (pLog)
@@ -556,7 +555,7 @@ void MTAHAL::MTAHAL_GetDSXLogs(IN const Json::Value& req, OUT Json::Value& respo
                 sprintf(d, "Time=%s;Description=%s;ID=%u;Level=%u;",p->Time,p->Description,p->ID,p->Level);
                 if (strlen(details) < 512)
                 {
-                    d = details + strlen(details);                
+                    d = details + strlen(details);
                     p++;
                 }
                 else break;
@@ -575,7 +574,7 @@ void MTAHAL::MTAHAL_GetDSXLogs(IN const Json::Value& req, OUT Json::Value& respo
         response["result"]="FAILURE";
         response["details"]="Failed to get the value";
     }
-    
+
     DEBUG_PRINT(DEBUG_TRACE,"\n MTAHAL_GetDSXLogs --->Exit\n");
     return;
 }
@@ -600,7 +599,7 @@ void MTAHAL::MTAHAL_GetMtaLog(IN const Json::Value& req, OUT Json::Value& respon
 
     strcpy(paramType, req["paramType"].asCString());
 
-    if(strcmp(paramType, "NULL")) 
+    if(strcmp(paramType, "NULL"))
         returnValue = ssp_MTAHAL_GetMtaLog(&count, &pLog);
     else
         returnValue = ssp_MTAHAL_GetMtaLog(&count, NULL);
@@ -649,7 +648,7 @@ void MTAHAL::MTAHAL_GetMtaLog(IN const Json::Value& req, OUT Json::Value& respon
         response["result"]="FAILURE";
         response["details"]="Failed to get the value";
     }
-    
+
     DEBUG_PRINT(DEBUG_TRACE,"\n MTAHAL_GetMtaLog --->Exit\n");
     return;
 }
@@ -670,8 +669,21 @@ void MTAHAL::MTAHAL_GetDhcpStatus(IN const Json::Value& req, OUT Json::Value& re
     MTAMGMT_MTA_STATUS output_pIpv4status;
     MTAMGMT_MTA_STATUS output_pIpv6status;
     char *status_string[4] = { "MTA_INIT", "MTA_START", "MTA_COMPLETE", "MTA_ERROR" };
+    int isNegativeScenario = 0;
 
-    returnValue = ssp_MTAHAL_getDhcpStatus(&output_pIpv4status, &output_pIpv6status);
+    if(&req["flag"])
+    {
+       isNegativeScenario = req["flag"].asInt();
+    }
+    if(isNegativeScenario)
+    {
+       DEBUG_PRINT(DEBUG_TRACE, "Executing negative scenario\n");
+       returnValue  = ssp_MTAHAL_getDhcpStatus(NULL,NULL);
+    }
+    else
+    {
+       returnValue = ssp_MTAHAL_getDhcpStatus(&output_pIpv4status, &output_pIpv6status);
+    }
 
     if(0 == returnValue)
     {
@@ -684,7 +696,7 @@ void MTAHAL::MTAHAL_GetDhcpStatus(IN const Json::Value& req, OUT Json::Value& re
         response["result"]="FAILURE";
         response["details"]="Failed to get the value";
     }
-    
+
     DEBUG_PRINT(DEBUG_TRACE,"\n MTAHAL_GetDhcpStatus --->Exit\n");
     return;
 }
@@ -704,8 +716,21 @@ void MTAHAL::MTAHAL_GetConfigFileStatus(IN const Json::Value& req, OUT Json::Val
     char details[1024] = {'\0'};
     MTAMGMT_MTA_STATUS output_status;
     char *status_string[4] = { "MTA_INIT", "MTA_START", "MTA_COMPLETE", "MTA_ERROR" };
+    int isNegativeScenario = 0;
 
-    returnValue = ssp_MTAHAL_getConfigFileStatus(&output_status);
+    if(&req["flag"])
+    {
+       isNegativeScenario = req["flag"].asInt();
+    }
+    if(isNegativeScenario)
+    {
+       DEBUG_PRINT(DEBUG_TRACE, "Executing negative scenario\n");
+       returnValue = ssp_MTAHAL_getConfigFileStatus(NULL);
+    }
+    else
+    {
+       returnValue = ssp_MTAHAL_getConfigFileStatus(&output_status);
+    }
 
     if(0 == returnValue)
     {
@@ -718,7 +743,7 @@ void MTAHAL::MTAHAL_GetConfigFileStatus(IN const Json::Value& req, OUT Json::Val
         response["result"]="FAILURE";
         response["details"]="Failed to get the value";
     }
-    
+
     DEBUG_PRINT(DEBUG_TRACE,"\n MTAHAL_GetConfigFileStatus --->Exit\n");
     return;
 }
@@ -736,24 +761,37 @@ void MTAHAL::MTAHAL_GetLineRegisterStatus(IN const Json::Value& req, OUT Json::V
     DEBUG_PRINT(DEBUG_TRACE,"\n MTAHAL_GetLineRegisterStatus --->Entry \n");
     int returnValue = 0;
     char details[1024] = {'\0'}, *d;
-    MTAMGMT_MTA_STATUS status[8]; 
+    MTAMGMT_MTA_STATUS status[8];
     unsigned long array_size = 0;
     int i;
     char *status_string[4] = { "MTA_INIT", "MTA_START", "MTA_COMPLETE", "MTA_ERROR" };
+    int isNegativeScenario = 0;
+
+    if(&req["flag"])
+    {
+        isNegativeScenario = req["flag"].asInt();
+    }
 
     returnValue = ssp_MTAHAL_GetParamUlongValue("LineTableNumberOfEntries", &array_size);
-    
+
     if(0 == returnValue && array_size != 0)
     {
-        returnValue = ssp_MTAHAL_getLineRegisterStatus(status, array_size);
-        
+        if(isNegativeScenario)
+        {
+          DEBUG_PRINT(DEBUG_TRACE, "Executing negative scenario\n");
+          returnValue = ssp_MTAHAL_getLineRegisterStatus(NULL,NULL);
+        }
+        else
+        {
+          returnValue = ssp_MTAHAL_getLineRegisterStatus(status, array_size);
+        }
         if(0 == returnValue)
         {
             d = details;
             for (i=0; i<array_size; i++)
             {
                 sprintf(d, "Line %d=%s;", i+1, status_string[status[i]]);
-                d = details + strlen(details);                
+                d = details + strlen(details);
             }
             response["result"]="SUCCESS";
             response["details"]=details;
@@ -769,7 +807,7 @@ void MTAHAL::MTAHAL_GetLineRegisterStatus(IN const Json::Value& req, OUT Json::V
         response["result"]="FAILURE";
         response["details"]="Failed to get the value";
     }
-    
+
     DEBUG_PRINT(DEBUG_TRACE,"\n MTAHAL_GetLineRegisterStatus --->Exit\n");
     return;
 }
@@ -790,8 +828,21 @@ void MTAHAL::MTAHAL_GetHandsets(IN const Json::Value& req, OUT Json::Value& resp
     PMTAMGMT_MTA_HANDSETS_INFO pHandsets = NULL, p;
     unsigned long count = 0;
     int i;
+    int isNegativeScenario = 0;
 
-    returnValue = ssp_MTAHAL_GetHandsets(&count, &pHandsets);
+    if(&req["flag"])
+    {
+       isNegativeScenario = req["flag"].asInt();
+    }
+    if(isNegativeScenario)
+    {
+       DEBUG_PRINT(DEBUG_TRACE, "Executing negative scenario\n");
+       returnValue = ssp_MTAHAL_GetHandsets(NULL,NULL);
+    }
+    else
+    {
+      returnValue = ssp_MTAHAL_GetHandsets(&count, &pHandsets);
+    }
 
     if(0 == returnValue)
     {
@@ -855,7 +906,7 @@ void MTAHAL::MTAHAL_InitDB(IN const Json::Value& req, OUT Json::Value& response)
         response["result"] = "FAILURE";
         response["details"] = "MTAHAL_InitDB function has failed";
     }
-    
+
     DEBUG_PRINT(DEBUG_TRACE,"\n MTAHAL_InitDB --->Exit\n");
     return;
 }
@@ -886,7 +937,7 @@ void MTAHAL::MTAHAL_devResetNow(IN const Json::Value& req, OUT Json::Value& resp
         response["result"] = "FAILURE";
         response["details"] = "MTAHAL_devResetNow function has failed";
     }
-    
+
     DEBUG_PRINT(DEBUG_TRACE,"\n MTAHAL_devResetNow --->Exit\n");
     return;
 }
@@ -904,11 +955,24 @@ void MTAHAL::MTAHAL_getMtaOperationalStatus(IN const Json::Value& req, OUT Json:
     DEBUG_PRINT(DEBUG_TRACE,"\n MTAHAL_getMtaOperationalStatus --->Entry \n");
     int returnValue = 0;
     char details[100] = {'\0'};
-    MTAMGMT_MTA_STATUS status; 
+    MTAMGMT_MTA_STATUS status;
     char *status_string[4] = { "MTA_INIT", "MTA_START", "MTA_COMPLETE", "MTA_ERROR" };
-   
-    returnValue = ssp_MTAHAL_getMtaOperationalStatus(&status);
-    
+    int isNegativeScenario = 0;
+
+    if(&req["flag"])
+    {
+      isNegativeScenario = req["flag"].asInt();
+    }
+    if(isNegativeScenario)
+    {
+        DEBUG_PRINT(DEBUG_TRACE, "Executing negative scenario\n");
+        returnValue = ssp_MTAHAL_getMtaOperationalStatus(NULL);
+    }
+    else
+    {
+       returnValue = ssp_MTAHAL_getMtaOperationalStatus(&status);
+    }
+
     if(0 == returnValue)
     {
         sprintf(details, "MTA operational status: %s", status_string[status]);
@@ -921,7 +985,7 @@ void MTAHAL::MTAHAL_getMtaOperationalStatus(IN const Json::Value& req, OUT Json:
         response["result"] = "FAILURE";
         response["details"] = "Failed to get the value";
     }
-    
+
     DEBUG_PRINT(DEBUG_TRACE,"\n MTAHAL_getMtaOperationalStatus --->Exit\n");
     return;
 }
@@ -951,20 +1015,20 @@ void MTAHAL::MTAHAL_start_provisioning(IN const Json::Value& req, OUT Json::Valu
     char dhcpOption2171CccV6DssID2[65] = {'\0'};
 
     /* Validate the input arguments */
-    if(&req["mtaIPMode"]==NULL || 
-       &req["dhcpOption122Suboption1"]==NULL || 
-       &req["dhcpOption122Suboption2"]==NULL || 
+    if(&req["mtaIPMode"]==NULL ||
+       &req["dhcpOption122Suboption1"]==NULL ||
+       &req["dhcpOption122Suboption2"]==NULL ||
        &req["dhcpOption2171CccV6DssID1"]==NULL ||
        &req["dhcpOption2171CccV6DssID2"]==NULL)
     {
         response["result"]="FAILURE";
         response["details"]="NULL parameter as input argument";
         return;
-    }    
-    mtaIPMode = req["mtaIPMode"].asInt();    
-    strcpy(dhcpOption122Suboption1,req["dhcpOption122Suboption1"].asCString());    
+    }
+    mtaIPMode = req["mtaIPMode"].asInt();
+    strcpy(dhcpOption122Suboption1,req["dhcpOption122Suboption1"].asCString());
     strcpy(dhcpOption122Suboption2,req["dhcpOption122Suboption2"].asCString());
-    strcpy(dhcpOption2171CccV6DssID1,req["dhcpOption2171CccV6DssID1"].asCString());    
+    strcpy(dhcpOption2171CccV6DssID1,req["dhcpOption2171CccV6DssID1"].asCString());
     strcpy(dhcpOption2171CccV6DssID2,req["dhcpOption2171CccV6DssID2"].asCString());
 
     returnValue = ssp_MTAHAL_start_provisioning(mtaIPMode, dhcpOption122Suboption1, dhcpOption122Suboption2, dhcpOption2171CccV6DssID1, dhcpOption2171CccV6DssID2);
@@ -999,9 +1063,9 @@ void MTAHAL::MTAHAL_LineRegisterStatus_callback_register(IN const Json::Value& r
 {
     DEBUG_PRINT(DEBUG_TRACE,"\n MTAHAL_LineRegisterStatus_callback_register --->Entry \n");
     int returnValue = 0;
-   
+
     returnValue = ssp_MTAHAL_LineRegisterStatus_callback_register();
-    
+
     if(0 == returnValue)
     {
         DEBUG_PRINT(DEBUG_TRACE, "Successfully registered MTA Line Register Status Callback\n");
@@ -1013,7 +1077,7 @@ void MTAHAL::MTAHAL_LineRegisterStatus_callback_register(IN const Json::Value& r
         response["result"] = "FAILURE";
         response["details"] = "Failed to registered MTA Line Register Status Callback";
     }
-    
+
     DEBUG_PRINT(DEBUG_TRACE,"\n MTAHAL_LineRegisterStatus_callback_register --->Exit\n");
     return;
 }
