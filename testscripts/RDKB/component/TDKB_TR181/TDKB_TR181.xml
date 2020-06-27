@@ -17,15 +17,15 @@
  limitations under the License.
 -->
 <?xml version="1.0" encoding="UTF-8"?><xml>
-  <module name="TDKB_TR181" testGroup="Component">
+  <module testGroup="Component" name="TDKB_TR181">
     <primitiveTests>
-      <primitiveTest id="" name="TDKB_TR181Stub_Get" version="1">
+      <primitiveTest name="TDKB_TR181Stub_Get" id="" version="1">
         <function>TDKB_TR181Stub_Get</function>
         <parameters>
           <parameter name="ParamName" value=""/>
         </parameters>
       </primitiveTest>
-      <primitiveTest id=" " name="TDKB_TR181Stub_Set" version="1">
+      <primitiveTest name="TDKB_TR181Stub_Set" id=" " version="1">
         <function>TDKB_TR181Stub_Set</function>
         <parameters>
           <parameter name="ParamName" value=""/>
@@ -33,7 +33,7 @@
           <parameter name="Type" value=""/>
         </parameters>
       </primitiveTest>
-      <primitiveTest id=" " name="TDKB_TR181Stub_DelObject" version="1">
+      <primitiveTest name="TDKB_TR181Stub_DelObject" id=" " version="1">
         <function>TDKB_TR181Stub_DelObject</function>
         <parameters>
           <parameter name="paramName" value=""/>
@@ -49,6 +49,14 @@
         <function>TDKB_TR181Stub_SetMultiple</function>
         <parameters>
           <parameter name="paramList" value=""/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest name="TDKB_TR181Stub_SetOnly" id=" " version="1">
+        <function>TDKB_TR181Stub_SetOnly</function>
+        <parameters>
+          <parameter name="ParamName" value=" "/>
+          <parameter name="ParamValue" value=" "/>
+          <parameter name="Type" value=" "/>
         </parameters>
       </primitiveTest>
     </primitiveTests>
