@@ -19,15 +19,15 @@
 '''
 <?xml version="1.0" encoding="UTF-8"?><xml>
   <id/>
-  <version>5</version>
-  <name>TS_WIFIHAL_5GHzSetRadioDFSEnable</name>
+  <version>4</version>
+  <name>TS_WIFIHAL_2.4GHzSetRadioDFSEnable</name>
   <primitive_test_id/>
   <primitive_test_name>WIFIHAL_GetOrSetParamBoolValue</primitive_test_name>
   <primitive_test_version>3</primitive_test_version>
   <status>FREE</status>
-  <synopsis>Check DFS support for 5GHZ using wifi_getRadioDfsSupport  (), set DFS status using wifi_setRadioDfsEnable() and verify with wifi_getRadioDfsEnable()</synopsis>
+  <synopsis>Check DFS support of 2.4GHZ using wifi_getRadioDfsSupport  (), set DFS status using wifi_setRadioDfsEnable() and verify with wifi_getRadioDfsEnable()</synopsis>
   <groups_id/>
-  <execution_time>10</execution_time>
+  <execution_time>1</execution_time>
   <long_duration>false</long_duration>
   <advanced_script>false</advanced_script>
   <remarks/>
@@ -39,18 +39,16 @@
     <rdk_version>RDKB</rdk_version>
   </rdk_versions>
   <test_cases>
-    <test_case_id>TC_WIFIHAL_12</test_case_id>
-    <test_objective>Check DFS support using wifi_getRadioDfsSupport  (), set DFS status using wifi_setRadioDfsEnable() and verify with wifi_getRadioDfsEnable()</test_objective>
+    <test_case_id>TC_WIFIHAL_369</test_case_id>
+    <test_objective>Check DFS support of 2.4GHZ using wifi_getRadioDfsSupport  (), set DFS status using wifi_setRadioDfsEnable() and verify with wifi_getRadioDfsEnable()</test_objective>
     <test_type>Positive</test_type>
-    <test_setup>XB3. XB6, Emulator, Rpi</test_setup>
+    <test_setup>Broadband</test_setup>
     <pre_requisite>1.Ccsp Components  should be in a running state else invoke cosa_start.sh manually that includes all the ccsp components and TDK Component
 2.TDK Agent should be in running state or invoke it through StartTdk.sh script</pre_requisite>
     <api_or_interface_used>wifi_getRadioDfsSupport
 wifi_setRadioDfsEnable()
 wifi_getRadioDfEnable()</api_or_interface_used>
-    <input_parameters>methodName   :   getRadioDfsEnable
-methodName   :   setRadioDfsEnable
-radioIndex        :    1</input_parameters>
+    <input_parameters>None</input_parameters>
     <automation_approch>1. Load wifihal module
 2. Check if DFS is supported using wifi_getRadioDfsSupport()
 3. If supported, then using getRadioDfsEnable() get and save current DFS enable state. Else, exit the script
@@ -61,9 +59,9 @@ radioIndex        :    1</input_parameters>
     <expected_output>If DFS is supported, setting DFS enable state using  setRadioDfsEnable() should be success</expected_output>
     <priority>High</priority>
     <test_stub_interface>WIFIHAL</test_stub_interface>
-    <test_script>TS_WIFIHAL_5GHzSetRadioDFSEnable</test_script>
+    <test_script>TS_WIFIHAL_2.4GHzSetRadioDFSEnable</test_script>
     <skipped>No</skipped>
-    <release_version/>
+    <release_version>M78</release_version>
     <remarks/>
   </test_cases>
   <script_tags/>
@@ -74,16 +72,16 @@ radioIndex        :    1</input_parameters>
 import tdklib;
 from wifiUtility import *;
 
-radio = "5G"
+radio = "2.4G"
 
 #Test component to be tested
 obj = tdklib.TDKScriptingLibrary("wifihal","1");
 
 #IP and Port of box, No need to change,
-#This will be replaced with correspoing Box Ip and port while executing script
+#This will be replaced with corresponding DUT Ip and port while executing script
 ip = <ipaddress>
 port = <port>
-obj.configureTestCase(ip,port,'TS_WIFIHAL_5GHzSetRadioDFSEnable');
+obj.configureTestCase(ip,port,'TS_WIFIHAL_2.4GHzSetRadioDFSEnable');
 
 loadmodulestatus =obj.getLoadModuleResult();
 print "[LIB LOAD STATUS]  :  %s" %loadmodulestatus
@@ -105,9 +103,9 @@ if "SUCCESS" in loadmodulestatus.upper():
 
         if expectedresult in actualresult and "Enabled" in details.split(":")[1].strip():
             tdkTestObj.setResultStatus("SUCCESS");
-            print "TEST STEP 1: Get the device's 5GHZ DFS Support";
-            print "EXPECTED RESULT 1: Should get the device's 5GHZ DFS Support";
-            print "ACTUAL RESULT 1: DFS is supported by this device for 5GHZ";
+            print "TEST STEP 1: Get the device's 2.4GHZ DFS Support";
+            print "EXPECTED RESULT 1: Should get the device's 2.4GHZ DFS Support";
+            print "ACTUAL RESULT 1: DFS is supported by this device for 2.4GHZ";
             print "[TEST EXECUTION RESULT] 1: SUCCESS";
 
 	    getMethod = "getRadioDFSEnable"
@@ -115,6 +113,12 @@ if "SUCCESS" in loadmodulestatus.upper():
 	    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, 0, getMethod)
 
 	    if expectedresult in actualresult :
+                tdkTestObj.setResultStatus("SUCCESS");
+                print "TEST STEP 2: Get the DFS Enable state";
+                print "EXPECTED RESULT 2: DFS should be in disabled state for 2.4GHZ";
+                print "ACTUAL RESULT 2: DFS is in disabled state for 2.4GHZ";
+                print "[TEST EXECUTION RESULT] 1: SUCCESS";
+
 		enable = details.split(":")[1].strip()
 		if "Enabled" in enable:
 		    oldEnable = 1
@@ -127,11 +131,11 @@ if "SUCCESS" in loadmodulestatus.upper():
 		tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, newEnable, setMethod)
 
 		if expectedresult in actualresult :
-		    print "Enable state toggled using set"
 		    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, 0, getMethod)
 
 		    if expectedresult in actualresult and enable not in details.split(":")[1].strip():
-			print "SetEnable Success, verified with getEnable() api"
+                        tdkTestObj.setResultStatus("SUCCESS");
+                        print "SetEnable Success, verified with getEnable() api"
 			tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, oldEnable, setMethod)
 
 			if expectedresult in actualresult :
@@ -139,27 +143,30 @@ if "SUCCESS" in loadmodulestatus.upper():
 			else:
 			    print "Couldn't revert enable status"
 		    else:
-			print "Set validation with get api failed"
 			tdkTestObj.setResultStatus("FAILURE");
+                        print "Set validation with get api failed"
 		else:
 		    print "wifi_setRadioDFSEnable() call failed"
 		    tdkTestObj.setResultStatus("FAILURE");
 	    else:
-		print "wifi_getRadioDFSEnable() call failed"
-		tdkTestObj.setResultStatus("FAILURE");
+                tdkTestObj.setResultStatus("FAILURE");
+                print "TEST STEP 2: Get the DFS Enable state";
+                print "EXPECTED RESULT 2: DFS should be in disabled state for 2.4GHZ";
+                print "ACTUAL RESULT 2: wifi_getRadioDFSEnable() call failed"
+                print "[TEST EXECUTION RESULT] 1: FAILURE";
 
         elif expectedresult in actualresult and "Disabled" in details.split(":")[1].strip():
             tdkTestObj.setResultStatus("SUCCESS");
-            print "TEST STEP 1: Get the device's 5GHZ DFS Support";
-            print "EXPECTED RESULT 1: Should get the device's 5GHZ DFS Support";
-            print "ACTUAL RESULT 1: DFS is not supported by this device for 5GHZ";
+            print "TEST STEP 1: Get the device's 2.4GHZ DFS Support";
+            print "EXPECTED RESULT 1: Should get the device's 2.4GHZ DFS Support";
+            print "ACTUAL RESULT 1: DFS is not supported by this device for 2.4GHZ";
             print "[TEST EXECUTION RESULT] 1: SUCCESS";
 
-        else:
+	else:
             tdkTestObj.setResultStatus("FAILURE");
-            print "TEST STEP 1: Get the device's 5GHZ DFS Support";
-            print "EXPECTED RESULT 1: Should get the device's 5GHZ DFS Support";
-            print "ACTUAL RESULT 1: Failed to get device's 5GHZ DFS Support status";
+            print "TEST STEP 1: Get the device's 2.4GHZ DFS Support";
+            print "EXPECTED RESULT 1: Should get the device's 2.4GHZ DFS Support";
+            print "ACTUAL RESULT 1: Failed to get device's 2.4GHZ DFS Support status";
             print "[TEST EXECUTION RESULT] 1: FAILURE";
 
     obj.unloadModule("wifihal");
