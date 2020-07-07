@@ -19,11 +19,11 @@
 '''
 <?xml version="1.0" encoding="UTF-8"?><xml>
   <id/>
-  <version>1</version>
+  <version>2</version>
   <name>TS_WIFIHAL_GetBandSteeringLog</name>
   <primitive_test_id/>
   <primitive_test_name>WIFIHAL_GetBandSteeringLog</primitive_test_name>
-  <primitive_test_version>1</primitive_test_version>
+  <primitive_test_version>2</primitive_test_version>
   <status>FREE</status>
   <synopsis>To check for the successful invocation of GetBandSteeringLog</synopsis>
   <groups_id/>
@@ -34,7 +34,6 @@
   <skip>false</skip>
   <box_types>
     <box_type>Broadband</box_type>
-    <box_type>RPI</box_type>
   </box_types>
   <rdk_versions>
     <rdk_version>RDKB</rdk_version>
@@ -44,7 +43,7 @@
     <test_objective>To check for the successful invocation of
 wifi_getBandSteeringLog</test_objective>
     <test_type>Positive</test_type>
-    <test_setup>Broadband,Emulator,RPI</test_setup>
+    <test_setup>Broadband</test_setup>
     <pre_requisite>1.Ccsp Components  should be in a running state else invoke cosa_start.sh manually that includes all the ccsp components and TDK Component
 2.TDK Agent should be in running state or invoke it through StartTdk.sh script
 </pre_requisite>
@@ -63,7 +62,9 @@ radioIndex : 1</input_parameters>
     <release_version/>
     <remarks/>
   </test_cases>
+  <script_tags/>
 </xml>
+
 '''
 # use tdklib library,which provides a wrapper for tdk testcase script
 import tdklib;
@@ -101,7 +102,7 @@ if "SUCCESS" in loadmodulestatus.upper():
        print "EXPECTED RESULT 1:API should be invoked sucessfully"
        print "ACTUAL RESULT 1: %s"%details
        print "[TEST EXECUTION RESULT] : SUCCESS";
-       
+
        pSteeringTime = details.split(':')[1].split(',')[0].strip()
        pSteeringReason = details.split(':')[2].strip()
        if pSteeringTime and pSteeringReason :
@@ -124,16 +125,9 @@ if "SUCCESS" in loadmodulestatus.upper():
         print "ACTUAL RESULT 1: Failed to invoke wifi_getBandSteeringLog"
         #Get the result of execution
         print "[TEST EXECUTION RESULT] : FAILURE";
-
-
-
     obj.unloadModule("wifihal");
 else:
     print "Failed to load the module";
     obj.setLoadModuleStatus("FAILURE");
     print "Module loading failed";
-
-
-
-
 
