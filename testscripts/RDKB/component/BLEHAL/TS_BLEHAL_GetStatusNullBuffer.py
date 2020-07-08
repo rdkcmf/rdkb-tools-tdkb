@@ -98,7 +98,7 @@ if "SUCCESS" in loadmodulestatus.upper() :
         tdkTestObj.setResultStatus("SUCCESS");
         print "TEST STEP 1: Get BLE status on passing null buffer";
         print "EXPECTED RESULT 1: Should not get the value on passing null buffer";
-        print "ACTUAL RESULT 1: %s" %Details;
+        print "ACTUAL RESULT 1: %s" %details;
         #Get the result of execution
         print "[TEST EXECUTION RESULT] : SUCCESS";
     else:
@@ -106,7 +106,7 @@ if "SUCCESS" in loadmodulestatus.upper() :
         tdkTestObj.setResultStatus("FAILURE");
         print "TEST STEP 1: Get BLE status on passing null buffer";
         print "EXPECTED RESULT 1:Should not get the value on passing null buffer";
-        print "ACTUAL RESULT 1: %s" %Details;
+        print "ACTUAL RESULT 1: %s" %details;
         #Get the result of execution
         print "[TEST EXECUTION RESULT] : FAILURE";
 
