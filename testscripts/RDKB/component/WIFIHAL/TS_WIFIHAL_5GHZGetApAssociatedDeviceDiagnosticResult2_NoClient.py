@@ -56,7 +56,7 @@
     <!--  -->
   </rdk_versions>
   <test_cases>
-    <test_case_id>TC_WIFIHAL_374</test_case_id>
+    <test_case_id>TC_WIFIHAL_375</test_case_id>
     <test_objective>Check if wifi_getApAssociatedDeviceDiagnosticResult2() is returning success and empty buffer for 5GHZ when there are no associated devices</test_objective>
     <test_type>Positive</test_type>
     <test_setup>Broadband</test_setup>

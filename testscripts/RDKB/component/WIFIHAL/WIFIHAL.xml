@@ -341,6 +341,20 @@
           <parameter name="mode" value=""/>
         </parameters>
       </primitiveTest>
+      <primitiveTest name="WIFIHAL_GetRadioMode" id=" " version="1">
+        <function>WIFIHAL_GetRadioMode</function>
+        <parameters>
+          <parameter name="radioIndex" value=""/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest name="WIFIHAL_SetRadioMode" id=" " version="1">
+        <function>WIFIHAL_SetRadioMode</function>
+        <parameters>
+          <parameter name="chnmode" value=""/>
+          <parameter name="puremode" value=""/>
+          <parameter name="radioIndex" value=""/>
+        </parameters>
+      </primitiveTest>
     </primitiveTests>
   </module>
 </xml>
