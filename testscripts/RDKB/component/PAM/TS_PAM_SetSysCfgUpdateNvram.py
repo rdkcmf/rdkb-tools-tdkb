@@ -365,7 +365,7 @@ if "SUCCESS" in (loadmodulestatus.upper() and sysobjloadmodulestatus.upper()):
             tdkTestObj.setResultStatus("FAILURE");
             print "TEST STEP 1: Get the SysCfg UpdateNvram Value";
             print "EXPECTED RESULT 1: Should get the SysCfg UpdateNvram Value";
-            print "ACTUAL RESULT 1: Failed to get the SysCfg UpdateNvram Value: %s" %details;
+            print "ACTUAL RESULT 1: Failed to get the SysCfg UpdateNvram Value";
             print "[TEST EXECUTION RESULT] : FAILURE";
     else:
         #Set the result status of execution
