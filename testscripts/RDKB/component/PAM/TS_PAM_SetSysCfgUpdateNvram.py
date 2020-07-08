@@ -68,7 +68,7 @@
 2. Get the secured location of syscfg file from platform properties file
 3. Get the initial value of Syscfg.UpdateNvram parameter and store it
 4. If the initial Syscfg.UpdateNvram value was true, then check both syscfg files (in nvram location and secured location) are present, if the initial Syscfg.UpdateNvram value was false then check syscfg file in temporary location(from nvram) is not present and secured location file only present
-5. Set the UpdateNvram value as false/true opposite to initial Syscfg.UpdateNvram value and check the syscfg file availability depends on the new set value
+5. Toggle the UpdateNvram value and check the syscfg file availability based on the new set value
 6. Revert the Syscfg.UpdateNvramvalue to initial value
 7. Unload the pam module</automation_approch>
     <expected_output>Syscfg file in Nvram location should be deleted if SysCfg.UpdateNvram parameter set to false</expected_output>

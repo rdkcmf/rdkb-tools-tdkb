@@ -847,6 +847,41 @@ void CMHAL::CMHAL_GetStatusOfdmaUsTable(IN const Json::Value& req, OUT Json::Val
     return;
 }
 
+/*******************************************************************************************
+ *
+ * Function Name    : CMHAL_IsEnergyDetected
+ * Description      : This will get the Energy Detected status from HAL
+ 
+ * @param [in]  req - none
+ * @param [out] response - filled with SUCCESS or FAILURE based on the return value
+ *
+ *******************************************************************************************/
+void CMHAL::CMHAL_IsEnergyDetected(IN const Json::Value& req, OUT Json::Value& response)
+{
+    DEBUG_PRINT(DEBUG_TRACE,"\n CMHAL_IsEnergyDetected --->Entry \n");
+    int returnValue = 0;
+    char* energyDetected = 0;
+    char Details[800] = {'\0'};
+
+    returnValue = ssp_CMHAL_IsEnergyDetected(energyDetected);
+    if(0 == returnValue)
+    {
+       if(energyDetected != NULL)
+       {
+           sprintf(Details,"CMHAL_IsEnergyDetected:%d", energyDetected);
+           response["result"]="SUCCESS";
+           response["details"]=Details;
+       }
+    }
+    else
+    {
+       response["result"]="FAILURE";
+       response["details"]="Failed to get the value from docsis_IsEnergyDetected()";
+    }
+    DEBUG_PRINT(DEBUG_TRACE,"\n CMHAL_IsEnergyDetected --->Exit\n");
+    return;
+}
+
 /**************************************************************************
  * Function Name        : CreateObject
 * Description  : This function will be used to create a new object for the

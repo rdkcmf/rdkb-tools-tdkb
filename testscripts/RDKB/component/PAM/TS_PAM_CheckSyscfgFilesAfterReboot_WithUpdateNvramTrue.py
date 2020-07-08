@@ -65,9 +65,9 @@
     <api_or_interface_used>N/A</api_or_interface_used>
     <input_parameters>Device.DeviceInfo.X_RDKCENTRAL-COM_RFC.Feature.SysCfg.UpdateNvram</input_parameters>
     <automation_approch>1. Load the pam module
-2. Get the secured location of syscfg file trough platform properties file
+2. Get the secured location of syscfg file from platform properties file
 3. Get the initial value of Syscfg.UpdateNvram parameter and store it
-4. If the initial Syscfg.UpdateNvram value was true set falsg as 1 if not set the Syscfg.UpdateNvram value as True then check both syscfg files (in nvram location and secured location) are present
+4. If the initial Syscfg.UpdateNvram value was true set flag as 1 if not set the Syscfg.UpdateNvram value as True then check both syscfg files (in nvram location and secured location) are present
 5. Remove the the syscfg files from nvram and secured location and make sure files got removed successfully
 6. Reboot the DUT then check syscfg files got restored in secured location and temporary location since UpdateNvram value was true after reboot
 7. Revert the Syscfg.UpdateNvramvalue to initial value
