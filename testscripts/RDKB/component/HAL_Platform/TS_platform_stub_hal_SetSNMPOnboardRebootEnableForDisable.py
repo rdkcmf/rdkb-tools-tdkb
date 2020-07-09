@@ -25,7 +25,7 @@
   <primitive_test_name>platform_stub_hal_SetSNMPOnboardRebootEnable</primitive_test_name>
   <primitive_test_version>3</primitive_test_version>
   <status>FREE</status>
-  <synopsis>To validate the platfrom hal api platform_hal_SetSNMPOnboardRebootEnable by passing disable value</synopsis>
+  <synopsis>To validate the platform hal api platform_hal_SetSNMPOnboardRebootEnable by passing disable value</synopsis>
   <groups_id/>
   <execution_time>20</execution_time>
   <long_duration>false</long_duration>
@@ -47,14 +47,16 @@
 2.TDK Agent should be in running state or invoke it through StartTDK.sh script</pre_requisite>
     <api_or_interface_used>platform_hal_SetSNMPOnboardRebootEnable()</api_or_interface_used>
     <input_parameters>SNMPonboard - indicates whether to go for a reboot</input_parameters>
-    <automation_approch>1.Load  platform module.
-2.Invoke the platform HAL API platform_hal_SetSNMPOnboardRebootEnable by passing disable value
-3.Check for successful set operation
-4.Initiate a Reboot through SNMP
-5.Check for the uptime to ensure device did not go for a reboot.
-5.Now the device should  not go for a reboot
-6.Validation of  the result is done within the python script and send the result status to Test Manager.
-7.Test Manager will publish the result in GUI as PASS/FAILURE based on the response from HAL_Platform stub</automation_approch>
+    <automation_approch>1.Load the module.
+2.Get the current uptime of the device and store the value.
+3.Invoke the platform HAL API platform_hal_SetSNMPOnboardRebootEnable by passing disable value
+4.Check for successful set operation
+5.Initiate a Reboot through SNMP
+6.Get the uptime and the uptime should be greater than the previously stored uptime to ensure device did not go for a reboot.
+7.Now the device should  not go for a reboot
+8.Validation of  the result is done within the python script and send the result status to Test Manager.
+9.Test Manager will publish the result in GUI as PASS/FAILURE based on the response from HAL_Platform stub
+10.Unload the module</automation_approch>
     <expected_output>The  set operation should be success and DUT should not go for  reboot.</expected_output>
     <priority>High</priority>
     <test_stub_interface>HAL_PLATFORM</test_stub_interface>
@@ -74,112 +76,126 @@ from time import sleep;
 #Test component to be tested
 obj = tdklib.TDKScriptingLibrary("halplatform","1");
 obj1= tdklib.TDKScriptingLibrary("sysutil","1");
+obj2 = tdklib.TDKScriptingLibrary("pam","1");
 #IP and Port of box, No need to change,
 #This will be replaced with correspoing Box Ip and port while executing script
 ip = <ipaddress>
 port = <port>
 obj.configureTestCase(ip,port,'TS_platform_stub_hal_SetSNMPOnboardRebootEnableForDisbale');
 obj1.configureTestCase(ip,port,'TS_platform_stub_hal_SetSNMPOnboardRebootEnableForDisable');
-
-#Get the result of connection with test component and STB
+obj2.configureTestCase(ip,port,'TS_platform_stub_hal_SetSNMPOnboardRebootEnableForDisable');
+#Get the result of connection with test component and DUT
 result =obj.getLoadModuleResult();
 result1 = obj1.getLoadModuleResult();
-
+result2 = obj2.getLoadModuleResult()
 print "[LIB LOAD STATUS]  :  %s" %result;
 print "[LIB LOAD STATUS]  :  %s" %result1;
+print "[LIB LOAD STATUS]  :  %s" %result2;
 
-if "SUCCESS" in (result.upper() and result1.upper()) :
+if "SUCCESS" in result.upper() and "SUCCESS" in result1.upper() and "SUCCESS" in result2.upper():
 
    obj.setLoadModuleStatus("SUCCESS");
-   #Prmitive test case which associated to this Script
-   tdkTestObj = obj.createTestStep('platform_stub_hal_SetSNMPOnboardRebootEnable');
-   expectedresult ="SUCCESS"
-   setValue = "disable"
-   tdkTestObj.addParameter("SNMPonboard",setValue)
-   #Execute the test case in STB
-   tdkTestObj.executeTestCase("expectedresult");
-   #Get the result of execution
+   obj1.setLoadModuleStatus("SUCCESS");
+   obj2.setLoadModuleStatus("SUCCESS");
+
+   tdkTestObj = obj2.createTestStep('pam_GetParameterValues');
+   tdkTestObj.addParameter("ParamName","Device.DeviceInfo.UpTime");
+   expectedresult="SUCCESS";
+
+   #Execute the test case in DUT
+   tdkTestObj.executeTestCase(expectedresult);
    actualresult = tdkTestObj.getResult();
-   details = tdkTestObj.getResultDetails();
+   Olduptime = tdkTestObj.getResultDetails();
+
    if expectedresult in actualresult:
-      print" TEST STEP 1: Set the SetSNMPOnboardRebootEnable to false";
-      print" EXPECTED  RESULT 1: Should succesfully set the SetSNMPOnboardRebootEnable";
-      print" ACTUAL RESULT 1: %s" %details
-      print "[TEST EXECUTION RESULT] : %s" %actualresult;
+      #Set the result status of execution
       tdkTestObj.setResultStatus("SUCCESS");
-      # Resetting device using snmp command
-      #Get the Community String
-      communityString = snmplib.getCommunityString(obj1,"snmpset");
-      #Get the IP Address
-      ipaddress = snmplib.getIPAddress(obj1);
-      ########## Script to Execute the snmp command ###########
-      actResponse =snmplib.SnmpExecuteCmd("snmpset", communityString, "-v 2c", "1.3.6.1.2.1.69.1.1.3.0 i 1", ipaddress);
-      if "INTEGER" in actResponse:
-         print "TEST STEP2 : Check for  successful SNMP set"
-         print "EXPECTED RESULT 1:Should successfully set the SNMP OID for reboot"
-         print"ACTUAL RESULT 2: SNMP set for reboot successful"
-         print "[TEST EXECUTION RESULT]: SUCCESS";
+      print "STEP 1 :Get the uptime";
+      print "EXPECTED RESULT 1: Should return the uptime successfully";
+      print "ACTUAL RESULT 1:UpTime before reboot is %s" %Olduptime;
+      print "[TEST EXECUTION RESULT]: SUCCESS";
+      tdkTestObj.setResultStatus("SUCCESS");
+
+      #Prmitive test case which associated to this Script
+      tdkTestObj = obj.createTestStep('platform_stub_hal_SetSNMPOnboardRebootEnable');
+      expectedresult ="SUCCESS"
+      setValue = "disable"
+      tdkTestObj.addParameter("SNMPonboard",setValue)
+      #Execute the test case in DUT
+      tdkTestObj.executeTestCase("expectedresult");
+      #Get the result of execution
+      actualresult = tdkTestObj.getResult();
+      details = tdkTestObj.getResultDetails();
+      if expectedresult in actualresult:
+         print" TEST STEP 2: Set the SetSNMPOnboardRebootEnable to false";
+         print" EXPECTED  RESULT 2: Should successfully set the SetSNMPOnboardRebootEnable";
+         print" ACTUAL RESULT 2: %s" %details
+         print"[TEST EXECUTION RESULT] : %s" %actualresult;
+
          tdkTestObj.setResultStatus("SUCCESS");
-
-         #sleep for one minute and check uptime
-         sleep(60);
-
-         #checking for uptime to ensure device did not go for a reboot
-         query = "uptime "
-         print "query:%s" %query
-         tdkTestObj = obj1.createTestStep('ExecuteCmd');
-         tdkTestObj.addParameter("command", query)
-         expectedresult="SUCCESS";
-         tdkTestObj.executeTestCase(expectedresult);
-         actualresult = tdkTestObj.getResult();
-         details= tdkTestObj.getResultDetails().strip().replace("\\n","");
-
-         if expectedresult in actualresult:
-            uptime =int(details.split("up")[1].split(",")[0].split(":")[1].replace(" ",""));
-            print "uptime:",uptime
-            print" STEP 3: Get the uptime of the device";
-            print" EXPECTED  RESULT 3: Should get the uptime of the device";
-            print" ACTUAL RESULT 3: %s" %details
-            print "[TEST EXECUTION RESULT] : %s" %actualresult;
+         # Resetting device using snmp command
+         #Get the Community String
+         communityString = snmplib.getCommunityString(obj1,"snmpset");
+         #Get the IP Address
+         ipaddress = snmplib.getIPAddress(obj1);
+         ########## Script to Execute the snmp command ###########
+         actResponse =snmplib.SnmpExecuteCmd("snmpset", communityString, "-v 2c", "1.3.6.1.2.1.69.1.1.3.0 i 1", ipaddress);
+         if "INTEGER" in actResponse:
+            print "TEST STEP 3 : Check for  successful SNMP set"
+            print "EXPECTED RESULT 3:Should successfully set the SNMP OID for reboot"
+            print"ACTUAL RESULT 3: SNMP set for reboot successful"
+            print "[TEST EXECUTION RESULT]: SUCCESS";
             tdkTestObj.setResultStatus("SUCCESS");
-            if uptime > 1:
-               print" STEP 4: uptime should be greater than one min";
-               print" EXPECTED  RESULT 4: Should get the uptime greater than one min";
-               print" ACTUAL RESULT 4: %s" %details
-               print "[TEST EXECUTION RESULT] :SUCCESS";
+
+            #sleep for one minute and check uptime
+            sleep(60);
+
+            #checking for uptime to ensure device did not go for a reboot
+            tdkTestObj = obj2.createTestStep('pam_GetParameterValues');
+            tdkTestObj.addParameter("ParamName","Device.DeviceInfo.UpTime");
+            expectedresult="SUCCESS";
+            #Execute the test case in DUT
+            tdkTestObj.executeTestCase(expectedresult);
+            actualresult = tdkTestObj.getResult();
+            curuptime = tdkTestObj.getResultDetails();
+            if expectedresult in actualresult and int(curuptime) > int(Olduptime):
+               print" TEST STEP 4: Get the uptime of the device after disabling snmp reboot";
+               print" EXPECTED RESULT 4: Should get the uptime of the device greater than previous retrieved uptime";
+               print" ACTUAL RESULT 4: Uptime before disabling reboot is %s greater than old uptime %s" %(curuptime,Olduptime);
+               print"[TEST EXECUTION RESULT] : SUCCESS";
                tdkTestObj.setResultStatus("SUCCESS");
             else:
-                print" STEP 4: uptime should be greater than one min";
-                print" EXPECTED  RESULT 4: Should get the uptime greater than one min";
-                print" ACTUAL RESULT 4: %s" %details
-                print "[TEST EXECUTION RESULT]: FAILURE";
+                print" TEST STEP 4: Get the uptime of the device after disabling snmp reboot";
+                print" EXPECTED RESULT 4: Should get the uptime of the device greater than previous retrieved uptime";
+                print" ACTUAL RESULT 4: Uptime before disabling reboot is %s greater than old uptime %s" %(curuptime,Olduptime);
+                print"[TEST EXECUTION RESULT] : FAILURE";
                 tdkTestObj.setResultStatus("FAILURE");
-
          else:
-              print" TEST STEP 3: Get the uptime of the device";
-              print" EXPECTED  RESULT 3: Should get the uptime of the device";
-              print" ACTUAL RESULT 3: %s" %details
-              print "[TEST EXECUTION RESULT] : %s" %actualresult;
-              tdkTestObj.setResultStatus("FAILURE");
-
+             #Set the result status of execution
+             print "TEST STEP 3 : Check for  successful SNMP set"
+             print "EXPECTED RESULT 3:Should successfully set the SNMP OID for reboot"
+             print "ACTUAL RESULT 3: SNMP set failed for reboot"
+             print "[TEST EXECUTION RESULT]: FAILURE";
+             tdkTestObj.setResultStatus("FAILURE");
       else:
-          #Set the result status of execution
-          print "TEST STEP2 : Check for  successful SNMP set"
-          print "EXPECTED RESULT 1:Should successfully set the SNMP OID for reboot"
-          print"ACTUAL RESULT 2: SNMP set failed for reboot"
-          print "[TEST EXECUTION RESULT]: FAILURE";
+          print" TEST STEP 2: Set the SetSNMPOnboardRebootEnable false";
+          print" EXPECTED  RESULT 2: Should successfully set the SetSNMPOnboardRebootEnable";
+          print" ACTUAL RESULT 2: %s" %details
+          print "[TEST EXECUTION RESULT] : %s" %actualresult;
           tdkTestObj.setResultStatus("FAILURE");
    else:
-       print" TEST STEP 1: Set the SetSNMPOnboardRebootEnable false";
-       print" EXPECTED  RESULT 1: Should succesfully set the SetSNMPOnboardRebootEnable";
-       print" ACTUAL RESULT 1: %s" %details
-       print "[TEST EXECUTION RESULT] : %s" %actualresult;
+       #Set the result status of execution
+       tdkTestObj.setResultStatus("FAILURE");
+       print "STEP 1 :Get the uptime";
+       print "EXPECTED RESULT 1: Should return the uptime successfully";
+       print "ACTUAL RESULT 1:UpTime before reboot is %s" %Olduptime;
+       print "[TEST EXECUTION RESULT]: SUCCESS";
        tdkTestObj.setResultStatus("FAILURE");
 
    obj.unloadModule("halplatform");
    obj1.unloadModule("sysutil");
+   obj2.unloadModule("pam");
 else:
     print "Failed to load the module";
     obj.setLoadModuleStatus("FAILURE");
     print "Module loading failed";
-
