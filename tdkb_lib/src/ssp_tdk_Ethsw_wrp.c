@@ -20,6 +20,8 @@
 #define MAXBITRATE_10    10
 #define MAXBITRATE_100   100
 #define MAXBITRATE_1000  1000
+#define MAXBITRATE_2500  2500
+#define MAXBITRATE_5000  5000
 #define MAXBITRATE_10000 10000
 #define MAXBITRATE_AUTO  1
 #define INVALID_VALUE -1
@@ -148,6 +150,16 @@ int ssp_ethsw_stub_hal_GetPortCfg(int portId, char *pDuplexMode, int *pLinkRate,
 			case CCSP_HAL_ETHSW_LINK_1Gbps:
 				{
 					*pLinkRate = MAXBITRATE_1000;
+					break;
+				}
+			case CCSP_HAL_ETHSW_LINK_2_5Gbps:
+				{
+					*pLinkRate = MAXBITRATE_2500;
+					break;
+				}
+			case CCSP_HAL_ETHSW_LINK_5Gbps:
+				{
+					*pLinkRate = MAXBITRATE_5000;
 					break;
 				}
 			case CCSP_HAL_ETHSW_LINK_10Gbps:
@@ -286,6 +298,16 @@ int ssp_ethsw_stub_hal_GetPort_Status(int portId, char *pLinkStatus, int *pLinkR
 			case CCSP_HAL_ETHSW_LINK_1Gbps:
 				{
 					*pLinkRate = MAXBITRATE_1000;
+					break;
+				}
+			case CCSP_HAL_ETHSW_LINK_2_5Gbps:
+				{
+					*pLinkRate = MAXBITRATE_2500;
+					break;
+				}
+			case CCSP_HAL_ETHSW_LINK_5Gbps:
+				{
+					*pLinkRate = MAXBITRATE_5000;
 					break;
 				}
 			case CCSP_HAL_ETHSW_LINK_10Gbps:
@@ -487,6 +509,16 @@ int ssp_ethsw_stub_hal_SetPortCfg(int portId, int linkRate, char *pDuplexMode)
 		case MAXBITRATE_1000:
 			{
 				setLinkRate = CCSP_HAL_ETHSW_LINK_1Gbps;
+				break;
+			}
+		case MAXBITRATE_2500:
+			{
+				setLinkRate = CCSP_HAL_ETHSW_LINK_2_5Gbps;
+				break;
+			}
+		case MAXBITRATE_5000:
+			{
+				setLinkRate = CCSP_HAL_ETHSW_LINK_5Gbps;
 				break;
 			}
 		case MAXBITRATE_10000:
