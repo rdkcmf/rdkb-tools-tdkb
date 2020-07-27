@@ -617,6 +617,8 @@ int ssp_WIFIHALGetOrSetParamIntValue(int radioIndex, int* output, char* method)
         return_status = wifi_setApCsaDeauth(radioIndex, *output);
     else if(!strcmp(method, "setBSSTransitionActivation"))
         return_status = wifi_setBSSTransitionActivation(radioIndex, *output);
+    else if(!strcmp(method, "setApDTIMInterval"))
+          return_status = wifi_setApDTIMInterval(radioIndex, *output);
     else
     {
         return_status = SSP_FAILURE;
