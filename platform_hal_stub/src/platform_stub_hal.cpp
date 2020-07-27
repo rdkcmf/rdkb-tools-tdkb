@@ -1853,13 +1853,6 @@ void platform_stub_hal::platform_stub_hal_SetSNMPOnboardRebootEnable(IN const Js
         }
         strcpy(setFlag, req["SNMPonboard"].asCString());
 
-        if(strcmp(setFlag,"enable") != 0 && strcmp(setFlag,"disable") != 0)
-        {
-		response["result"] = "FAILURE";
-                response["details"] = "Invalid parameter as input argument";
-                return;
-	}
-
         if(ssp_SetSNMPOnboardRebootEnable(setFlag) == RETURN_SUCCESS)
         {
                 response["result"] = "SUCCESS";
