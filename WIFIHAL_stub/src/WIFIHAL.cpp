@@ -2630,4 +2630,37 @@ void WIFIHAL::WIFIHAL_SetRadioMode(IN const Json::Value& req, OUT Json::Value& r
     DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_SetRadioMode ----->Exit\n");
     return;
 }
-
+/*******************************************************************************************
+ *
+ * Function Name        : WIFIHAL_GetApIndexFromName
+ * Description          : This function invokes WiFi hal api wifi_getApIndexFromName()
+ * @param [in] req-     : param     - the ssid name to be passed
+ * @param [out] response - Access Point index, to be returned 
+ *
+ ********************************************************************************************/
+void WIFIHAL::WIFIHAL_GetApIndexFromName (IN const Json::Value& req, OUT Json::Value& response)
+{
+    DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_GetApIndexFromName ----->Entry\n");
+    int returnValue;
+    int output = 1;
+    char ssidName[10] = {'\0'};
+    char details[200] = {'\0'};
+    strcpy(ssidName, req["param"].asCString());
+    returnValue = ssp_WIFIHALGetApIndexFromName(ssidName, &output);
+    if(0 == returnValue)
+       {
+            DEBUG_PRINT(DEBUG_TRACE,"\n output: %d\n",output);
+            sprintf(details, "Value returned is :%d", output);
+            response["result"]="SUCCESS";
+            response["details"]=details;
+            return;
+       }
+    else
+       {
+            sprintf(details, "GetApIndexFromName operation failed");
+            response["result"]="FAILURE";
+            response["details"]=details;
+            return;
+       }
+    DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_GetApIndexFromName  --->Exit\n");
+}
