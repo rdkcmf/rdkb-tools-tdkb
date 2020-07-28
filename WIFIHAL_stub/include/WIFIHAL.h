@@ -407,6 +407,7 @@ extern "C"
     int ssp_WIFIHALGetOrSetParamIntValue(int radioIndex, int *output, char* methodName);
     int ssp_WIFIHALGetOrSetParamUIntValue(int radioIndex, unsigned int *output, char* methodName);
     int ssp_WIFIHALGetIndexFromName(char* ssidName, int *output);
+    int ssp_WIFIHALGetApIndexFromName(char* ssidName, int *output);
     int ssp_WIFIHALClearRadioResetCount();
     int ssp_WIFIHALReset();
     int ssp_WIFIHALDown();
@@ -462,6 +463,8 @@ class WIFIHAL : public RDKTestStubInterface, public AbstractServer<WIFIHAL>
 		  this->bindAndAddMethod(Procedure("WIFIHAL_GetOrSetParamIntValue", PARAMS_BY_NAME, JSON_STRING,"methodName", JSON_STRING,"radioIndex", JSON_INTEGER, "param", JSON_INTEGER, "paramType",  JSON_STRING,NULL), &WIFIHAL::WIFIHAL_GetOrSetParamIntValue);
 	 	  this->bindAndAddMethod(Procedure("WIFIHAL_GetOrSetParamUIntValue", PARAMS_BY_NAME, JSON_STRING,"methodName", JSON_STRING,"radioIndex", JSON_INTEGER, "param", JSON_INTEGER, "paramType",  JSON_STRING,NULL), &WIFIHAL::WIFIHAL_GetOrSetParamUIntValue);
 		  this->bindAndAddMethod(Procedure("WIFIHAL_GetIndexFromName", PARAMS_BY_NAME, JSON_STRING, "param", JSON_STRING,NULL), &WIFIHAL::WIFIHAL_GetIndexFromName);
+                  this->bindAndAddMethod(Procedure("WIFIHAL_GetApIndexFromName", PARAMS_BY_NAME, JSON_STRING, "param", JSON_STRING,NULL), &WIFIHAL::WIFIHAL_GetApIndexFromName);
+
 		  this->bindAndAddMethod(Procedure("WIFIHAL_ClearRadioResetCount", PARAMS_BY_NAME, JSON_STRING, NULL), &WIFIHAL::WIFIHAL_ClearRadioResetCount);
                   this->bindAndAddMethod(Procedure("WIFIHAL_Reset", PARAMS_BY_NAME, JSON_STRING, NULL), &WIFIHAL::WIFIHAL_Reset);
                   this->bindAndAddMethod(Procedure("WIFIHAL_GetOrSetSecurityRadiusServer", PARAMS_BY_NAME, JSON_STRING,"methodName", JSON_STRING,"radioIndex", JSON_INTEGER, "port", JSON_INTEGER, "IPAddress", JSON_STRING, "RadiusSecret", JSON_STRING, "paramType",  JSON_STRING,NULL), &WIFIHAL::WIFIHAL_GetOrSetSecurityRadiusServer);
@@ -520,6 +523,7 @@ class WIFIHAL : public RDKTestStubInterface, public AbstractServer<WIFIHAL>
         void WIFIHAL_GetOrSetParamIntValue(IN const Json::Value& req, OUT Json::Value& response);
         void WIFIHAL_GetOrSetParamUIntValue(IN const Json::Value& req, OUT Json::Value& response);
 	void WIFIHAL_GetIndexFromName(IN const Json::Value& req, OUT Json::Value& response);
+        void WIFIHAL_GetApIndexFromName(IN const Json::Value& req, OUT Json::Value& response);
 	void WIFIHAL_ClearRadioResetCount(IN const Json::Value& req, OUT Json::Value& response);
 	void WIFIHAL_Reset(IN const Json::Value& req, OUT Json::Value& response);
 	void WIFIHAL_GetOrSetSecurityRadiusServer(IN const Json::Value& req, OUT Json::Value& response);

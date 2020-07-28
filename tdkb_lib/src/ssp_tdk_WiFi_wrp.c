@@ -1894,3 +1894,30 @@ int ssp_WIFIHALSetRadioMode(int radioIndex, char* output_string, unsigned int pu
     return return_status;
 }
 
+/*******************************************************************************************
+ *
+ * Function Name        : WIFIHAL_GetApIndexFromName
+ * Description          : This function invokes WiFi hal api wifi_getApIndexFromName()
+ * @param [in]          : param     - the ssid name to be passed
+ * @param [out]         : return status an integer value 0-success and 1-Failure
+ *
+ ********************************************************************************************/
+int ssp_WIFIHALGetApIndexFromName(char* ssidName, int *output)
+{
+    printf("\n ssp_WIFIHALGetApIndexFromName ----> Entry\n");
+    printf("ssidName: %s\n", ssidName);
+    int return_status = 0;
+    return_status = wifi_getApIndexFromName(ssidName, output);
+    printf("return value from ssp_WIFIHALGetApIndexFromName is %d\n",return_status);
+    if(return_status != SSP_SUCCESS)
+    {
+     printf("\nssp_WIFIHALGetApIndexFromName::Failed\n");
+     return SSP_FAILURE;
+    }
+    else
+    {
+     printf("\nssp_WIFIHALGetApIndexFromName::Success\n");
+     return return_status;
+    }
+    printf("\n ssp_WIFIHALGetApIndexFromName ----> Exit\n");
+}

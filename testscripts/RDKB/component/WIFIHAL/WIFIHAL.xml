@@ -13,9 +13,9 @@
  limitations under the License.
 -->
 <?xml version="1.0" encoding="UTF-8"?><xml>
-  <module name="WIFIHAL" testGroup="Component">
+  <module testGroup="Component" name="WIFIHAL">
     <primitiveTests>
-      <primitiveTest id=" " name="WIFIHAL_GetOrSetParamBoolValue" version="3">
+      <primitiveTest name="WIFIHAL_GetOrSetParamBoolValue" id=" " version="3">
         <function>WIFIHAL_GetOrSetParamBoolValue</function>
         <parameters>
           <parameter name="methodName" value="0"/>
@@ -24,7 +24,7 @@
           <parameter name="paramType" value="0"/>
         </parameters>
       </primitiveTest>
-      <primitiveTest id=" " name="WIFIHAL_GetOrSetParamULongValue" version="2">
+      <primitiveTest name="WIFIHAL_GetOrSetParamULongValue" id=" " version="2">
         <function>WIFIHAL_GetOrSetParamULongValue</function>
         <parameters>
           <parameter name="methodName" value="0"/>
@@ -33,7 +33,7 @@
           <parameter name="paramType" value="0"/>
         </parameters>
       </primitiveTest>
-      <primitiveTest id=" " name="WIFIHAL_GetOrSetParamStringValue" version="8">
+      <primitiveTest name="WIFIHAL_GetOrSetParamStringValue" id=" " version="8">
         <function>WIFIHAL_GetOrSetParamStringValue</function>
         <parameters>
           <parameter name="methodName" value="0"/>
@@ -42,16 +42,16 @@
           <parameter name="param" value="0"/>
         </parameters>
       </primitiveTest>
-      <primitiveTest id=" " name="WIFIHAL_GetOrSetParamIntValue" version="3">
+      <primitiveTest name="WIFIHAL_GetOrSetParamIntValue" id=" " version="5">
         <function>WIFIHAL_GetOrSetParamIntValue</function>
         <parameters>
-          <parameter name="methodName" value="0"/>
+          <parameter name="methodName" value=" 0"/>
           <parameter name="radioIndex" value="0"/>
-          <parameter name="paramType" value="0"/>
+          <parameter name="paramType" value=" 0"/>
           <parameter name="param" value="0"/>
         </parameters>
       </primitiveTest>
-      <primitiveTest id=" " name="WIFIHAL_GetOrSetParamUIntValue" version="3">
+      <primitiveTest name="WIFIHAL_GetOrSetParamUIntValue" id=" " version="3">
         <function>WIFIHAL_GetOrSetParamUIntValue</function>
         <parameters>
           <parameter name="methodName" value="0"/>
@@ -60,27 +60,27 @@
           <parameter name="radioIndex" value="0"/>
         </parameters>
       </primitiveTest>
-      <primitiveTest id=" " name="WIFIHAL_ApplySettings" version="1">
+      <primitiveTest name="WIFIHAL_ApplySettings" id=" " version="1">
         <function>WIFIHAL_ApplySettings</function>
         <parameters>
           <parameter name="radioIndex" value="0"/>
         </parameters>
       </primitiveTest>
-      <primitiveTest id=" " name="WIFIHAL_GetIndexFromName" version="1">
+      <primitiveTest name="WIFIHAL_GetIndexFromName" id=" " version="1">
         <function>WIFIHAL_GetIndexFromName</function>
         <parameters>
           <parameter name="param" value="NULL"/>
         </parameters>
       </primitiveTest>
-      <primitiveTest id="" name="WIFIHAL_Reset" version="1">
+      <primitiveTest name="WIFIHAL_Reset" id="" version="1">
         <function>WIFIHAL_Reset</function>
         <parameters/>
       </primitiveTest>
-      <primitiveTest id="" name="WIFIHAL_ClearRadioResetCount" version="1">
+      <primitiveTest name="WIFIHAL_ClearRadioResetCount" id="" version="1">
         <function>WIFIHAL_ClearRadioResetCount</function>
         <parameters/>
       </primitiveTest>
-      <primitiveTest id=" " name="WIFIHAL_GetOrSetRadioStandard" version="1">
+      <primitiveTest name="WIFIHAL_GetOrSetRadioStandard" id=" " version="1">
         <function>WIFIHAL_GetOrSetRadioStandard</function>
         <parameters>
           <parameter name="acOnly" value="0"/>
@@ -92,7 +92,7 @@
           <parameter name="radioIndex" value="0"/>
         </parameters>
       </primitiveTest>
-      <primitiveTest id=" " name="WIFIHAL_GetOrSetSecurityRadiusServer" version="1">
+      <primitiveTest name="WIFIHAL_GetOrSetSecurityRadiusServer" id=" " version="1">
         <function>WIFIHAL_GetOrSetSecurityRadiusServer</function>
         <parameters>
           <parameter name="IPAddress" value="0"/>
@@ -103,7 +103,7 @@
           <parameter name="RadiusSecret" value="0"/>
         </parameters>
       </primitiveTest>
-      <primitiveTest id=" " name="WIFIHAL_GetOrSetApBridgeInfo" version="1">
+      <primitiveTest name="WIFIHAL_GetOrSetApBridgeInfo" id=" " version="1">
         <function>WIFIHAL_GetOrSetApBridgeInfo</function>
         <parameters>
           <parameter name="bridgeName" value="0"/>
@@ -114,7 +114,7 @@
           <parameter name="subnet" value="0"/>
         </parameters>
       </primitiveTest>
-      <primitiveTest id=" " name="WIFIHAL_GetOrSetRadioDCSScanTime" version="2">
+      <primitiveTest name="WIFIHAL_GetOrSetRadioDCSScanTime" id=" " version="2">
         <function>WIFIHAL_GetOrSetRadioDCSScanTime</function>
         <parameters>
           <parameter name="methodName" value="0"/>
@@ -124,7 +124,7 @@
           <parameter name="paramType" value="0"/>
         </parameters>
       </primitiveTest>
-      <primitiveTest id=" " name="WIFIHAL_AddorDelApAclDevice" version="1">
+      <primitiveTest name="WIFIHAL_AddorDelApAclDevice" id=" " version="1">
         <function>WIFIHAL_AddorDelApAclDevice</function>
         <parameters>
           <parameter name="apIndex" value="0"/>
@@ -132,22 +132,22 @@
           <parameter name="methodName" value="0"/>
         </parameters>
       </primitiveTest>
-      <primitiveTest id=" " name="WIFIHAL_IfConfigUporDown" version="1">
+      <primitiveTest name="WIFIHAL_IfConfigUporDown" id=" " version="1">
         <function>WIFIHAL_IfConfigUporDown</function>
         <parameters>
           <parameter name="apIndex" value="0"/>
           <parameter name="methodName" value="0"/>
         </parameters>
       </primitiveTest>
-      <primitiveTest id="" name="WIFIHAL_Down" version="1">
+      <primitiveTest name="WIFIHAL_Down" id="" version="1">
         <function>WIFIHAL_Down</function>
         <parameters/>
       </primitiveTest>
-      <primitiveTest id="" name="WIFIHAL_Init" version="1">
+      <primitiveTest name="WIFIHAL_Init" id="" version="1">
         <function>WIFIHAL_Init</function>
         <parameters/>
       </primitiveTest>
-      <primitiveTest id=" " name="WIFIHAL_GetOrSetSecurityRadiusSettings" version="1">
+      <primitiveTest name="WIFIHAL_GetOrSetSecurityRadiusSettings" id=" " version="1">
         <function>WIFIHAL_GetOrSetSecurityRadiusSettings</function>
         <parameters>
           <parameter name="BlacklistTableTimeout" value="0"/>
@@ -163,54 +163,54 @@
           <parameter name="RadiusServerRetries" value="0"/>
         </parameters>
       </primitiveTest>
-      <primitiveTest id=" " name="WIFIHAL_GetRadioTrafficStats2" version="2">
+      <primitiveTest name="WIFIHAL_GetRadioTrafficStats2" id=" " version="2">
         <function>WIFIHAL_GetRadioTrafficStats2</function>
         <parameters>
           <parameter name="radioIndex" value="0"/>
         </parameters>
       </primitiveTest>
-      <primitiveTest id=" " name="WIFIHAL_ParamRadioIndex" version="1">
+      <primitiveTest name="WIFIHAL_ParamRadioIndex" id=" " version="1">
         <function>WIFIHAL_ParamRadioIndex</function>
         <parameters>
           <parameter name="methodName" value="0"/>
           <parameter name="radioIndex" value="0"/>
         </parameters>
       </primitiveTest>
-      <primitiveTest id=" " name="WIFIHAL_StartorStopHostApd" version="1">
+      <primitiveTest name="WIFIHAL_StartorStopHostApd" id=" " version="1">
         <function>WIFIHAL_StartorStopHostApd</function>
         <parameters>
           <parameter name="methodName" value="0"/>
         </parameters>
       </primitiveTest>
-      <primitiveTest id=" " name="WIFIHAL_FactoryReset" version="1">
+      <primitiveTest name="WIFIHAL_FactoryReset" id=" " version="1">
         <function>WIFIHAL_FactoryReset</function>
         <parameters>
           <parameter name="methodName" value="0"/>
         </parameters>
       </primitiveTest>
-      <primitiveTest id=" " name="WIFIHAL_GetSSIDTrafficStats2" version="1">
+      <primitiveTest name="WIFIHAL_GetSSIDTrafficStats2" id=" " version="1">
         <function>WIFIHAL_GetSSIDTrafficStats2</function>
         <parameters>
           <parameter name="radioIndex" value="0"/>
         </parameters>
       </primitiveTest>
-      <primitiveTest id=" " name="WIFIHAL_GetNeighboringWiFiDiagnosticResult2" version="1">
+      <primitiveTest name="WIFIHAL_GetNeighboringWiFiDiagnosticResult2" id=" " version="1">
         <function>WIFIHAL_GetNeighboringWiFiDiagnosticResult2</function>
         <parameters>
           <parameter name="radioIndex" value="0"/>
         </parameters>
       </primitiveTest>
-      <primitiveTest id="" name="WIFIHAL_CreateInitialConfigFiles" version="1">
+      <primitiveTest name="WIFIHAL_CreateInitialConfigFiles" id="" version="1">
         <function>WIFIHAL_CreateInitialConfigFiles</function>
         <parameters/>
       </primitiveTest>
-      <primitiveTest id=" " name="WIFIHAL_GetApAssociatedDeviceDiagnosticResult" version="1">
+      <primitiveTest name="WIFIHAL_GetApAssociatedDeviceDiagnosticResult" id=" " version="1">
         <function>WIFIHAL_GetApAssociatedDeviceDiagnosticResult</function>
         <parameters>
           <parameter name="radioIndex" value="0"/>
         </parameters>
       </primitiveTest>
-      <primitiveTest id=" " name="WIFIHAL_PushRadioChannel2" version="1">
+      <primitiveTest name="WIFIHAL_PushRadioChannel2" id=" " version="1">
         <function>WIFIHAL_PushRadioChannel2</function>
         <parameters>
           <parameter name="channel" value=""/>
@@ -219,26 +219,26 @@
           <parameter name="radioIndex" value=""/>
         </parameters>
       </primitiveTest>
-      <primitiveTest id=" " name="WIFIHAL_GetNeighboringWiFiStatus" version="1">
+      <primitiveTest name="WIFIHAL_GetNeighboringWiFiStatus" id=" " version="1">
         <function>WIFIHAL_GetNeighboringWiFiStatus</function>
         <parameters>
           <parameter name="radioIndex" value=""/>
         </parameters>
       </primitiveTest>
-      <primitiveTest id=" " name="WIFIHAL_GetRadioChannelStats" version="1">
+      <primitiveTest name="WIFIHAL_GetRadioChannelStats" id=" " version="1">
         <function>WIFIHAL_GetRadioChannelStats</function>
         <parameters>
           <parameter name="radioIndex" value=""/>
         </parameters>
       </primitiveTest>
-      <primitiveTest id=" " name="WIFIHAL_ParamApIndex" version="1">
+      <primitiveTest name="WIFIHAL_ParamApIndex" id=" " version="1">
         <function>WIFIHAL_ParamApIndex</function>
         <parameters>
           <parameter name="apIndex" value=""/>
           <parameter name="methodName" value=""/>
         </parameters>
       </primitiveTest>
-      <primitiveTest id=" " name="WIFIHAL_GetApDeviceRSSI" version="1">
+      <primitiveTest name="WIFIHAL_GetApDeviceRSSI" id=" " version="1">
         <function>WIFIHAL_GetApDeviceRSSI</function>
         <parameters>
           <parameter name="apIndex" value=""/>
@@ -246,52 +246,52 @@
           <parameter name="methodName" value=""/>
         </parameters>
       </primitiveTest>
-      <primitiveTest id=" " name="WIFIHAL_GetApAssociatedDevice" version="1">
+      <primitiveTest name="WIFIHAL_GetApAssociatedDevice" id=" " version="1">
         <function>WIFIHAL_GetApAssociatedDevice</function>
         <parameters>
           <parameter name="apIndex" value="0"/>
         </parameters>
       </primitiveTest>
-      <primitiveTest id=" " name="WIFIHAL_DelApAclDevices" version="1">
+      <primitiveTest name="WIFIHAL_DelApAclDevices" id=" " version="1">
         <function>WIFIHAL_DelApAclDevices</function>
         <parameters>
           <parameter name="apIndex" value=""/>
         </parameters>
       </primitiveTest>
-      <primitiveTest id=" " name="WIFIHAL_GetApAclDevices" version="1">
+      <primitiveTest name="WIFIHAL_GetApAclDevices" id=" " version="1">
         <function>WIFIHAL_GetApAclDevices</function>
         <parameters>
           <parameter name="apIndex" value=""/>
         </parameters>
       </primitiveTest>
-      <primitiveTest id=" " name="WIFIHAL_GetApAssociatedDeviceDiagnosticResult3" version="1">
+      <primitiveTest name="WIFIHAL_GetApAssociatedDeviceDiagnosticResult3" id=" " version="1">
         <function>WIFIHAL_GetApAssociatedDeviceDiagnosticResult3</function>
         <parameters>
           <parameter name="apIndex" value=""/>
         </parameters>
       </primitiveTest>
-      <primitiveTest id=" " name="WIFIHAL_GetApAssociatedDeviceRxStatsResult" version="1">
+      <primitiveTest name="WIFIHAL_GetApAssociatedDeviceRxStatsResult" id=" " version="1">
         <function>WIFIHAL_GetApAssociatedDeviceRxStatsResult</function>
         <parameters>
           <parameter name="MAC" value=""/>
           <parameter name="radioIndex" value=""/>
         </parameters>
       </primitiveTest>
-      <primitiveTest id=" " name="WIFIHAL_GetApAssociatedDeviceTxStatsResult" version="1">
+      <primitiveTest name="WIFIHAL_GetApAssociatedDeviceTxStatsResult" id=" " version="1">
         <function>WIFIHAL_GetApAssociatedDeviceTxStatsResult</function>
         <parameters>
           <parameter name="MAC" value=""/>
           <parameter name="radioIndex" value=""/>
         </parameters>
       </primitiveTest>
-      <primitiveTest id=" " name="WIFIHAL_GetApAssociatedDeviceStats" version="1">
+      <primitiveTest name="WIFIHAL_GetApAssociatedDeviceStats" id=" " version="1">
         <function>WIFIHAL_GetApAssociatedDeviceStats</function>
         <parameters>
           <parameter name="apIndex" value=""/>
           <parameter name="MAC" value=""/>
         </parameters>
       </primitiveTest>
-      <primitiveTest id=" " name="WIFIHAL_GetApDeviceTxRxRate" version="1">
+      <primitiveTest name="WIFIHAL_GetApDeviceTxRxRate" id=" " version="1">
         <function>WIFIHAL_GetApDeviceTxRxRate</function>
         <parameters>
           <parameter name="apIndex" value=""/>
@@ -299,13 +299,13 @@
           <parameter name="methodName" value=""/>
         </parameters>
       </primitiveTest>
-      <primitiveTest id=" " name="WIFIHAL_GetRadioChannelStats2" version="1">
+      <primitiveTest name="WIFIHAL_GetRadioChannelStats2" id=" " version="1">
         <function>WIFIHAL_GetRadioChannelStats2</function>
         <parameters>
           <parameter name="radioIndex" value=""/>
         </parameters>
       </primitiveTest>
-      <primitiveTest id=" " name="WIFIHAL_StartNeighborScan" version="1">
+      <primitiveTest name="WIFIHAL_StartNeighborScan" id=" " version="1">
         <function>WIFIHAL_StartNeighborScan</function>
         <parameters>
           <parameter name="apIndex" value=""/>
@@ -313,7 +313,7 @@
           <parameter name="scan_mode" value=""/>
         </parameters>
       </primitiveTest>
-      <primitiveTest id=" " name="WIFIHAL_GetApAssociatedDeviceTidStatsResult" version="1">
+      <primitiveTest name="WIFIHAL_GetApAssociatedDeviceTidStatsResult" id=" " version="1">
         <function>WIFIHAL_GetApAssociatedDeviceTidStatsResult</function>
         <parameters>
           <parameter name="MAC" value="0"/>
@@ -341,21 +341,26 @@
           <parameter name="mode" value=""/>
         </parameters>
       </primitiveTest>
-      <primitiveTest name="WIFIHAL_GetRadioMode" id=" " version="1">
+      <primitiveTest name="WIFIHAL_GetRadioMode" id=" " version="2">
         <function>WIFIHAL_GetRadioMode</function>
         <parameters>
           <parameter name="radioIndex" value=""/>
         </parameters>
       </primitiveTest>
-      <primitiveTest name="WIFIHAL_SetRadioMode" id=" " version="1">
+      <primitiveTest name="WIFIHAL_SetRadioMode" id=" " version="2">
         <function>WIFIHAL_SetRadioMode</function>
         <parameters>
+          <parameter name="radioIndex" value=""/>
           <parameter name="chnmode" value=""/>
           <parameter name="puremode" value=""/>
-          <parameter name="radioIndex" value=""/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest name="WIFIHAL_GetApIndexFromName" id=" " version="2">
+        <function>WIFIHAL_GetApIndexFromName</function>
+        <parameters>
+          <parameter name="param" value=" "/>
         </parameters>
       </primitiveTest>
     </primitiveTests>
   </module>
 </xml>
-
