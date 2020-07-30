@@ -606,41 +606,55 @@ void CosaMTA::CosaMTA_DectGetEnable(IN const Json::Value& req, OUT Json::Value& 
     int Value = 0;
     char Details[64] = {'\0'};
 
-    /* Validate the input arguments */
-    if(&req["handleType"]==NULL)
+    int isNegativeScenario = 0;
+
+    if(&req["flag"])
     {
-        response["result"]="FAILURE";
-        response["details"]="NULL parameter as input argument";
-        return;
+       isNegativeScenario = req["flag"].asInt();
     }
-
-    if(&req["Value"]==NULL)
+    if(isNegativeScenario)
     {
-        response["result"]="FAILURE";
-        response["details"]="NULL parameter as input argument";
-        return;
-    }
-
-    handleType = req["handleType"].asInt();
-    Value = req["Value"].asInt();
-
-    returnValue = ssp_CosaDmlMTADectGetEnable(handleType,Value);
-    printf("return value is %d\n",returnValue);
-    if(0 == returnValue)
-    {
-	sprintf(Details,"Enable value of Dect is :%d",returnValue);
-        response["result"]="SUCCESS";
-        response["details"]=Details;
+       DEBUG_PRINT(DEBUG_TRACE, "Executing negative scenario\n");
+       returnValue = ssp_CosaDmlMTADectGetEnable(NULL,NULL);
     }
     else
     {
+        /* Validate the input arguments */
+        if(&req["handleType"]==NULL)
+        {
+           response["result"]="FAILURE";
+           response["details"]="NULL parameter as input argument";
+           return;
+        }
+
+        if(&req["Value"]==NULL)
+        {
+           response["result"]="FAILURE";
+           response["details"]="NULL parameter as input argument";
+           return;
+        }
+
+        handleType = req["handleType"].asInt();
+        Value = req["Value"].asInt();
+
+        returnValue = ssp_CosaDmlMTADectGetEnable(handleType,Value);
+     }
+     printf("return value is %d\n",returnValue);
+     if(0 == returnValue)
+     {
+	sprintf(Details,"Enable value of Dect is :%d",returnValue);
+        response["result"]="SUCCESS";
+        response["details"]=Details;
+     }
+     else
+     {
         response["result"]="FAILURE";
         response["details"]="Failed to retrieve the Enable value of Dect";
         DEBUG_PRINT(DEBUG_TRACE,"\n CosaMTA_DectGetEnable --->Exit\n");
         return;
-    }
-    DEBUG_PRINT(DEBUG_TRACE,"\n CosaMTA_DectGetEnable  --->Exit\n");
-    return;
+     }
+     DEBUG_PRINT(DEBUG_TRACE,"\n CosaMTA_DectGetEnable  --->Exit\n");
+     return;
 }
 
 /*******************************************************************************************
@@ -662,26 +676,39 @@ void CosaMTA::CosaMTA_DectSetEnable(IN const Json::Value& req, OUT Json::Value& 
     int returnValue = 0;
     int handleType = 0;
     int Value = 0;
+    int isNegativeScenario = 0;
 
-    /* Validate the input arguments */
-    if(&req["handleType"]==NULL)
+    if(&req["flag"])
     {
-        response["result"]="FAILURE";
-        response["details"]="NULL parameter as input argument";
-        return;
+       isNegativeScenario = req["flag"].asInt();
     }
-
-    if(&req["Value"]==NULL)
+    if(isNegativeScenario)
     {
-        response["result"]="FAILURE";
-        response["details"]="NULL parameter as input argument";
-        return;
+       DEBUG_PRINT(DEBUG_TRACE, "Executing negative scenario\n");
+       returnValue = ssp_CosaDmlMTADectSetEnable(NULL,NULL);
     }
+    else
+    {
+        /* Validate the input arguments */
+        if(&req["handleType"]==NULL)
+        {
+          response["result"]="FAILURE";
+          response["details"]="NULL parameter as input argument";
+          return;
+        }
 
-    handleType = req["handleType"].asInt();
-    Value = req["Value"].asInt();
+        if(&req["Value"]==NULL)
+        {
+           response["result"]="FAILURE";
+           response["details"]="NULL parameter as input argument";
+           return;
+        }
 
-    returnValue = ssp_CosaDmlMTADectSetEnable(handleType,Value);
+        handleType = req["handleType"].asInt();
+        Value = req["Value"].asInt();
+
+        returnValue = ssp_CosaDmlMTADectSetEnable(handleType,Value);
+    }
     if(0 == returnValue)
     {
         response["result"]="SUCCESS";
@@ -718,26 +745,39 @@ void CosaMTA::CosaMTA_DectGetRegistrationMode(IN const Json::Value& req, OUT Jso
     int handleType = 0;
     int Value = 0;
     char Details[64]={'\0'};
+    int isNegativeScenario = 0;
 
-    /* Validate the input arguments */
-    if(&req["handleType"]==NULL)
+    if(&req["flag"])
     {
-        response["result"]="FAILURE";
-        response["details"]="NULL parameter as input argument";
-        return;
+       isNegativeScenario = req["flag"].asInt();
     }
-
-    if(&req["Value"]==NULL)
+    if(isNegativeScenario)
     {
-        response["result"]="FAILURE";
-        response["details"]="NULL parameter as input argument";
-        return;
+       DEBUG_PRINT(DEBUG_TRACE, "Executing negative scenario\n");
+       returnValue = ssp_CosaDmlMTADectGetRegistrationMode(NULL,NULL);
     }
+    else
+    {
+        /* Validate the input arguments */
+        if(&req["handleType"]==NULL)
+        {
+           response["result"]="FAILURE";
+           response["details"]="NULL parameter as input argument";
+           return;
+        }
 
-    handleType = req["handleType"].asInt();
-    Value    = req["Value"].asInt();
+        if(&req["Value"]==NULL)
+        {
+          response["result"]="FAILURE";
+          response["details"]="NULL parameter as input argument";
+          return;
+        }
 
-    returnValue = ssp_CosaDmlMTADectGetRegistrationMode(handleType,Value);
+        handleType = req["handleType"].asInt();
+        Value    = req["Value"].asInt();
+
+        returnValue = ssp_CosaDmlMTADectGetRegistrationMode(handleType,Value);
+    }
     if(0 == returnValue)
     {
 	sprintf(Details,"Registration mode is :%d",returnValue);
@@ -774,26 +814,39 @@ void CosaMTA::CosaMTA_DectSetRegistrationMode(IN const Json::Value& req, OUT Jso
     int returnValue = 0;
     int handleType = 0;
     int Value = 0;
+    int isNegativeScenario = 0;
 
-    /* Validate the input arguments */
-    if(&req["handleType"]==NULL)
+    if(&req["flag"])
     {
+       isNegativeScenario = req["flag"].asInt();
+    }
+    if(isNegativeScenario)
+    {
+       DEBUG_PRINT(DEBUG_TRACE, "Executing negative scenario\n");
+       returnValue = ssp_CosaDmlMTADectSetRegistrationMode(NULL,NULL);
+    }
+    else
+    {
+      /* Validate the input arguments */
+      if(&req["handleType"]==NULL)
+      {
         response["result"]="FAILURE";
         response["details"]="NULL parameter as input argument";
         return;
-    }
+      }
 
-    if(&req["Value"]==NULL)
-    {
+      if(&req["Value"]==NULL)
+      {
         response["result"]="FAILURE";
         response["details"]="NULL parameter as input argument";
         return;
+      }
+
+      handleType = req["handleType"].asInt();
+      Value = req["Value"].asInt();
+
+      returnValue = ssp_CosaDmlMTADectSetRegistrationMode(handleType,Value);
     }
-
-    handleType = req["handleType"].asInt();
-    Value = req["Value"].asInt();
-
-    returnValue = ssp_CosaDmlMTADectSetRegistrationMode(handleType,Value);
     printf("return value is %d\n",returnValue);
     if(0 == returnValue)
     {
@@ -832,27 +885,40 @@ void CosaMTA::CosaMTA_GetDect(IN const Json::Value& req, OUT Json::Value& respon
     int bufferType = 0;
     void* DectInfo;
     char Details[64] = {'\0'};
+    int isNegativeScenario = 0;
 
-    /* Validate the input arguments */
-    if(&req["handleType"]==NULL)
+    if(&req["flag"])
     {
-        response["result"]="FAILURE";
-        response["details"]="NULL parameter as input argument";
-        return;
+       isNegativeScenario = req["flag"].asInt();
     }
-
-    if(&req["bufferType"]==NULL)
+    if(isNegativeScenario)
     {
-        response["result"]="FAILURE";
-        response["details"]="NULL parameter as input argument";
-        return;
+       DEBUG_PRINT(DEBUG_TRACE, "Executing negative scenario\n");
+       returnValue = ssp_CosaDmlMTAGetDect(NULL,NULL,NULL);
     }
+    else
+    {
+       /* Validate the input arguments */
+       if(&req["handleType"]==NULL)
+       {
+         response["result"]="FAILURE";
+         response["details"]="NULL parameter as input argument";
+         return;
+       }
 
-    handleType = req["handleType"].asInt();
-    bufferType = req["bufferType"].asInt();
-    printf("handleType %d\nbufferType %d\n",handleType,bufferType);
+       if(&req["bufferType"]==NULL)
+       {
+         response["result"]="FAILURE";
+         response["details"]="NULL parameter as input argument";
+         return;
+       }
 
-    returnValue = ssp_CosaDmlMTAGetDect(handleType,bufferType, DectInfo);
+       handleType = req["handleType"].asInt();
+       bufferType = req["bufferType"].asInt();
+       printf("handleType %d\nbufferType %d\n",handleType,bufferType);
+
+       returnValue = ssp_CosaDmlMTAGetDect(handleType,bufferType, DectInfo);
+    }
     printf("return value is %d\n",returnValue);
     if(0 == returnValue)
     {
@@ -890,26 +956,39 @@ void CosaMTA::CosaMTA_GetDectPIN(IN const Json::Value& req, OUT Json::Value& res
     int bufferType = 0;
     char pin[64] = {0};
     char Details[64] = {'\0'};
+    int isNegativeScenario = 0;
 
-    /* Validate the input arguments */
-    if(&req["handleType"]==NULL)
+    if(&req["flag"])
     {
+       isNegativeScenario = req["flag"].asInt();
+    }
+    if(isNegativeScenario)
+    {
+       DEBUG_PRINT(DEBUG_TRACE, "Executing negative scenario\n");
+       returnValue = ssp_CosaDmlMTAGetDectPIN(NULL,NULL,NULL);
+    }
+    else
+    {
+      /* Validate the input arguments */
+      if(&req["handleType"]==NULL)
+      {
+         response["result"]="FAILURE";
+         response["details"]="NULL parameter as input argument";
+         return;
+      }
+
+      if(&req["bufferType"]==NULL)
+      {
         response["result"]="FAILURE";
         response["details"]="NULL parameter as input argument";
         return;
+      }
+
+      handleType = req["handleType"].asInt();
+      bufferType = req["bufferType"].asInt();
+    
+      returnValue = ssp_CosaDmlMTAGetDectPIN(handleType,bufferType,pin);
     }
-
-    if(&req["bufferType"]==NULL)
-    {
-        response["result"]="FAILURE";
-        response["details"]="NULL parameter as input argument";
-        return;
-    }
-
-    handleType = req["handleType"].asInt();
-    bufferType = req["bufferType"].asInt();
-
-    returnValue = ssp_CosaDmlMTAGetDectPIN(handleType,bufferType,pin);
     if(0 == returnValue)
     {
 	sprintf(Details,"Dect pin retrieved is: %s",pin);
@@ -945,34 +1024,47 @@ void CosaMTA::CosaMTA_SetDectPIN(IN const Json::Value& req, OUT Json::Value& res
     int handleType = 0;
     int bufferType = 0;
     char pin[64] = {0};
+    int isNegativeScenario = 0;
 
-    /* Validate the input arguments */
-    if(&req["handleType"]==NULL)
+    if(&req["flag"])
     {
+       isNegativeScenario = req["flag"].asInt();
+    }
+    if(isNegativeScenario)
+    {
+       DEBUG_PRINT(DEBUG_TRACE, "Executing negative scenario\n");
+       returnValue = ssp_CosaDmlMTASetDectPIN(NULL,NULL,NULL);
+    }
+    else
+    {
+      /* Validate the input arguments */
+      if(&req["handleType"]==NULL)
+      {
         response["result"]="FAILURE";
         response["details"]="NULL parameter as input argument";
         return;
-    }
+      }
 
-    if(&req["bufferType"]==NULL)
-    {
+      if(&req["bufferType"]==NULL)
+      {
         response["result"]="FAILURE";
         response["details"]="NULL parameter as input argument";
         return;
-    }
+      }
 
-    if(&req["value"]==NULL)
-    {
+      if(&req["value"]==NULL)
+      {
         response["result"]="FAILURE";
         response["details"]="NULL parameter as input argument";
         return;
+      }
+
+      handleType = req["handleType"].asInt();
+      bufferType = req["bufferType"].asInt();
+      strcpy(pin,req["value"].asCString());
+
+      returnValue = ssp_CosaDmlMTASetDectPIN(handleType,bufferType,pin);
     }
-
-    handleType = req["handleType"].asInt();
-    bufferType = req["bufferType"].asInt();
-    strcpy(pin,req["value"].asCString());
-
-    returnValue = ssp_CosaDmlMTASetDectPIN(handleType,bufferType,pin);
     if(0 == returnValue)
     {
         response["result"]="SUCCESS";

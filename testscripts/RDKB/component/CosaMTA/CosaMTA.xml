@@ -16,7 +16,6 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 -->
-
 <?xml version="1.0" encoding="UTF-8"?><xml>
   <module name="CosaMTA" testGroup="Component">
     <primitiveTests>
@@ -81,54 +80,61 @@
           <parameter name="handleType" value="0"/>
         </parameters>
       </primitiveTest>
-      <primitiveTest id=" " name="CosaMTA_DectGetEnable" version="2">
+      <primitiveTest name="CosaMTA_DectGetEnable" id=" " version="3">
         <function>CosaMTA_DectGetEnable</function>
         <parameters>
           <parameter name="handleType" value="0"/>
           <parameter name="Value" value="0"/>
+          <parameter name="flag" value="0"/>
         </parameters>
       </primitiveTest>
-      <primitiveTest id=" " name="CosaMTA_DectSetEnable" version="1">
+      <primitiveTest name="CosaMTA_DectSetEnable" id=" " version="2">
         <function>CosaMTA_DectSetEnable</function>
         <parameters>
           <parameter name="handleType" value="0"/>
           <parameter name="Value" value="0"/>
+          <parameter name="flag" value="0"/>
         </parameters>
       </primitiveTest>
-      <primitiveTest id=" " name="CosaMTA_DectGetRegistrationMode" version="1">
+      <primitiveTest name="CosaMTA_DectGetRegistrationMode" id=" " version="2">
         <function>CosaMTA_DectGetRegistrationMode</function>
         <parameters>
           <parameter name="handleType" value="0"/>
           <parameter name="Value" value="0"/>
+          <parameter name="flag" value="0"/>
         </parameters>
       </primitiveTest>
-      <primitiveTest id=" " name="CosaMTA_DectSetRegistrationMode" version="1">
+      <primitiveTest name="CosaMTA_DectSetRegistrationMode" id=" " version="2">
         <function>CosaMTA_DectSetRegistrationMode</function>
         <parameters>
           <parameter name="handleType" value="0"/>
           <parameter name="Value" value="0"/>
+          <parameter name="flag" value="0"/>
         </parameters>
       </primitiveTest>
-      <primitiveTest id=" " name="CosaMTA_GetDect" version="1">
+      <primitiveTest name="CosaMTA_GetDect" id=" " version="2">
         <function>CosaMTA_GetDect</function>
         <parameters>
-          <parameter name="bufferType" value="0"/>
           <parameter name="handleType" value="0"/>
+          <parameter name="bufferType" value="0"/>
+          <parameter name="flag" value="0"/>
         </parameters>
       </primitiveTest>
-      <primitiveTest id=" " name="CosaMTA_GetDectPIN" version="1">
+      <primitiveTest name="CosaMTA_GetDectPIN" id=" " version="2">
         <function>CosaMTA_GetDectPIN</function>
         <parameters>
-          <parameter name="bufferType" value="0"/>
           <parameter name="handleType" value="0"/>
+          <parameter name="bufferType" value="0"/>
+          <parameter name="flag" value="0"/>
         </parameters>
       </primitiveTest>
-      <primitiveTest id=" " name="CosaMTA_SetDectPIN" version="3">
+      <primitiveTest name="CosaMTA_SetDectPIN" id=" " version="4">
         <function>CosaMTA_SetDectPIN</function>
         <parameters>
           <parameter name="handleType" value="0"/>
           <parameter name="bufferType" value="0"/>
           <parameter name="value" value="DectPin"/>
+          <parameter name="flag" value="0"/>
         </parameters>
       </primitiveTest>
       <primitiveTest id=" " name="CosaMTA_GetDSXLogEnable" version="1">
