@@ -110,7 +110,7 @@ if "SUCCESS" in loadmodulestatus.upper():
 	    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, "0", getMethod)
 
 	    #List of default WPS config mode supported
-	    defaultWpsConfigModesSupported = ['USBFlashDrive', 'Ethernet', 'ExternalNFCToken', 'IntegratedNFCToken', 'NFCInterface', 'PushButton', 'PIN', 'Label', 'Display', 'Keypad']
+	    defaultWpsConfigModesSupported = ['USBFlashDrive', 'Ethernet', 'ExternalNFCToken', 'IntegratedNFCToken', 'NFCInterface', 'PushButton', 'PIN', 'Label', 'Display', 'Keypad', 'VirtualPushButton', 'PhysicalPushButton', 'VirtualDisplay']
 
 	    if expectedresult in actualresult:
 	       supportedWpsConfigModes = details.split(":")[1].strip()
