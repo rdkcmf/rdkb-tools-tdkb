@@ -22,7 +22,7 @@
   <version>2</version>
   <name>TS_MTAHAL_GetBatteryPowerStatus_NullBuffer</name>
   <primitive_test_id/>
-  <primitive_test_name>MTAHAL_GetParamUlongValue</primitive_test_name>
+  <primitive_test_name>MTAHAL_GetParamCharValue</primitive_test_name>
   <primitive_test_version>4</primitive_test_version>
   <status>FREE</status>
   <synopsis>To validate mta_hal_GetBatteryPowerStatus() by passing a Null Buffer</synopsis>
@@ -83,7 +83,7 @@ if "SUCCESS" in loadmodulestatus.upper():
     obj.setLoadModuleStatus("SUCCESS");
 
     #Script to load the configuration file of the component
-    tdkTestObj = obj.createTestStep("MTAHAL_GetParamUlongValue");
+    tdkTestObj = obj.createTestStep("MTAHAL_GetParamCharValue");
     tdkTestObj.addParameter("paramName","BatteryPowerStatus");
     tdkTestObj.addParameter("paramType","NULL");
     expectedresult="FAILURE";
