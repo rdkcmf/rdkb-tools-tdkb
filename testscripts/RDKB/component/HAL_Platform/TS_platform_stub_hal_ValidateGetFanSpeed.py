@@ -125,7 +125,7 @@ if "SUCCESS" in  result.upper() and "SUCCESS" in result1.upper():
         tdkTestObj.executeTestCase(expectedresult);
         actualresult = tdkTestObj.getResult();
 
-        details = tdkTestObj.getResultDetails().strip.replace("\\n", "");;
+        details = tdkTestObj.getResultDetails().strip.replace("\\n", "");
         if expectedresult in actualresult and int(details) == 0:
             #Set the result status of execution
             tdkTestObj.setResultStatus("SUCCESS");

@@ -23,6 +23,7 @@
         <function>MTAHAL_GetParamCharValue</function>
         <parameters>
           <parameter name="paramName" value="  "/>
+          <parameter name="paramType" value=" "/>
         </parameters>
       </primitiveTest>
       <primitiveTest name="MTAHAL_GetParamUlongValue" id=" " version="4">

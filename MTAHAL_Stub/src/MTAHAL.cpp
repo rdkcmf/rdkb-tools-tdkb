@@ -73,6 +73,7 @@ void MTAHAL::MTAHAL_GetParamCharValue(IN const Json::Value& req, OUT Json::Value
     char paramName[100] = {'\0'};
     char Details[1024] = {'\0'};
     char value[1024] = {'\0'};
+    char paramType[10] = {'\0'};
     /* Validate the input arguments */
 
     if(&req["paramName"]==NULL)
@@ -82,8 +83,15 @@ void MTAHAL::MTAHAL_GetParamCharValue(IN const Json::Value& req, OUT Json::Value
         return;
     }
     strcpy(paramName,req["paramName"].asCString());
-
-    returnValue = ssp_MTAHAL_GetParamCharValue(paramName,value);
+    strcpy(paramType, req["paramType"].asCString());
+    if(strcmp(paramType, "NULL"))    
+    {
+       returnValue = ssp_MTAHAL_GetParamCharValue(paramName,value);
+    }
+    else
+    {
+       returnValue = ssp_MTAHAL_GetParamCharValue(paramName,NULL);
+    }
 
     if(0 == returnValue)
     {

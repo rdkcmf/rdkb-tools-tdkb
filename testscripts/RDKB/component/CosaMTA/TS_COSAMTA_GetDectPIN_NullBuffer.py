@@ -74,7 +74,7 @@ obj = tdklib.TDKScriptingLibrary("cosamta","1");
 ip = <ipaddress>
 port = <port>
 obj.configureTestCase(ip,port,'TS_COSAMTA_GetDectPIN_NullBuffer');
-ult of connection with test component and DUT
+#Result of connection with test component and DUT
 loadmodulestatus =obj.getLoadModuleResult()
 print "[LIB LOAD STATUS]  :  %s" %loadmodulestatus
 if "SUCCESS" in loadmodulestatus.upper():
