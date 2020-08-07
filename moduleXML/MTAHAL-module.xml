@@ -47,8 +47,9 @@
   <!-- Total parameters corresponding module  -->
     <parameters>
       <parameter funName='MTAHAL_GetParamCharValue' parameterName='paramName' parameterType='STRING' range='A-Z' />
-      <parameter funName='MTAHAL_GetParamCharValue' parameterName='paramType' parameterType='STRING' range='A-Z' />
+      <parameter funName='MTAHAL_GetParamCharValue' parameterName='flag' parameterType='INTEGER' range='0-100' />
       <parameter funName='MTAHAL_GetParamUlongValue' parameterName='paramName' parameterType='STRING' range='A-Z' />
+      <parameter funName='MTAHAL_GetParamUlongValue' parameterName='flag' parameterType='INTEGER' range='0-100' />
       <parameter funName='MTAHAL_SetParamUlongValue' parameterName='paramName' parameterType='STRING' range='A-Z' />
       <parameter funName='MTAHAL_SetParamUlongValue' parameterName='value' parameterType='INTEGER' range='0-7' />
       <parameter funName='MTAHAL_GetLineTableGetEntry' parameterName='value' parameterType='INTEGER' range='0-7' />

@@ -73,7 +73,7 @@ void MTAHAL::MTAHAL_GetParamCharValue(IN const Json::Value& req, OUT Json::Value
     char paramName[100] = {'\0'};
     char Details[1024] = {'\0'};
     char value[1024] = {'\0'};
-    char paramType[10] = {'\0'};
+    int isNegativeScenario = 0;
     /* Validate the input arguments */
 
     if(&req["paramName"]==NULL)
@@ -82,15 +82,22 @@ void MTAHAL::MTAHAL_GetParamCharValue(IN const Json::Value& req, OUT Json::Value
         response["details"]="NULL parameter as input argument";
         return;
     }
-    strcpy(paramName,req["paramName"].asCString());
-    strcpy(paramType, req["paramType"].asCString());
-    if(strcmp(paramType, "NULL"))    
+
+    if(&req["flag"])
     {
-       returnValue = ssp_MTAHAL_GetParamCharValue(paramName,value);
+        isNegativeScenario = req["flag"].asInt();
+    }
+    
+    strcpy(paramName,req["paramName"].asCString());
+
+    if(isNegativeScenario)
+    {
+       DEBUG_PRINT(DEBUG_TRACE,"\n Executing Negative Scenario\n");
+       returnValue = ssp_MTAHAL_GetParamCharValue(paramName,NULL);
     }
     else
-    {
-       returnValue = ssp_MTAHAL_GetParamCharValue(paramName,NULL);
+    {  DEBUG_PRINT(DEBUG_TRACE,"\n Executing Positive Sceanrio\n");
+       returnValue = ssp_MTAHAL_GetParamCharValue(paramName,value);
     }
 
     if(0 == returnValue)
@@ -127,7 +134,7 @@ void MTAHAL::MTAHAL_GetParamUlongValue(IN const Json::Value& req, OUT Json::Valu
     char paramName[100] = {'\0'};
     char Details[64] = {'\0'};
     unsigned long value = 0;
-    char paramType[10] = {'\0'};
+    int isNegativeScenario = 0;
 
     /* Validate the input arguments */
     if(&req["paramName"]==NULL)
@@ -137,16 +144,22 @@ void MTAHAL::MTAHAL_GetParamUlongValue(IN const Json::Value& req, OUT Json::Valu
         return;
     }
 
-    strcpy(paramName,req["paramName"].asCString());
-    strcpy(paramType, req["paramType"].asCString());
-
-    if(strcmp(paramType, "NULL"))
+    if(&req["flag"])
     {
-        returnValue = ssp_MTAHAL_GetParamUlongValue(paramName,&value);
+       isNegativeScenario = req["flag"].asInt();
+    }    
+
+    strcpy(paramName,req["paramName"].asCString());
+
+    if(isNegativeScenario)
+    {
+        DEBUG_PRINT(DEBUG_TRACE,"\n Executing Negative Scenario\n");
+        returnValue = ssp_MTAHAL_GetParamUlongValue(paramName,NULL);
     }
     else
     {
-        returnValue = ssp_MTAHAL_GetParamUlongValue(paramName,NULL);
+       DEBUG_PRINT(DEBUG_TRACE,"\n Executing Positive Sceanrio \n");
+        returnValue = ssp_MTAHAL_GetParamUlongValue(paramName,&value);
     }
 
     if(0 == returnValue)
