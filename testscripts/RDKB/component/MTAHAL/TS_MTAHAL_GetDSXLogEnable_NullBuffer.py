@@ -100,7 +100,7 @@ if "SUCCESS" in loadmodulestatus.upper():
     #Script to load the configuration file of the component
     tdkTestObj = obj.createTestStep("MTAHAL_GetParamUlongValue");
     tdkTestObj.addParameter("paramName","DSXLogEnable");
-    tdkTestObj.addParameter("paramType","NULL");
+    tdkTestObj.addParameter("flag",1);
     expectedresult="FAILURE";
     tdkTestObj.executeTestCase(expectedresult);
     actualresult = tdkTestObj.getResult();

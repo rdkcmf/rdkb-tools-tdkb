@@ -85,7 +85,7 @@ if "SUCCESS" in loadmodulestatus.upper():
     #Script to load the configuration file of the component
     tdkTestObj = obj.createTestStep("MTAHAL_GetParamCharValue");
     tdkTestObj.addParameter("paramName","BatteryInfo");
-    tdkTestObj.addParameter("paramType","NULL");
+    tdkTestObj.addParameter("flag",1);
     expectedresult="FAILURE";
     tdkTestObj.executeTestCase(expectedresult);
     actualresult = tdkTestObj.getResult();
@@ -110,4 +110,3 @@ if "SUCCESS" in loadmodulestatus.upper():
 else:
     print "Failed to load the module";
     obj.setLoadModuleStatus("FAILURE");
-    print "Module loading failed";

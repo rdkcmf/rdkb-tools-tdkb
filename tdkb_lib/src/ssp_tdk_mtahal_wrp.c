@@ -44,51 +44,54 @@ int ssp_MTAHAL_GetParamCharValue(char* paramName, char* value)
 
     if( !(strcmp(paramName, "BatteryPowerStatus")) )
     {
-        return_status = mta_hal_BatteryGetPowerStatus(val, &len);
+        return_status = mta_hal_BatteryGetPowerStatus(value, &len);
         printf("Return status of mta_hal_BatteryGetPowerStatus %d", return_status);
         if ( return_status != SSP_SUCCESS)
         {
             printf("ssp_MTAHAL_GetParamCharValue : Failed to get the Battery Power Status\n");
             return SSP_FAILURE;
         }        
-        snprintf( value, 32, "%s", val);
     }
     else if( !(strcmp(paramName, "BatteryCondition")) )
     {
-        return_status = mta_hal_BatteryGetCondition(val, &len);
+        return_status = mta_hal_BatteryGetCondition(value, &len);
         printf("Return status of mta_hal_BatteryGetCondition %d", return_status);
         if ( return_status != SSP_SUCCESS)
         {
             printf("ssp_MTAHAL_GetParamCharValue : Failed to get the Battery Condition\n");
             return SSP_FAILURE;
         }        
-        snprintf( value, 32, "%s", val);
     }
     else if( !(strcmp(paramName, "BatteryStatus")) )
     {
-        return_status = mta_hal_BatteryGetStatus(val, &len);
+        return_status = mta_hal_BatteryGetStatus(value, &len);
         printf("Return status of mta_hal_BatteryGetStatus %d", return_status);
         if ( return_status != SSP_SUCCESS)
         {
             printf("ssp_MTAHAL_GetParamCharValue : Failed to get the Battery Status\n");
             return SSP_FAILURE;
         }        
-        snprintf( value, 32, "%s", val);
     }
     else if( !(strcmp(paramName, "BatteryLife")) )
     {
-        return_status = mta_hal_BatteryGetLife(val, &len);
+        return_status = mta_hal_BatteryGetLife(value, &len);
         printf("Return status of mta_hal_BatteryGetLife %d", return_status);
         if ( return_status != SSP_SUCCESS)
         {
             printf("ssp_MTAHAL_GetParamCharValue : Failed to get the Battery Life\n");
             return SSP_FAILURE;
         }        
-        snprintf( value, 32, "%s", val);
     }
     else if( !(strcmp(paramName, "BatteryInfo")) )
     {
-        return_status = mta_hal_BatteryGetInfo(&batteryInfo);
+        if (value == NULL)
+        {
+           return_status = mta_hal_BatteryGetInfo(NULL);
+        }
+        else
+        {
+           return_status = mta_hal_BatteryGetInfo(&batteryInfo);
+        }
         printf("Return status of mta_hal_BatteryGetInfo %d", return_status);
         if ( return_status != SSP_SUCCESS)
         {
@@ -206,36 +209,33 @@ int ssp_MTAHAL_GetParamUlongValue(char* paramName, unsigned long* value)
     }
     else if( !(strcmp(paramName, "BatteryRemainingCharge")) )
     {
-        return_status = mta_hal_BatteryGetRemainingCharge(&val);
+        return_status = mta_hal_BatteryGetRemainingCharge(value);
         printf("Return status of mta_hal_BatteryGetRemainingCharge %d", return_status);
         if ( return_status != SSP_SUCCESS)
         {
             printf("ssp_MTAHAL_GetParamUlongValue : Failed to get the Battery Remaining Charge\n");
             return SSP_FAILURE;
         }        
-        *value = val;
     }
     else if( !(strcmp(paramName, "BatteryRemainingTime")) )
     {
-        return_status = mta_hal_BatteryGetRemainingTime(&val);
+        return_status = mta_hal_BatteryGetRemainingTime(value);
         printf("Return status of mta_hal_BatteryGetRemainingTime %d", return_status);
         if ( return_status != SSP_SUCCESS)
         {
             printf("ssp_MTAHAL_GetParamUlongValue : Failed to get the Battery Remaining Time\n");
             return SSP_FAILURE;
         }        
-        *value = val;
     }
     else if( !(strcmp(paramName, "BatteryNumberofCycles")) )
     {
-        return_status = mta_hal_BatteryGetNumberofCycles(&val);
+        return_status = mta_hal_BatteryGetNumberofCycles(value);
         printf("Return status of mta_hal_BatteryGetNumberofCycles %d", return_status);
         if ( return_status != SSP_SUCCESS)
         {
             printf("ssp_MTAHAL_GetParamUlongValue : Failed to get the Battery Number of Cycles\n");
             return SSP_FAILURE;
         }        
-        *value = val;
     }
     else if( !(strcmp(paramName, "BatteryPowerSavingModeStatus")) )
     {
