@@ -395,6 +395,58 @@ typedef struct wifi_associated_dev_tid_stats
 {
   wifi_associated_dev_tid_entry_t tid_array[16];
 } wifi_associated_dev_tid_stats_t;
+
+typedef struct _wifi_device
+{
+     unsigned char wifi_devMacAddress[6];
+     char wifi_devIPAddress[64];
+     int wifi_devAssociatedDeviceAuthentiationState;
+     int  wifi_devSignalStrength;
+     int  wifi_devTxRate;
+     int  wifi_devRxRate;
+} wifi_device_t;
+
+typedef struct _wifi_basicTrafficStats
+{
+     unsigned long wifi_BytesSent;
+     unsigned long wifi_BytesReceived;
+     unsigned long wifi_PacketsSent;
+     unsigned long wifi_PacketsReceived;
+     unsigned long wifi_Associations; 	
+} wifi_basicTrafficStats_t;
+
+typedef struct _wifi_trafficStats
+{
+     unsigned long wifi_ErrorsSent;
+     unsigned long wifi_ErrorsReceived;
+     unsigned long wifi_UnicastPacketsSent;
+     unsigned long wifi_UnicastPacketsReceived;
+     unsigned long wifi_DiscardedPacketsSent;
+     unsigned long wifi_DiscardedPacketsReceived;
+     unsigned long wifi_MulticastPacketsSent;
+     unsigned long wifi_MulticastPacketsReceived;
+     unsigned long wifi_BroadcastPacketsSent;
+     unsigned long wifi_BroadcastPacketsRecevied;
+     unsigned long wifi_UnknownPacketsReceived;
+} wifi_trafficStats_t;
+
+typedef enum {
+    DISCONNECT_TYPE_UNKNOWN                 = 0,    /**< Unknown type               */
+    DISCONNECT_TYPE_DISASSOC,                       /**< Disassociation             */
+    DISCONNECT_TYPE_DEAUTH                          /**< Deauthentication           */
+} wifi_disconnectType_t;
+
+typedef struct {
+    unsigned int        rssiProbeHWM;           /**< Probe response RSSI high water mark    */
+    unsigned int        rssiProbeLWM;           /**< Probe response RSSI low water mark     */
+    unsigned int        rssiAuthHWM;            /**< Auth response RSSI high water mark     */
+    unsigned int        rssiAuthLWM;            /**< Auth response RSSI low water mark      */
+    unsigned int        rssiInactXing;          /**< Inactive RSSI crossing threshold       */
+    unsigned int        rssiHighXing;           /**< High RSSI crossing threshold           */
+    unsigned int        rssiLowXing;            /**< Low RSSI crossing threshold            */
+    unsigned int        authRejectReason;       /**< Inactive RSSI crossing threshold       */
+} wifi_steering_clientConfig_t;
+
 /* To provide external linkage to C Functions defined in TDKB Component folder */
 extern "C"
 {
@@ -447,7 +499,12 @@ extern "C"
     int ssp_WIFIHALGetApAssociatedDeviceDiagnosticResult2(int apIndex, wifi_associated_dev2_t **associated_dev_array, unsigned int *dev_cnt);
     int ssp_WIFIHALGetRadioMode(int radioIndex, char* output_string, unsigned int *puremode);
     int ssp_WIFIHALSetRadioMode(int radioIndex, char* output_string, unsigned int puremode);
-
+    int ssp_WIFIHALGetAssociatedDeviceDetail(int apIndex, int devIndex, wifi_device_t *dev);
+    int ssp_WIFIHALGetBasicTrafficStats(int apIndex, wifi_basicTrafficStats_t *output_struct);
+    int ssp_WIFIHALGetWifiTrafficStats(int apIndex, wifi_trafficStats_t *output_struct);
+    int ssp_WIFIHALSteeringClientDisconnect(unsigned int steeringgroupIndex, int apIndex, mac_address_t client_mac, wifi_disconnectType_t type, unsigned int reason);
+    int ssp_WIFIHALSteeringClientSet(unsigned int steeringgroupIndex, int apIndex, mac_address_t client_mac, wifi_steering_clientConfig_t *cli_cfg);
+    int ssp_WIFIHALSteeringClientRemove(unsigned int steeringgroupIndex, int apIndex, mac_address_t client_mac);
 };
 
 class RDKTestAgent;
@@ -507,7 +564,12 @@ class WIFIHAL : public RDKTestStubInterface, public AbstractServer<WIFIHAL>
                   this->bindAndAddMethod(Procedure("WIFIHAL_GetApAssociatedDeviceDiagnosticResult2",PARAMS_BY_NAME,JSON_STRING,"apIndex",JSON_INTEGER,NULL), &WIFIHAL::WIFIHAL_GetApAssociatedDeviceDiagnosticResult2);
                   this->bindAndAddMethod(Procedure("WIFIHAL_GetRadioMode",PARAMS_BY_NAME,JSON_STRING,"radioIndex",JSON_INTEGER,NULL), &WIFIHAL::WIFIHAL_GetRadioMode);
                   this->bindAndAddMethod(Procedure("WIFIHAL_SetRadioMode",PARAMS_BY_NAME,JSON_STRING,"radioIndex",JSON_INTEGER,"chnmode",JSON_STRING,"puremode",JSON_INTEGER,NULL), &WIFIHAL::WIFIHAL_SetRadioMode);
-
+                  this->bindAndAddMethod(Procedure("WIFIHAL_GetAssociatedDeviceDetail", PARAMS_BY_NAME, JSON_STRING,"apIndex", JSON_INTEGER, "devIndex", JSON_INTEGER, NULL), &WIFIHAL::WIFIHAL_GetAssociatedDeviceDetail);
+                  this->bindAndAddMethod(Procedure("WIFIHAL_GetBasicTrafficStats", PARAMS_BY_NAME, JSON_STRING,"apIndex", JSON_INTEGER, NULL), &WIFIHAL::WIFIHAL_GetBasicTrafficStats);
+                  this->bindAndAddMethod(Procedure("WIFIHAL_GetWifiTrafficStats", PARAMS_BY_NAME, JSON_STRING,"apIndex", JSON_INTEGER, NULL), &WIFIHAL::WIFIHAL_GetWifiTrafficStats);
+                  this->bindAndAddMethod(Procedure("WIFIHAL_SteeringClientDisconnect", PARAMS_BY_NAME, JSON_STRING, "steeringgroupIndex", JSON_INTEGER, "apIndex", JSON_INTEGER, "clientMAC", JSON_STRING, "disconnectType", JSON_INTEGER, "reason", JSON_INTEGER, NULL), &WIFIHAL::WIFIHAL_SteeringClientDisconnect);
+                  this->bindAndAddMethod(Procedure("WIFIHAL_SteeringClientSet", PARAMS_BY_NAME, JSON_STRING, "steeringgroupIndex", JSON_INTEGER, "apIndex", JSON_INTEGER, "clientMAC", JSON_STRING, "rssiProbeHWM", JSON_INTEGER, "rssiProbeLWM", JSON_INTEGER, "rssiAuthHWM", JSON_INTEGER, "rssiAuthLWM", JSON_INTEGER, "rssiInactXing", JSON_INTEGER, "rssiHighXing", JSON_INTEGER, "rssiLowXing", JSON_INTEGER, "authRejectReason", JSON_INTEGER, NULL), &WIFIHAL::WIFIHAL_SteeringClientSet);
+                  this->bindAndAddMethod(Procedure("WIFIHAL_SteeringClientRemove", PARAMS_BY_NAME, JSON_STRING, "steeringgroupIndex", JSON_INTEGER, "apIndex", JSON_INTEGER, "clientMAC", JSON_STRING, NULL), &WIFIHAL::WIFIHAL_SteeringClientRemove);
                 }
         /*inherited functions*/
         bool initialize(IN const char* szVersion);
@@ -564,7 +626,12 @@ class WIFIHAL : public RDKTestStubInterface, public AbstractServer<WIFIHAL>
         void WIFIHAL_GetApAssociatedDeviceDiagnosticResult2(IN const Json::Value& req, OUT Json::Value& response);
         void WIFIHAL_GetRadioMode(IN const Json::Value& req, OUT Json::Value& response);
         void WIFIHAL_SetRadioMode(IN const Json::Value& req, OUT Json::Value& response);
-
+        void WIFIHAL_GetAssociatedDeviceDetail(IN const Json::Value& req, OUT Json::Value& response);
+        void WIFIHAL_GetBasicTrafficStats(IN const Json::Value& req, OUT Json::Value& response);
+        void WIFIHAL_GetWifiTrafficStats(IN const Json::Value& req, OUT Json::Value& response);
+        void WIFIHAL_SteeringClientDisconnect(IN const Json::Value& req, OUT Json::Value& response);
+        void WIFIHAL_SteeringClientSet(IN const Json::Value& req, OUT Json::Value& response);
+        void WIFIHAL_SteeringClientRemove(IN const Json::Value& req, OUT Json::Value& response);
 };
 #endif //__WIFIHAL_STUB_H__
 

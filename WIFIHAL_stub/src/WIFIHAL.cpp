@@ -2664,3 +2664,283 @@ void WIFIHAL::WIFIHAL_GetApIndexFromName (IN const Json::Value& req, OUT Json::V
        }
     DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_GetApIndexFromName  --->Exit\n");
 }
+
+
+/*******************************************************************************************
+ * Function Name        : WIFIHAL_GetAssociatedDeviceDetail
+ * Description          : This function invokes WiFi hal api wifi_getAssociatedDeviceDetail
+ * @param [in] req-     : apIndex - access point index
+                          devIndex - Index of associated device
+ * @param [out] response - filled with SUCCESS or FAILURE based on the output status of operation
+ *
+ ********************************************************************************************/
+void WIFIHAL::WIFIHAL_GetAssociatedDeviceDetail(IN const Json::Value& req, OUT Json::Value& response)
+{
+    DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_GetAssociatedDeviceDetail ----->Entry\n");
+    int apIndex = 0;
+    int devIndex = 0;
+    wifi_device_t dev;
+    int returnValue = 1;
+    char details[2000] = {'\0'};
+
+    apIndex = req["apIndex"].asInt();
+    devIndex = req["devIndex"].asInt();
+
+    returnValue = ssp_WIFIHALGetAssociatedDeviceDetail(apIndex, devIndex, &dev);
+    if(0 == returnValue)
+    {
+        sprintf(details,"Associated Device MAC Address : %02x:%02x:%02x:%02x:%02x:%02x Auth State : %d Rx Rate : %d Tx Rate : %d", dev.wifi_devMacAddress[0], dev.wifi_devMacAddress[1],
+                        dev.wifi_devMacAddress[2], dev.wifi_devMacAddress[3], dev.wifi_devMacAddress[4], dev.wifi_devMacAddress[5],
+                        dev.wifi_devAssociatedDeviceAuthentiationState, dev.wifi_devTxRate, dev.wifi_devRxRate);
+        response["result"]="SUCCESS";
+        response["details"]=details;
+        return;
+    }
+    else
+    {
+        sprintf(details, "wifi_getAssociatedDeviceDetail operation failed");
+        response["result"]="FAILURE";
+        response["details"]=details;
+        DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_GetAssociatedDeviceDetail ---->Error in execution\n");
+        return;
+    }
+}
+
+
+/*******************************************************************************************
+ * Function Name        : WIFIHAL_GetBasicTrafficStats
+ * Description          : This function invokes WiFi hal api wifi_getBasicTrafficStats
+ * @param [in] req-     : apIndex - access point index
+ * @param [out] response - filled with SUCCESS or FAILURE based on the output status of operation
+ *
+ ********************************************************************************************/
+void WIFIHAL::WIFIHAL_GetBasicTrafficStats(IN const Json::Value& req, OUT Json::Value& response)
+{
+    DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_GetBasicTrafficStats ----->Entry\n");
+    int apIndex = 0;
+    wifi_basicTrafficStats_t stats={0};
+    int returnValue = 1;
+    char details[2000] = {'\0'};
+
+    apIndex = req["apIndex"].asInt();
+
+    returnValue = ssp_WIFIHALGetBasicTrafficStats(apIndex, &stats);
+    if(0 == returnValue)
+    {
+        sprintf(details,"BasicTrafficStats Details- wifi_BytesSent %lu, wifi_BytesReceived %lu, wifi_PacketsSent %lu, wifi_PacketsReceived %lu, wifi_Associations %lu", stats.wifi_BytesSent, stats.wifi_BytesReceived, stats.wifi_PacketsSent, stats.wifi_PacketsReceived, stats.wifi_Associations);
+        response["result"]="SUCCESS";
+        response["details"]=details;
+        return;
+    }
+    else
+    {
+        sprintf(details, "wifi_getBasicTrafficStats operation failed");
+        response["result"]="FAILURE";
+        response["details"]=details;
+        DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_GetBasicTrafficStats ---->Error in execution\n");
+        return;
+    }
+}
+
+
+/*******************************************************************************************
+ * Function Name        : WIFIHAL_GetWifiTrafficStats
+ * Description          : This function invokes WiFi hal api wifi_getWifiTrafficStats
+ * @param [in] req-     : apIndex - access point index
+ * @param [out] response - filled with SUCCESS or FAILURE based on the output status of operation
+ *
+ ********************************************************************************************/
+void WIFIHAL::WIFIHAL_GetWifiTrafficStats(IN const Json::Value& req, OUT Json::Value& response)
+{
+    DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_GetWifiTrafficStats ----->Entry\n");
+    int apIndex = 0;
+    wifi_trafficStats_t stats={0};
+    int returnValue = 1;
+    char details[2000] = {'\0'};
+
+    apIndex = req["apIndex"].asInt();
+
+    returnValue = ssp_WIFIHALGetWifiTrafficStats(apIndex, &stats);
+    if(0 == returnValue)
+    {
+        sprintf(details,"WifiTrafficStats Details- wifi_ErrorsSent %lu, wifi_ErrorsReceived %lu, wifi_UnicastPacketsSent %lu, wifi_UnicastPacketsReceived %lu, wifi_DiscardedPacketsSent %lu, wifi_DiscardedPacketsReceived %lu, wifi_MulticastPacketsSent %lu, wifi_MulticastPacketsReceived %lu", stats.wifi_ErrorsSent, stats.wifi_ErrorsReceived, stats.wifi_UnicastPacketsSent, stats.wifi_UnicastPacketsReceived, stats.wifi_DiscardedPacketsSent, stats.wifi_DiscardedPacketsReceived, stats.wifi_MulticastPacketsSent, stats.wifi_MulticastPacketsReceived);
+        response["result"]="SUCCESS";
+        response["details"]=details;
+        return;
+    }
+    else
+    {
+        sprintf(details, "wifi_getWifiTrafficStats operation failed");
+        response["result"]="FAILURE";
+        response["details"]=details;
+        DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_GetWifiTrafficStats ---->Error in execution\n");
+        return;
+    }
+}
+
+
+/*******************************************************************************************
+ * Function Name        : WIFIHAL_SteeringClientDisconnect
+ * Description          : This function invokes WiFi hal api wifi_steering_clientDisconnect
+ * @param [in] req-     : steeringgroupIndex - Wifi Steering Group index
+			  apIndex - access point index
+			  clientMAC - The Client's MAC address
+			  disconnectType - Disconnect Type
+			  reason - Reason code to provide in deauth/disassoc frame
+ * @param [out] response - filled with SUCCESS or FAILURE based on the output status of operation
+ *
+ ********************************************************************************************/
+void WIFIHAL::WIFIHAL_SteeringClientDisconnect(IN const Json::Value& req, OUT Json::Value& response)
+{
+    DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_SteeringClientDisconnect ----->Entry\n");
+    int apIndex = 0;
+    unsigned int steeringgroupIndex = 0;
+    char mac[20] = {'\0'}; 
+    mac_address_t client_mac;
+    unsigned int macInt[6];
+    wifi_disconnectType_t type;
+    unsigned int reason = 0;
+    int returnValue = 1;
+    char details[2000] = {'\0'};
+    int k = 0;
+
+    apIndex = req["apIndex"].asInt();
+    steeringgroupIndex = req["steeringgroupIndex"].asInt();
+    type = (wifi_disconnectType_t)req["disconnectType"].asInt();
+    reason = (unsigned int)req["reason"].asInt();
+    strcpy(mac, req["clientMAC"].asCString());
+    sscanf(mac, "%02x:%02x:%02x:%02x:%02x:%02x", &macInt[0], &macInt[1], &macInt[2], &macInt[3], &macInt[4], &macInt[5]);
+    for (k = 0; k < 6; k++) {
+         client_mac[k] = (unsigned char)macInt[k];
+    }
+
+    returnValue = ssp_WIFIHALSteeringClientDisconnect(steeringgroupIndex, apIndex, client_mac, type, reason);
+    if(0 == returnValue)
+    {
+        sprintf(details, "wifi_steering_clientDisconnect operation is success");
+        response["result"]="SUCCESS";
+        response["details"]=details;
+        return;
+    }
+    else
+    {
+        sprintf(details, "wifi_steering_clientDisconnect operation failed");
+        response["result"]="FAILURE";
+        response["details"]=details;
+        DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_SteeringClientDisconnect ---->Error in execution\n");
+        return;
+    }
+}
+
+
+/*******************************************************************************************
+ * Function Name        : WIFIHAL_SteeringClientSet
+ * Description          : This function invokes WiFi hal api wifi_steering_clientSet
+ * @param [in] req-     : steeringgroupIndex - Wifi Steering Group index
+                          apIndex - access point index
+                          clientMAC - The Client's MAC address
+                          rssiProbeHWM - Probe response RSSI high water mark
+                          rssiProbeLWM - Probe response RSSI low water mark
+                          rssiAuthHWM - Auth response RSSI high water mark
+                          rssiAuthLWM - Auth response RSSI low water mark
+                          rssiInactXing - Inactive RSSI crossing threshold
+                          rssiHighXing - High RSSI crossing threshold
+                          rssiLowXing - Low RSSI crossing threshold
+                          authRejectReason - Inactive RSSI crossing threshold
+ * @param [out] response - filled with SUCCESS or FAILURE based on the output status of operation
+ *
+ ********************************************************************************************/
+void WIFIHAL::WIFIHAL_SteeringClientSet(IN const Json::Value& req, OUT Json::Value& response)
+{
+    DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_SteeringClientSet ----->Entry\n");
+    int apIndex = 0;
+    unsigned int steeringgroupIndex = 0;
+    char mac[20] = {'\0'};
+    mac_address_t client_mac;
+    unsigned int macInt[6];
+    wifi_steering_clientConfig_t cli_cfg = {0};
+    int returnValue = 1;
+    char details[2000] = {'\0'};
+    int k = 0;
+
+    apIndex = req["apIndex"].asInt();
+    steeringgroupIndex = req["steeringgroupIndex"].asInt();
+    cli_cfg.rssiProbeHWM = req["rssiProbeHWM"].asInt();
+    cli_cfg.rssiProbeLWM = req["rssiProbeLWM"].asInt();
+    cli_cfg.rssiAuthHWM = req["rssiAuthHWM"].asInt();
+    cli_cfg.rssiAuthLWM = req["rssiAuthLWM"].asInt();
+    cli_cfg.rssiInactXing = req["rssiInactXing"].asInt();
+    cli_cfg.rssiHighXing = req["rssiHighXing"].asInt();
+    cli_cfg.rssiLowXing = req["rssiLowXing"].asInt();
+    cli_cfg.authRejectReason = req["authRejectReason"].asInt();
+    strcpy(mac, req["clientMAC"].asCString());
+    sscanf(mac, "%02x:%02x:%02x:%02x:%02x:%02x", &macInt[0], &macInt[1], &macInt[2], &macInt[3], &macInt[4], &macInt[5]);
+    for (k = 0; k < 6; k++) {
+         client_mac[k] = (unsigned char)macInt[k];
+    }
+
+    returnValue = ssp_WIFIHALSteeringClientSet(steeringgroupIndex, apIndex, client_mac, &cli_cfg);
+    if(0 == returnValue)
+    {
+        sprintf(details, "wifi_steering_clientSet operation is success");
+        response["result"]="SUCCESS";
+        response["details"]=details;
+        return;
+    }
+    else
+    {
+        sprintf(details, "wifi_steering_clientSet operation failed");
+        response["result"]="FAILURE";
+        response["details"]=details;
+        DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_SteeringClientSet ---->Error in execution\n");
+        return;
+    }
+}
+
+
+/*******************************************************************************************
+ * Function Name        : WIFIHAL_SteeringClientRemove
+ * Description          : This function invokes WiFi hal api wifi_steering_clientRemove
+ * @param [in] req-     : steeringgroupIndex - Wifi Steering Group index
+                          apIndex - access point index
+                          clientMAC - The Client's MAC address
+ * @param [out] response - filled with SUCCESS or FAILURE based on the output status of operation
+ *
+ ********************************************************************************************/
+void WIFIHAL::WIFIHAL_SteeringClientRemove(IN const Json::Value& req, OUT Json::Value& response)
+{
+    DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_SteeringClientRemove ----->Entry\n");
+    int apIndex = 0;
+    unsigned int steeringgroupIndex = 0;
+    char mac[20] = {'\0'};
+    mac_address_t client_mac;
+    unsigned int macInt[6];
+    int returnValue = 1;
+    char details[2000] = {'\0'};
+    int k = 0;
+
+    apIndex = req["apIndex"].asInt();
+    steeringgroupIndex = req["steeringgroupIndex"].asInt();
+    strcpy(mac, req["clientMAC"].asCString());
+    sscanf(mac, "%02x:%02x:%02x:%02x:%02x:%02x", &macInt[0], &macInt[1], &macInt[2], &macInt[3], &macInt[4], &macInt[5]);
+    for (k = 0; k < 6; k++) {
+         client_mac[k] = (unsigned char)macInt[k];
+    }
+
+    returnValue = ssp_WIFIHALSteeringClientRemove(steeringgroupIndex, apIndex, client_mac);
+    if(0 == returnValue)
+    {
+        sprintf(details, "wifi_steering_clientRemove operation is success");
+        response["result"]="SUCCESS";
+        response["details"]=details;
+        return;
+    }
+    else
+    {
+        sprintf(details, "wifi_steering_clientRemove operation failed");
+        response["result"]="FAILURE";
+        response["details"]=details;
+        DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_SteeringClientRemove ---->Error in execution\n");
+        return;
+    }
+}
