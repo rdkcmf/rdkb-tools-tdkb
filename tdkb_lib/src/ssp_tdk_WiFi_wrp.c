@@ -355,6 +355,10 @@ int ssp_WIFIHALGetOrSetParamStringValue(int radioIndex, char* output, char* meth
     printf("GetorSetParam: %s\n" , output);
     printf("MethodName: %s\n", method);
     int return_status = 0;
+    wifi_device_t dev = {0};
+    char mac[64] = {'\0'};
+    char *token = NULL;
+    int count = 0;
 
     if(!strcmp(method, "getRadioChannelsInUse"))
         return_status = wifi_getRadioChannelsInUse(radioIndex, output);
@@ -474,6 +478,19 @@ int ssp_WIFIHALGetOrSetParamStringValue(int radioIndex, char* output, char* meth
         return_status = wifi_getApSecurityMFPConfig(radioIndex, output);
     else if(!strcmp(method, "setApSecurityMFPConfig"))
         return_status = wifi_setApSecurityMFPConfig(radioIndex, output);
+    else if(!strcmp(method, "kickAssociatedDevice"))
+    {
+        strncpy(mac, output, 64);
+        token = mac;
+        token = strtok(token, ":");
+        while ((token != NULL) && (count<6))
+        {
+             dev.wifi_devMacAddress[count] = (int) strtol(token, NULL, 16);
+             count++;
+             token = strtok(NULL, ":");
+        }
+        return_status = wifi_kickAssociatedDevice(radioIndex, &dev);
+    }
     else
     {
         return_status = SSP_FAILURE;
@@ -1920,4 +1937,187 @@ int ssp_WIFIHALGetApIndexFromName(char* ssidName, int *output)
      return return_status;
     }
     printf("\n ssp_WIFIHALGetApIndexFromName ----> Exit\n");
+}
+
+
+/*******************************************************************************************
+ *
+ * Function Name        : ssp_WIFIHALGetAssociatedDeviceDetail
+ * Description          : This function invokes WiFi hal api wifi_getAssociatedDeviceDetail()
+ * @param [in]          : apIndex   - accesspoint index
+                          devIndex - associated device index
+ * @param [out]         : return status an integer value 0-success and 1-Failure
+ *
+ ********************************************************************************************/
+int ssp_WIFIHALGetAssociatedDeviceDetail(int apIndex, int devIndex, wifi_device_t *dev)
+{
+    printf("\n ssp_WIFIHALGetAssociatedDeviceDetail ----> Entry\n");
+    printf("ap index:%d devIndex:%d \n",apIndex, devIndex);
+
+    int return_status = 0;
+    return_status = wifi_getAssociatedDeviceDetail(apIndex, devIndex, dev);
+    if(return_status != SSP_SUCCESS)
+    {
+     printf("\nssp_WIFIHALGetAssociatedDeviceDetail::Failed. Ret:status %d\n", return_status);
+     return return_status;
+    }
+    else
+    {
+     printf("\n ssp_WIFIHALGetAssociatedDeviceDetail::Success. Ret:status %d\n", return_status);
+     return return_status;
+    }
+    printf("\n ssp_WIFIHALGetApAssociatedDeviceDetail ---> Exit\n");
+}
+
+
+/*******************************************************************************************
+ *
+ * Function Name        : ssp_WIFIHALGetBasicTrafficStats
+ * Description          : This function invokes WiFi hal api wifi_getBasicTrafficStats()
+ * @param [in]          : apIndex   - accesspoint index
+ * @param [out]         : return status an integer value 0-success and 1-Failure
+ *
+ ********************************************************************************************/
+int ssp_WIFIHALGetBasicTrafficStats(int apIndex, wifi_basicTrafficStats_t *output_struct)
+{
+    printf("\n ssp_WIFIHALGetBasicTrafficStats ----> Entry\n");
+    printf("ap index:%d \n",apIndex);
+
+    int return_status = 1;
+    return_status = wifi_getBasicTrafficStats(apIndex, output_struct);
+    if(return_status != SSP_SUCCESS)
+    {
+     printf("\nssp_WIFIHALGetBasicTrafficStats::Failed. Ret:status %d\n", return_status);
+     return return_status;
+    }
+    else
+    {
+     printf("\n ssp_WIFIHALGetBasicTrafficStats::Success. Ret:status %d\n", return_status);
+     return return_status;
+    }
+    printf("\n ssp_WIFIHALGetBasicTrafficStats ---> Exit\n");
+}
+
+
+/*******************************************************************************************
+ *
+ * Function Name        : ssp_WIFIHALGetWifiTrafficStats
+ * Description          : This function invokes WiFi hal api wifi_getWifiTrafficStats()
+ * @param [in]          : apIndex   - accesspoint index
+ * @param [out]         : return status an integer value 0-success and 1-Failure
+ *
+ ********************************************************************************************/
+int ssp_WIFIHALGetWifiTrafficStats(int apIndex, wifi_trafficStats_t *output_struct)
+{
+    printf("\n ssp_WIFIHALGetWifiTrafficStats ----> Entry\n");
+    printf("ap index:%d \n",apIndex);
+
+    int return_status = 1;
+    return_status = wifi_getWifiTrafficStats(apIndex, output_struct);
+    if(return_status != SSP_SUCCESS)
+    {
+     printf("\nssp_WIFIHALGetWifiTrafficStats::Failed. Ret:status %d\n", return_status);
+     return return_status;
+    }
+    else
+    {
+     printf("\n ssp_WIFIHALGetWifiTrafficStats::Success. Ret:status %d\n", return_status);
+     return return_status;
+    }
+    printf("\n ssp_WIFIHALGetWifiTrafficStats ---> Exit\n");
+}
+
+
+/*******************************************************************************************
+ *
+ * Function Name        : ssp_WIFIHALSteeringClientDisconnect
+ * Description          : This function invokes WiFi hal api wifi_steering_clientDisconnect()
+ * @param [in]          : steeringgroupIndex - Wifi Steering Group index 
+			  apIndex   - accesspoint index
+                          client_mac - The Client's MAC address
+                          type - Disconnect Type
+                          reason - Reason code to provide in deauth/disassoc frame
+ * @param [out]         : return status an integer value 0-success and 1-Failure
+ *
+ ********************************************************************************************/
+int ssp_WIFIHALSteeringClientDisconnect(unsigned int steeringgroupIndex, int apIndex, mac_address_t client_mac, wifi_disconnectType_t type, unsigned int reason)
+{
+    printf("\n ssp_WIFIHALSteeringClientDisconnect ----> Entry\n");
+    printf("ap index:%d \n",apIndex);
+
+    int return_status = 1;
+    return_status = wifi_steering_clientDisconnect(steeringgroupIndex, apIndex, client_mac, type, reason);
+    if(return_status != SSP_SUCCESS)
+    {
+     printf("\nssp_WIFIHALSteeringClientDisconnect::Failed. Ret:status %d\n", return_status);
+     return return_status;
+    }
+    else
+    {
+     printf("\n ssp_WIFIHALSteeringClientDisconnect::Success. Ret:status %d\n", return_status);
+     return return_status;
+    }
+    printf("\n ssp_WIFIHALSteeringClientDisconnect ---> Exit\n");
+}
+
+/*******************************************************************************************
+ *
+ * Function Name        : ssp_WIFIHALSteeringClientDisconnect
+ * Description          : This function invokes WiFi hal api wifi_steering_clientDisconnect()
+ * @param [in]          : steeringgroupIndex - Wifi Steering Group index
+                          apIndex   - accesspoint index
+                          client_mac - The Client's MAC address
+                          wifi_steering_clientConfig_t - Steering client config
+ * @param [out]         : return status an integer value 0-success and 1-Failure
+ *
+ ********************************************************************************************/
+int ssp_WIFIHALSteeringClientSet(unsigned int steeringgroupIndex, int apIndex, mac_address_t client_mac, wifi_steering_clientConfig_t *cli_cfg)
+{
+    printf("\n ssp_WIFIHALSteeringClientSet ----> Entry\n");
+    printf("ap index:%d \n",apIndex);
+
+    int return_status = 1;
+    return_status = wifi_steering_clientSet(steeringgroupIndex, apIndex, client_mac, cli_cfg);
+    if(return_status != SSP_SUCCESS)
+    {
+     printf("\nssp_WIFIHALSteeringClientSet::Failed. Ret:status %d\n", return_status);
+     return return_status;
+    }
+    else
+    {
+     printf("\n ssp_WIFIHALSteeringClientSet::Success. Ret:status %d\n", return_status);
+     return return_status;
+    }
+    printf("\n ssp_WIFIHALSteeringClientSet ---> Exit\n");
+}
+
+
+/*******************************************************************************************
+ *
+ * Function Name        : ssp_WIFIHALSteeringClientRemove
+ * Description          : This function invokes WiFi hal api wifi_steering_clientRemove()
+ * @param [in]          : steeringgroupIndex - Wifi Steering Group index
+                          apIndex   - accesspoint index
+                          client_mac - The Client's MAC address
+ * @param [out]         : return status an integer value 0-success and 1-Failure
+ *
+ ********************************************************************************************/
+int ssp_WIFIHALSteeringClientRemove(unsigned int steeringgroupIndex, int apIndex, mac_address_t client_mac)
+{
+    printf("\n ssp_WIFIHALSteeringClientRemove ----> Entry\n");
+    printf("ap index:%d \n",apIndex);
+
+    int return_status = 1;
+    return_status = wifi_steering_clientRemove(steeringgroupIndex, apIndex, client_mac);
+    if(return_status != SSP_SUCCESS)
+    {
+     printf("\nssp_WIFIHALSteeringClientRemove::Failed. Ret:status %d\n", return_status);
+     return return_status;
+    }
+    else
+    {
+     printf("\n ssp_WIFIHALSteeringClientRemove::Success. Ret:status %d\n", return_status);
+     return return_status;
+    }
+    printf("\n ssp_WIFIHALSteeringClientRemove ---> Exit\n");
 }
