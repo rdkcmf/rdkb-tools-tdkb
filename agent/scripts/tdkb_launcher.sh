@@ -74,6 +74,8 @@ if [ -f /version.txt ]; then
 
                         if [ $DNLD_RES -eq 0 ]; then
                                 echo "TDK-B package download is successful" >> $LOG_FILE
+				echo "Sleep for 60 seconds for the package to untar...." >> $LOG_FILE
+				sleep 60
                                 export PATH=$PATH:$TDK_AGENT_RDM_PATH
                                 export LD_LIBRARY_PATH=/lib:/usr/lib:$TDK_AGENT_LIB_PATH
                                 if [ -f "$TDK_AGENT_RDM_PATH/StartTDK.sh" ]; then
