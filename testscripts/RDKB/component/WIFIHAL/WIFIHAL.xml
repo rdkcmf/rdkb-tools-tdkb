@@ -361,6 +361,61 @@
           <parameter name="param" value=" "/>
         </parameters>
       </primitiveTest>
+      <primitiveTest name="WIFIHAL_GetWifiTrafficStats" id=" " version="1">
+        <function>WIFIHAL_GetWifiTrafficStats</function>
+        <parameters>
+          <parameter name="apIndex" value=""/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest name="WIFIHAL_GetBasicTrafficStats" id=" " version="1">
+        <function>WIFIHAL_GetBasicTrafficStats</function>
+        <parameters>
+          <parameter name="apIndex" value=""/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest name="WIFIHAL_SteeringClientSet" id=" " version="1">
+        <function>WIFIHAL_SteeringClientSet</function>
+        <parameters>
+          <parameter name="apIndex" value=""/>
+          <parameter name="authRejectReason" value=""/>
+          <parameter name="clientMAC" value=""/>
+          <parameter name="rssiAuthHWM" value=""/>
+          <parameter name="rssiAuthLWM" value=""/>
+          <parameter name="rssiHighXing" value=""/>
+          <parameter name="rssiInactXing" value=""/>
+          <parameter name="rssiLowXing" value=""/>
+          <parameter name="rssiProbeHWM" value=""/>
+          <parameter name="rssiProbeLWM" value=""/>
+          <parameter name="steeringgroupIndex" value=""/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest name="WIFIHAL_SteeringClientRemove" id=" " version="1">
+        <function>WIFIHAL_SteeringClientRemove</function>
+        <parameters>
+          <parameter name="apIndex" value=""/>
+          <parameter name="clientMAC" value=""/>
+          <parameter name="steeringgroupIndex" value=""/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest name="WIFIHAL_CreateAp" id=" " version="1">
+        <function>WIFIHAL_CreateAp</function>
+        <parameters>
+          <parameter name="apIndex" value=""/>
+          <parameter name="essid" value=""/>
+          <parameter name="hideSsid" value=""/>
+          <parameter name="radioIndex" value=""/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest name="WIFIHAL_SteeringClientDisconnect" id=" " version="1">
+        <function>WIFIHAL_SteeringClientDisconnect</function>
+        <parameters>
+          <parameter name="apIndex" value=""/>
+          <parameter name="clientMAC" value=""/>
+          <parameter name="disconnectType" value=""/>
+          <parameter name="reason" value=""/>
+          <parameter name="steeringgroupIndex" value=""/>
+        </parameters>
+      </primitiveTest>
     </primitiveTests>
   </module>
 </xml>
