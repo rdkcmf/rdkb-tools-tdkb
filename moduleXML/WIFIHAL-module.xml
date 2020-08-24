@@ -24,7 +24,7 @@
   <!-- Excecution time out of module -->
     <testGroup>Component</testGroup>
   <!-- Logs File Names of module -->
-    <logFileNames>[]</logFileNames>
+    <logFileNames>[/rdklogs/logs/qtn_hal.log, /rdklogs/logs/WiFilog.txt.0, /rdklogs/logs/WiFilog.txt.1]</logFileNames>
   <!-- Crash File Names of the module -->
     <crashFileNames>[]</crashFileNames>
   <!-- Total functions corresponding module  -->
@@ -40,7 +40,50 @@
       <function name='WIFIHAL_Reset' />
       <function name='WIFIHAL_GetOrSetSecurityRadiusServer' />
       <function name='WIFIHAL_GetOrSetRadioStandard' />
+      <function name='WIFIHAL_GetOrSetApBridgeInfo' />
+      <function name='WIFIHAL_Down' />
+      <function name='WIFIHAL_Init' />
+      <function name='WIFIHAL_GetOrSetRadioDCSScanTime' />
+      <function name='WIFIHAL_AddorDelApAclDevice' />
+      <function name='WIFIHAL_IfConfigUporDown' />
+      <function name='WIFIHAL_GetOrSetSecurityRadiusSettings' />
+      <function name='WIFIHAL_GetRadioTrafficStats2' />
+      <function name='WIFIHAL_ParamRadioIndex' />
+      <function name='WIFIHAL_StartorStopHostApd' />
+      <function name='WIFIHAL_FactoryReset' />
+      <function name='WIFIHAL_GetSSIDTrafficStats2' />
+      <function name='WIFIHAL_GetNeighboringWiFiDiagnosticResult2' />
+      <function name='WIFIHAL_CreateInitialConfigFiles' />
+      <function name='WIFIHAL_GetApAssociatedDeviceDiagnosticResult' />
+      <function name='WIFIHAL_GetBandSteeringLog' />
+      <function name='WIFIHAL_GetApAssociatedDeviceStats' />
+      <function name='WIFIHAL_GetApAssociatedDeviceRxStatsResult' />
+      <function name='WIFIHAL_GetRadioChannelStats' />
+      <function name='WIFIHAL_PushRadioChannel2' />
+      <function name='WIFIHAL_GetNeighboringWiFiStatus' />
+      <function name='WIFIHAL_StartNeighborScan' />
+      <function name='WIFIHAL_GetApAclDevices' />
+      <function name='WIFIHAL_SetApScanFilter' />
+      <function name='WIFIHAL_ParamApIndex' />
+      <function name='WIFIHAL_GetApAssociatedDevice' />
+      <function name='WIFIHAL_GetApDeviceRSSI' />
+      <function name='WIFIHAL_GetApAssociatedDeviceDiagnosticResult3' />
+      <function name='WIFIHAL_DelApAclDevices' />
+      <function name='WIFIHAL_GetApAssociatedDeviceDiagnosticResult2' />
+      <function name='WIFIHAL_GetApAssociatedDeviceTxStatsResult' />
+      <function name='WIFIHAL_GetApDeviceTxRxRate' />
+      <function name='WIFIHAL_GetRadioChannelStats2' />
+      <function name='WIFIHAL_GetApAssociatedDeviceTidStatsResult' />
+      <function name='WIFIHAL_GetRadioMode' />
+      <function name='WIFIHAL_SetRadioMode' />
       <function name='WIFIHAL_GetApIndexFromName' />
+      <function name='WIFIHAL_GetAssociatedDeviceDetail' />
+      <function name='WIFIHAL_GetBasicTrafficStats' />
+      <function name='WIFIHAL_GetWifiTrafficStats' />
+      <function name='WIFIHAL_CreateAp' />
+      <function name='WIFIHAL_SteeringClientSet' />
+      <function name='WIFIHAL_SteeringClientRemove' />
+      <function name='WIFIHAL_SteeringClientDisconnect' />
     </functions>
   <!-- Total parameters corresponding module  -->
     <parameters>
@@ -79,7 +122,113 @@
       <parameter funName='WIFIHAL_GetOrSetRadioStandard' parameterName='gOnly' parameterType='INTEGER' range='0-1' />
       <parameter funName='WIFIHAL_GetOrSetRadioStandard' parameterName='nOnly' parameterType='INTEGER' range='0-1' />
       <parameter funName='WIFIHAL_GetOrSetRadioStandard' parameterName='acOnly' parameterType='INTEGER' range='0-1' />
+      <parameter funName='WIFIHAL_GetOrSetApBridgeInfo' parameterName='methodName' parameterType='STRING' range='A-Z' />
+      <parameter funName='WIFIHAL_GetOrSetApBridgeInfo' parameterName='radioIndex' parameterType='INTEGER' range='0-1' />
+      <parameter funName='WIFIHAL_GetOrSetApBridgeInfo' parameterName='paramType' parameterType='STRING' range='A-Z' />
+      <parameter funName='WIFIHAL_GetOrSetApBridgeInfo' parameterName='bridgeName' parameterType='STRING' range='A-Z' />
+      <parameter funName='WIFIHAL_GetOrSetApBridgeInfo' parameterName='IP' parameterType='STRING' range='A-Z' />
+      <parameter funName='WIFIHAL_GetOrSetApBridgeInfo' parameterName='subnet' parameterType='STRING' range='A-Z' />
+      <parameter funName='WIFIHAL_GetOrSetRadioDCSScanTime' parameterName='methodName' parameterType='STRING' range='A-Z' />
+      <parameter funName='WIFIHAL_GetOrSetRadioDCSScanTime' parameterName='radioIndex' parameterType='INTEGER' range='0-1' />
+      <parameter funName='WIFIHAL_GetOrSetRadioDCSScanTime' parameterName='output_interval_seconds' parameterType='INTEGER' range='0-500' />
+      <parameter funName='WIFIHAL_GetOrSetRadioDCSScanTime' parameterName='output_dwell_milliseconds' parameterType='INTEGER' range='0-500' />
+      <parameter funName='WIFIHAL_GetOrSetRadioDCSScanTime' parameterName='paramType' parameterType='STRING' range='A-Z' />
+      <parameter funName='WIFIHAL_AddorDelApAclDevice' parameterName='methodName' parameterType='STRING' range='A-Z' />
+      <parameter funName='WIFIHAL_AddorDelApAclDevice' parameterName='apIndex' parameterType='INTEGER' range='0-2' />
+      <parameter funName='WIFIHAL_AddorDelApAclDevice' parameterName='DeviceMacAddress' parameterType='STRING' range='A-Z' />
+      <parameter funName='WIFIHAL_IfConfigUporDown' parameterName='methodName' parameterType='STRING' range='A-Z' />
+      <parameter funName='WIFIHAL_IfConfigUporDown' parameterName='apIndex' parameterType='INTEGER' range='0-2' />
+      <parameter funName='WIFIHAL_GetOrSetSecurityRadiusSettings' parameterName='radioIndex' parameterType='INTEGER' range='0-1' />
+      <parameter funName='WIFIHAL_GetOrSetSecurityRadiusSettings' parameterName='methodName' parameterType='STRING' range='A-Z' />
+      <parameter funName='WIFIHAL_GetOrSetSecurityRadiusSettings' parameterName='RadiusServerRetries' parameterType='INTEGER' range='0-100' />
+      <parameter funName='WIFIHAL_GetOrSetSecurityRadiusSettings' parameterName='RadiusServerRequestTimeout' parameterType='INTEGER' range='0-100' />
+      <parameter funName='WIFIHAL_GetOrSetSecurityRadiusSettings' parameterName='PMKLifetime' parameterType='INTEGER' range='0-100' />
+      <parameter funName='WIFIHAL_GetOrSetSecurityRadiusSettings' parameterName='PMKCaching' parameterType='INTEGER' range='0-100' />
+      <parameter funName='WIFIHAL_GetOrSetSecurityRadiusSettings' parameterName='PMKCacheInterval' parameterType='INTEGER' range='0-100' />
+      <parameter funName='WIFIHAL_GetOrSetSecurityRadiusSettings' parameterName='MaxAuthenticationAttempts' parameterType='INTEGER' range='0-100' />
+      <parameter funName='WIFIHAL_GetOrSetSecurityRadiusSettings' parameterName='BlacklistTableTimeout' parameterType='INTEGER' range='0-100' />
+      <parameter funName='WIFIHAL_GetOrSetSecurityRadiusSettings' parameterName='IdentityRequestRetryInterval' parameterType='INTEGER' range='0-100' />
+      <parameter funName='WIFIHAL_GetOrSetSecurityRadiusSettings' parameterName='QuietPeriodAfterFailedAuthentication' parameterType='INTEGER' range='0-100' />
+      <parameter funName='WIFIHAL_GetRadioTrafficStats2' parameterName='radioIndex' parameterType='INTEGER' range='0-1' />
+      <parameter funName='WIFIHAL_GetRadioTrafficStats2' parameterName='methodName' parameterType='STRING' range='A-Z' />
+      <parameter funName='WIFIHAL_GetRadioTrafficStats2' parameterName='radio_BytesSent' parameterType='INTEGER' range='0-500' />
+      <parameter funName='WIFIHAL_ParamRadioIndex' parameterName='methodName' parameterType='STRING' range='A-Z' />
+      <parameter funName='WIFIHAL_ParamRadioIndex' parameterName='radioIndex' parameterType='INTEGER' range='0-2' />
+      <parameter funName='WIFIHAL_StartorStopHostApd' parameterName='methodName' parameterType='STRING' range='A-Z' />
+      <parameter funName='WIFIHAL_FactoryReset' parameterName='methodName' parameterType='STRING' range='A-Z' />
+      <parameter funName='WIFIHAL_GetSSIDTrafficStats2' parameterName='radioIndex' parameterType='INTEGER' range='0-1' />
+      <parameter funName='WIFIHAL_GetNeighboringWiFiDiagnosticResult2' parameterName='radioIndex' parameterType='INTEGER' range='0-1' />
+      <parameter funName='WIFIHAL_GetApAssociatedDeviceDiagnosticResult' parameterName='radioIndex' parameterType='INTEGER' range='0-1' />
+      <parameter funName='WIFIHAL_GetBandSteeringLog' parameterName='record_index' parameterType='INTEGER' range='0-100' />
+      <parameter funName='WIFIHAL_GetApAssociatedDeviceStats' parameterName='apIndex' parameterType='INTEGER' range='0-100' />
+      <parameter funName='WIFIHAL_GetApAssociatedDeviceStats' parameterName='MAC' parameterType='STRING' range='A-Z' />
+      <parameter funName='WIFIHAL_GetApAssociatedDeviceRxStatsResult' parameterName='radioIndex' parameterType='INTEGER' range='0-1' />
+      <parameter funName='WIFIHAL_GetApAssociatedDeviceRxStatsResult' parameterName='MAC' parameterType='STRING' range='A-Z' />
+      <parameter funName='WIFIHAL_GetRadioChannelStats' parameterName='radioIndex' parameterType='INTEGER' range='0-1' />
+      <parameter funName='WIFIHAL_GetRadioChannelStats' parameterName='ch_number' parameterType='INTEGER' range='0-100' />
+      <parameter funName='WIFIHAL_GetRadioChannelStats' parameterName='ch_in_pool' parameterType='INTEGER' range='0-1' />
+      <parameter funName='WIFIHAL_GetRadioChannelStats' parameterName='array_size' parameterType='INTEGER' range='0-256' />
+      <parameter funName='WIFIHAL_PushRadioChannel2' parameterName='radioIndex' parameterType='INTEGER' range='0-1' />
+      <parameter funName='WIFIHAL_PushRadioChannel2' parameterName='channel' parameterType='INTEGER' range='0-100' />
+      <parameter funName='WIFIHAL_PushRadioChannel2' parameterName='channel_width_MHz' parameterType='INTEGER' range='0-100' />
+      <parameter funName='WIFIHAL_PushRadioChannel2' parameterName='csa_beacon_count' parameterType='INTEGER' range='0-100' />
+      <parameter funName='WIFIHAL_GetNeighboringWiFiStatus' parameterName='radioIndex' parameterType='INTEGER' range='0-1' />
+      <parameter funName='WIFIHAL_StartNeighborScan' parameterName='apIndex' parameterType='INTEGER' range='0-10' />
+      <parameter funName='WIFIHAL_StartNeighborScan' parameterName='scan_mode' parameterType='INTEGER' range='0-10' />
+      <parameter funName='WIFIHAL_StartNeighborScan' parameterName='dwell_time' parameterType='INTEGER' range='0-10' />
+      <parameter funName='WIFIHAL_GetApAclDevices' parameterName='apIndex' parameterType='INTEGER' range='0-100' />
+      <parameter funName='WIFIHAL_SetApScanFilter' parameterName='apIndex' parameterType='INTEGER' range='0-1' />
+      <parameter funName='WIFIHAL_SetApScanFilter' parameterName='mode' parameterType='INTEGER' range='0-1' />
+      <parameter funName='WIFIHAL_SetApScanFilter' parameterName='essid' parameterType='STRING' range='A-Z' />
+      <parameter funName='WIFIHAL_ParamApIndex' parameterName='methodName' parameterType='STRING' range='A-Z' />
+      <parameter funName='WIFIHAL_ParamApIndex' parameterName='apIndex' parameterType='INTEGER' range='1-100' />
+      <parameter funName='WIFIHAL_GetApAssociatedDevice' parameterName='apIndex' parameterType='INTEGER' range='0-100' />
+      <parameter funName='WIFIHAL_GetApDeviceRSSI' parameterName='methodName' parameterType='STRING' range='a-z' />
+      <parameter funName='WIFIHAL_GetApDeviceRSSI' parameterName='apIndex' parameterType='INTEGER' range='0-100' />
+      <parameter funName='WIFIHAL_GetApDeviceRSSI' parameterName='MAC' parameterType='STRING' range='a-z' />
+      <parameter funName='WIFIHAL_GetApAssociatedDeviceDiagnosticResult3' parameterName='apIndex' parameterType='INTEGER' range='0-10' />
+      <parameter funName='WIFIHAL_DelApAclDevices' parameterName='apIndex' parameterType='INTEGER' range='0-100' />
+      <parameter funName='WIFIHAL_GetApAssociatedDeviceDiagnosticResult2' parameterName='apIndex' parameterType='INTEGER' range='0-100' />
+      <parameter funName='WIFIHAL_GetApAssociatedDeviceTxStatsResult' parameterName='radioIndex' parameterType='INTEGER' range='0-100' />
+      <parameter funName='WIFIHAL_GetApAssociatedDeviceTxStatsResult' parameterName='MAC' parameterType='STRING' range='A-Z' />
+      <parameter funName='WIFIHAL_GetApDeviceTxRxRate' parameterName='methodName' parameterType='STRING' range='A-Z' />
+      <parameter funName='WIFIHAL_GetApDeviceTxRxRate' parameterName='apIndex' parameterType='INTEGER' range='0-100' />
+      <parameter funName='WIFIHAL_GetApDeviceTxRxRate' parameterName='MAC' parameterType='STRING' range='A-Z' />
+      <parameter funName='WIFIHAL_GetRadioChannelStats2' parameterName='radioIndex' parameterType='INTEGER' range='0-100' />
+      <parameter funName='WIFIHAL_GetApAssociatedDeviceTidStatsResult' parameterName='radioIndex' parameterType='INTEGER' range='0-100' />
+      <parameter funName='WIFIHAL_GetApAssociatedDeviceTidStatsResult' parameterName='MAC' parameterType='STRING' range='A-Z' />
+      <parameter funName='WIFIHAL_GetRadioMode' parameterName='radioIndex' parameterType='INTEGER' range='0-16' />
+      <parameter funName='WIFIHAL_SetRadioMode' parameterName='radioIndex' parameterType='INTEGER' range='0-16' />
+      <parameter funName='WIFIHAL_SetRadioMode' parameterName='chnmode' parameterType='STRING' range='A-Z' />
+      <parameter funName='WIFIHAL_SetRadioMode' parameterName='puremode' parameterType='INTEGER' range='0-50' />
       <parameter funName='WIFIHAL_GetApIndexFromName' parameterName='param' parameterType='STRING' range='A-Z' />
+      <parameter funName='WIFIHAL_GetAssociatedDeviceDetail' parameterName='apIndex' parameterType='INTEGER' range='0-50' />
+      <parameter funName='WIFIHAL_GetAssociatedDeviceDetail' parameterName='devIndex' parameterType='INTEGER' range='0-50' />
+      <parameter funName='WIFIHAL_GetBasicTrafficStats' parameterName='apIndex' parameterType='INTEGER' range='0-10' />
+      <parameter funName='WIFIHAL_GetWifiTrafficStats' parameterName='apIndex' parameterType='INTEGER' range='0-10' />
+      <parameter funName='WIFIHAL_CreateAp' parameterName='apIndex' parameterType='INTEGER' range='0-50' />
+      <parameter funName='WIFIHAL_CreateAp' parameterName='radioIndex' parameterType='INTEGER' range='0-50' />
+      <parameter funName='WIFIHAL_CreateAp' parameterName='essid' parameterType='STRING' range='A-Z' />
+      <parameter funName='WIFIHAL_CreateAp' parameterName='hideSsid' parameterType='INTEGER' range='0-1' />
+      <parameter funName='WIFIHAL_SteeringClientSet' parameterName='apIndex' parameterType='INTEGER' range='0-10' />
+      <parameter funName='WIFIHAL_SteeringClientSet' parameterName='steeringgroupIndex' parameterType='INTEGER' range='0-10' />
+      <parameter funName='WIFIHAL_SteeringClientSet' parameterName='rssiProbeHWM' parameterType='INTEGER' range='0-100' />
+      <parameter funName='WIFIHAL_SteeringClientSet' parameterName='rssiProbeLWM' parameterType='INTEGER' range='1-10' />
+      <parameter funName='WIFIHAL_SteeringClientSet' parameterName='rssiAuthHWM' parameterType='INTEGER' range='0-100' />
+      <parameter funName='WIFIHAL_SteeringClientSet' parameterName='rssiAuthLWM' parameterType='INTEGER' range='0-100' />
+      <parameter funName='WIFIHAL_SteeringClientSet' parameterName='rssiInactXing' parameterType='INTEGER' range='0-100' />
+      <parameter funName='WIFIHAL_SteeringClientSet' parameterName='rssiHighXing' parameterType='INTEGER' range='0-100' />
+      <parameter funName='WIFIHAL_SteeringClientSet' parameterName='rssiLowXing' parameterType='INTEGER' range='0-100' />
+      <parameter funName='WIFIHAL_SteeringClientSet' parameterName='authRejectReason' parameterType='INTEGER' range='0-100' />
+      <parameter funName='WIFIHAL_SteeringClientSet' parameterName='clientMAC' parameterType='INTEGER' range='0-100' />
+      <parameter funName='WIFIHAL_SteeringClientRemove' parameterName='apIndex' parameterType='INTEGER' range='0-10' />
+      <parameter funName='WIFIHAL_SteeringClientRemove' parameterName='steeringgroupIndex' parameterType='INTEGER' range='0-100' />
+      <parameter funName='WIFIHAL_SteeringClientRemove' parameterName='clientMAC' parameterType='STRING' range='A-Z' />
+      <parameter funName='WIFIHAL_SteeringClientDisconnect' parameterName='steeringgroupIndex' parameterType='INTEGER' range='0-50' />
+      <parameter funName='WIFIHAL_SteeringClientDisconnect' parameterName='apIndex' parameterType='INTEGER' range='0-50' />
+      <parameter funName='WIFIHAL_SteeringClientDisconnect' parameterName='clientMAC' parameterType='STRING' range='A-Z' />
+      <parameter funName='WIFIHAL_SteeringClientDisconnect' parameterName='disconnectType' parameterType='INTEGER' range='0-50' />
+      <parameter funName='WIFIHAL_SteeringClientDisconnect' parameterName='reason' parameterType='INTEGER' range='0-50' />
     </parameters>
   </module>
 </xml>
