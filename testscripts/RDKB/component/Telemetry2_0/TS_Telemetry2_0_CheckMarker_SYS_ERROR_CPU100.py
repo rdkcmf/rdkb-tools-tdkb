@@ -21,7 +21,7 @@
 <xml>
   <id></id>
   <!-- Do not edit id. This will be auto filled while exporting. If you are adding a new script keep the id empty -->
-  <version>6</version>
+  <version>7</version>
   <!-- Do not edit version. This will be auto incremented while updating. If you are adding a new script you can keep the vresion as 1 -->
   <name>TS_Telemetry2_0_CheckMarker_SYS_ERROR_CPU100</name>
   <!-- If you are adding a new script you can specify the script name. Script Name should be unique same as this file name with out .py extension -->
@@ -168,8 +168,8 @@ if "SUCCESS" in loadmodulestatus.upper() and "SUCCESS" in loadmodulestatus1.uppe
 
             print "Initial Line count of Telemetry Log File is ",initialLinesCount
 
-            print "TEST STEP 3: Increase the CPU Load";
-            print "EXPECTED RESULT 3: CPULOAD should be increased to more than 2";
+            print "TEST STEP 3: Increase the CPU Load to hit CPU100";
+            print "EXPECTED RESULT 3: CPULOAD Average value should be increased to 5 to hit CPU100 marker";
 
             cpuloadabove5 = 0;
             #Wait for 2 min to load the CPU value
@@ -279,7 +279,7 @@ if "SUCCESS" in loadmodulestatus.upper() and "SUCCESS" in loadmodulestatus1.uppe
                     sysobj .initiateReboot();
                     sleep(300);
             else:
-                print "Load CPU value is not 2, Exiting Script"
+                print "CPULOAD average value is not 5, Exiting Script"
                 tdkTestObj_Sys_ExeCmd.setResultStatus("FAILURE");
         else:
             tdkTestObj_Sys_ExeCmd.setResultStatus("FAILURE");

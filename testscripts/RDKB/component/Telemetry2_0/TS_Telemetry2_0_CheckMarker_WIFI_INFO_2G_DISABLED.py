@@ -17,26 +17,43 @@
 # limitations under the License.
 ##########################################################################
 '''
-<?xml version="1.0" encoding="UTF-8"?><xml>
-  <id/>
-  <version>6</version>
+<?xml version='1.0' encoding='utf-8'?>
+<xml>
+  <id></id>
+  <!-- Do not edit id. This will be auto filled while exporting. If you are adding a new script keep the id empty -->
+  <version>7</version>
+  <!-- Do not edit version. This will be auto incremented while updating. If you are adding a new script you can keep the vresion as 1 -->
   <name>TS_Telemetry2_0_CheckMarker_WIFI_INFO_2G_DISABLED</name>
-  <primitive_test_id/>
+  <!-- If you are adding a new script you can specify the script name. Script Name should be unique same as this file name with out .py extension -->
+  <primitive_test_id></primitive_test_id>
+  <!-- Do not change primitive_test_id if you are editing an existing script. -->
   <primitive_test_name>Telemetry_DoNothing</primitive_test_name>
+  <!--  -->
   <primitive_test_version>1</primitive_test_version>
+  <!--  -->
   <status>FREE</status>
+  <!--  -->
   <synopsis>To simulate WIFI_INFO_2G_DISABLED telemetry2_0 marker by executing task_health_monitor.sh from TAD module</synopsis>
-  <groups_id/>
+  <!--  -->
+  <groups_id />
+  <!--  -->
   <execution_time>40</execution_time>
+  <!--  -->
   <long_duration>false</long_duration>
+  <!--  -->
   <advanced_script>false</advanced_script>
-  <remarks/>
+  <!-- execution_time is the time out time for test execution -->
+  <remarks></remarks>
+  <!-- Reason for skipping the tests if marked to skip -->
   <skip>false</skip>
+  <!--  -->
   <box_types>
     <box_type>Broadband</box_type>
+    <!--  -->
   </box_types>
   <rdk_versions>
     <rdk_version>RDKB</rdk_version>
+    <!--  -->
   </rdk_versions>
   <test_cases>
     <test_case_id>TC_TELEMETRY2_0_26</test_case_id>
@@ -73,9 +90,8 @@ Device.WiFi.SSID.2.Enable</input_parameters>
     <release_version>M80</release_version>
     <remarks>None</remarks>
   </test_cases>
-  <script_tags/>
+  <script_tags />
 </xml>
-
 '''
 # use tdklib library,which provides a wrapper for tdk testcase script
 import tdklib;
@@ -166,7 +182,7 @@ if "SUCCESS" in (loadmodulestatus.upper() and loadmodulestatus1.upper()) :
                 if str(ssid1_enable) == "false":
                     disabled = 1;
                 else:
-                    set_result1,set_details1, tdkTestObj = setSSIDEnable(tdkTestObj_Tr181_Set,"Device.WiFi.SSID.1.Enable","false");
+                    set_result1,set_details1, tdkTestObj = setSSIDEnable(tdkTestObj_Tr181_set,"Device.WiFi.SSID.1.Enable","false");
                     if expectedresult in set_result1:
                         disabled = 1;
                         ssid_RevertFlag = 1;
