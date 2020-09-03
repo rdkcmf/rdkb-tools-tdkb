@@ -234,7 +234,7 @@ if "SUCCESS" in loadmodulestatus.upper() and "SUCCESS" in loadmodulestatus1.uppe
                                       tdkTestObj_Sys_ExeCmd.setResultStatus("FAILURE");
                                       print "TEST STEP 7: Check if the CcspHotspot proccess restarted";
                                       print "EXPECTED RESULT 7:CcspHotspot proccess should restart ";
-                                      print "ACTUAL RESULT 7: CcspHotspot restarted failed";
+                                      print "ACTUAL RESULT 7: CcspHotspot restart failed";
                                       print "[TEST EXECUTION RESULT] : FAILURE";
                                else:
                                    tdkTestObj_Sys_ExeCmd.setResultStatus("FAILURE");

@@ -111,8 +111,8 @@ def setMeshstatus(setValue):
     details = tdkTestObj.getResultDetails();
     return actualresult,tdkTestObj;
 
-flag =0;
-revertflag =0;
+meshEnabled  =0;
+revertmesh =0;
 
 if "SUCCESS" in loadmodulestatus.upper() and "SUCCESS" in loadmodulestatus1.upper() :
     #Set the result status of execution
@@ -163,21 +163,21 @@ if "SUCCESS" in loadmodulestatus.upper() and "SUCCESS" in loadmodulestatus1.uppe
                if default != "true":
                   actualresult,tdkTestObj_Tr181_setOnly = setMeshstatus("true");
                   if expectedresult in actualresult :
-                     revertflag =1;
+                     revertmesh =1;
                      tdkTestObj_Tr181_setOnly.setResultStatus("SUCCESS");
                      print "TEST STEP 4:Enable the Mesh";
                      print "EXPECTED RESULT 4:Should Enable the mesh ";
                      print "ACTUAL RESULT 4: meshAgent Enabled successfully";
                      print "[TEST EXECUTION RESULT] : SUCCESS";
                   else:
-                      flag =1;
+                      meshEnabled =1;
                       tdkTestObj_Tr181_setOnly.setResultStatus("FAILURE");
                       print "TEST STEP 4:Enable the Mesh";
                       print "EXPECTED RESULT 4:Should Enable the mesh ";
                       print "ACTUAL RESULT 4: meshAgent Enabling failed";
                       print "[TEST EXECUTION RESULT] : FAILURE";
 
-               if flag ==0:
+               if meshEnabled ==0:
                   cmd = "sh /usr/ccsp/tad/task_health_monitor.sh &";
                   tdkTestObj_Sys_ExeCmd.addParameter("command",cmd);
                   tdkTestObj_Sys_ExeCmd.executeTestCase(expectedresult);
@@ -237,7 +237,7 @@ if "SUCCESS" in loadmodulestatus.upper() and "SUCCESS" in loadmodulestatus1.uppe
                       print "EXPECTED RESULT 5: should run the task_health_monitor.sh script ";
                       print "ACTUAL RESULT 5: Failed to run task_health_monitor.sh script";
                       print "[TEST EXECUTION RESULT] : FAILURE";
-                  if revertflag == 1:
+                  if revertmesh == 1:
                      #Reverting the mesh status
                      actualresult,tdkTestObj_Tr181_setOnly = setMeshstatus(default);
                      if  expectedresult in actualresult:
