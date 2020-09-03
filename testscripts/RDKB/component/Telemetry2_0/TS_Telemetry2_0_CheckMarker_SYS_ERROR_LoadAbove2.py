@@ -21,7 +21,7 @@
 <xml>
   <id></id>
   <!-- Do not edit id. This will be auto filled while exporting. If you are adding a new script keep the id empty -->
-  <version>15</version>
+  <version>16</version>
   <!-- Do not edit version. This will be auto incremented while updating. If you are adding a new script you can keep the vresion as 1 -->
   <name>TS_Telemetry2_0_CheckMarker_SYS_ERROR_LoadAbove2</name>
   <!-- If you are adding a new script you can specify the script name. Script Name should be unique same as this file name with out .py extension -->
@@ -169,8 +169,8 @@ if "SUCCESS" in loadmodulestatus.upper() and "SUCCESS" in loadmodulestatus1.uppe
 
             print "Initial Line count of Telemetry Log File is ",initialLinesCount
 
-            print "TEST STEP 3: Increase the CPU Load";
-            print "EXPECTED RESULT 3: CPULOAD should be increased to more than 2";
+            print "TEST STEP 3: Increase the CPU Load to hit CPULOAD average value 2";
+            print "EXPECTED RESULT 3: CPULOAD Average should be increased to value 2";
 
             cpuloadabove2 = 0;
             #Wait for 2 min to load the CPU value
@@ -180,11 +180,11 @@ if "SUCCESS" in loadmodulestatus.upper() and "SUCCESS" in loadmodulestatus1.uppe
                 if int(cpuload) == 2:
                     cpuloadabove2 = 1;
                     tdkTestObj_Sys_ExeCmd.setResultStatus("SUCCESS");
-                    print "EXPECTED RESULT 3: CPULOAD Increased to value 2";
+                    print "EXPECTED RESULT 3: CPULOAD average Increased to value 2";
                     print "[TEST EXECUTION RESULT] : SUCCESS";
                     break;
                 elif int(cpuload) > 2:
-                    print "EXPECTED RESULT 3: CPULOAD value was more than 2";
+                    print "EXPECTED RESULT 3: CPULOAD average value was more than 2";
                     print "[TEST EXECUTION RESULT] : FAILURE";
                     cpuloadabove2 = 0;
                     break;
@@ -280,7 +280,7 @@ if "SUCCESS" in loadmodulestatus.upper() and "SUCCESS" in loadmodulestatus1.uppe
                     sysobj .initiateReboot();
                     sleep(300);
             else:
-                print "Load CPU value is not 2, Exiting Script"
+                print "CPULOAD average value is not 2, Exiting Script"
                 tdkTestObj_Sys_ExeCmd.setResultStatus("FAILURE");
         else:
             tdkTestObj_Sys_ExeCmd.setResultStatus("FAILURE");

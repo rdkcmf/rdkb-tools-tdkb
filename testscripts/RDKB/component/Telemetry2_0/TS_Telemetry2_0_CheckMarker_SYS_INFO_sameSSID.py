@@ -21,7 +21,7 @@
 <xml>
   <id></id>
   <!-- Do not edit id. This will be auto filled while exporting. If you are adding a new script keep the id empty -->
-  <version>13</version>
+  <version>21</version>
   <!-- Do not edit version. This will be auto incremented while updating. If you are adding a new script you can keep the vresion as 1 -->
   <name>TS_Telemetry2_0_CheckMarker_SYS_INFO_sameSSID</name>
   <!-- If you are adding a new script you can specify the script name. Script Name should be unique same as this file name with out .py extension -->
@@ -98,7 +98,6 @@ from time import sleep;
 #Test component to be tested
 sysobj = tdklib.TDKScriptingLibrary("sysutil","1");
 tr181obj= tdklib.TDKScriptingLibrary("tdkbtr181","1");
-wifiobj = tdklib.TDKScriptingLibrary("wifiagent","RDKB");
 
 #IP and Port of box, No need to change,
 #This will be replaced with corresponding DUT Ip and port while executing script
@@ -106,35 +105,30 @@ ip = <ipaddress>
 port = <port>
 sysobj.configureTestCase(ip,port,'TS_Telemetry2_0_CheckMarker_SYS_INFO_sameSSID');
 tr181obj.configureTestCase(ip,port,'TS_Telemetry2_0_CheckMarker_SYS_INFO_sameSSID');
-wifiobj.configureTestCase(ip,port,'TS_Telemetry2_0_CheckMarker_SYS_INFO_sameSSID');
 
 #Get the result of connection with test component and DUT
 loadmodulestatus=sysobj.getLoadModuleResult();
 loadmodulestatus1=tr181obj.getLoadModuleResult();
-loadmodulestatus2=wifiobj.getLoadModuleResult();
 
-def getWiFiSSIDvalue(wifiobj,param_name):
-    tdkTestObj = wifiobj.createTestStep("WIFIAgent_Get");
-    tdkTestObj.addParameter("paramName",param_name);
+def getSSIDNames(tdkTestObj,param_name):
+    tdkTestObj.addParameter("ParamName",param_name);
     expectedresult="SUCCESS";
     tdkTestObj.executeTestCase(expectedresult);
     actualresult = tdkTestObj.getResult();
-    value = tdkTestObj.getResultDetails();
-    details = value.split("VALUE:")[1].split(' ')[0];
+    details  = tdkTestObj.getResultDetails();
     return actualresult,details,tdkTestObj;
 
-def setWiFiSSIDvalue(wifiobj,param_name,param_value):
-    tdkTestObj = wifiobj.createTestStep("WIFIAgent_Set");
-    tdkTestObj.addParameter("paramName",param_name);
-    tdkTestObj.addParameter("paramValue",param_value);
-    tdkTestObj.addParameter("paramType","string");
+def setSSIDNames(tdkTestObj,param_name,param_value):
+    tdkTestObj.addParameter("ParamName",param_name);
+    tdkTestObj.addParameter("ParamValue",param_value);
+    tdkTestObj.addParameter("Type","string");
     expectedresult="SUCCESS";
     tdkTestObj.executeTestCase(expectedresult);
     actualresult = tdkTestObj.getResult();
     details = tdkTestObj.getResultDetails();
     return actualresult,details,tdkTestObj;
 
-if "SUCCESS" in (loadmodulestatus.upper() and loadmodulestatus1.upper()  and loadmodulestatus2.upper()) :
+if "SUCCESS" in (loadmodulestatus.upper() and loadmodulestatus1.upper()) :
     #Set the result status of execution
     sysobj.setLoadModuleStatus("SUCCESS");
     tr181obj.setLoadModuleStatus("SUCCESS");
@@ -173,9 +167,10 @@ if "SUCCESS" in (loadmodulestatus.upper() and loadmodulestatus1.upper()  and loa
             print "Initial Line count of Telemetry Log File is ",initialLinesCount
 
             same_name = 0;
-            ssid1_res, ssid1_name, tdkTestObj = getWiFiSSIDvalue(wifiobj,"Device.WiFi.SSID.1.SSID");
-            sid2_res, ssid2_name, tdkTestObj1 = getWiFiSSIDvalue(wifiobj,"Device.WiFi.SSID.2.SSID");
-            if expectedresult in (ssid1_res and ssid1_res):
+            ssid1_res, ssid1_name, tdkTestObj = getSSIDNames(tdkTestObj_Tr181_Get,"Device.WiFi.SSID.1.SSID");
+            ssid2_res, ssid2_name, tdkTestObj1 = getSSIDNames(tdkTestObj_Tr181_Get,"Device.WiFi.SSID.2.SSID");
+
+            if expectedresult in (ssid1_res and ssid2_res):
                 tdkTestObj.setResultStatus("SUCCESS");
                 print "TEST STEP 3: Get the SSID Names of SSID1 and SSID2";
                 print "EXPECTED RESULT 3: Should get the SSID Names";
@@ -191,8 +186,8 @@ if "SUCCESS" in (loadmodulestatus.upper() and loadmodulestatus1.upper()  and loa
                     same_name = 1;
                 else:
                     print "SSID Names are NOT same, Initiating SET operation"
-                    set_result1,set_details1, tdkTestObj = setWiFiSSIDvalue(wifiobj,"Device.WiFi.SSID.1.SSID","Tel_Test_WiFi");
-                    set_result2,set_details2, tdkTestObj1 = setWiFiSSIDvalue(wifiobj,"Device.WiFi.SSID.2.SSID","Tel_Test_WiFi");
+                    set_result1,set_details1, tdkTestObj = setSSIDNames(tdkTestObj_Tr181_set,"Device.WiFi.SSID.1.SSID","Tel_Test_WiFi");
+                    set_result2,set_details2, tdkTestObj1 = setSSIDNames(tdkTestObj_Tr181_set,"Device.WiFi.SSID.2.SSID","Tel_Test_WiFi");
                     if expectedresult in (set_result1 and set_result2):
                         same_name = 1;
                         ssid_revert_flag = 1;
@@ -288,8 +283,8 @@ if "SUCCESS" in (loadmodulestatus.upper() and loadmodulestatus1.upper()  and loa
                     print "[TEST EXECUTION RESULT] : FAILURE";
 
                 if ssid_revert_flag == 1:
-                    revert_Set1,set_details1, tdkTestObj = setWiFiSSIDvalue(wifiobj,"Device.WiFi.SSID.1.SSID",ssid1_name);
-                    revert_Set2,set_details2, tdkTestObj1 = setWiFiSSIDvalue(wifiobj,"Device.WiFi.SSID.2.SSID",ssid2_name);
+                    revert_Set1,set_details1, tdkTestObj = setSSIDNames(tdkTestObj_Tr181_set,"Device.WiFi.SSID.1.SSID",ssid1_name);
+                    revert_Set2,set_details2, tdkTestObj1 = setSSIDNames(tdkTestObj_Tr181_set,"Device.WiFi.SSID.2.SSID",ssid2_name);
                     if expectedresult in (revert_Set1 and revert_Set2):
                         tdkTestObj.setResultStatus("SUCCESS");
                         print "TEST STEP 8: Revert the SSID Names";
@@ -338,9 +333,7 @@ if "SUCCESS" in (loadmodulestatus.upper() and loadmodulestatus1.upper()  and loa
 
     tr181obj.unloadModule("tdkbtr181");
     sysobj.unloadModule("sysutil");
-    wifiobj.unloadModule("wifiagent");
 else:
     print "Failed to load module";
     sysobj.setLoadModuleStatus("FAILURE");
     tr181obj.setLoadModuleStatus("FAILURE");
-    wifiobj.setLoadModuleStatus("FAILURE");
