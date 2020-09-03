@@ -199,7 +199,7 @@ if "SUCCESS" in loadmodulestatus.upper() and "SUCCESS" in loadmodulestatus1.uppe
                             tdkTestObj_Sys_ExeCmd.setResultStatus("FAILURE");
                             print "TEST STEP 7: Check if the CcspPandMSsp proccess restarted";
                             print "EXPECTED RESULT 7:CcspPandMSsp proccess should restart ";
-                            print "ACTUAL RESULT 7: CcspPandMSsp restarted failed";
+                            print "ACTUAL RESULT 7: CcspPandMSsp restart failed";
                             print "[TEST EXECUTION RESULT] : FAILURE";
                      else:
                          tdkTestObj_Sys_ExeCmd.setResultStatus("FAILURE");
