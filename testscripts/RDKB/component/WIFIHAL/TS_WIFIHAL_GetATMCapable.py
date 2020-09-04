@@ -23,7 +23,7 @@
   <!-- Do not edit id. This will be auto filled while exporting. If you are adding a new script keep the id empty -->
   <version>9</version>
   <!-- Do not edit version. This will be auto incremented while updating. If you are adding a new script you can keep the vresion as 1 -->
-  <name>TS_WIFIHAL_2.4GHzGetATMCapable</name>
+  <name>TS_WIFIHAL_GetATMCapable</name>
   <!-- If you are adding a new script you can specify the script name. Script Name should be unique same as this file name with out .py extension -->
   <primitive_test_id> </primitive_test_id>
   <!-- Do not change primitive_test_id if you are editing an existing script. -->
@@ -72,7 +72,7 @@ no input parameters.</input_parameters>
     <except_output>Should successfully get the ATM capable value from the device by calling from the wrapper file.</except_output>
     <priority>High</priority>
     <test_stub_interface>WIFIHAL</test_stub_interface>
-    <test_script>TS_WIFIHAL_2.4GHzGetATMCapable</test_script>
+    <test_script>TS_WIFIHAL_GetATMCapable</test_script>
     <skipped>No</skipped>
     <release_version>Nil</release_version>
     <remarks>None</remarks>
@@ -91,7 +91,7 @@ obj = tdklib.TDKScriptingLibrary("wifihal","1");
 #This will be replaced with correspoing Box Ip and port while executing script
 ip = <ipaddress>
 port = <port>
-obj.configureTestCase(ip,port,'TS_WIFIHAL_2.4GHzGetATMCapable');
+obj.configureTestCase(ip,port,'TS_WIFIHAL_GetATMCapable');
 
 #Get the result of connection with test component and STB
 loadmodulestatus =obj.getLoadModuleResult();
@@ -134,7 +134,7 @@ if "SUCCESS" in loadmodulestatus.upper():
             print "EXPECTED RESULT : ATM Capable status should be returned";
             print "ACTUAL RESULT 1: getATMCapable function is failed %s"%enablestate;
             print "[TEST EXECUTION RESULT] : FAILURE";
-            
+
     else:
         print "wifi_getATMpable failed";
         tdkTestObj.setResultStatus("FAILURE");
