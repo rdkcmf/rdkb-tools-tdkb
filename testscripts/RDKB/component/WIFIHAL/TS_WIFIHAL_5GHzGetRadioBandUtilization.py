@@ -2,7 +2,7 @@
 # If not stated otherwise in this file or this component's Licenses.txt
 # file the following copyright and licenses apply:
 #
-# Copyright 2019 RDK Management
+# Copyright 2020 RDK Management
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,26 +17,43 @@
 # limitations under the License.
 ##########################################################################
 '''
-<?xml version="1.0" encoding="UTF-8"?><xml>
-  <id/>
-  <version>1</version>
+<?xml version='1.0' encoding='utf-8'?>
+<xml>
+  <id></id>
+  <!-- Do not edit id. This will be auto filled while exporting. If you are adding a new script keep the id empty -->
+  <version>2</version>
+  <!-- Do not edit version. This will be auto incremented while updating. If you are adding a new script you can keep the vresion as 1 -->
   <name>TS_WIFIHAL_5GHzGetRadioBandUtilization</name>
-  <primitive_test_id/>
+  <!-- If you are adding a new script you can specify the script name. Script Name should be unique same as this file name with out .py extension -->
+  <primitive_test_id> </primitive_test_id>
+  <!-- Do not change primitive_test_id if you are editing an existing script. -->
   <primitive_test_name>WIFIHAL_GetOrSetParamIntValue</primitive_test_name>
-  <primitive_test_version>3</primitive_test_version>
+  <!--  -->
+  <primitive_test_version>5</primitive_test_version>
+  <!--  -->
   <status>FREE</status>
+  <!--  -->
   <synopsis>This test script is to read the radio band utilization using wifi_getRadioBandUtilization()</synopsis>
-  <groups_id/>
+  <!--  -->
+  <groups_id />
+  <!--  -->
   <execution_time>1</execution_time>
+  <!--  -->
   <long_duration>false</long_duration>
+  <!--  -->
   <advanced_script>false</advanced_script>
-  <remarks/>
+  <!-- execution_time is the time out time for test execution -->
+  <remarks></remarks>
+  <!-- Reason for skipping the tests if marked to skip -->
   <skip>false</skip>
+  <!--  -->
   <box_types>
     <box_type>Broadband</box_type>
+    <!--  -->
   </box_types>
   <rdk_versions>
     <rdk_version>RDKB</rdk_version>
+    <!--  -->
   </rdk_versions>
   <test_cases>
     <test_case_id>TC_WIFIHAL_312</test_case_id>
@@ -51,7 +68,7 @@ radioIndex = 1</input_parameters>
     <automation_approch>1. Load wifihal module
 2. Get the radio band utilization and validate
 3. Unload wifihal module</automation_approch>
-    <except_output>It should return the radio band utilization percentage</except_output>
+    <expected_output>It should return the radio band utilization percentage</expected_output>
     <priority>High</priority>
     <test_stub_interface>wifihal</test_stub_interface>
     <test_script>TS_WIFIHAL_5GHzGetRadioBandUtilization</test_script>
@@ -59,8 +76,8 @@ radioIndex = 1</input_parameters>
     <release_version>M64</release_version>
     <remarks>None</remarks>
   </test_cases>
+  <script_tags />
 </xml>
-
 '''
 # use tdklib library,which provides a wrapper for tdk testcase script
 import tdklib;
@@ -88,7 +105,7 @@ if "SUCCESS" in loadmodulestatus.upper():
     if idx == -1:
         print "Failed to get radio index for radio %s\n" %radio;
         tdkTestObjTemp.setResultStatus("FAILURE");
-    else: 
+    else:
 
 	    #Script to load the configuration file of the component
 	    tdkTestObj = obj.createTestStep("WIFIHAL_GetOrSetParamIntValue");
@@ -102,7 +119,7 @@ if "SUCCESS" in loadmodulestatus.upper():
 	    details = tdkTestObj.getResultDetails();
 	    if expectedresult in actualresult :
 		radioBandUtilization = int(details.split(":")[1]);
-		if 0 < radioBandUtilization < 100 :
+		if 0 <= radioBandUtilization < 100 :
 		    #Set the result status of execution
 		    tdkTestObj.setResultStatus("SUCCESS");
 		    print "TEST STEP 1: Get the Radio band utilization in percentage";
