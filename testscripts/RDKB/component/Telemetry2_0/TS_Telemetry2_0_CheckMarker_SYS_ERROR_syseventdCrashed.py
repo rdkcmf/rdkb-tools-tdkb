@@ -160,8 +160,8 @@ if "SUCCESS" in loadmodulestatus.upper() and "SUCCESS" in loadmodulestatus1.uppe
                   print "EXPECTED RESULT 4:Should Kill the syseventd  process and run task_health_monitor.sh script";
                   print "ACTUAL RESULT 4: syseventd process killed and run task_health_monitor.sh script successfully";
                   print "[TEST EXECUTION RESULT] : SUCCESS";
-
-                  sleep(45);
+                  #Waiting for the task_health_monitor.sh script execution and marker population
+                  sleep(100);
 
                   lineCountResult1, lineCountAfterSimu = getTelLogFileTotalLinesCount(tdkTestObj_Sys_ExeCmd);
                   if expectedresult in lineCountResult and  int(lineCountAfterSimu) > int(initialLinesCount):
@@ -188,6 +188,11 @@ if "SUCCESS" in loadmodulestatus.upper() and "SUCCESS" in loadmodulestatus1.uppe
                         print "ACTUAL RESULT 6: SYS_ERROR_syseventdCrashed  Marker Value is %s" %markervalue;
                         #Get the result of execution
                         print "[TEST EXECUTION RESULT] : SUCCESS";
+
+                        #As syseventd comes up only after the reboot in maintenance window
+                        #Triggering a explicit reboot
+                        sysobj.initiateReboot();
+                        sleep(300);
 
                         actualresult,pid = checkProcessRestarted(tdkTestObj_Sys_ExeCmd,"syseventd");
                         if expectedresult in actualresult and pid != "" and pid != Initialpid:
