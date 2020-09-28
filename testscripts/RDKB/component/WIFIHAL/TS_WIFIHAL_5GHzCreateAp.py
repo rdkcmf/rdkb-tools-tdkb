@@ -21,7 +21,7 @@
 <xml>
   <id></id>
   <!-- Do not edit id. This will be auto filled while exporting. If you are adding a new script keep the id empty -->
-  <version>9</version>
+  <version>10</version>
   <!-- Do not edit version. This will be auto incremented while updating. If you are adding a new script you can keep the vresion as 1 -->
   <name>TS_WIFIHAL_5GHzCreateAp</name>
   <!-- If you are adding a new script you can specify the script name. Script Name should be unique same as this file name with out .py extension -->
@@ -151,14 +151,19 @@ if "SUCCESS" in loadmodulestatus.upper() and sysloadmodulestatus.upper():
 		        else:
 		            continue;
 		    else:
-		        print "wifi_getSSIDName function failed,Failed to receive SSID string %s"%details
 		        tdkTestObj.setResultStatus("FAILURE");
+			print "wifi_getSSIDName function failed,Failed to receive SSID string %s"%details
 		        #Get the result of execution
             	        print "[TEST EXECUTION RESULT] : FAILURE";
+			obj.unloadModule("wifihal");
+			wifiobj.unloadModule("wifiagent");
 		        print "Exiting the script"
 		        exit();
 	        else:
+		    tdkTestObj.setResultStatus("FAILURE");
 	            print "wifi_getSSIDName function failed";
+		    obj.unloadModule("wifihal");
+		    wifiobj.unloadModule("wifiagent");
 		    print "Exiting the script"
 		    exit();
 	    if newFlag == 1 :
