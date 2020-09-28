@@ -80,7 +80,7 @@ radioIndex : 1</input_parameters>
 # use tdklib library,which provides a wrapper for tdk testcase script
 import tdklib;
 from wifiUtility import *;
-
+from time import sleep;
 #Test component to be tested
 obj = tdklib.TDKScriptingLibrary("wifihal","1");
 
@@ -182,6 +182,8 @@ if "SUCCESS" in loadmodulestatus.upper():
     if expectedresult in actualresult:
         tdkTestObj.setResultStatus("SUCCESS");
 	print"details",details;
+        #Waiting for Factory Reset operation to be reflected
+        sleep(150);
 	DevicePIN0_reset =  GetOperation_PIN(0);
 	print "DevicePIN after factoryReset for 2.4GHz = ",DevicePIN0_reset;
 	DevicePIN1_reset =  GetOperation_PIN(1);
