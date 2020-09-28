@@ -67,6 +67,7 @@
     <automation_approch>1. Load  cmhal module
 2. Invoke docsis_GetDSChannel to get the power levels of downstream channels.
 3. The test should return FAILURE if the power levels are not in permissible range.
+4. The test should return SUCCESS if power levels are NULL when the modulation received are "UNSUPPORTED" and "NotLocked" else FAILURE.
 4. Unload cmhal module</automation_approch>
     <except_output>The Power Level must be within the permissible range</except_output>
     <priority>High</priority>
@@ -80,31 +81,33 @@
 
 '''
 
-# use tdklib library,which provides a wrapper for tdk testcase script 
-import tdklib; 
+# use tdklib library,which provides a wrapper for tdk testcase script
+import tdklib;
 from tdkbVariables import *;
 
 #Test component to be tested
 obj = tdklib.TDKScriptingLibrary("cmhal","1");
 obj1 = tdklib.TDKScriptingLibrary("sysutil","1");
-
+tr181obj = tdklib.TDKScriptingLibrary("tdkbtr181","1");
 #IP and Port of box, No need to change,
 #This will be replaced with correspoing Box Ip and port while executing script
 ip = <ipaddress>
 port = <port>
 obj.configureTestCase(ip,port,'TS_CMHAL_GetDSPower');
 obj1.configureTestCase(ip,port,'TS_CMHAL_GetDSPower');
-
-#Get the result of connection with test component and DUT 
+tr181obj.configureTestCase(ip,port,'TS_CMHAL_GetDSPower');
+#Get the result of connection with test component and DUT
 loadmodulestatus =obj.getLoadModuleResult();
 loadmodulestatus1 =obj1.getLoadModuleResult();
+loadmodulestatus2 =tr181obj.getLoadModuleResult()
 print "[LIB LOAD STATUS]  :  %s" %loadmodulestatus ;
 print "[LIB LOAD STATUS]  :  %s" %loadmodulestatus1 ;
-
-if "SUCCESS" in loadmodulestatus.upper() and "SUCCESS" in loadmodulestatus1.upper():
+print "[LIB LOAD STATUS]  :  %s" %loadmodulestatus2;
+if "SUCCESS" in loadmodulestatus.upper() and "SUCCESS" in loadmodulestatus1.upper() and "SUCCESS" in loadmodulestatus2.upper():
     obj.setLoadModuleStatus("SUCCESS");
     obj1.setLoadModuleStatus("SUCCESS");
- 
+    tr181obj.setLoadModuleStatus("SUCCESS");
+
     tdkTestObj1 = obj1.createTestStep("ExecuteCmd");
     cmd = "sh %s/tdk_utility.sh parseConfigFile CM_DS_POWER_LEVELS" %TDK_PATH;
     tdkTestObj1.addParameter("command", cmd);
@@ -133,19 +136,34 @@ if "SUCCESS" in loadmodulestatus.upper() and "SUCCESS" in loadmodulestatus1.uppe
         print power;
         Min_power = float(powerlevels[0]);
         Max_power = float(powerlevels[1]);
+        i=1;
         for item in power:
-            if "dBmV" in item:
-                if Min_power <= float(item.split(" ")[0]) <= Max_power:
-                    status = "Success";
-                else:
-                    status = "Failure";
-                    break; 
-            else :
-                if Min_power <= float(item) <= Max_power:
-                    status = "Success";
-                else:
-                    status = "Failure";
-                    break; 
+            if item == "" :
+               tdkTestObj= tr181obj.createTestStep('TDKB_TR181Stub_Get');
+               tdkTestObj.addParameter("ParamName","Device.X_CISCO_COM_CableModem.DownstreamChannel.%d.Modulation" %i);
+               expectedresult="SUCCESS";
+               #Execute the test case in DUT
+               tdkTestObj.executeTestCase(expectedresult);
+               actualresult = tdkTestObj.getResult();
+               value = tdkTestObj.getResultDetails();
+               if expectedresult in actualresult and ( "UNSUPPORTED" in value or  "NotLocked" in value):
+                  status = "Success";
+               else:
+                   status = "Failure";
+            else:
+                if "dBmV" in item :
+                   if Min_power <= float(item.split(" ")[0]) <= Max_power:
+                      status = "Success";
+                   else:
+                       status = "Failure";
+                       break;
+                else :
+                     if Min_power <= float(item) <= Max_power:
+                        status = "Success";
+                     else:
+                         status = "Failure";
+                         break;
+            i=i+1;
         if expectedresult in actualresult and "Success" in status:
             #Set the result status of execution
             tdkTestObj.setResultStatus("SUCCESS");
@@ -169,9 +187,10 @@ if "SUCCESS" in loadmodulestatus.upper() and "SUCCESS" in loadmodulestatus1.uppe
 
     obj.unloadModule("cmhal");
     obj1.unloadModule("sysutil");
+    tr181obj.unloadModule("tdkbtr181");
 else:
         print "Failed to load the module";
         obj.setLoadModuleStatus("FAILURE");
         obj1.setLoadModuleStatus("FAILURE");
+        tr181obj.setLoadModuleStatus("FAILURE");
         print "Module loading failed";
-
