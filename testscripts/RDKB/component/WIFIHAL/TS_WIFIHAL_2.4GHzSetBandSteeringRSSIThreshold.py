@@ -2,7 +2,7 @@
 # If not stated otherwise in this file or this component's Licenses.txt
 # file the following copyright and licenses apply:
 #
-# Copyright 2017 RDK Management
+# Copyright 2020 RDK Management
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,26 +17,43 @@
 # limitations under the License.
 ##########################################################################
 '''
-<?xml version="1.0" encoding="UTF-8"?><xml>
-  <id/>
-  <version>1</version>
+<?xml version='1.0' encoding='utf-8'?>
+<xml>
+  <id></id>
+  <!-- Do not edit id. This will be auto filled while exporting. If you are adding a new script keep the id empty -->
+  <version>9</version>
+  <!-- Do not edit version. This will be auto incremented while updating. If you are adding a new script you can keep the vresion as 1 -->
   <name>TS_WIFIHAL_2.4GHzSetBandSteeringRSSIThreshold</name>
-  <primitive_test_id/>
+  <!-- If you are adding a new script you can specify the script name. Script Name should be unique same as this file name with out .py extension -->
+  <primitive_test_id> </primitive_test_id>
+  <!-- Do not change primitive_test_id if you are editing an existing script. -->
   <primitive_test_name>WIFIHAL_GetOrSetParamIntValue</primitive_test_name>
-  <primitive_test_version>3</primitive_test_version>
+  <!--  -->
+  <primitive_test_version>5</primitive_test_version>
+  <!--  -->
   <status>FREE</status>
+  <!--  -->
   <synopsis>To set and get the BandSteeringRSSIThreshold for 2.4GHz</synopsis>
-  <groups_id/>
+  <!--  -->
+  <groups_id />
+  <!--  -->
   <execution_time>10</execution_time>
+  <!--  -->
   <long_duration>false</long_duration>
+  <!--  -->
   <advanced_script>false</advanced_script>
-  <remarks/>
+  <!-- execution_time is the time out time for test execution -->
+  <remarks></remarks>
+  <!-- Reason for skipping the tests if marked to skip -->
   <skip>false</skip>
+  <!--  -->
   <box_types>
     <box_type>Broadband</box_type>
+    <!--  -->
   </box_types>
   <rdk_versions>
     <rdk_version>RDKB</rdk_version>
+    <!--  -->
   </rdk_versions>
   <test_cases>
     <test_case_id>TC_WIFIHAL_147</test_case_id>
@@ -53,27 +70,27 @@ methodName : getBandSteeringRSSIThreshold
 methodName : setBandSteeringRSSIThreshold
 radioIndex : 0</input_parameters>
     <automation_approch>1. Load wifihal module
-2. Using WIFIHAL_GetOrSetParamBoolValue invoke wifi_getBandSteeringCapability() to see if the BandSteering Capability is available or not. If available proceed to next step, else return SUCCESS and exit. 
+2. Using WIFIHAL_GetOrSetParamBoolValue invoke wifi_getBandSteeringCapability() to see if the BandSteering Capability is available or not. If available proceed to next step, else return SUCCESS and exit.
 3. Using  WIFIHAL_GetOrSetParamStringValue invoke wifi_getBandSteeringRSSIThreshold()
-4. Using WIFIHAL_GetOrSetParamStringValue 
+4. Using WIFIHAL_GetOrSetParamStringValue
  invoke wifi_setBandSteeringRSSIThreshold  and set a valid value
-5. Invoke wifi_getBandSteeringRSSIThreshold() to get the previously set value. 
+5. Invoke wifi_getBandSteeringRSSIThreshold() to get the previously set value.
 6. Compare the above two results. If the two values  are same return SUCCESS else return FAILURE
 7. Revert the RSSIThreshold back to initial value
 8. Unload wifihal module</automation_approch>
-    <except_output>Set and get values of RSSIThreshold should be the same</except_output>
+    <expected_output>Set and get values of RSSIThreshold should be the same</expected_output>
     <priority>High</priority>
     <test_stub_interface>WIFIHAL</test_stub_interface>
     <test_script>TS_WIFIHAL_2.4GHzSetBandSteeringRSSIThreshold</test_script>
     <skipped>No</skipped>
-    <release_version/>
-    <remarks/>
+    <release_version></release_version>
+    <remarks></remarks>
   </test_cases>
+  <script_tags />
 </xml>
-
 '''
-# use tdklib library,which provides a wrapper for tdk testcase script 
-import tdklib; 
+# use tdklib library,which provides a wrapper for tdk testcase script
+import tdklib;
 from wifiUtility import *;
 import random;
 from tdkbVariables import *;
@@ -130,7 +147,7 @@ if "SUCCESS" in (loadmodulestatus.upper() and  sysyutilmodulestatus.upper()):
 			radioIndex = idx;
 			primitive = 'WIFIHAL_GetOrSetParamIntValue'
 
-                        #Get the Range of the value to set 
+                        #Get the Range of the value to set
                         tdkTestObj1 = obj1.createTestStep('ExecuteCmd');
                         cmd = "sh %s/tdk_utility.sh parseConfigFile RSSI_RANGE" %TDK_PATH;
                         print cmd;
@@ -142,8 +159,8 @@ if "SUCCESS" in (loadmodulestatus.upper() and  sysyutilmodulestatus.upper()):
                         details = tdkTestObj1.getResultDetails().strip();
                         Range = ""
                         Range = details.replace("\\n", "");
-                        Range = Range.split(",");
-                        if Range != "" and (expectedresult in actualresult):
+                        if Range != ""  and (expectedresult in actualresult):
+			   Range = Range.split(",");
                            tdkTestObj1.setResultStatus("SUCCESS");
                            print "TEST STEP 1: Get the RSSI range value";
                            print "EXPECTED RESULT 1: Should Get RSSI range value";
@@ -174,7 +191,7 @@ if "SUCCESS" in (loadmodulestatus.upper() and  sysyutilmodulestatus.upper()):
 			      primitive = 'WIFIHAL_GetOrSetParamIntValue'
                               details = ""
 			      tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, 0, getMethod)
-                               
+
 			      if expectedresult in actualresult:
                                  tdkTestObj.setResultStatus("SUCCESS");
                                  print "getBandSteeringRSSIThreshold() call success"
@@ -239,7 +256,3 @@ if "SUCCESS" in (loadmodulestatus.upper() and  sysyutilmodulestatus.upper()):
 else:
     print "Failed to load wifi/sysutil module";
     obj.setLoadModuleStatus("FAILURE");
-
-
-
-
