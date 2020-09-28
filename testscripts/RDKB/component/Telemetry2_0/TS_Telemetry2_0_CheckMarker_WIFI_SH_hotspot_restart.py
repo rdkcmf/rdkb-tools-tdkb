@@ -195,7 +195,8 @@ if "SUCCESS" in loadmodulestatus.upper() and "SUCCESS" in loadmodulestatus1.uppe
                             print "ACTUAL RESULT 7: CcspHotspot process killed successfully";
                             print "[TEST EXECUTION RESULT] : SUCCESS";
 
-                            sleep(100);
+                            #WIFI_SH_hotspot_restart marker comes up once the GRE tunnel is created hence doing a sleep for marker to be uploaded
+                            sleep(900);
 
                             lineCountResult1, lineCountAfterSimu = getTelLogFileTotalLinesCount(tdkTestObj_Sys_ExeCmd);
                             if expectedresult in lineCountResult and  int(lineCountAfterSimu) > int(initialLinesCount):

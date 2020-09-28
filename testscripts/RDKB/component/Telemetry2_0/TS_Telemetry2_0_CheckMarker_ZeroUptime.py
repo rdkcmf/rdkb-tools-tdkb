@@ -137,7 +137,7 @@ if "SUCCESS" in loadmodulestatus.upper() and "SUCCESS" in loadmodulestatus1.uppe
            if int(upTime) >=86400:
               print "########-Uptime of the device is greater than the 1 day and need to reboot the device for ZeroUptime marker simulation-#######";
               print "*********-Initiating Reboot Please wait till the device comes up-********";
-              tdkTestObj_Sys_ExeCmd.initiateReboot();
+              sysobj.initiateReboot();
               sleep(300);
 
            print "########-Uptime of the device is less than the 1 day no reboot required for ZeroUptime marker simulation-######";
