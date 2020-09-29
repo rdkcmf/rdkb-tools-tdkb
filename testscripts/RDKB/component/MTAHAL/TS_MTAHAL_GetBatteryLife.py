@@ -106,7 +106,7 @@ if "SUCCESS" in loadmodulestatus.upper():
     actualresult = tdkTestObj.getResult();
     resultDetails = " ";
     resultDetails = tdkTestObj.getResultDetails();
-    status = [ "Need Replacement", "Good", "N/A" ];
+    status = [ "Need Replacement", "Good", "N/A","Unknown"];
 
     if expectedresult in actualresult and resultDetails != " " and resultDetails in status:
         #Set the result status of execution
