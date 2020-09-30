@@ -75,3 +75,4 @@ int ssp_WIFIHALGetWifiTrafficStats(int apIndex, wifi_trafficStats_t *output_stru
 int ssp_WIFIHALSteeringClientDisconnect(unsigned int steeringgroupIndex, int apIndex, mac_address_t client_mac, wifi_disconnectType_t type, unsigned int reason);
 int ssp_WIFIHALSteeringClientSet(unsigned int steeringgroupIndex, int apIndex, mac_address_t client_mac, wifi_steering_clientConfig_t *cli_cfg);
 int ssp_WIFIHALSteeringClientRemove(unsigned int steeringgroupIndex, int apIndex, mac_address_t client_mac);
+int ssp_WIFIHALGetBTMClientCapabilityList(int apIndex, wifi_BTMCapabilities_t* btm_caps);

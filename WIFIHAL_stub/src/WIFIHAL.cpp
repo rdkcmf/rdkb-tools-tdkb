@@ -1417,10 +1417,11 @@ void WIFIHAL::WIFIHAL_GetNeighboringWiFiDiagnosticResult2(IN const Json::Value& 
 {
     DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_GetNeighboringWiFiDiagnosticResult2 ----->Entry\n");
 
-    wifi_neighbor_ap2_t *neighbor_ap2;
-    unsigned int output_array_size;
+    wifi_neighbor_ap2_t *neighbor_ap2 = NULL,*pt = NULL;
+    unsigned int output_array_size = 0;
     int radioIndex = 0;
-    int returnValue;
+    int returnValue = 1;
+    unsigned int i = 0;
     char details[1000] = {'\0'};
 
     radioIndex = req["radioIndex"].asInt();
@@ -1428,10 +1429,27 @@ void WIFIHAL::WIFIHAL_GetNeighboringWiFiDiagnosticResult2(IN const Json::Value& 
     returnValue = ssp_WIFIHALGetNeighboringWiFiDiagnosticResult2(radioIndex, &neighbor_ap2, &output_array_size);
     if(0 == returnValue)
     {
-        sprintf(details, "Value returned is :ap_SSID=%s,ap_BSSID=%s,ap_Mode=%s,ap_Channel=%d,ap_SignalStrength=%d,ap_SecurityModeEnabled=%s,ap_EncryptionMode=%s,ap_OperatingFrequencyBand=%s,ap_SupportedStandards=%s,ap_OperatingStandards=%s,ap_OperatingChannelBandwidth=%s,ap_BeaconPeriod=%d,ap_Noise=%d,ap_BasicDataTransferRates=%s,ap_SupportedDataTransferRates=%s,ap_DTIMPeriod=%d,ap_ChannelUtilization=%d,output_array_size=%u",neighbor_ap2->ap_SSID,neighbor_ap2->ap_BSSID,neighbor_ap2->ap_Mode,neighbor_ap2->ap_Channel,neighbor_ap2->ap_SignalStrength,neighbor_ap2->ap_SecurityModeEnabled,neighbor_ap2->ap_EncryptionMode,neighbor_ap2->ap_OperatingFrequencyBand,neighbor_ap2->ap_SupportedStandards,neighbor_ap2->ap_OperatingStandards,neighbor_ap2->ap_OperatingChannelBandwidth,neighbor_ap2->ap_BeaconPeriod,neighbor_ap2->ap_Noise,neighbor_ap2->ap_BasicDataTransferRates,neighbor_ap2->ap_SupportedDataTransferRates,neighbor_ap2->ap_DTIMPeriod,neighbor_ap2->ap_ChannelUtilization,output_array_size);
-        response["result"]="SUCCESS";
-        response["details"]=details;
-        return;
+        if(neighbor_ap2 != NULL and output_array_size > 0)
+        {
+	    for(i=0, pt=neighbor_ap2; i<output_array_size; i++, pt++)
+	    {
+	         if((pt->ap_SSID!="") and (strcmp(pt->ap_SSID,"OutOfService")!=0))
+		     break;
+	    }
+	    if(i==output_array_size)
+                sprintf(details, "Value returned is :ap_SSID=%s,ap_BSSID=%s,ap_Mode=%s,ap_Channel=%d,ap_SignalStrength=%d,ap_SecurityModeEnabled=%s,ap_EncryptionMode=%s,ap_OperatingFrequencyBand=%s,ap_SupportedStandards=%s,ap_OperatingStandards=%s,ap_OperatingChannelBandwidth=%s,ap_BeaconPeriod=%d,ap_Noise=%d,ap_BasicDataTransferRates=%s,ap_SupportedDataTransferRates=%s,ap_DTIMPeriod=%d,ap_ChannelUtilization=%d,output_array_size=%u",neighbor_ap2->ap_SSID,neighbor_ap2->ap_BSSID,neighbor_ap2->ap_Mode,neighbor_ap2->ap_Channel,neighbor_ap2->ap_SignalStrength,neighbor_ap2->ap_SecurityModeEnabled,neighbor_ap2->ap_EncryptionMode,neighbor_ap2->ap_OperatingFrequencyBand,neighbor_ap2->ap_SupportedStandards,neighbor_ap2->ap_OperatingStandards,neighbor_ap2->ap_OperatingChannelBandwidth,neighbor_ap2->ap_BeaconPeriod,neighbor_ap2->ap_Noise,neighbor_ap2->ap_BasicDataTransferRates,neighbor_ap2->ap_SupportedDataTransferRates,neighbor_ap2->ap_DTIMPeriod,neighbor_ap2->ap_ChannelUtilization,output_array_size);
+           else
+	       sprintf(details, "Value returned is :ap_SSID=%s,ap_BSSID=%s,ap_Mode=%s,ap_Channel=%d,ap_SignalStrength=%d,ap_SecurityModeEnabled=%s,ap_EncryptionMode=%s,ap_OperatingFrequencyBand=%s,ap_SupportedStandards=%s,ap_OperatingStandards=%s,ap_OperatingChannelBandwidth=%s,ap_BeaconPeriod=%d,ap_Noise=%d,ap_BasicDataTransferRates=%s,ap_SupportedDataTransferRates=%s,ap_DTIMPeriod=%d,ap_ChannelUtilization=%d,output_array_size=%u",pt->ap_SSID,pt->ap_BSSID,pt->ap_Mode,pt->ap_Channel,pt->ap_SignalStrength,pt->ap_SecurityModeEnabled,pt->ap_EncryptionMode,pt->ap_OperatingFrequencyBand,pt->ap_SupportedStandards,pt->ap_OperatingStandards,pt->ap_OperatingChannelBandwidth,pt->ap_BeaconPeriod,pt->ap_Noise,pt->ap_BasicDataTransferRates,pt->ap_SupportedDataTransferRates,pt->ap_DTIMPeriod,pt->ap_ChannelUtilization,output_array_size);
+           response["result"]="SUCCESS";
+           response["details"]=details;
+           return;
+      }
+	 else
+        {
+            response["result"]="SUCCESS";
+            response["details"]="No neighbouring Accesspoints found by wifi_getNeighboringWiFiDiagnosticResult2";
+            return;
+        }
     }
     else
     {
@@ -1442,6 +1460,7 @@ void WIFIHAL::WIFIHAL_GetNeighboringWiFiDiagnosticResult2(IN const Json::Value& 
         return;
     }
 }
+
 /*******************************************************************************************
  *
  * Function Name        : WIFIHAL_Down
@@ -2944,3 +2963,53 @@ void WIFIHAL::WIFIHAL_SteeringClientRemove(IN const Json::Value& req, OUT Json::
         return;
     }
 }
+
+/*******************************************************************************************
+ * Function Name        : WIFIHAL_GetBTMClientCapabilityList
+ * Description          : This function invokes WiFi hal api wifi_getBTMClientCapabilityList
+ * @param [in] req-     : apIndex - access point index
+                          count - no: of MAC entries being passed
+                          clientMAC - The Client's MAC address
+ * @param [out] response - filled with SUCCESS or FAILURE based on the output status of operation
+ *
+ ********************************************************************************************/
+void WIFIHAL::WIFIHAL_GetBTMClientCapabilityList(IN const Json::Value& req, OUT Json::Value& response)
+{
+    DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_GetBTMClientCapabilityList ----->Entry\n");
+    int apIndex = 0;
+    int count = 0;
+    char mac[20] = {'\0'};
+    mac_address_t client_mac;
+    wifi_BTMCapabilities_t btm_caps;
+    unsigned int macInt[6];
+    int returnValue = 1;
+    char details[2000] = {'\0'};
+    int k = 0;
+
+    apIndex = req["apIndex"].asInt();
+    btm_caps.entries = req["count"].asInt();
+    strcpy(mac, req["clientMAC"].asCString());
+    sscanf(mac, "%02x:%02x:%02x:%02x:%02x:%02x", &macInt[0], &macInt[1], &macInt[2], &macInt[3], &macInt[4], &macInt[5]);
+    for (k = 0; k < 6; k++) {
+         client_mac[k] = (unsigned char)macInt[k];
+         btm_caps.peer[0][k] = client_mac[k];
+    }
+
+    returnValue = ssp_WIFIHALGetBTMClientCapabilityList(apIndex, &btm_caps);
+    if(0 == returnValue)
+    {
+        sprintf(details, "wifi_getBTMClientCapabilityList output is: Entries %d, MAC %x:%x:%x:%x:%x:%x, Capability %d", btm_caps.entries, btm_caps.peer[0][0],  btm_caps.peer[0][1], btm_caps.peer[0][2], btm_caps.peer[0][3], btm_caps.peer[0][4], btm_caps.peer[0][5], btm_caps.capability[0]);
+        response["result"]="SUCCESS";
+        response["details"]=details;
+        return;
+    }
+    else
+    {
+        sprintf(details, "wifi_getBTMClientCapabilityList operation failed");
+        response["result"]="FAILURE";
+        response["details"]=details;
+        DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_GetBTMClientCapabilityList ---->Error in execution\n");
+        return;
+    }
+}
+

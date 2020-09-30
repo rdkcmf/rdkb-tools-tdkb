@@ -2121,3 +2121,34 @@ int ssp_WIFIHALSteeringClientRemove(unsigned int steeringgroupIndex, int apIndex
     }
     printf("\n ssp_WIFIHALSteeringClientRemove ---> Exit\n");
 }
+
+
+/*******************************************************************************************
+ *
+ * Function Name        : ssp_WIFIHALGetBTMClientCapabilityList
+ * Description          : This function invokes WiFi hal api wifi_getBTMClientCapabilityList()
+ * @param [in]          : apIndex   - accesspoint index
+                          btm_caps  - buffer to returm client capability
+ * @param [out]         : return status an integer value 0-success and 1-Failure
+ *
+ ********************************************************************************************/
+int ssp_WIFIHALGetBTMClientCapabilityList(int apIndex, wifi_BTMCapabilities_t* btm_caps)
+{
+    printf("\n ssp_WIFIHALGetBTMClientCapabilityList ----> Entry\n");
+    printf("ap index:%d \n",apIndex);
+
+    int return_status = 1;
+    return_status = wifi_getBTMClientCapabilityList(apIndex, btm_caps);
+    if(return_status != SSP_SUCCESS)
+    {
+     printf("\nssp_WIFIHALGetBTMClientCapabilityList::Failed. Ret:status %d\n", return_status);
+     return return_status;
+    }
+    else
+    {
+     printf("\n ssp_WIFIHALGetBTMClientCapabilityList::Success. Ret:status %d\n", return_status);
+     return return_status;
+    }
+    printf("\n ssp_WIFIHALGetBTMClientCapabilityList ---> Exit\n");
+}
+
