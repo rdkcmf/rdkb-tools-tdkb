@@ -37,6 +37,7 @@
 
 #define     MAX_BSR 32
 #define     MAX_RU_ALLOCATIONS  74
+#define     MAX_BTM_DEVICES     64
 
 typedef struct _wifi_radius_setting_t
 {
@@ -447,6 +448,12 @@ typedef struct {
     unsigned int        authRejectReason;       /**< Inactive RSSI crossing threshold       */
 } wifi_steering_clientConfig_t;
 
+typedef struct {
+    unsigned int        entries;                        // Number of entries in each of the following arrays.
+    mac_address_t       peer[MAX_BTM_DEVICES];          // Array a peer device MAC addresses.
+    unsigned char       capability[MAX_BTM_DEVICES];    // Array of bool indicating peer BSS transition capability.
+} wifi_BTMCapabilities_t;
+
 /* To provide external linkage to C Functions defined in TDKB Component folder */
 extern "C"
 {
@@ -505,6 +512,7 @@ extern "C"
     int ssp_WIFIHALSteeringClientDisconnect(unsigned int steeringgroupIndex, int apIndex, mac_address_t client_mac, wifi_disconnectType_t type, unsigned int reason);
     int ssp_WIFIHALSteeringClientSet(unsigned int steeringgroupIndex, int apIndex, mac_address_t client_mac, wifi_steering_clientConfig_t *cli_cfg);
     int ssp_WIFIHALSteeringClientRemove(unsigned int steeringgroupIndex, int apIndex, mac_address_t client_mac);
+    int ssp_WIFIHALGetBTMClientCapabilityList(int apIndex, wifi_BTMCapabilities_t* btm_caps);
 };
 
 class RDKTestAgent;
@@ -570,6 +578,7 @@ class WIFIHAL : public RDKTestStubInterface, public AbstractServer<WIFIHAL>
                   this->bindAndAddMethod(Procedure("WIFIHAL_SteeringClientDisconnect", PARAMS_BY_NAME, JSON_STRING, "steeringgroupIndex", JSON_INTEGER, "apIndex", JSON_INTEGER, "clientMAC", JSON_STRING, "disconnectType", JSON_INTEGER, "reason", JSON_INTEGER, NULL), &WIFIHAL::WIFIHAL_SteeringClientDisconnect);
                   this->bindAndAddMethod(Procedure("WIFIHAL_SteeringClientSet", PARAMS_BY_NAME, JSON_STRING, "steeringgroupIndex", JSON_INTEGER, "apIndex", JSON_INTEGER, "clientMAC", JSON_STRING, "rssiProbeHWM", JSON_INTEGER, "rssiProbeLWM", JSON_INTEGER, "rssiAuthHWM", JSON_INTEGER, "rssiAuthLWM", JSON_INTEGER, "rssiInactXing", JSON_INTEGER, "rssiHighXing", JSON_INTEGER, "rssiLowXing", JSON_INTEGER, "authRejectReason", JSON_INTEGER, NULL), &WIFIHAL::WIFIHAL_SteeringClientSet);
                   this->bindAndAddMethod(Procedure("WIFIHAL_SteeringClientRemove", PARAMS_BY_NAME, JSON_STRING, "steeringgroupIndex", JSON_INTEGER, "apIndex", JSON_INTEGER, "clientMAC", JSON_STRING, NULL), &WIFIHAL::WIFIHAL_SteeringClientRemove);
+                  this->bindAndAddMethod(Procedure("WIFIHAL_GetBTMClientCapabilityList", PARAMS_BY_NAME, JSON_STRING, "count", JSON_INTEGER, "apIndex", JSON_INTEGER, "clientMAC", JSON_STRING, NULL), &WIFIHAL::WIFIHAL_GetBTMClientCapabilityList);
                 }
         /*inherited functions*/
         bool initialize(IN const char* szVersion);
@@ -632,6 +641,7 @@ class WIFIHAL : public RDKTestStubInterface, public AbstractServer<WIFIHAL>
         void WIFIHAL_SteeringClientDisconnect(IN const Json::Value& req, OUT Json::Value& response);
         void WIFIHAL_SteeringClientSet(IN const Json::Value& req, OUT Json::Value& response);
         void WIFIHAL_SteeringClientRemove(IN const Json::Value& req, OUT Json::Value& response);
+        void WIFIHAL_GetBTMClientCapabilityList(IN const Json::Value& req, OUT Json::Value& response);
 };
 #endif //__WIFIHAL_STUB_H__
 
