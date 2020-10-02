@@ -21,7 +21,7 @@
 <xml>
   <id></id>
   <!-- Do not edit id. This will be auto filled while exporting. If you are adding a new script keep the id empty -->
-  <version>2</version>
+  <version>4</version>
   <!-- Do not edit version. This will be auto incremented while updating. If you are adding a new script you can keep the vresion as 1 -->
   <name>TS_WIFIHAL_5GHz_SetApScanFilter</name>
   <!-- If you are adding a new script you can specify the script name. Script Name should be unique same as this file name with out .py extension -->
@@ -108,8 +108,8 @@ def get_gscanfilter(tdkTestObj):
     tdkTestObj.executeTestCase(expectedresult);
     actualresult = tdkTestObj.getResult();
     tmp_details = tdkTestObj.getResultDetails().strip();
-    details = int(tmp_details[0])
-    return details,actualresult
+    print "tmp_details is %s"%tmp_details
+    return tmp_details,actualresult
 
 def set_apscanfilter(mode,tdkTestObj):
     tdkTestObj.addParameter("apIndex", 1);
@@ -135,9 +135,10 @@ if "SUCCESS" in (loadmodulestatus.upper() and  sysutilloadmodulestatus.upper()):
     #Get the Initial Scan Filter Value
     tdkTestObj = sysObj.createTestStep('ExecuteCmd');
     expectedresult="SUCCESS";
-    initial_mode,initial_result = get_gscanfilter(tdkTestObj);
+    details,initial_result = get_gscanfilter(tdkTestObj);
 
-    if expectedresult in initial_result:
+    if expectedresult in initial_result and details!="" :
+        initial_mode= int(details[0])
         tdkTestObj.setResultStatus("SUCCESS");
         print "TEST STEP 1: Get Scan Filter mode"
         print "EXPECTED RESULT 1: Should successfully get Scan Filter mode"

@@ -21,7 +21,7 @@
 <xml>
   <id></id>
   <!-- Do not edit id. This will be auto filled while exporting. If you are adding a new script keep the id empty -->
-  <version>20</version>
+  <version>21</version>
   <!-- Do not edit version. This will be auto incremented while updating. If you are adding a new script you can keep the vresion as 1 -->
   <name>TS_WIFIHAL_DisconnectSteeringClient</name>
   <!-- If you are adding a new script you can specify the script name. Script Name should be unique same as this file name with out .py extension -->
@@ -185,6 +185,8 @@ if "SUCCESS" in loadmodulestatus.upper() and "SUCCESS" in wifiloadmodulestatus.u
 		    print "wifi_getApNumDevicesAssociated failed"
 		    tdkTestObj.setResultStatus("FAILURE");
 		    print "Exiting the script"
+		    obj.unloadModule("wifihal");
+                    wifiObj.unloadModule("wifiagent");
 		    exit();
 	    if connectFlag == 1:
 	        print "TESTSTEP 3 : Get the number of devices connected to each AP using wifi_getApNumDevicesAssociated  api"
@@ -222,6 +224,8 @@ if "SUCCESS" in loadmodulestatus.upper() and "SUCCESS" in wifiloadmodulestatus.u
 		    #Get the result of execution
 		    print "[TEST EXECUTION RESULT] 4 : FAILURE";
 		    print "Exiting the script"
+		    obj.unloadModule("wifihal");
+                    wifiObj.unloadModule("wifiagent");
 		    exit();
                 print "MacAddress :", macAddress;
 	        primitive = 'WIFIHAL_SteeringClientDisconnect';
@@ -266,6 +270,8 @@ if "SUCCESS" in loadmodulestatus.upper() and "SUCCESS" in wifiloadmodulestatus.u
 		        print "wifi_getApNumDevicesAssociated failed after wifi_steering_clientDisconnect()"
 		        tdkTestObj.setResultStatus("FAILURE");
 			print "Exiting the script"
+			obj.unloadModule("wifihal");
+                        wifiObj.unloadModule("wifiagent");
 		        exit();
 		else:
 		    print "TEST STEP 5:Disconnect steering client of specific mac using wifi_steering_clientDisconnect()";
@@ -282,6 +288,8 @@ if "SUCCESS" in loadmodulestatus.upper() and "SUCCESS" in wifiloadmodulestatus.u
 		#Get the result of execution
 		print "[TEST EXECUTION RESULT] 3: FAILURE";
 	        print "Exiting the script"
+		obj.unloadModule("wifihal");
+                wifiObj.unloadModule("wifiagent");
 	        exit();
 	else:
 	    print "TEST STEP 2: Check the SSID and passphrase are same for 2.4G and 5G."
