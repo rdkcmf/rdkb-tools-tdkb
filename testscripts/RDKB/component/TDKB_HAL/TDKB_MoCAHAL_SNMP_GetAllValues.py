@@ -123,7 +123,7 @@ if "SUCCESS" in (loadmodulestatus1.upper() and loadmodulestatus2.upper() and loa
 
     setup_type = "SNMP"
     tdkTestObj = sysobj.createTestStep('ExecuteCmd');
-
+    mainFunctionFailedParams = [];
     prerequisite_status = tdkbHalTr181Utility.prerequisite(sysobj,setup_type);
     if prerequisite_status == 1:
         print "Pre-requisite for Setup Type %s is SUCCESS"%setup_type
