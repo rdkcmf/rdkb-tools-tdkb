@@ -416,6 +416,14 @@
           <parameter name="steeringgroupIndex" value=""/>
         </parameters>
       </primitiveTest>
+      <primitiveTest name="WIFIHAL_GetBTMClientCapabilityList" id=" " version="1">
+        <function>WIFIHAL_GetBTMClientCapabilityList</function>
+        <parameters>
+          <parameter name="apIndex" value=""/>
+          <parameter name="clientMAC" value=""/>
+          <parameter name="count" value=""/>
+        </parameters>
+      </primitiveTest>
     </primitiveTests>
   </module>
 </xml>
