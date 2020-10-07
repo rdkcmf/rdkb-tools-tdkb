@@ -121,7 +121,7 @@ if "SUCCESS" in loadmodulestatus1.upper() and loadmodulestatus2.upper():
         print "ACTUAL RESULT 1: MocaResetCount is:%s" %LastResetCount;
         #Get the result of execution
         print "[TEST EXECUTION RESULT] : SUCCESS";
-        tdkTestObj = obj.createTestStep('Mocastub_Set');
+        tdkTestObj = obj.createTestStep('Mocastub_SetOnly');
         tdkTestObj.addParameter("ParamName","Device.MoCA.Interface.1.X_CISCO_COM_Reset");
         tdkTestObj.addParameter("ParamValue","true");
         tdkTestObj.addParameter("Type","bool");
