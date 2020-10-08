@@ -192,7 +192,7 @@ if "SUCCESS" in loadmodulestatus.upper() and "SUCCESS" in loadmodulestatus1.uppe
                     print "EXPECTED RESULT 4: Should get SubscribeEx Test Result value from consumer log file (/tmp/rbusTestConsumer1.log)"
                     print "ACTUAL RESULT 4: Failed to get SubscribeEx Test Result value from consumer file (/tmp/rbusTestConsumer1.log)"
                     print "[TEST EXECUTION RESULT] 4: FAILURE";
-                    tdkTestObj_Tr181_Get.setResultStatus(FAILURE);
+                    tdkTestObj_Tr181_Get.setResultStatus("FAILURE");
             else:
                 tdkTestObj_Tr181_Get.setResultStatus("FAILURE");
                 print "TEST STEP 3: Execute the Test Consumer Test App "
