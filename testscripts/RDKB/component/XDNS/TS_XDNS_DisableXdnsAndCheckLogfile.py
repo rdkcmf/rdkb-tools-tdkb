@@ -88,7 +88,6 @@ from tdkutility import *
 
 #Test component to be tested
 obj = tdklib.TDKScriptingLibrary("tad","1");
-obj1 = tdklib.TDKScriptingLibrary("tdkbtr181","1");
 sysobj = tdklib.TDKScriptingLibrary("sysutil","1");
 
 #IP and Port of box, No need to change,
@@ -96,22 +95,18 @@ sysobj = tdklib.TDKScriptingLibrary("sysutil","1");
 ip = <ipaddress>
 port = <port>
 obj.configureTestCase(ip,port,'TS_XDNS_DisableXdnsAndCheckLogfile');
-obj1.configureTestCase(ip,port,'TS_XDNS_DisableXdnsAndCheckLogfile');
 sysobj.configureTestCase(ip,port,'TS_XDNS_DisableXdnsAndCheckLogfile');
 
 
 #Get the result of connection with test component and DUT
 loadmodulestatus1=obj.getLoadModuleResult();
-loadmodulestatus2=obj1.getLoadModuleResult();
-loadmodulestatus3=sysobj.getLoadModuleResult();
+loadmodulestatus2=sysobj.getLoadModuleResult();
 
-
-
-if "SUCCESS" in loadmodulestatus1.upper() and "SUCCESS" in loadmodulestatus2.upper() and "SUCCESS" in loadmodulestatus3.upper():
+if "SUCCESS" in loadmodulestatus1.upper() and "SUCCESS" in loadmodulestatus2.upper():
     #Set the result status of execution
-    obj.setLoadModuleStatus("SUCCESS")
-    tdkTestObj = obj.createTestStep('TADstub_Get');
+    obj.setLoadModuleStatus("SUCCESS");
 
+    tdkTestObj = obj.createTestStep('TADstub_Get');
     expectedresult = "SUCCESS"
     paramList=["Device.DeviceInfo.X_RDKCENTRAL-COM_EnableXDNS", "Device.X_Comcast_com_ParentalControl.ManagedSites.Enable", "Device.X_Comcast_com_ParentalControl.ManagedServices.Enable", "Device.X_Comcast_com_ParentalControl.ManagedDevices.Enable"]
     print "TEST STEP 1: Should get the Enable status of XDNS,Parental Control ManagedSites, Parental Control ManagedServices,Parental Control ManagedDevices"
@@ -123,17 +118,25 @@ if "SUCCESS" in loadmodulestatus1.upper() and "SUCCESS" in loadmodulestatus2.upp
         #Get the result of execution
         print "[TEST EXECUTION RESULT] : SUCCESS";
 
-        #Disable XDNS and parental control features
-        tdkTestObj = obj1.createTestStep("TDKB_TR181Stub_SetMultiple");
-        tdkTestObj.addParameter("paramList","Device.DeviceInfo.X_RDKCENTRAL-COM_EnableXDNS|false|bool|Device.X_Comcast_com_ParentalControl.ManagedSites.Enable|false|bool|Device.X_Comcast_com_ParentalControl.ManagedServices.Enable|false|bool|Device.X_Comcast_com_ParentalControl.ManagedDevices.Enable|false|bool");
-        tdkTestObj.executeTestCase(expectedresult);
-        actualresult = tdkTestObj.getResult();
-        details = tdkTestObj.getResultDetails();
+        paramList =["Device.DeviceInfo.X_RDKCENTRAL-COM_EnableXDNS","Device.X_Comcast_com_ParentalControl.ManagedSites.Enable","Device.X_Comcast_com_ParentalControl.ManagedServices.Enable","Device.X_Comcast_com_ParentalControl.ManagedDevices.Enable"]
+
+        for item in paramList:
+            #Disable XDNS and parental control features
+            tdkTestObj = obj.createTestStep("TADstub_Set");
+            tdkTestObj.addParameter("ParamName",item)
+            tdkTestObj.addParameter("ParamValue","false");
+            tdkTestObj.addParameter("Type","boolean")
+            tdkTestObj.executeTestCase(expectedresult);
+            actualresult = tdkTestObj.getResult();
+            details = tdkTestObj.getResultDetails();
+            if expectedresult not in actualresult:
+               break;
         if expectedresult in actualresult:
             tdkTestObj.setResultStatus("SUCCESS");
             print "TEST STEP 2: Should disable XDNS and parental control features"
             print "ACTUAL RESULT 2: %s" %details;
             print "TEST EXECUTION RESULT :SUCCESS";
+
             tdkTestObj = sysobj.createTestStep('ExecuteCmd');
             cmd = "[ -f /var/log/messages ] && echo \"File exist\" || echo \"File does not exist\"";
             tdkTestObj.addParameter("command",cmd);
@@ -189,12 +192,20 @@ if "SUCCESS" in loadmodulestatus1.upper() and "SUCCESS" in loadmodulestatus2.upp
                     #Get the result of execution
                     print "[TEST EXECUTION RESULT] : FAILURE";
 
-            tdkTestObj = obj1.createTestStep("TDKB_TR181Stub_SetMultiple");
-            tdkTestObj.addParameter("paramList","Device.DeviceInfo.X_RDKCENTRAL-COM_EnableXDNS|%s|bool|Device.X_Comcast_com_ParentalControl.ManagedSites.Enable|%s|bool|Device.X_Comcast_com_ParentalControl.ManagedServices.Enable|%s|bool|Device.X_Comcast_com_ParentalControl.ManagedDevices.Enable|%s|bool" %(orgValue[0],orgValue[1],orgValue[2],orgValue[3]))
-            tdkTestObj.executeTestCase(expectedresult);
-            actualresult = tdkTestObj.getResult();
-            details = tdkTestObj.getResultDetails();
-            if expectedresult in actualresult:
+            paramList =["Device.DeviceInfo.X_RDKCENTRAL-COM_EnableXDNS","Device.X_Comcast_com_ParentalControl.ManagedSites.Enable","Device.X_Comcast_com_ParentalControl.ManagedServices.Enable","Device.X_Comcast_com_ParentalControl.ManagedDevices.Enable"]
+            i =0;
+            for item in paramList:
+                tdkTestObj = obj.createTestStep("TADstub_Set");
+                tdkTestObj.addParameter("ParamName",item)
+                tdkTestObj.addParameter("ParamValue",orgValue[i]);
+                tdkTestObj.addParameter("Type","boolean")
+                tdkTestObj.executeTestCase(expectedresult);
+                actualresult = tdkTestObj.getResult();
+                details = tdkTestObj.getResultDetails();
+                i=i+1;
+                if expectedresult not in actualresult:
+                   break;
+            if  expectedresult in actualresult:
                 tdkTestObj.setResultStatus("SUCCESS");
                 print "TEST STEP : Should revert XDNS and parental control features"
                 print "ACTUAL RESULT : %s" %details;
@@ -217,13 +228,8 @@ if "SUCCESS" in loadmodulestatus1.upper() and "SUCCESS" in loadmodulestatus2.upp
         print "[TEST EXECUTION RESULT] : FAILURE";
 
     obj.unloadModule("tad");
-    obj1.unloadModule("tdkbtr181");
     sysobj.unloadModule("sysutil");
 else:
     print "Failed to load module";
     obj.setLoadModuleStatus("FAILURE");
     print "Module loading failed";
-
-
-
-
