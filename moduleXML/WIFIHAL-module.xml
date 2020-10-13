@@ -84,6 +84,7 @@
       <function name='WIFIHAL_SteeringClientSet' />
       <function name='WIFIHAL_SteeringClientRemove' />
       <function name='WIFIHAL_SteeringClientDisconnect' />
+      <function name='WIFIHAL_GetBTMClientCapabilityList' />
     </functions>
   <!-- Total parameters corresponding module  -->
     <parameters>
@@ -229,6 +230,9 @@
       <parameter funName='WIFIHAL_SteeringClientDisconnect' parameterName='clientMAC' parameterType='STRING' range='A-Z' />
       <parameter funName='WIFIHAL_SteeringClientDisconnect' parameterName='disconnectType' parameterType='INTEGER' range='0-50' />
       <parameter funName='WIFIHAL_SteeringClientDisconnect' parameterName='reason' parameterType='INTEGER' range='0-50' />
+      <parameter funName='WIFIHAL_GetBTMClientCapabilityList' parameterName='apIndex' parameterType='INTEGER' range='0-20' />
+      <parameter funName='WIFIHAL_GetBTMClientCapabilityList' parameterName='count' parameterType='INTEGER' range='0-10' />
+      <parameter funName='WIFIHAL_GetBTMClientCapabilityList' parameterName='clientMAC' parameterType='STRING' range='A-Z' />
     </parameters>
   </module>
 </xml>
