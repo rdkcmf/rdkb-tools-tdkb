@@ -424,6 +424,13 @@
           <parameter name="count" value=""/>
         </parameters>
       </primitiveTest>
+      <primitiveTest name="WIFIHAL_GetAssociatedDeviceDetail" id=" " version="2">
+        <function>WIFIHAL_GetAssociatedDeviceDetail</function>
+        <parameters>
+          <parameter name="apIndex" value=""/>
+          <parameter name="devIndex" value=""/>
+        </parameters>
+      </primitiveTest>
     </primitiveTests>
   </module>
 </xml>
