@@ -14,10 +14,22 @@
 -->
 
 <?xml version="1.0" encoding="UTF-8"?><xml>
-  <module name="RBUS" testGroup="Component">
+  <module testGroup="Component" name="RBUS">
     <primitiveTests>
       <primitiveTest name="RBUS_DoNothing" id="" version="1">
         <function>RBUS_DoNothing</function>
+        <parameters/>
+      </primitiveTest>
+      <primitiveTest name="RBUS_checkStatus" id="" version="1">
+        <function>RBUS_checkStatus</function>
+        <parameters/>
+      </primitiveTest>
+      <primitiveTest name="RBUS_open" id="" version="1">
+        <function>RBUS_open</function>
+        <parameters/>
+      </primitiveTest>
+      <primitiveTest name="RBUS_close" id="" version="1">
+        <function>RBUS_close</function>
         <parameters/>
       </primitiveTest>
     </primitiveTests>

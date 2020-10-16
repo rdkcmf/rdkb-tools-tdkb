@@ -2,7 +2,7 @@
 # If not stated otherwise in this file or this component's Licenses.txt
 # file the following copyright and licenses apply:
 #
-# Copyright 2016 RDK Management
+# Copyright 2020 RDK Management
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -16,8 +16,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 ##########################################################################
-
-SUBDIRS = agent tdkb_lib RDKLogger_stub CMAgent_stub WIFIAgent_stub MBUS_Stub WECB_Stub CosaCM_Stub SNMP_PA_Stub TR069Pa_Stub Mta_agent_Stub AdvancedConfig_stub CosaMTA_Stub pam_stub SysUtil_stub TAD_stub Moca_Stub LMLite_Stub WIFIHAL_stub CMHAL_Stub ethsw_hal_stub dhcp_hal_stub tdkb_e2e_stub platform_hal_stub tdkb_tr181_stub MoCAHAL_Stub MTAHAL_Stub XUPNP_Stub EPONHAL_Stub mso_mgmt_hal_stub BLEHAL_Stub RBUS_Stub
-DIST_SUBDIRS = @SUBDIRS@
-
-distcleancheck_listfiles = *-libtool
+ACLOCAL_AMFLAGS = -Im4 --install
+AM_CPPFLAGS = ${COPTS} -fPIC -DDEBUG_LEVEL_TRACE
+AM_CXXFLAGS = -I${top_srcdir}/RBUS_Stub/include -I${top_srcdir}/agent/include -I${top_srcdir}/tdkb_lib/include -I${PKG_CONFIG_SYSROOT_DIR}$(includedir)/rbus
+lib_LTLIBRARIES = librbusstub.la
+librbusstub_la_SOURCES = src/RBUS_Stub.cpp
+librbusstub_la_DEPENDENCIES= ${top_builddir}/tdkb_lib/.libs/libtdkagentssp.la
+librbusstub_la_LIBADD =  $(librbusstub_la_DEPENDENCIES)
+librbusstub_la_includedir = ${includedir}
+librbusstub_la_include_HEADERS = ${top_srcdir}/RBUS_Stub/include/RBUS_Stub.h
