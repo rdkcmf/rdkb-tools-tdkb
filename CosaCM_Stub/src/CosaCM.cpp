@@ -49,10 +49,10 @@ int ssp_cosacm_getcertstatus_invalid_arg();
 int ssp_cosacm_getcpelist_invalid_arg();
 int ssp_CosaDmlCMGetStatus(int handleType, int Value);
 int ssp_CosaCMGetLoopDiagnosticsStart(int handleType, int boolValue);
-int ssp_CosaDmlCMGetLoopDiagnosticsDetails(int handleType, int Value);
-int ssp_CosaDmlCMGetTelephonyRegistrationStatus(int handleType, int Value);
-int ssp_CosaDmlCMGetTelephonyDHCPStatus(int handleType, int Value);
-int ssp_CosaDmlCMGetTelephonyTftpStatus(int handleType, int Value);
+int ssp_CosaDmlCMGetLoopDiagnosticsDetails(int handleType, int bufferType, char* status);
+int ssp_CosaDmlCMGetTelephonyRegistrationStatus(int handleType, int bufferType, char* status);
+int ssp_CosaDmlCMGetTelephonyDHCPStatus(int handleType, int bufferType, char* status);
+int ssp_CosaDmlCMGetTelephonyTftpStatus(int handleType, int bufferType, char* status);
 int ssp_CosaDmlCMSetLoopDiagnosticsStart(int handleType, int boolValue);
 int ssp_cosacm_GetDHCPInfo(int handleType, int bufferType);
 int ssp_cosacm_GetDOCSISInfo(int handleType, int bufferType);
@@ -1124,44 +1124,45 @@ void CosaCM::CosaCM_GetLoopDiagnosticsStart(IN const Json::Value& req, OUT Json:
  * @param [out] response - filled with SUCCESS or FAILURE based on the return value
  *
  *******************************************************************************************/
-
 void CosaCM::CosaCM_GetLoopDiagnosticsDetails(IN const Json::Value& req, OUT Json::Value& response)
 {
-    DEBUG_PRINT(DEBUG_TRACE,"\n CosaCM_GetLoopDiagnosticsDetails --->Entry \n");
-
     int returnValue = 0;
     int handleType = 0;
     int bufferType = 0;
+    char dia_status[MAX_BUFFER_SIZE] = {'\0'};
+    char details[MAX_BUFFER_SIZE] = {'\0'};
 
     /* Validate the input arguments */
     if(&req["handleType"]==NULL)
     {
         response["result"]="FAILURE";
         response["details"]="NULL parameter as input argument";
-	return;
+        return;
     }
     if(&req["bufferType"]==NULL)
     {
         response["result"]="FAILURE";
         response["details"]="NULL parameter as input argument";
-	return;
+        return;
     }
 
     handleType = req["handleType"].asInt();
     bufferType = req["bufferType"].asInt();
 
-    returnValue =ssp_CosaDmlCMGetLoopDiagnosticsDetails(handleType,bufferType);
+    returnValue =ssp_CosaDmlCMGetLoopDiagnosticsDetails(handleType,bufferType,dia_status);	
     if(0 == returnValue)
     {
+        DEBUG_PRINT(DEBUG_TRACE,"\n Diagnostic Details is %s \n", dia_status);
+        sprintf(details, "Diagnostics Details is %s", dia_status);
         response["result"]="SUCCESS";
-        response["details"]="Successfully got the Loop Diagnostics Details";
+        response["details"]=details;
     }
     else
     {
         response["result"]="FAILURE";
-        response["details"]="Failed to get the Loop Diagnostics Details";
+        response["details"]="Failed to get Loop DiagnosticsDetails ";
         DEBUG_PRINT(DEBUG_TRACE,"\n CosaCM_GetLoopDiagnosticsDetails --->Exit\n");
-	return;
+        return;
     }
     DEBUG_PRINT(DEBUG_TRACE,"\n CosaCM_GetLoopDiagnosticsDetails  --->Exit\n");
     return;
@@ -1176,7 +1177,6 @@ void CosaCM::CosaCM_GetLoopDiagnosticsDetails(IN const Json::Value& req, OUT Jso
  * @param [out] response - filled with SUCCESS or FAILURE based on the return value
  *
  *******************************************************************************************/
-
 void CosaCM::CosaCM_GetTelephonyRegistrationStatus(IN const Json::Value& req, OUT Json::Value& response)
 {
     DEBUG_PRINT(DEBUG_TRACE,"\n CosaCM_GetTelephonyRegistrationStatus --->Entry \n");
@@ -1184,36 +1184,40 @@ void CosaCM::CosaCM_GetTelephonyRegistrationStatus(IN const Json::Value& req, OU
     int returnValue = 0;
     int handleType = 0;
     int bufferType = 0;
+    char reg_status[1024] = {'\0'};
+    char details[1100] = {'\0'};
 
     /* Validate the input arguments */
     if(&req["handleType"]==NULL)
     {
         response["result"]="FAILURE";
         response["details"]="NULL parameter as input argument";
-	return;
+        return;
     }
     if(&req["bufferType"]==NULL)
     {
         response["result"]="FAILURE";
         response["details"]="NULL parameter as input argument";
-	return;
+        return;
     }
 
     handleType = req["handleType"].asInt();
     bufferType = req["bufferType"].asInt();
 
-    returnValue =ssp_CosaDmlCMGetTelephonyRegistrationStatus(handleType,bufferType);
+    returnValue = ssp_CosaDmlCMGetTelephonyRegistrationStatus(handleType,bufferType,reg_status);
     if(0 == returnValue)
     {
+        DEBUG_PRINT(DEBUG_TRACE,"\n Telephony Registration status is %s \n", reg_status);
+        sprintf(details, "Telephony Registration Status is %s", reg_status);
         response["result"]="SUCCESS";
-        response["details"]="Successfully got Telephony Registration Status";
+        response["details"]=details;
     }
     else
     {
         response["result"]="FAILURE";
         response["details"]="Failed to get Telephony Registration Status";
         DEBUG_PRINT(DEBUG_TRACE,"\n CosaCM_GetTelephonyRegistrationStatus --->Exit\n");
-	return;
+        return;
     }
     DEBUG_PRINT(DEBUG_TRACE,"\n CosaCM_GetTelephonyRegistrationStatus  --->Exit\n");
     return;
@@ -1235,7 +1239,9 @@ void CosaCM::CosaCM_GetTelephonyTftpStatus(IN const Json::Value& req, OUT Json::
 
     int returnValue = 0;
     int handleType = 0;
-    int Value = 0;
+    int bufferType = 0;
+    char tftp_status[1024] = {'\0'};
+    char details[1100] = {'\0'};
 
     /* Validate the input arguments */
     if(&req["handleType"]==NULL)
@@ -1244,7 +1250,7 @@ void CosaCM::CosaCM_GetTelephonyTftpStatus(IN const Json::Value& req, OUT Json::
         response["details"]="NULL parameter as input argument";
 	return;
     }
-    if(&req["Value"]==NULL)
+    if(&req["bufferType"]==NULL)
     {
         response["result"]="FAILURE";
         response["details"]="NULL parameter as input argument";
@@ -1252,13 +1258,16 @@ void CosaCM::CosaCM_GetTelephonyTftpStatus(IN const Json::Value& req, OUT Json::
     }
 
     handleType = req["handleType"].asInt();
-    Value = req["Value"].asInt();
+    bufferType = req["bufferType"].asInt();
 
-    returnValue =ssp_CosaDmlCMGetTelephonyTftpStatus(handleType,Value);
+    returnValue =ssp_CosaDmlCMGetTelephonyTftpStatus(handleType,bufferType,tftp_status);
+
     if(0 == returnValue)
     {
+        DEBUG_PRINT(DEBUG_TRACE,"\n Telephony TFTP status is %s \n", tftp_status);
+        sprintf(details, "Telephony TFTP Status is %s", tftp_status);
         response["result"]="SUCCESS";
-        response["details"]="Successfully got Telephony Tftp Status";
+        response["details"]=details;
     }
     else
     {
@@ -1279,44 +1288,48 @@ void CosaCM::CosaCM_GetTelephonyTftpStatus(IN const Json::Value& req, OUT Json::
  * @param [out] response - filled with SUCCESS or FAILURE based on the return value
  *
  *******************************************************************************************/
-
 void CosaCM::CosaCM_GetTelephonyDHCPStatus(IN const Json::Value& req, OUT Json::Value& response)
 {
     DEBUG_PRINT(DEBUG_TRACE,"\n CosaCM_GetTelephonyDHCPStatus --->Entry \n");
 
     int returnValue = 0;
     int handleType = 0;
-    int Value = 0;
+    int bufferType = 0;
+    char dhcp_status[1024] = {'\0'};
+    char details[1100] = {'\0'};
 
     /* Validate the input arguments */
     if(&req["handleType"]==NULL)
     {
         response["result"]="FAILURE";
         response["details"]="NULL parameter as input argument";
-	return;
+        return;
     }
-    if(&req["Value"]==NULL)
+    if(&req["bufferType"]==NULL)
     {
         response["result"]="FAILURE";
         response["details"]="NULL parameter as input argument";
-	return;
+        return;
     }
 
     handleType = req["handleType"].asInt();
-    Value = req["Value"].asInt();
+    bufferType = req["bufferType"].asInt();
 
-    returnValue =ssp_CosaDmlCMGetTelephonyDHCPStatus(handleType,Value);
+    returnValue =ssp_CosaDmlCMGetTelephonyDHCPStatus(handleType,bufferType,dhcp_status);
+
     if(0 == returnValue)
     {
+        DEBUG_PRINT(DEBUG_TRACE,"\n Telephony DHCP status is %s \n", dhcp_status);
+        sprintf(details, "Telephony DHCP Status is %s", dhcp_status);
         response["result"]="SUCCESS";
-        response["details"]="Successfully got Telephony DHCP Status";
+        response["details"]=details;
     }
     else
     {
         response["result"]="FAILURE";
         response["details"]="Failed to get Telephony DHCP Status";
         DEBUG_PRINT(DEBUG_TRACE,"\n CosaCM_GetTelephonyDHCPStatus --->Exit\n");
-	return;
+        return;
     }
     DEBUG_PRINT(DEBUG_TRACE,"\n CosaCM_GetTelephonyDHCPStatus  --->Exit\n");
     return;

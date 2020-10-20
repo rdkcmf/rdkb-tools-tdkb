@@ -122,14 +122,14 @@
         <function>CosaCM_GetTelephonyTftpStatus</function>
         <parameters>
           <parameter name="handleType" value="0"/>
-          <parameter name="Value" value="0"/>
+          <parameter name="bufferType" value="0"/>
         </parameters>
       </primitiveTest>
       <primitiveTest id=" " name="CosaCM_GetTelephonyDHCPStatus" version="1">
         <function>CosaCM_GetTelephonyDHCPStatus</function>
         <parameters>
           <parameter name="handleType" value="0"/>
-          <parameter name="Value" value="0"/>
+          <parameter name="bufferType" value="0"/>
         </parameters>
       </primitiveTest>
       <primitiveTest id=" " name="COSACM_GetDocsisLog" version="1">

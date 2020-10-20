@@ -55,10 +55,7 @@ API Name
 CosaCM_GetTelephonyTftpStatus
 Input
 handleType - valid
-Value - invalid
-
-
-
+bufferType - invalid
 </input_parameters>
     <automation_approch>1.Configure the Function info in Test Manager GUI  which needs to be tested  
 (CosaCM_GetTelephonyTftpStatus - func name - "If not exists already" ( This is considered as default Primitive test case)
@@ -103,7 +100,7 @@ ip = <ipaddress>
 port = <port>
 obj.configureTestCase(ip,port,'TS_COSACM_GetTelephonyTftpStatus_WithInvalidBuffer');
 
-#Get the result of connection with test component and STB
+#Get the result of connection with test component and DUT
 loadmodulestatus =obj.getLoadModuleResult();
 print "[LIB LOAD STATUS]  :  %s" %loadmodulestatus ;
 
@@ -113,7 +110,7 @@ if "SUCCESS" in loadmodulestatus.upper():
         #Script to load the configuration file of the component
         tdkTestObj = obj.createTestStep("CosaCM_GetTelephonyTftpStatus");
         tdkTestObj.addParameter("handleType",0);
-        tdkTestObj.addParameter("Value",1);
+        tdkTestObj.addParameter("bufferType",1);
         expectedresult="FAILURE";
         tdkTestObj.executeTestCase(expectedresult);
         actualresult = tdkTestObj.getResult();

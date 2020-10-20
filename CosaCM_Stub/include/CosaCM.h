@@ -38,6 +38,7 @@
 #define TEST_FAILURE false
 #define MAX_PARAM_SIZE	100
 #define MAX_PARAM_NAMES_ARRAY	1000
+#define MAX_BUFFER_SIZE 1024
 
 class RDKTestAgent;
 
@@ -72,8 +73,8 @@ class CosaCM : public RDKTestStubInterface, public AbstractServer<CosaCM>
                   this->bindAndAddMethod(Procedure("CosaCM_GetLoopDiagnosticsStart", PARAMS_BY_NAME,JSON_STRING ,"handleType", JSON_INTEGER,"boolValue", JSON_INTEGER,NULL), &CosaCM::CosaCM_GetLoopDiagnosticsStart);
                   this->bindAndAddMethod(Procedure("CosaCM_GetLoopDiagnosticsDetails", PARAMS_BY_NAME, JSON_STRING,"handleType", JSON_INTEGER,"bufferType", JSON_INTEGER,NULL), &CosaCM::CosaCM_GetLoopDiagnosticsDetails);
                   this->bindAndAddMethod(Procedure("CosaCM_GetTelephonyRegistrationStatus", PARAMS_BY_NAME,JSON_STRING,"handleType", JSON_INTEGER,"bufferType", JSON_INTEGER,NULL), &CosaCM::CosaCM_GetTelephonyRegistrationStatus);
-                  this->bindAndAddMethod(Procedure("CosaCM_GetTelephonyDHCPStatus", PARAMS_BY_NAME,JSON_STRING ,"handleType", JSON_INTEGER,"Value", JSON_INTEGER,NULL), &CosaCM::CosaCM_GetTelephonyDHCPStatus);
-                  this->bindAndAddMethod(Procedure("CosaCM_GetTelephonyTftpStatus", PARAMS_BY_NAME,JSON_STRING ,"handleType", JSON_INTEGER,"Value", JSON_INTEGER,NULL), &CosaCM::CosaCM_GetTelephonyTftpStatus);
+                  this->bindAndAddMethod(Procedure("CosaCM_GetTelephonyDHCPStatus", PARAMS_BY_NAME,JSON_STRING ,"handleType", JSON_INTEGER,"bufferType", JSON_INTEGER,NULL), &CosaCM::CosaCM_GetTelephonyDHCPStatus);
+                  this->bindAndAddMethod(Procedure("CosaCM_GetTelephonyTftpStatus", PARAMS_BY_NAME,JSON_STRING ,"handleType", JSON_INTEGER,"bufferType", JSON_INTEGER,NULL), &CosaCM::CosaCM_GetTelephonyTftpStatus);
                   this->bindAndAddMethod(Procedure("CosaCM_SetLoopDiagnosticsStart", PARAMS_BY_NAME,JSON_STRING ,"handleType", JSON_INTEGER,"boolValue", JSON_INTEGER,NULL), &CosaCM::CosaCM_SetLoopDiagnosticsStart);
                   this->bindAndAddMethod(Procedure("COSACM_GetDHCPInfo", PARAMS_BY_NAME,JSON_STRING ,"handleType", JSON_INTEGER,"bufferType", JSON_INTEGER,NULL), &CosaCM::COSACM_GetDHCPInfo);
                   this->bindAndAddMethod(Procedure("COSACM_GetDOCSISInfo", PARAMS_BY_NAME,JSON_STRING ,"handleType", JSON_INTEGER,"bufferType", JSON_INTEGER,NULL), &CosaCM::COSACM_GetDOCSISInfo);
