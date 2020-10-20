@@ -2,7 +2,7 @@
 # If not stated otherwise in this file or this component's Licenses.txt
 # file the following copyright and licenses apply:
 #
-# Copyright 2018 RDK Management
+# Copyright 2020 RDK Management
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@
 <xml>
   <id></id>
   <!-- Do not edit id. This will be auto filled while exporting. If you are adding a new script keep the id empty -->
-  <version>2</version>
+  <version>3</version>
   <!-- Do not edit version. This will be auto incremented while updating. If you are adding a new script you can keep the vresion as 1 -->
   <name>TS_SANITY_Is_DROPBEAR_UP</name>
   <!-- If you are adding a new script you can specify the script name. Script Name should be unique same as this file name with out .py extension -->
@@ -50,8 +50,6 @@
   <box_types>
     <box_type>Broadband</box_type>
     <!--  -->
-    <box_type>Emulator</box_type>
-    <!--  -->
     <box_type>RPI</box_type>
     <!--  -->
   </box_types>
@@ -63,20 +61,20 @@
     <test_case_id>TC_SYSUTIL_17</test_case_id>
     <test_objective>This test case will check whether dropbear process is running or not.</test_objective>
     <test_type>Positive</test_type>
-    <test_setup>Broadband, RPI, Emulator</test_setup>
+    <test_setup>Broadband, RPI</test_setup>
     <pre_requisite>TDK Agent should be in running state or invoke it through StartTdk.sh script</pre_requisite>
     <api_or_interface_used>ExecuteCmd</api_or_interface_used>
     <input_parameters>"sh %s/tdk_utility.sh parseConfigFile DROPBEAR_PROCESS" %TDK_PATH</input_parameters>
     <automation_approch>1. Invoke tdk_utility.sh and parse the tdk_platform.properties file to get the list of DROPBEAR process to be verified.
 2. Check whether the DROPBEAR process are running and get the PID of the process.
 3. If process is running then set the script to success else failure</automation_approch>
-    <except_output>DROPBEAR process should be running and should return the PID</except_output>
+    <expected_output>DROPBEAR process should be running and should return the PID</expected_output>
     <priority>High</priority>
     <test_stub_interface>sysutil</test_stub_interface>
     <test_script>TS_SANITY_Is_DROPBEAR_UP</test_script>
     <skipped>No</skipped>
     <release_version>M59</release_version>
-    <remarks></remarks>
+    <remarks>None</remarks>
   </test_cases>
   <script_tags>
     <script_tag>BASIC</script_tag>
@@ -84,8 +82,8 @@
   </script_tags>
 </xml>
 '''
-# use tdklib library,which provides a wrapper for tdk testcase script 
-import tdklib; 
+# use tdklib library,which provides a wrapper for tdk testcase script
+import tdklib;
 from tdkbVariables import *;
 #Test component to be tested
 obj = tdklib.TDKScriptingLibrary("sysutil","RDKB");
@@ -114,27 +112,27 @@ if "SUCCESS" in loadmodulestatus.upper():
         print "ACTUAL RESULT 1: DROPBEAR process: %s" %dropbearProcessList;
         #Get the result of execution
         print "[TEST EXECUTION RESULT] : SUCCESS"
-	dropbearProcessList = dropbearProcessList.split(",");
+        dropbearProcessList = dropbearProcessList.split(",");
         for item in dropbearProcessList:
-	    command = "pidof %s" %item
+            command = "pidof %s" %item
             tdkTestObj.addParameter("command", command);
             tdkTestObj.executeTestCase(expectedresult);
             actualresult = tdkTestObj.getResult();
             details = tdkTestObj.getResultDetails().strip();
-	    details = details.replace("\\n", "");
-	    if expectedresult in actualresult and "" != details:
-		tdkTestObj.setResultStatus("SUCCESS");
-	        print "Process Name : %s" %item;
-		print "PID : %s" %details;
-		print "%s with process ID %s is running" %(item,details)
-	 	print "[TEST EXECUTION RESULT] : SUCCESS"
-	    else:
-		tdkTestObj.setResultStatus("FAILURE");
-		print "Process Name : %s" %item
-		print "%s is not running" %item
-		print "[TEST EXECUTION RESULT] : FAILURE"
+            details = details.replace("\\n", "");
+            if expectedresult in actualresult and "" != details:
+                tdkTestObj.setResultStatus("SUCCESS");
+                print "Process Name : %s" %item;
+                print "PID : %s" %details;
+                print "%s with process ID %s is running" %(item,details)
+                print "[TEST EXECUTION RESULT] : SUCCESS"
+            else:
+                tdkTestObj.setResultStatus("FAILURE");
+                print "Process Name : %s" %item
+                print "%s is not running" %item
+                print "[TEST EXECUTION RESULT] : FAILURE"
     else:
-	tdkTestObj.setResultStatus("FAILURE");
+        tdkTestObj.setResultStatus("FAILURE");
         print "TEST STEP 1: Get the list of DROPBEAR process";
         print "EXPECTED RESULT 1: Should Get the list of DROPBEAR Process";
         print "ACTUAL RESULT 1: DROPBEAR process: %s" %dropbearProcessList;
