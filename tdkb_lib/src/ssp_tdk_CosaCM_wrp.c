@@ -420,16 +420,19 @@ int ssp_CosaCMGetLoopDiagnosticsStart(int handleType, int Value)
  *
  * Function Name        : ssp_CosaDmlCMGetLoopDiagnosticsDetails
  * Description          : This function will get Loop Diagnostics details
- * @param [in]          : boolValue -
+ * @param [in]          : handleType - CM Agent Handle
+                        : Value - Flag to indicate negative scenario
+                        : status - Pointer to get the Loop Diagnostics details
  * @param [out]         : return status an integer value 0-success and 1-Failure
  ********************************************************************************************/
-
-int ssp_CosaDmlCMGetLoopDiagnosticsDetails(int handleType, int Value)
+int ssp_CosaDmlCMGetLoopDiagnosticsDetails(int handleType, int Value, char* status)
 {
     int return_status = 0;
     ANSC_HANDLE cm_handle = NULL;
-    char pValue[20] = {0};
+    char pValue[1024] = {0};
+
     printf("Entering ssp_CosaDmlCMGetLoopDiagnosticsDetails");
+	
     if(handleType == 0)
     {
         cm_handle = bus_handle_client;
@@ -437,11 +440,12 @@ int ssp_CosaDmlCMGetLoopDiagnosticsDetails(int handleType, int Value)
     if(Value == 0)
     {
         return_status = CosaDmlCMGetLoopDiagnosticsDetails(cm_handle,pValue);
-        printf("Loop Diagnostic Details:%s\n",pValue);
+        printf("Diagnostics Detail is :%s\n",pValue);
+        strcpy(status,pValue);
     }
     else
     {
-	return_status = CosaDmlCMGetLoopDiagnosticsDetails(cm_handle,NULL);
+        return_status = CosaDmlCMGetLoopDiagnosticsDetails(cm_handle,NULL);
     }
 
     if(return_status == SSP_SUCCESS)
@@ -460,29 +464,32 @@ int ssp_CosaDmlCMGetLoopDiagnosticsDetails(int handleType, int Value)
 /*******************************************************************************************
  * Function Name        : ssp_CosaDmlCMGetTelephonyRegistrationStatus
  * Description          : This function will get the telephony registration status
- * @param [in]          : boolValue -
+ * @param [in]          : handleType - CM Agent Handle
+                        : Value - Flag to indicate negative scenario
+                        : status - Pointer to get the Registration status
  * @param [out]         : return status an integer value 0-success and 1-Failure
  ********************************************************************************************/
-int ssp_CosaDmlCMGetTelephonyRegistrationStatus(int handleType, int Value)
+int ssp_CosaDmlCMGetTelephonyRegistrationStatus(int handleType, int Value, char* status)
 {
     int return_status = 0;
     ANSC_HANDLE cm_handle = NULL;
-    char pValue[30] = {0};
+    char pValue[1024] = {0};
 
     printf("Entering ssp_CosaDmlCMGetTelephonyRegistrationStatus");
-
+	
     if(handleType == 0)
     {
         cm_handle = bus_handle_client;
     }
     if(Value == 0)
     {
-    	return_status = CosaDmlCMGetTelephonyRegistrationStatus(cm_handle,pValue);
+        return_status = CosaDmlCMGetTelephonyRegistrationStatus(cm_handle,pValue);
         printf("Telephony Registration Status:%s\n",pValue);
+        strcpy(status,pValue);
     }
     else
     {
-    	return_status = CosaDmlCMGetTelephonyRegistrationStatus(cm_handle,NULL);
+        return_status = CosaDmlCMGetTelephonyRegistrationStatus(cm_handle,NULL);
     }
 
     if(return_status == SSP_SUCCESS)
@@ -500,29 +507,33 @@ int ssp_CosaDmlCMGetTelephonyRegistrationStatus(int handleType, int Value)
 
 /*******************************************************************************************
  * Function Name        : ssp_CosaDmlCMGetTelephonyDHCPStatus
- * Description          : This function will get
- * @param [in]          : boolValue -
+ * Description          : This function will get the Telephony DHCP Status
+ * @param [in]          : handleType - CM Agent Handle
+                        : Value - Flag to indicate negative scenario
+                        : status - Pointer to get the DHCP status
  * @param [out]         : return status an integer value 0-success and 1-Failure
  ********************************************************************************************/
-int ssp_CosaDmlCMGetTelephonyDHCPStatus(int handleType, int Value)
+int ssp_CosaDmlCMGetTelephonyDHCPStatus(int handleType, int Value, char* status)
 {
     int return_status = 0;
     ANSC_HANDLE cm_handle = NULL;
-    char pValue[30] = {0};
+    char pValue[1024] = {0};
 
     printf("Entering ssp_CosaDmlCMGetTelephonyDHCPStatus");
+	
     if(handleType == 0)
     {
         cm_handle = bus_handle_client;
     }
     if(Value == 0)
     {
-  	return_status = CosaDmlCMGetTelephonyDHCPStatus(cm_handle,pValue);
+        return_status = CosaDmlCMGetTelephonyDHCPStatus(cm_handle,pValue);
         printf("Telephony DHCP Status:%s\n",pValue);
+        strcpy(status,pValue);
     }
     else
     {
-	return_status = CosaDmlCMGetTelephonyDHCPStatus(cm_handle,NULL);
+        return_status = CosaDmlCMGetTelephonyDHCPStatus(cm_handle,NULL);
     }
 
     if(return_status == SSP_SUCCESS)
@@ -538,17 +549,20 @@ int ssp_CosaDmlCMGetTelephonyDHCPStatus(int handleType, int Value)
     return return_status;
 }
 
+
 /*******************************************************************************************
  * Function Name        : ssp_CosaDmlCMGetTelephonyTftpStatus
- * Description          : This function will get
- * @param [in]          : boolValue -
+ * Description          : This function will get the Telephony TFTP status
+ * @param [in]          : handleType - CM Agent Handle
+                        : Value - Flag to indicate negative scenario
+                        : status - Pointer to get the TFTP status
  * @param [out]         : return status an integer value 0-success and 1-Failure
  ********************************************************************************************/
-int ssp_CosaDmlCMGetTelephonyTftpStatus(int handleType, int Value)
+int ssp_CosaDmlCMGetTelephonyTftpStatus(int handleType, int Value, char* status)
 {
     int return_status = 0;
     ANSC_HANDLE cm_handle = NULL;
-    char pValue[30] = {0};
+    char pValue[1024] = {0};
 
     printf("Entering ssp_CosaDmlCMGetTelephonyTftpStatus");
 
@@ -559,6 +573,8 @@ int ssp_CosaDmlCMGetTelephonyTftpStatus(int handleType, int Value)
     if(Value == 0)
     {
   	return_status = CosaDmlCMGetTelephonyTftpStatus(cm_handle,pValue);
+        printf("Telephony TFTP Status:%s\n",pValue);
+        strcpy(status,pValue);
     }
     else
     {
