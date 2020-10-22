@@ -29,8 +29,15 @@ extern "C"
         int ssp_rbus_checkStatus( rbusStatus_t *status);
         int ssp_rbus_open();
         int ssp_rbus_close();
+        int ssp_rbus_dataElements(char* element1, char* element2,char* operation);
+        int ssp_rbus_session(char* operation, unsigned int *sessionID);
+        int ssp_rbus_closeSession(unsigned int sessionID);
+        int ssp_rbus_discoverComponentDataElements(char* component_name);
+        int ssp_rbus_get(char* parameter_name);
+        int ssp_rbus_getValue(char* parameter_type,char* parameter_name, const char** getvalue, int** getvalue_i);
+        int ssp_rbus_setValue(char* parameter_type,char* param_name, char* set_value);
+
 #ifdef __cplusplus
 }
 #endif
 #endif
-

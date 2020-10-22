@@ -21,19 +21,19 @@
 <xml>
   <id></id>
   <!-- Do not edit id. This will be auto filled while exporting. If you are adding a new script keep the id empty -->
-  <version>10</version>
+  <version>4</version>
   <!-- Do not edit version. This will be auto incremented while updating. If you are adding a new script you can keep the vresion as 1 -->
-  <name>TS_RBUS_OpenAndClose</name>
+  <name>TS_RBUS_CreateAndCloseSession</name>
   <!-- If you are adding a new script you can specify the script name. Script Name should be unique same as this file name with out .py extension -->
-  <primitive_test_id></primitive_test_id>
+  <primitive_test_id> </primitive_test_id>
   <!-- Do not change primitive_test_id if you are editing an existing script. -->
-  <primitive_test_name>RBUS_Open</primitive_test_name>
+  <primitive_test_name>RBUS_Session</primitive_test_name>
   <!--  -->
   <primitive_test_version>1</primitive_test_version>
   <!--  -->
   <status>FREE</status>
   <!--  -->
-  <synopsis>To valiadte RBUS2_0 APIs of rbus_open and rbus_close</synopsis>
+  <synopsis>Create the rbus session using rbus_createSession RBUS API and close the session using rbus_closeSession API</synopsis>
   <!--  -->
   <groups_id />
   <!--  -->
@@ -56,24 +56,26 @@
     <!--  -->
   </rdk_versions>
   <test_cases>
-    <test_case_id>TC_RBUS_16</test_case_id>
-    <test_objective>To valiadte RBUS2_0 APIs of rbus_open and rbus_close</test_objective>
+    <test_case_id>TC_RBUS_18</test_case_id>
+    <test_objective>To Create the rbus session using rbus_createSession RBUS API and close the session using rbus_closeSession API</test_objective>
     <test_type>Positive</test_type>
     <test_setup>Broadband</test_setup>
-    <pre_requisite>1. Ccsp Components  should be in a running state of DUT
-2.TDK Agent should be in running state or invoke it through StartTdk.sh script</pre_requisite>
-    <api_or_interface_used>rbus_open, rbus_close</api_or_interface_used>
+    <pre_requisite>1.Ccsp Components  should be in a running state else invoke cosa_start.sh manually that includes all the ccsp components and TDK Component
+2.TDK Agent should be in running state or invoke it through StartTdk.sh script
+3.DUT should be in RBUS mode</pre_requisite>
+    <api_or_interface_used>rbus_createSession
+rbus_closeSession</api_or_interface_used>
     <input_parameters>N/A</input_parameters>
     <automation_approch>1. Load the rbus module
-2. open the rbus connection using rbus_open API with component name as tdk_b
-3. The rbus_open should be success
-4. Close the rbus connection using rbus_close API
-5. The rbus_close should be success
-6. Unload the rbus module </automation_approch>
-    <expected_output>Should be able to open RBUS connection using rbus_open and close the connection using rbus_close </expected_output>
+2. Open the rbus connection using rbus_open RBUS API
+3. Create the rbus session using rbus_createSession RBUS API and store the session ID value
+4. Close the created session using rbus_closeSession RBUS API with the sessionID from step 3.
+5. Close the rbus connection using rbus_close RBUS API
+6. Unload the module</automation_approch>
+    <expected_output>The session should be crated successfully and it can be closed using the obtained sessionID</expected_output>
     <priority>High</priority>
-    <test_stub_interface>rus</test_stub_interface>
-    <test_script>TS_RBUS_OpenAndClose</test_script>
+    <test_stub_interface>rbus</test_stub_interface>
+    <test_script>TS_RBUS_CreateAndCloseSession</test_script>
     <skipped>No</skipped>
     <release_version>M82</release_version>
     <remarks>None</remarks>
@@ -91,7 +93,7 @@ obj = tdklib.TDKScriptingLibrary("rbus","1");
 #This will be replaced with correspoing Box Ip and port while executing script
 ip = <ipaddress>
 port = <port>
-obj.configureTestCase(ip,port,'TS_RBUS_OpenAndClose');
+obj.configureTestCase(ip,port,'TS_RBUS_CreateAndCloseSession');
 
 #Get the result of connection with test component and DUT
 loadmodulestatus =obj.getLoadModuleResult();
@@ -115,7 +117,55 @@ if "SUCCESS" in loadmodulestatus.upper() :
         print "ACTUAL RESULT 1: rbus_open was success";
         #Get the result of execution
         print "[TEST EXECUTION RESULT] : %s" %actualresult ;
-        print "RBUS status is %s" %details;
+
+        tdkTestObj = obj.createTestStep('RBUS_Session');
+        tdkTestObj.addParameter("operation","CreateSession");
+        expectedresult = "SUCCESS";
+        tdkTestObj.executeTestCase(expectedresult);
+        actualresult = tdkTestObj.getResult();
+        session_ID = tdkTestObj.getResultDetails();
+
+        if expectedresult in actualresult:
+            #Set the result status of execution
+            tdkTestObj.setResultStatus("SUCCESS");
+            print "TEST STEP 2: Create session using rbus_createSession";
+            print "EXPECTED RESULT 2: Session should be created ";
+            print "ACTUAL RESULT 2: Session was created successfully, SessionID: ",session_ID
+            #Get the result of execution
+            print "[TEST EXECUTION RESULT] : %s" %actualresult ;
+
+            tdkTestObj = obj.createTestStep('RBUS_CloseSession');
+            tdkTestObj.addParameter("sessionid",int(session_ID));
+            expectedresult = "SUCCESS";
+            tdkTestObj.executeTestCase(expectedresult);
+            actualresult = tdkTestObj.getResult();
+            details = tdkTestObj.getResultDetails();
+
+            if expectedresult in actualresult:
+                #Set the result status of execution
+                tdkTestObj.setResultStatus("SUCCESS");
+                print "TEST STEP 3: Close the session using rbus_closeSession";
+                print "EXPECTED RESULT : Session should be Closed ";
+                print "ACTUAL RESULT 3: Session was Closed successfully";
+                #Get the result of execution
+                print "[TEST EXECUTION RESULT] : %s" %actualresult ;
+            else:
+                #Set the result status of execution
+                tdkTestObj.setResultStatus("FAILURE");
+                print "TEST STEP 3: Close the session using rbus_closeSession";
+                print "EXPECTED RESULT 3: Session should be Closed ";
+                print "ACTUAL RESULT 3: Closing the session was failed";
+                #Get the result of execution
+                print "[TEST EXECUTION RESULT] : %s" %actualresult ;
+        else:
+            #Set the result status of execution
+            tdkTestObj.setResultStatus("FAILURE");
+            print "TEST STEP 2: Create session using rbus_createSession";
+            print "EXPECTED RESULT 2: Session should be created ";
+            print "ACTUAL RESULT 2: Creation of sessionID failed ";
+            #Get the result of execution
+            #Get the result of execution
+            print "[TEST EXECUTION RESULT] : %s" %actualresult ;
 
         tdkTestObj = obj.createTestStep('RBUS_Close');
         expectedresult = "SUCCESS";
@@ -127,17 +177,17 @@ if "SUCCESS" in loadmodulestatus.upper() :
         if expectedresult in actualresult:
             #Set the result status of execution
             tdkTestObj.setResultStatus("SUCCESS");
-            print "TEST STEP 2: Close the RBUS connection";
-            print "EXPECTED RESULT 2: rbus_close should be success";
-            print "ACTUAL RESULT 2: rbus_close was success";
-            #Get the result of execution
+            print "TEST STEP 4: Close the RBUS connection";
+            print "EXPECTED RESULT 4: rbus_close should be success";
+            print "ACTUAL RESULT 4: rbus_close was success";
+             #Get the result of execution
             print "[TEST EXECUTION RESULT] : %s" %actualresult ;
         else:
             #Set the result status of execution
             tdkTestObj.setResultStatus("FAILURE");
-            print "TEST STEP 2: Close the RBUS connection";
-            print "EXPECTED RESULT 2: rbus_close should be success";
-            print "ACTUAL RESULT 2: rbus_close was Failed";
+            print "TEST STEP 4: Close the RBUS connection";
+            print "EXPECTED RESULT 4: rbus_close should be success";
+            print "ACTUAL RESULT 4: rbus_close was Failed";
             #Get the result of execution
             print "[TEST EXECUTION RESULT] : %s" %actualresult ;
     else:

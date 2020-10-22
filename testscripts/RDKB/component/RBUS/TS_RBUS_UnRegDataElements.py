@@ -21,19 +21,19 @@
 <xml>
   <id></id>
   <!-- Do not edit id. This will be auto filled while exporting. If you are adding a new script keep the id empty -->
-  <version>10</version>
+  <version>2</version>
   <!-- Do not edit version. This will be auto incremented while updating. If you are adding a new script you can keep the vresion as 1 -->
-  <name>TS_RBUS_OpenAndClose</name>
+  <name>TS_RBUS_UnRegDataElements</name>
   <!-- If you are adding a new script you can specify the script name. Script Name should be unique same as this file name with out .py extension -->
-  <primitive_test_id></primitive_test_id>
+  <primitive_test_id> </primitive_test_id>
   <!-- Do not change primitive_test_id if you are editing an existing script. -->
-  <primitive_test_name>RBUS_Open</primitive_test_name>
+  <primitive_test_name>RBUS_DataElements</primitive_test_name>
   <!--  -->
   <primitive_test_version>1</primitive_test_version>
   <!--  -->
   <status>FREE</status>
   <!--  -->
-  <synopsis>To valiadte RBUS2_0 APIs of rbus_open and rbus_close</synopsis>
+  <synopsis>Validate the RBUS2.0 API rbus_unregDataElements with sample data elements</synopsis>
   <!--  -->
   <groups_id />
   <!--  -->
@@ -56,24 +56,24 @@
     <!--  -->
   </rdk_versions>
   <test_cases>
-    <test_case_id>TC_RBUS_16</test_case_id>
-    <test_objective>To valiadte RBUS2_0 APIs of rbus_open and rbus_close</test_objective>
+    <test_case_id>TC_RBUS_22</test_case_id>
+    <test_objective>To Validate the RBUS2.0 API rbus_unregDataElements with sample data elements</test_objective>
     <test_type>Positive</test_type>
     <test_setup>Broadband</test_setup>
-    <pre_requisite>1. Ccsp Components  should be in a running state of DUT
-2.TDK Agent should be in running state or invoke it through StartTdk.sh script</pre_requisite>
-    <api_or_interface_used>rbus_open, rbus_close</api_or_interface_used>
+    <pre_requisite>1.Ccsp Components  should be in a running state else invoke cosa_start.sh manually that includes all the ccsp components and TDK Component
+2.TDK Agent should be in running state or invoke it through StartTdk.sh script
+3.DUT should be in RBUS mode</pre_requisite>
+    <api_or_interface_used>rbus_unregDataElements</api_or_interface_used>
     <input_parameters>N/A</input_parameters>
     <automation_approch>1. Load the rbus module
-2. open the rbus connection using rbus_open API with component name as tdk_b
-3. The rbus_open should be success
-4. Close the rbus connection using rbus_close API
-5. The rbus_close should be success
-6. Unload the rbus module </automation_approch>
-    <expected_output>Should be able to open RBUS connection using rbus_open and close the connection using rbus_close </expected_output>
+2. Open the rbus connection using rbus_open RBUS API
+3. Invoke the RBUS API rbus_unregDataElements and the return status should be success
+4. Close the rbus connection using rbus_close RBUS API
+5. Unload the module</automation_approch>
+    <expected_output>RBUS2.0 API rbus_unregDataElements return status should be success</expected_output>
     <priority>High</priority>
-    <test_stub_interface>rus</test_stub_interface>
-    <test_script>TS_RBUS_OpenAndClose</test_script>
+    <test_stub_interface>rbus</test_stub_interface>
+    <test_script>TS_RBUS_UnRegDataElements</test_script>
     <skipped>No</skipped>
     <release_version>M82</release_version>
     <remarks>None</remarks>
@@ -91,7 +91,7 @@ obj = tdklib.TDKScriptingLibrary("rbus","1");
 #This will be replaced with correspoing Box Ip and port while executing script
 ip = <ipaddress>
 port = <port>
-obj.configureTestCase(ip,port,'TS_RBUS_OpenAndClose');
+obj.configureTestCase(ip,port,'TS_RBUS_UnRegDataElements');
 
 #Get the result of connection with test component and DUT
 loadmodulestatus =obj.getLoadModuleResult();
@@ -115,14 +115,38 @@ if "SUCCESS" in loadmodulestatus.upper() :
         print "ACTUAL RESULT 1: rbus_open was success";
         #Get the result of execution
         print "[TEST EXECUTION RESULT] : %s" %actualresult ;
-        print "RBUS status is %s" %details;
+
+        tdkTestObj = obj.createTestStep('RBUS_DataElements');
+        tdkTestObj.addParameter("element1","Device.WiFi.SSID.1.SSID");
+        tdkTestObj.addParameter("element2","Device.WiFi.SSID.1.SSID");
+        tdkTestObj.addParameter("operation","UnRegister");
+        expectedresult = "SUCCESS";
+        tdkTestObj.executeTestCase(expectedresult);
+        actualresult = tdkTestObj.getResult();
+        details = tdkTestObj.getResultDetails();
+
+        if expectedresult in actualresult:
+            #Set the result status of execution
+            tdkTestObj.setResultStatus("SUCCESS");
+            print "TEST STEP 2: Validate rbus_unregDataElements API";
+            print "EXPECTED RESULT 2: rbus_unregDataElements API call should be success";
+            print "ACTUAL RESULT 2: rbus_unregDataElements API was success";
+            #Get the result of execution
+            print "[TEST EXECUTION RESULT] : %s" %actualresult ;
+        else:
+            #Set the result status of execution
+            tdkTestObj.setResultStatus("FAILURE");
+            print "TEST STEP 2: Validate rbus_unregDataElements API";
+            print "EXPECTED RESULT 2: rbus_unregDataElements API call should be success";
+            print "ACTUAL RESULT 2: rbus_unregDataElements API was Failed";
+            #Get the result of execution
+            print "[TEST EXECUTION RESULT] : %s" %actualresult ;
 
         tdkTestObj = obj.createTestStep('RBUS_Close');
         expectedresult = "SUCCESS";
         tdkTestObj.executeTestCase(expectedresult);
         actualresult = tdkTestObj.getResult();
         details = tdkTestObj.getResultDetails();
-        print "RBUS close Detail is ",details
 
         if expectedresult in actualresult:
             #Set the result status of execution

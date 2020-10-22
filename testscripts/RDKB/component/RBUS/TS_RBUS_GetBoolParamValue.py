@@ -21,19 +21,19 @@
 <xml>
   <id></id>
   <!-- Do not edit id. This will be auto filled while exporting. If you are adding a new script keep the id empty -->
-  <version>10</version>
+  <version>2</version>
   <!-- Do not edit version. This will be auto incremented while updating. If you are adding a new script you can keep the vresion as 1 -->
-  <name>TS_RBUS_OpenAndClose</name>
+  <name>TS_RBUS_GetBoolParamValue</name>
   <!-- If you are adding a new script you can specify the script name. Script Name should be unique same as this file name with out .py extension -->
-  <primitive_test_id></primitive_test_id>
+  <primitive_test_id> </primitive_test_id>
   <!-- Do not change primitive_test_id if you are editing an existing script. -->
-  <primitive_test_name>RBUS_Open</primitive_test_name>
+  <primitive_test_name>RBUS_GetValue</primitive_test_name>
   <!--  -->
   <primitive_test_version>1</primitive_test_version>
   <!--  -->
   <status>FREE</status>
   <!--  -->
-  <synopsis>To valiadte RBUS2_0 APIs of rbus_open and rbus_close</synopsis>
+  <synopsis>Get the value of the DML parameter (boolean) using rbus_get and rbusvalue_getBoolean RBUS APIs</synopsis>
   <!--  -->
   <groups_id />
   <!--  -->
@@ -56,24 +56,26 @@
     <!--  -->
   </rdk_versions>
   <test_cases>
-    <test_case_id>TC_RBUS_16</test_case_id>
-    <test_objective>To valiadte RBUS2_0 APIs of rbus_open and rbus_close</test_objective>
+    <test_case_id>TC_RBUS_24</test_case_id>
+    <test_objective>To Get the value of the DML parameter (boolean) using rbus_get and rbusvalue_getBoolean RBUS APIs</test_objective>
     <test_type>Positive</test_type>
     <test_setup>Broadband</test_setup>
-    <pre_requisite>1. Ccsp Components  should be in a running state of DUT
-2.TDK Agent should be in running state or invoke it through StartTdk.sh script</pre_requisite>
-    <api_or_interface_used>rbus_open, rbus_close</api_or_interface_used>
-    <input_parameters>N/A</input_parameters>
+    <pre_requisite>1.Ccsp Components  should be in a running state else invoke cosa_start.sh manually that includes all the ccsp components and TDK Component
+2.TDK Agent should be in running state or invoke it through StartTdk.sh script
+3.DUT should be in RBUS mode</pre_requisite>
+    <api_or_interface_used>rbus_get
+rbusvalue_getBoolean</api_or_interface_used>
+    <input_parameters>Device.WiFi.SSID.1.Enable</input_parameters>
     <automation_approch>1. Load the rbus module
-2. open the rbus connection using rbus_open API with component name as tdk_b
-3. The rbus_open should be success
-4. Close the rbus connection using rbus_close API
-5. The rbus_close should be success
-6. Unload the rbus module </automation_approch>
-    <expected_output>Should be able to open RBUS connection using rbus_open and close the connection using rbus_close </expected_output>
+2. Open the rbus connection using rbus_open RBUS API
+3. Invoke the RBUS API rbusValue_GetBoolean with the boolean parameter name and the return status should be success
+4. The Return status should be success, return value should be the value of the parameter
+5. Close the rbus connection using rbus_close RBUS API
+6. Unload the module</automation_approch>
+    <expected_output>Should get the value of the boolean parameter</expected_output>
     <priority>High</priority>
-    <test_stub_interface>rus</test_stub_interface>
-    <test_script>TS_RBUS_OpenAndClose</test_script>
+    <test_stub_interface>rbus</test_stub_interface>
+    <test_script>TS_RBUS_GetBoolParamValue</test_script>
     <skipped>No</skipped>
     <release_version>M82</release_version>
     <remarks>None</remarks>
@@ -91,7 +93,7 @@ obj = tdklib.TDKScriptingLibrary("rbus","1");
 #This will be replaced with correspoing Box Ip and port while executing script
 ip = <ipaddress>
 port = <port>
-obj.configureTestCase(ip,port,'TS_RBUS_OpenAndClose');
+obj.configureTestCase(ip,port,'TS_RBUS_GetBoolParamValue');
 
 #Get the result of connection with test component and DUT
 loadmodulestatus =obj.getLoadModuleResult();
@@ -99,6 +101,8 @@ print "[LIB LOAD STATUS]  :  %s" %loadmodulestatus ;
 
 if "SUCCESS" in loadmodulestatus.upper() :
     obj.setLoadModuleStatus("SUCCESS");
+
+    parameterNameList = ["Device.WiFi.SSID.1.Enable"]
 
     tdkTestObj = obj.createTestStep('RBUS_Open');
     expectedresult = "SUCCESS";
@@ -117,6 +121,34 @@ if "SUCCESS" in loadmodulestatus.upper() :
         print "[TEST EXECUTION RESULT] : %s" %actualresult ;
         print "RBUS status is %s" %details;
 
+        for  parameterName in parameterNameList:
+            print "Parameter Name is: ",parameterName
+
+            tdkTestObj = obj.createTestStep('RBUS_GetValue');
+            tdkTestObj.addParameter("paramName",parameterName);
+            tdkTestObj.addParameter("paramType","Boolean");
+            expectedresult = "SUCCESS";
+            tdkTestObj.executeTestCase(expectedresult);
+            actualresult = tdkTestObj.getResult();
+            details = tdkTestObj.getResultDetails();
+
+            if expectedresult in actualresult and details != "":
+                #Set the result status of execution
+                tdkTestObj.setResultStatus("SUCCESS");
+                print "TEST STEP 2: Get the value of parameter using rbusValue_GetBoolean";
+                print "EXPECTED RESULT 2: Should get the value of the parameter: ",parameterName;
+                print "ACTUAL RESULT 2: value of the parameter is ",details;
+                #Get the result of execution
+                print "[TEST EXECUTION RESULT] : %s" %actualresult ;
+            else:
+                #Set the result status of execution
+                tdkTestObj.setResultStatus("FAILURE");
+                print "TEST STEP 2: Get the value of parameter using rbusValue_GetBoolean";
+                print "EXPECTED RESULT 2: Should get the value of the parameter: ",parameterName;
+                print "ACTUAL RESULT 2: Failed to get the value of the parameter "
+                #Get the result of execution
+                print "[TEST EXECUTION RESULT] : %s" %actualresult ;
+
         tdkTestObj = obj.createTestStep('RBUS_Close');
         expectedresult = "SUCCESS";
         tdkTestObj.executeTestCase(expectedresult);
@@ -127,17 +159,17 @@ if "SUCCESS" in loadmodulestatus.upper() :
         if expectedresult in actualresult:
             #Set the result status of execution
             tdkTestObj.setResultStatus("SUCCESS");
-            print "TEST STEP 2: Close the RBUS connection";
-            print "EXPECTED RESULT 2: rbus_close should be success";
-            print "ACTUAL RESULT 2: rbus_close was success";
-            #Get the result of execution
+            print "TEST STEP 3: Close the RBUS connection";
+            print "EXPECTED RESULT 3: rbus_close should be success";
+            print "ACTUAL RESULT 3: rbus_close was success";
+             #Get the result of execution
             print "[TEST EXECUTION RESULT] : %s" %actualresult ;
         else:
             #Set the result status of execution
             tdkTestObj.setResultStatus("FAILURE");
-            print "TEST STEP 2: Close the RBUS connection";
-            print "EXPECTED RESULT 2: rbus_close should be success";
-            print "ACTUAL RESULT 2: rbus_close was Failed";
+            print "TEST STEP 3: Close the RBUS connection";
+            print "EXPECTED RESULT 3: rbus_close should be success";
+            print "ACTUAL RESULT 3: rbus_close was Failed";
             #Get the result of execution
             print "[TEST EXECUTION RESULT] : %s" %actualresult ;
     else:

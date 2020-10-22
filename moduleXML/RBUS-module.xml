@@ -31,5 +31,34 @@
     <logFileNames>[]</logFileNames>
   <!-- Crash File Names of the module -->
     <crashFileNames>[]</crashFileNames>
+  <!-- Total functions corresponding module  -->
+    <functions>
+      <function name='RBUS_DoNothing' />
+      <function name='RBUS_DataElements' />
+      <function name='RBUS_Session' />
+      <function name='RBUS_CloseSession' />
+      <function name='RBUS_DiscoverComponentDataElements' />
+      <function name='RBUS_Get' />
+      <function name='RBUS_GetValue' />
+      <function name='RBUS_SetValue' />
+      <function name='RBUS_CheckStatus' />
+      <function name='RBUS_Open' />
+      <function name='RBUS_Close' />
+    </functions>
+  <!-- Total parameters corresponding module  -->
+    <parameters>
+      <parameter funName='RBUS_DataElements' parameterName='element1' parameterType='STRING' range='a-z' />
+      <parameter funName='RBUS_DataElements' parameterName='element2' parameterType='STRING' range='a-z' />
+      <parameter funName='RBUS_DataElements' parameterName='operation' parameterType='STRING' range='a-z' />
+      <parameter funName='RBUS_Session' parameterName='operation' parameterType='STRING' range='a-z' />
+      <parameter funName='RBUS_CloseSession' parameterName='sessionid' parameterType='INTEGER' range='0-9' />
+      <parameter funName='RBUS_DiscoverComponentDataElements' parameterName='componentName' parameterType='STRING' range='a-z' />
+      <parameter funName='RBUS_Get' parameterName='paramName' parameterType='STRING' range='a-z' />
+      <parameter funName='RBUS_GetValue' parameterName='paramName' parameterType='STRING' range='a-z' />
+      <parameter funName='RBUS_GetValue' parameterName='paramType' parameterType='STRING' range='a-z' />
+      <parameter funName='RBUS_SetValue' parameterName='paramName' parameterType='STRING' range='a-z' />
+      <parameter funName='RBUS_SetValue' parameterName='paramType' parameterType='STRING' range='a-z' />
+      <parameter funName='RBUS_SetValue' parameterName='paramValue' parameterType='STRING' range='a-z' />
+    </parameters>
   </module>
 </xml>
