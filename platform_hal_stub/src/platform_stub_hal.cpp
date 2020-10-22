@@ -1645,15 +1645,32 @@ void platform_stub_hal::platform_stub_hal_GetMACsecOperationalStatus(IN const Js
 /*****************************************************************************************************
  *Function name : platform_stub_hal_getFactoryCmVariant
  *Description   : This function will invoke the HAL wrapper to get the Factory CM Variant value
- *@param [in]   : req -
+ *@param [in]   : req - ParamName : Holds the name of the parameter
  *@param [out]  : response - filled with SUCCESS or FAILURE based on the return value
  ******************************************************************************************************/
 void platform_stub_hal::platform_stub_hal_getFactoryCmVariant(IN const Json::Value& req, OUT Json::Value& response)
 {
         char getResult[MAX_STRING_SIZE] = {0};
         int result = RETURN_FAILURE;
+        int isNegativeScenario = 0;
+
         DEBUG_PRINT(DEBUG_TRACE,"Inside Function platform_stub_hal_getFactoryCmVariant stub\n");
-        result = ssp_getFactoryCmVariant(getResult);
+
+        if(&req["flag"])
+        {
+                isNegativeScenario = req["flag"].asInt();
+        }
+
+        if(isNegativeScenario)
+        {
+                DEBUG_PRINT(DEBUG_TRACE, "Executing negative scenario\n");
+                result = ssp_getFactoryCmVariant(NULL);
+        }
+        else
+        {
+                DEBUG_PRINT(DEBUG_TRACE, "Executing positive scenario\n");
+                result = ssp_getFactoryCmVariant(getResult);
+        }
         if(result == RETURN_SUCCESS)
         {
                 response["result"] = "SUCCESS";
@@ -1863,6 +1880,54 @@ void platform_stub_hal::platform_stub_hal_SetSNMPOnboardRebootEnable(IN const Js
         {
                 response["result"] = "FAILURE";
                 response["details"] = "Set SNMP  onboard Reboot Enable not  fetched successfully";
+                return;
+        }
+}
+
+
+/*************************************************************************************************
+ *Function name : platform_stub_hal_GetGetRouterRegion
+ *Description   : This function will invoke the SSP  HAL wrapper to get the RouterRegion
+ *@param [in]   : req - ParamName : Holds the name of the parameter
+ *@param [out]  : response - filled with SUCCESS or FAILURE based on the return value
+ **************************************************************************************************/
+void platform_stub_hal::platform_stub_hal_GetRouterRegion(IN const Json::Value& req, OUT Json::Value& response)
+{
+        char getResult[MAX_STRING_SIZE] = {0};
+        int isNegativeScenario = 0;
+        int result = RETURN_FAILURE;
+
+        DEBUG_PRINT(DEBUG_TRACE,"Inside Function platform_stub_hal_GetRouterRegion stub\n");
+
+        if(&req["flag"])
+        {
+                isNegativeScenario = req["flag"].asInt();
+        }
+
+        if(isNegativeScenario)
+        {
+                DEBUG_PRINT(DEBUG_TRACE, "Executing negative scenario\n");
+                result = ssp_GetRouterRegion(NULL);
+        }
+        else
+        {
+                DEBUG_PRINT(DEBUG_TRACE, "Executing positive scenario\n");
+                result = ssp_GetRouterRegion(getResult);
+        }
+        if(result == RETURN_SUCCESS)
+        {
+                response["result"] = "SUCCESS";
+                response["details"] = getResult;
+
+                DEBUG_PRINT(DEBUG_TRACE, "%s:: Test execution successful:: result = %s\n", __func__, getResult);
+                return;
+        }
+        else
+        {
+                response["result"] = "FAILURE";
+                response["details"] = "RouterRegion not fetched successfully";
+
+                DEBUG_PRINT(DEBUG_TRACE, "%s:: Test execution failed\n", __func__);
                 return;
         }
 }

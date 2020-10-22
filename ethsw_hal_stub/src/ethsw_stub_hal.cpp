@@ -168,6 +168,7 @@ void ethsw_stub_hal::ethsw_stub_hal_Get_Port_Status(IN const Json::Value& req, O
 	int bitRate = 0;
 	char resultDetails[MAX_BUFFER_SIZE_TO_SEND] = {0};
 	int isNegativeScenario = 0;
+        char duplexMode[MAX_STRING_SIZE] = {0};
 
 	DEBUG_PRINT(DEBUG_TRACE,"Inside Function ethsw_stub_hal_Get_Port_Status stub \n");
 
@@ -184,9 +185,9 @@ void ethsw_stub_hal::ethsw_stub_hal_Get_Port_Status(IN const Json::Value& req, O
 		isNegativeScenario = req["flag"].asInt();
 	}
 
-	if(ssp_ethsw_stub_hal_GetPort_Status(portID, linkStatus, &bitRate, isNegativeScenario) == RETURN_SUCCESS)
+	if(ssp_ethsw_stub_hal_GetPort_Status(portID, linkStatus, &bitRate, duplexMode, isNegativeScenario) == RETURN_SUCCESS)
 	{
-		snprintf(resultDetails, MAX_BUFFER_SIZE_TO_SEND, "/%d/%s/", bitRate, linkStatus);
+		snprintf(resultDetails, MAX_BUFFER_SIZE_TO_SEND, "/%d/%s/%s/", bitRate, linkStatus, duplexMode);
 		response["result"] = "SUCCESS";
 		response["details"] = resultDetails;
 		return;

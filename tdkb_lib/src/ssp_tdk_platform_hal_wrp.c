@@ -605,7 +605,7 @@ int ssp_GetFanSpeed(unsigned long int* pSpeedValue)
 {
         DEBUG_PRINT(DEBUG_TRACE, "Entering the ssp_GetFanSpeed wrapper\n");
 //      CHECK_PARAM_AND_RET(pSpeedValue);
-        if(platform_hal_GetFanSpeed(pSpeedValue) != RETURN_OK)
+        if(platform_hal_getFanSpeed(pSpeedValue) != RETURN_OK)
         {
                 DEBUG_PRINT(DEBUG_ERROR, "platform_hal_GetFanSpeed function failure\n");
                 return RETURN_ERR;
@@ -854,3 +854,26 @@ int ssp_SetSNMPOnboardRebootEnable(char *pEnable)
         }
         return RETURN_OK;
 }
+
+/*******************************************************************************************
+ * * Function Name       : ssp_GetRouterRegion
+ ** Description          : This function will invoke the HAL API to get the RouterRegion
+ ** @param [in]          : String to fetch the RouterRegion
+ ** @param [out]         : return status an integer value 0-success and 1-Failure
+ *********************************************************************************************/
+int ssp_GetRouterRegion(char* pValue)
+{
+        DEBUG_PRINT(DEBUG_TRACE, "Entering the ssp_GetRouterRegion wrapper\n");
+
+        if(platform_hal_GetRouterRegion(pValue) != RETURN_OK)
+        {
+                DEBUG_PRINT(DEBUG_ERROR, " platform_hal_GetRouterRegion function failure\n");
+                return RETURN_ERR;
+        }
+
+        DEBUG_PRINT(DEBUG_TRACE, "platform_hal_GetRouterRegion call was success\n");
+        if(pValue)
+            DEBUG_PRINT(DEBUG_TRACE, "platform_hal_GetRouterRegion returns value: %s\n", pValue); 
+        return RETURN_OK;
+}
+
