@@ -24,7 +24,7 @@ extern "C"
 	int ssp_ethsw_stub_hal_Init(void);
 	int ssp_ethsw_stub_hal_GetAdminPortStatus(int portId, char *pAdminStatus, int isNegativeScenario);
 	int ssp_ethsw_stub_hal_GetPortCfg(int portID, char *pDuplexMode, int *pBitRate, int isNegativeScenario);
-	int ssp_ethsw_stub_hal_GetPort_Status(int portId, char *pLinkStatus, int *pBitRate, int isNegativeScenario);
+	int ssp_ethsw_stub_hal_GetPort_Status(int portId, char *pLinkStatus, int *pBitRate, char *pDuplexMode, int isNegativeScenario);
 	int ssp_ethsw_stub_hal_LocatePort_By_MacAddress(char *pmacAddr, int *pPortId, int isNegativeScenario);
 	int ssp_ethsw_stub_hal_SetPortCfg(int portId, int linkRate, char *pDuplexmode);
 	int ssp_ethsw_stub_hal_SetPortAdminStatus(int portId, char *pAdminStatus);

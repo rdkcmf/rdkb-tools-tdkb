@@ -227,7 +227,7 @@ int ssp_ethsw_stub_hal_GetPortCfg(int portId, char *pDuplexMode, int *pLinkRate,
 		   isNegativeScenario - for negative scenario
  *@param [out]   : return status an integer value 0-success and 1-Failure
  *******************************************************************************************************/
-int ssp_ethsw_stub_hal_GetPort_Status(int portId, char *pLinkStatus, int *pLinkRate, int isNegativeScenario)
+int ssp_ethsw_stub_hal_GetPort_Status(int portId, char *pLinkStatus, int *pLinkRate, char *pDuplexMode, int isNegativeScenario)
 {
 	#if defined(INTEL_PUMA7)
         if(portId ==1)
@@ -244,6 +244,7 @@ int ssp_ethsw_stub_hal_GetPort_Status(int portId, char *pLinkStatus, int *pLinkR
 	DEBUG_PRINT(DEBUG_TRACE, "Entering the ssp_Port_Status wrapper\n");
 	CHECK_PARAM_AND_RET(pLinkStatus);
 	CHECK_PARAM_AND_RET(pLinkRate);
+	CHECK_PARAM_AND_RET(pDuplexMode);
 
 	port = (CCSP_HAL_ETHSW_PORT)portId;
 
@@ -332,7 +333,32 @@ int ssp_ethsw_stub_hal_GetPort_Status(int portId, char *pLinkStatus, int *pLinkR
 				}
 		}
 
-		DEBUG_PRINT(DEBUG_TRACE, "LinkRate = %d, LinkStatus = %s\n", *pLinkRate, pLinkStatus);
+                switch(getDuplexMode)
+                {
+                        case CCSP_HAL_ETHSW_DUPLEX_Auto:
+                                {
+                                        strncpy(pDuplexMode, "CCSP_HAL_ETHSW_DUPLEX_Auto", MAX_STRING_SIZE);
+                                        break;
+                                }
+                        case CCSP_HAL_ETHSW_DUPLEX_Half:
+                                {
+                                        strncpy(pDuplexMode, "CCSP_HAL_ETHSW_DUPLEX_Half", MAX_STRING_SIZE);
+                                        break;
+                                }
+                        case CCSP_HAL_ETHSW_DUPLEX_Full:
+                                {
+                                        strncpy(pDuplexMode, "CCSP_HAL_ETHSW_DUPLEX_Full", MAX_STRING_SIZE);
+                                        break;
+                                }
+                        default:
+                                {
+                                        DEBUG_PRINT(DEBUG_TRACE, "Invalid value provided\n");
+                                        strncpy(pDuplexMode, "Invalid", MAX_STRING_SIZE);
+                                        break;
+                                }
+                }
+
+		DEBUG_PRINT(DEBUG_TRACE, "LinkRate = %d, LinkStatus = %s DuplexMode = %s\n", *pLinkRate, pLinkStatus, pDuplexMode);
 	}
 	else
 	{

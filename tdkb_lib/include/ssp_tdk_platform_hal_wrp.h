@@ -66,6 +66,7 @@ extern "C"
         int ssp_getFanStatus(int*);
         int ssp_setFanMaxOverride(BOOLEAN);
         int ssp_SetSNMPOnboardRebootEnable(char*);
+        int ssp_GetRouterRegion(char*);
 #ifdef __cplusplus
 }
 #endif

@@ -75,13 +75,14 @@ class platform_stub_hal : public RDKTestStubInterface, public AbstractServer<pla
                         this->bindAndAddMethod(Procedure("platform_stub_hal_GetMACsecEnable", PARAMS_BY_NAME, JSON_STRING, "ethPort", JSON_INTEGER, "index", JSON_INTEGER, NULL), &platform_stub_hal::platform_stub_hal_GetMACsecEnable);
                         this->bindAndAddMethod(Procedure("platform_stub_hal_SetMACsecEnable", PARAMS_BY_NAME, JSON_STRING, "ethPort", JSON_INTEGER, "index", JSON_INTEGER, NULL), &platform_stub_hal::platform_stub_hal_SetMACsecEnable);
                         this->bindAndAddMethod(Procedure("platform_stub_hal_GetMACsecOperationalStatus", PARAMS_BY_NAME, JSON_STRING, "ethPort", JSON_INTEGER, "index", JSON_INTEGER, NULL), &platform_stub_hal::platform_stub_hal_GetMACsecOperationalStatus);
-                        this->bindAndAddMethod(Procedure("platform_stub_hal_getFactoryCmVariant", PARAMS_BY_NAME, JSON_STRING, NULL), &platform_stub_hal::platform_stub_hal_getFactoryCmVariant);
+                        this->bindAndAddMethod(Procedure("platform_stub_hal_getFactoryCmVariant", PARAMS_BY_NAME, JSON_STRING, "flag", JSON_INTEGER, NULL), &platform_stub_hal::platform_stub_hal_getFactoryCmVariant);
                         this->bindAndAddMethod(Procedure("platform_stub_hal_setFactoryCmVariant", PARAMS_BY_NAME, JSON_STRING, "CmVarient", JSON_STRING, NULL), &platform_stub_hal::platform_stub_hal_setFactoryCmVariant);
                         this->bindAndAddMethod(Procedure("platform_stub_hal_getRPM", PARAMS_BY_NAME, JSON_STRING, NULL), &platform_stub_hal::platform_stub_hal_getRPM);
                         this->bindAndAddMethod(Procedure("platform_stub_hal_getRotorLock", PARAMS_BY_NAME, JSON_STRING, NULL), &platform_stub_hal::platform_stub_hal_getRotorLock);
                         this->bindAndAddMethod(Procedure("platform_stub_hal_getFanStatus", PARAMS_BY_NAME, JSON_STRING, NULL), &platform_stub_hal::platform_stub_hal_getFanStatus);
                         this->bindAndAddMethod(Procedure("platform_stub_hal_setFanMaxOverride", PARAMS_BY_NAME, JSON_STRING, "flag", JSON_INTEGER, NULL), &platform_stub_hal::platform_stub_hal_setFanMaxOverride);
                         this->bindAndAddMethod(Procedure("platform_stub_hal_SetSNMPOnboardRebootEnable", PARAMS_BY_NAME, JSON_STRING, "SNMPonboard", JSON_STRING, NULL), &platform_stub_hal::platform_stub_hal_SetSNMPOnboardRebootEnable);
+                        this->bindAndAddMethod(Procedure("platform_stub_hal_GetRouterRegion", PARAMS_BY_NAME, JSON_STRING, "flag", JSON_INTEGER, NULL), &platform_stub_hal::platform_stub_hal_GetRouterRegion);
                  }
 
                 bool initialize(IN const char* szVersion);
@@ -133,5 +134,6 @@ class platform_stub_hal : public RDKTestStubInterface, public AbstractServer<pla
                 void platform_stub_hal_getFanStatus(IN const Json::Value& req, OUT Json::Value& response);
                 void platform_stub_hal_setFanMaxOverride(IN const Json::Value& req, OUT Json::Value& response);
                 void platform_stub_hal_SetSNMPOnboardRebootEnable(IN const Json::Value& req, OUT Json::Value& response);
+                void platform_stub_hal_GetRouterRegion(IN const Json::Value& req, OUT Json::Value& response);
 };
 #endif
