@@ -21,7 +21,7 @@
 <xml>
   <id></id>
   <!-- Do not edit id. This will be auto filled while exporting. If you are adding a new script keep the id empty -->
-  <version>12</version>
+  <version>13</version>
   <!-- Do not edit version. This will be auto incremented while updating. If you are adding a new script you can keep the vresion as 1 -->
   <name>TS_WIFIHAL_2.4GHzSetSteeringClient</name>
   <!-- If you are adding a new script you can specify the script name. Script Name should be unique same as this file name with out .py extension -->
@@ -206,8 +206,8 @@ if "SUCCESS" in loadmodulestatus.upper() and "SUCCESS" in sysutilloadmodulestatu
 	    tdkTestObj = obj.createTestStep(primitive);
 	    tdkTestObj.addParameter("apIndex",apIndex);
 	    tdkTestObj.addParameter("steeringgroupIndex",0);
-	    tdkTestObj.addParameter("rssiProbeHWM",0);
-	    tdkTestObj.addParameter("rssiProbeLWM",0);
+	    tdkTestObj.addParameter("rssiProbeHWM",10);
+	    tdkTestObj.addParameter("rssiProbeLWM",11);
 	    tdkTestObj.addParameter("rssiAuthHWM",0);
 	    tdkTestObj.addParameter("rssiAuthLWM",0);
 	    tdkTestObj.addParameter("rssiInactXing",0);
@@ -232,6 +232,7 @@ if "SUCCESS" in loadmodulestatus.upper() and "SUCCESS" in sysutilloadmodulestatu
 
 		if expectedresult in actualresult and details !="" and clientMAC in details :
 		    print "wifi_steering_clientSet() validation using get operation is success"
+                    tdkTestObj.setResultStatus("SUCCESS");
 
 		    #Revert the client config added
                     primitive = 'WIFIHAL_SteeringClientRemove'
