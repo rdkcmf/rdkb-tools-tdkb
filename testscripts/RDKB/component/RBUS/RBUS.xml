@@ -12,24 +12,70 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 -->
-
 <?xml version="1.0" encoding="UTF-8"?><xml>
-  <module testGroup="Component" name="RBUS">
+  <module name="RBUS" testGroup="Component">
     <primitiveTests>
       <primitiveTest name="RBUS_DoNothing" id="" version="1">
         <function>RBUS_DoNothing</function>
         <parameters/>
       </primitiveTest>
-      <primitiveTest name="RBUS_checkStatus" id="" version="1">
-        <function>RBUS_checkStatus</function>
+      <primitiveTest name="RBUS_DataElements" id=" " version="1">
+        <function>RBUS_DataElements</function>
+        <parameters>
+          <parameter name="element1" value=""/>
+          <parameter name="element2" value=""/>
+          <parameter name="operation" value=""/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest name="RBUS_Session" id=" " version="1">
+        <function>RBUS_Session</function>
+        <parameters>
+          <parameter name="operation" value=""/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest name="RBUS_CloseSession" id=" " version="1">
+        <function>RBUS_CloseSession</function>
+        <parameters>
+          <parameter name="sessionid" value=""/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest name="RBUS_DiscoverComponentDataElements" id=" " version="1">
+        <function>RBUS_DiscoverComponentDataElements</function>
+        <parameters>
+          <parameter name="componentName" value=""/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest name="RBUS_Get" id=" " version="1">
+        <function>RBUS_Get</function>
+        <parameters>
+          <parameter name="paramName" value=""/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest name="RBUS_GetValue" id=" " version="1">
+        <function>RBUS_GetValue</function>
+        <parameters>
+          <parameter name="paramName" value=""/>
+          <parameter name="paramType" value=""/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest name="RBUS_SetValue" id=" " version="1">
+        <function>RBUS_SetValue</function>
+        <parameters>
+          <parameter name="paramName" value=""/>
+          <parameter name="paramType" value=""/>
+          <parameter name="paramValue" value=""/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest name="RBUS_Close" id="" version="1">
+        <function>RBUS_Close</function>
         <parameters/>
       </primitiveTest>
-      <primitiveTest name="RBUS_open" id="" version="1">
-        <function>RBUS_open</function>
+      <primitiveTest name="RBUS_Open" id="" version="1">
+        <function>RBUS_Open</function>
         <parameters/>
       </primitiveTest>
-      <primitiveTest name="RBUS_close" id="" version="1">
-        <function>RBUS_close</function>
+      <primitiveTest name="RBUS_CheckStatus" id="" version="1">
+        <function>RBUS_CheckStatus</function>
         <parameters/>
       </primitiveTest>
     </primitiveTests>

@@ -45,22 +45,35 @@ class RDKTestAgent;
 /* RDKTestStubInterface : This Class provides provides interface for the modules.  */
 class RBUS : public RDKTestStubInterface, public AbstractServer<RBUS>
 {
-        public:
+    public:
 
-                RBUS(TcpSocketServer &ptrRpcServer) : AbstractServer <RBUS>(ptrRpcServer)
-                {
-                    this->bindAndAddMethod(Procedure("RBUS_checkStatus", PARAMS_BY_NAME, JSON_STRING, NULL), &RBUS::RBUS_checkStatus);
-                    this->bindAndAddMethod(Procedure("RBUS_open", PARAMS_BY_NAME, JSON_STRING, NULL), &RBUS::RBUS_open);
-                    this->bindAndAddMethod(Procedure("RBUS_close", PARAMS_BY_NAME, JSON_STRING, NULL), &RBUS::RBUS_close);
-                }
+        RBUS(TcpSocketServer &ptrRpcServer) : AbstractServer <RBUS>(ptrRpcServer)
+        {
+            this->bindAndAddMethod(Procedure("RBUS_CheckStatus", PARAMS_BY_NAME, JSON_STRING, NULL), &RBUS::RBUS_CheckStatus);
+            this->bindAndAddMethod(Procedure("RBUS_Open", PARAMS_BY_NAME, JSON_STRING, NULL), &RBUS::RBUS_Open);
+            this->bindAndAddMethod(Procedure("RBUS_Close", PARAMS_BY_NAME, JSON_STRING, NULL), &RBUS::RBUS_Close);
+            this->bindAndAddMethod(Procedure("RBUS_DataElements", PARAMS_BY_NAME, JSON_STRING, "element1",JSON_STRING, "element2" , JSON_STRING, "operation", JSON_STRING, NULL), &RBUS::RBUS_DataElements);
+            this->bindAndAddMethod(Procedure("RBUS_Session", PARAMS_BY_NAME, JSON_STRING,"operation", JSON_STRING, NULL), &RBUS::RBUS_Session);
+            this->bindAndAddMethod(Procedure("RBUS_CloseSession", PARAMS_BY_NAME, JSON_STRING, "sessionid", JSON_INTEGER, NULL), &RBUS::RBUS_CloseSession);
+            this->bindAndAddMethod(Procedure("RBUS_DiscoverComponentDataElements", PARAMS_BY_NAME, JSON_STRING, "componentName", JSON_STRING, NULL), &RBUS::RBUS_DiscoverComponentDataElements);
+            this->bindAndAddMethod(Procedure("RBUS_Get", PARAMS_BY_NAME, JSON_STRING, "paramName", JSON_STRING, NULL), &RBUS::RBUS_Get);
+            this->bindAndAddMethod(Procedure("RBUS_GetValue", PARAMS_BY_NAME, JSON_STRING, "paramName", JSON_STRING, "paramType", JSON_STRING, NULL), &RBUS::RBUS_GetValue);
+            this->bindAndAddMethod(Procedure("RBUS_SetValue", PARAMS_BY_NAME, JSON_STRING, "paramName", JSON_STRING, "paramType", JSON_STRING, "paramValue", JSON_STRING, NULL), &RBUS::RBUS_SetValue);
+        }
 
-                bool initialize(IN const char* szVersion);
-                bool cleanup(const char*);
-                std::string testmodulepre_requisites();
-                bool testmodulepost_requisites();
-
-                void RBUS_checkStatus(IN const Json::Value& req, OUT Json::Value& response);
-                void RBUS_open(IN const Json::Value& req, OUT Json::Value& response);
-                void RBUS_close(IN const Json::Value& req, OUT Json::Value& response);
+        bool initialize(IN const char* szVersion);
+        bool cleanup(const char*);
+        std::string testmodulepre_requisites();
+        bool testmodulepost_requisites();
+        void RBUS_CheckStatus(IN const Json::Value& req, OUT Json::Value& response);
+        void RBUS_Open(IN const Json::Value& req, OUT Json::Value& response);
+        void RBUS_Close(IN const Json::Value& req, OUT Json::Value& response);
+        void RBUS_DataElements(IN const Json::Value& req, OUT Json::Value& response);
+        void RBUS_Session(IN const Json::Value& req, OUT Json::Value& response);
+        void RBUS_CloseSession(IN const Json::Value& req, OUT Json::Value& response);
+        void RBUS_DiscoverComponentDataElements(IN const Json::Value& req, OUT Json::Value& response);
+        void RBUS_Get(IN const Json::Value& req, OUT Json::Value& response);
+        void RBUS_GetValue(IN const Json::Value& req, OUT Json::Value& response);
+        void RBUS_SetValue(IN const Json::Value& req, OUT Json::Value& response);
 };
 #endif

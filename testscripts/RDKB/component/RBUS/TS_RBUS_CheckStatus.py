@@ -21,13 +21,13 @@
 <xml>
   <id></id>
   <!-- Do not edit id. This will be auto filled while exporting. If you are adding a new script keep the id empty -->
-  <version>4</version>
+  <version>2</version>
   <!-- Do not edit version. This will be auto incremented while updating. If you are adding a new script you can keep the vresion as 1 -->
   <name>TS_RBUS_CheckStatus</name>
   <!-- If you are adding a new script you can specify the script name. Script Name should be unique same as this file name with out .py extension -->
   <primitive_test_id></primitive_test_id>
   <!-- Do not change primitive_test_id if you are editing an existing script. -->
-  <primitive_test_name>RBUS_checkStatus</primitive_test_name>
+  <primitive_test_name>RBUS_CheckStatus</primitive_test_name>
   <!--  -->
   <primitive_test_version>1</primitive_test_version>
   <!--  -->
@@ -61,7 +61,8 @@
     <test_type>Positive</test_type>
     <test_setup>Broadband</test_setup>
     <pre_requisite>1. Ccsp Components  should be in a running state of DUT
-2.TDK Agent should be in running state or invoke it through StartTdk.sh script</pre_requisite>
+2. TDK Agent should be in running state or invoke it through StartTdk.sh script
+3. The DUT should be in RBUS mode</pre_requisite>
     <api_or_interface_used>rbus_checkstatus</api_or_interface_used>
     <input_parameters>Device.DeviceInfo.X_RDKCENTRAL-COM_RFC.Feature.RBUS.Enable</input_parameters>
     <automation_approch>1. Load the rbus and tr181 module
@@ -69,9 +70,10 @@
 3. Get the RBUS enable status value from TR181 parameter
 4. Compare the values of API and TR181 parameter, the values should be matching
 5. Unload the modules</automation_approch>
-    <expected_output>The RBUS enable status value of API and TR181 parameter should be matching</expected_output>
+    <expected_output>The RBUS enable status value of API and TR181 parameter should be matching
+</expected_output>
     <priority>High</priority>
-    <test_stub_interface>rubs</test_stub_interface>
+    <test_stub_interface>rbus</test_stub_interface>
     <test_script>TS_RBUS_CheckStatus</test_script>
     <skipped>No</skipped>
     <release_version>M82</release_version>
@@ -92,8 +94,8 @@ tr181obj = tdklib.TDKScriptingLibrary("tdkbtr181","1");
 #This will be replaced with correspoing Box Ip and port while executing script
 ip = <ipaddress>
 port = <port>
-obj.configureTestCase(ip,port,'TS_RBUS_checkstatus');
-tr181obj.configureTestCase(ip,port,'TS_RBUS_checkstatus');
+obj.configureTestCase(ip,port,'TS_RBUS_CheckStatus');
+tr181obj.configureTestCase(ip,port,'TS_RBUS_CheckStatus');
 
 #Get the result of connection with test component and DUT
 loadmodulestatus =obj.getLoadModuleResult();
@@ -104,7 +106,7 @@ print "[LIB LOAD STATUS]  :  %s" %loadmodulestatus1 ;
 if "SUCCESS" in (loadmodulestatus.upper() and loadmodulestatus1.upper()):
     obj.setLoadModuleStatus("SUCCESS");
 
-    tdkTestObj = obj.createTestStep('RBUS_checkStatus');
+    tdkTestObj = obj.createTestStep('RBUS_CheckStatus');
     expectedresult = "SUCCESS";
     tdkTestObj.executeTestCase(expectedresult);
     actualresult = tdkTestObj.getResult();

@@ -28,7 +28,6 @@
 #include "ssp_tdk_rbus_wrp.h"
 #include "ssp_hal_logger.h"
 
-
 static rbusHandle_t bus_handle;
 
 /*****************************************************************************************************************
@@ -37,31 +36,31 @@ static rbusHandle_t bus_handle;
  * @param [in]   : status - buffer to hold RBUS status value
  * @param [out]  : return status an integer value 0-success and 1-Failure
  ******************************************************************************************************************/
-int ssp_rbus_checkStatus( rbusStatus_t *status)
-{
-        int result = RETURN_ERR;
+int ssp_rbus_checkStatus( rbusStatus_t *status) {
 
-        DEBUG_PRINT(DEBUG_ERROR, "Entering the ssp_rbus_checkStatus wrapper\n");
+    DEBUG_PRINT(DEBUG_ERROR, "Entering the ssp_rbus_checkStatus wrapper\n");
 
-        rbusStatus_t rbus_status = RBUS_DISABLED;
-        rbus_status = rbus_checkStatus();
+    int result = RETURN_ERR;
+    rbusStatus_t rbus_status = RBUS_DISABLED;
+    rbus_status = rbus_checkStatus();
 
-        DEBUG_PRINT(DEBUG_ERROR, "RBUS Status is %d\n",rbus_status);
-        *status = rbus_status;
+    DEBUG_PRINT(DEBUG_ERROR, "RBUS Status is %d\n",rbus_status);
 
-        if(rbus_status == RBUS_ENABLED || rbus_status == RBUS_ENABLE_PENDING || rbus_status == RBUS_DISABLE_PENDING || rbus_status == RBUS_DISABLED )
-        {
-            DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_checkStatus function returns value : %d\n", rbus_status);
-            result = RETURN_OK;
-        }
-        else
-        {
-            DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_checkStatus function returns failure, %d\n", rbus_status);
-            result = RETURN_ERR;
-        }
+    *status = rbus_status;
 
-        DEBUG_PRINT(DEBUG_ERROR, "Exiting ssp_rbus_checkStatus wrapper\n");
-        return result;
+    if(rbus_status == RBUS_ENABLED || rbus_status == RBUS_ENABLE_PENDING || rbus_status == RBUS_DISABLE_PENDING || rbus_status == RBUS_DISABLED )
+    {
+        DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_checkStatus function returns value : %d\n", rbus_status);
+        result = RETURN_OK;
+    }
+    else
+    {
+        DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_checkStatus function returns failure, %d\n", rbus_status);
+        result = RETURN_ERR;
+    }
+
+    DEBUG_PRINT(DEBUG_ERROR, "Exiting ssp_rbus_checkStatus wrapper\n");
+    return result;
 }
 
 /*****************************************************************************************************************
@@ -71,31 +70,30 @@ int ssp_rbus_checkStatus( rbusStatus_t *status)
  * @param [out]  : return status an integer value 0-success and 1-Failure
  ******************************************************************************************************************/
 int ssp_rbus_open() {
+
     DEBUG_PRINT(DEBUG_ERROR, "Entering the ssp_rbus_open wrapper\n");
 
     int result = RETURN_ERR;
     int ret = RBUS_ERROR_SUCCESS;
 
-    if (bus_handle == NULL)
+    if (bus_handle)
     {
-        ret = rbus_open(&bus_handle, "tdk_b");
+        rbus_close(bus_handle);
+    }
 
-        if(ret != RBUS_ERROR_SUCCESS)
-        {
-            DEBUG_PRINT(DEBUG_ERROR, "rbus_open failed with error code %d \n", ret);
-            result = RETURN_ERR;
-        }
-	else
-	{
-            DEBUG_PRINT(DEBUG_ERROR, "rbus_open was successful, return value is %d \n",ret);
-            result = RETURN_OK;
-	}
+    ret = rbus_open(&bus_handle, "tdk_b");
+
+    if(ret != RBUS_ERROR_SUCCESS)
+    {
+        DEBUG_PRINT(DEBUG_ERROR, "rbus_open failed with error code %d \n", ret);
+        result = RETURN_ERR;
     }
     else
     {
-        DEBUG_PRINT(DEBUG_ERROR, "rbus was already opened and not closed properly \n");
-        result = RETURN_ERR;
+        DEBUG_PRINT(DEBUG_ERROR, "rbus_open was successful, return value is %d \n",ret);
+        result = RETURN_OK;
     }
+
     return result;
 }
 
@@ -106,12 +104,13 @@ int ssp_rbus_open() {
  * @param [out]  : return status an integer value 0-success and 1-Failure
  ******************************************************************************************************************/
 int ssp_rbus_close( ) {
+
     DEBUG_PRINT(DEBUG_ERROR, "Entering the ssp_rbus_close wrapper\n");
 
     int result = RETURN_ERR;
     int ret = RBUS_ERROR_SUCCESS;
 
-    if (bus_handle != NULL)
+    if (bus_handle)
     {
         ret = rbus_close(bus_handle);
 
@@ -120,11 +119,11 @@ int ssp_rbus_close( ) {
             DEBUG_PRINT(DEBUG_ERROR, "rbus_close failed with error code %d \n", ret);
             result = RETURN_ERR;
         }
-	else
-	{
+        else
+        {
             DEBUG_PRINT(DEBUG_ERROR, "rbus_close was successful, return value is %d \n",ret);
             result = RETURN_OK;
-	}
+        }
     }
     else
     {
@@ -134,3 +133,389 @@ int ssp_rbus_close( ) {
     return result;
 }
 
+/*****************************************************************************************************************
+ * Function Name : ssp_rbus_dataElements
+ * Description   : This function will invoke rbus_regDataElements / rbus_unregDataElements RBUS APIs
+                 : rbus_regDataElements - To register one or more Data Elements that will be accessible/subscribable by other components
+				 : rbus_unregDataElements - To unregister one or more previously registered Data Elements that will no longer be accessible
+ * @param [in]   : element1 - Data Element name (Parameter Name)
+                 : element2 - Data Element name (Parameter Name)
+                 : operation - To specify, Regsister / UnRegister operation
+ * @param [out]  : return status an integer value 0-success and 1-Failure
+ ******************************************************************************************************************/
+int ssp_rbus_dataElements (char* element1, char* element2,char* operation) {
+
+    DEBUG_PRINT(DEBUG_ERROR, "Entering the ssp_rbus_dataElements wrapper\n");
+
+    DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_dataElements Element 1: %s, Element 2: %s  and Operation %s \n", element1,element2, operation);
+
+    int result = RETURN_ERR;
+    int ret = RBUS_ERROR_SUCCESS;
+
+    if (bus_handle != NULL)
+    {
+        rbusDataElement_t dataElements[2] = {
+        {element1, RBUS_ELEMENT_TYPE_EVENT, {NULL, NULL, NULL, NULL, NULL}},
+        {element2, RBUS_ELEMENT_TYPE_EVENT, {NULL, NULL, NULL, NULL, NULL}}
+        };
+
+        if (strcmp(operation, "Register") == 0)
+            ret = rbus_regDataElements(bus_handle, 2, dataElements);
+        else if(strcmp(operation , "UnRegister") == 0)
+            ret = rbus_unregDataElements(bus_handle, 2, dataElements);
+        else
+        {
+            DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_dataElements Invalid operation name ");
+            return RETURN_ERR;
+        }
+
+        if(ret != RBUS_ERROR_SUCCESS)
+        {
+            DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_dataElements operation %s Failed: %d\n",operation, ret);
+            result = RETURN_ERR;
+        }
+        else
+        {
+            DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_dataElements operation %s Success: %d\n",operation, ret);
+            result = RETURN_OK;
+        }
+    }
+    else
+    {
+        DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_dataElements bus_handle was null\n");
+        result = RETURN_ERR;
+    }
+
+    DEBUG_PRINT(DEBUG_ERROR, "Exit from ssp_rbus_dataElements wrapper\n");
+    return result;
+}
+
+
+/*****************************************************************************************************************
+ * Function Name : ssp_rbus_session
+ * Description   : This function will invoke rbus_createSession / rbus_getCurrentSession RBUS APIs to open new session
+                 : and get the session ID
+ * @param [in]   : operation - To specify Create Session or Get Current Session ID
+                 : sessionID - To get the Session ID value
+ * @param [out]  : return status an integer value 0-success and 1-Failure
+ ******************************************************************************************************************/
+int ssp_rbus_session(char* operation, unsigned int *sessionID) {
+
+    DEBUG_PRINT(DEBUG_ERROR, "Entering the ssp_rbus_session wrapper\n");
+
+    int result = RETURN_ERR;
+    int ret = RBUS_ERROR_SUCCESS;
+
+    if (bus_handle != NULL)
+    {
+        if (strcmp(operation,"CreateSession") == 0)
+        {
+            ret = rbus_createSession(bus_handle,sessionID);
+        }
+        else if (strcmp(operation,"GetSession") == 0)
+        {
+            ret = rbus_getCurrentSession(bus_handle,sessionID);
+        }
+        else
+        {
+            DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_session Invalid Operation Name\n");
+            return RETURN_ERR;
+        }
+
+        if(ret != RBUS_ERROR_SUCCESS)
+        {
+            DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_session Operation %s Failed: %d\n",operation, ret);
+            result = RETURN_ERR;
+        }
+        else
+        {
+            DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_session Operation %s Success: %d\n",operation, ret);
+            DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_session Session ID is: %d\n", sessionID);
+            result = RETURN_OK;
+        }
+    }
+    else
+    {
+        DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_session bus_handle was NULL");
+        result = RETURN_ERR;
+    }
+
+    DEBUG_PRINT(DEBUG_ERROR, "Exit from ssp_rbus_session wrapper\n");
+    return result;
+}
+
+/*****************************************************************************************************************
+ * Function Name : ssp_rbus_closeSession
+ * Description   : This function will invoke the rbus api rbus_closeSession to close the current session
+ * @param [in]   : sessionID - Session to be closed
+ * @param [out]  : return status an integer value 0-success and 1-Failure
+ ******************************************************************************************************************/
+int ssp_rbus_closeSession(unsigned int sessionID) {
+
+    DEBUG_PRINT(DEBUG_ERROR, "Entering the ssp_rbus_closeSession wrapper\n");
+
+    int result = RETURN_ERR;
+    int ret = RBUS_ERROR_SUCCESS;
+
+    if (bus_handle != NULL)
+    {
+        ret = rbus_closeSession(bus_handle,sessionID);
+
+        if(ret != RBUS_ERROR_SUCCESS)
+        {
+            DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_closeSession failed: %d\n", ret);
+            result = RETURN_ERR;
+        }
+        else
+        {
+            DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_closeSession success: %d\n", ret);
+            DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_closeSession Session ID is: %d\n", sessionID);
+            result = RETURN_OK;
+        }
+    }
+    else
+    {
+        DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_closeSession bus_handle was NULL \n");
+        result = RETURN_ERR;
+    }
+
+    DEBUG_PRINT(DEBUG_ERROR, "Exit from ssp_rbus_close wrapper\n");
+    return result;
+}
+
+/*****************************************************************************************************************
+ * Function Name : ssp_rbus_discoverComponentDataElements
+ * Description   : This function will invoke the rbus api rbus_discoverComponentDataElements which enables a component
+                 : to get a list of all data elements provided by a component.
+ * @param [in]   : component_name - Name of the Component
+ * @param [out]  : return status an integer value 0-success and 1-Failure
+ ******************************************************************************************************************/
+ int ssp_rbus_discoverComponentDataElements(char* component_name) {
+
+    DEBUG_PRINT(DEBUG_ERROR, "Entering the ssp_rbus_discoverComponentDataElements wrapper\n");
+
+    int result = RETURN_ERR;
+    int ret = RBUS_ERROR_SUCCESS;
+    int numElements = 0;
+    char** elementNames = NULL;
+    int i;
+
+    ret =  rbus_discoverComponentDataElements(bus_handle,component_name,false,&numElements,&elementNames);
+    if(RBUS_ERROR_SUCCESS == ret)
+    {
+        DEBUG_PRINT(DEBUG_ERROR, "Discovered elements are,\n");
+        for(i=0;i<numElements;i++)
+        {
+            DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_discoverComponentDataElements %d: %s\n", i,elementNames[i]);
+            free(elementNames[i]);
+        }
+        free(elementNames);
+        result = RETURN_OK;
+    }
+    else
+    {
+        DEBUG_PRINT(DEBUG_ERROR, "Failed to discover element array. Error Code = %s\n", "");
+        result = RETURN_ERR;
+    }
+
+    DEBUG_PRINT(DEBUG_ERROR, "Exit from ssp_rbus_discoverComponentDataElements wrapper\n");
+    return result;
+}
+
+/*****************************************************************************************************************
+ * Function Name : ssp_rbus_get
+ * Description   : This function will invoke the rbus api rbus_get which returns rbusValue_t structure value
+ * @param [in]   : parameter_name - Parameter Name to get values
+ * @param [out]  : return status an integer value 0-success and 1-Failure
+ ******************************************************************************************************************/
+int ssp_rbus_get(char* parameter_name){
+
+    DEBUG_PRINT(DEBUG_ERROR, "Entering the ssp_rbus_get wrapper\n");
+
+    int result = RETURN_ERR;
+    int ret = RBUS_ERROR_SUCCESS;
+
+    rbusValue_t value;
+    ret = rbus_get(bus_handle, parameter_name ,&value);
+
+    if(RBUS_ERROR_SUCCESS != ret)
+    {
+        DEBUG_PRINT(DEBUG_ERROR, "Failed to get the Data \n");
+        result = RETURN_ERR;
+    }
+    else
+    {
+        DEBUG_PRINT(DEBUG_ERROR, "rbus_get function was success \n");
+        result = RETURN_OK;
+    }
+
+    DEBUG_PRINT(DEBUG_ERROR, "rbus_get calling rbusValue_Release function to release the structure value \n");
+    rbusValue_Release(value);
+
+    DEBUG_PRINT(DEBUG_ERROR, "Exit from ssp_rbus_get wrapper\n");
+    return result;
+}
+
+
+/*****************************************************************************************************************
+ * Function Name : ssp_rbus_getValue
+ * Description   : This function will invoke the RBUS APIs to get Boolean, string, Interger or UnsignedInt parameter values
+ * @param [in]   : parameter_name - Parameter Name to get values
+                 : parameter_type - Boolean , String, Integer or UnsignedInt
+                 : getvalue - TO Store the Parameter value
+ * @param [out]  : return status an integer value 0-success and 1-Failure
+ ******************************************************************************************************************/
+int ssp_rbus_getValue(char* parameter_type,char* parameter_name, const char** getvalue, int** getvalue_i) {
+
+    DEBUG_PRINT(DEBUG_ERROR, "Entering the ssp_rbus_getValue wrapper\n");
+    DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_getValue calling for Method %s with Parameter %s \n", parameter_type, parameter_name);
+
+    int result = RETURN_ERR;
+    int ret = RBUS_ERROR_SUCCESS;
+    rbusValue_t value;
+
+    ret = rbus_get(bus_handle, parameter_name ,&value);
+
+    if(ret == RBUS_ERROR_SUCCESS)
+    {
+        if (strcmp(parameter_type,"Boolean") == 0)
+        {
+            if (rbusValue_GetBoolean(value))
+                *getvalue = "true";
+            else
+                *getvalue = "false";
+
+            if (getvalue != NULL)
+            {
+                DEBUG_PRINT(DEBUG_ERROR, "Value Received on Boolean is %s",*getvalue);
+                result = RETURN_OK;
+            }
+            else
+            {
+                DEBUG_PRINT(DEBUG_ERROR, "Value Received is NULL");
+                result = RETURN_ERR;
+            }
+        }
+        else if (strcmp(parameter_type,"String") == 0)
+        {
+            *getvalue = rbusValue_GetString(value, NULL);
+            if (getvalue != NULL)
+            {
+                DEBUG_PRINT(DEBUG_ERROR, "Value Received on String is %s",*getvalue);
+                result = RETURN_OK;
+            }
+            else
+            {
+                DEBUG_PRINT(DEBUG_ERROR, "Value Received is NULL");
+                result = RETURN_ERR;
+            }
+        }
+        else if (strcmp(parameter_type, "Integer") == 0)
+        {
+            *getvalue_i = rbusValue_GetInt32(value);
+
+            if (getvalue_i != NULL)
+            {
+                DEBUG_PRINT(DEBUG_ERROR, "Value Received on Integer is %d",*getvalue_i);
+                result = RETURN_OK;
+            }
+            else
+            {
+                DEBUG_PRINT(DEBUG_ERROR, "Value Received is NULL");
+                result = RETURN_ERR;
+            }
+        }
+        else if (strcmp(parameter_type, "UnsignedInt") == 0)
+        {
+            unsigned int getv = 0;
+            getv = rbusValue_GetUInt32(value);
+            *getvalue_i = (int)getv;
+
+            if (getvalue_i != NULL)
+            {
+                DEBUG_PRINT(DEBUG_ERROR, "Value Received on UnsignedInt is %d",*getvalue_i);
+                result = RETURN_OK;
+            }
+            else
+            {
+                DEBUG_PRINT(DEBUG_ERROR, "Value Received is NULL");
+                result = RETURN_ERR;
+            }
+        }
+    }
+    else
+    {
+        DEBUG_PRINT(DEBUG_ERROR, "Failed to get the Data\n");
+        result = RETURN_ERR;
+    }
+
+    DEBUG_PRINT(DEBUG_ERROR, "Exit from ssp_rbus_getValue wrapper\n");
+    return result;
+}
+
+/*****************************************************************************************************************
+ * Function Name : ssp_rbus_setValue
+ * Description   : This function will invoke RBUS APIs to Set Boolean, string, Interger or UnsignedInt parameter values
+ * @param [in]   : parameter_name - Parameter Name to get values
+                 : parameter_type - Boolean , String, Integer or UnsignedInt
+                 : set_value - The value to be set
+ * @param [out]  : return status an integer value 0-success and 1-Failure
+ ******************************************************************************************************************/
+int ssp_rbus_setValue(char* parameter_type,char* param_name, char* set_value) {
+
+    DEBUG_PRINT(DEBUG_ERROR, "Entering the ssp_rbus_setValue wrapper\n");
+    DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_setValue calling for Method %s with Parameter %s and Value %s\n", parameter_type, param_name,set_value);
+
+    int result = RETURN_ERR;
+    int ret = RBUS_ERROR_SUCCESS;
+    rbusValue_t value;
+
+    DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_setValue calling rbusValue_Init to initialize rbus structure value");
+    rbusValue_Init(&value);
+
+    if (strcmp(parameter_type,"Boolean") == 0)
+    {
+        DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_setValue calling rbusValue_SetBoolean with value %s", set_value);
+        rbusValue_SetBoolean(value, (bool)set_value);
+    }
+    else if (strcmp(parameter_type,"String") == 0)
+    {
+        DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_setValue calling rbusValue_SetString with value %s", set_value);
+        rbusValue_SetString(value, (char const*)set_value);
+    }
+    else if (strcmp(parameter_type, "Integer") == 0)
+    {
+        int set_value1 = 0;
+        set_value1 = atoi(set_value);
+
+        DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_setValue calling rbusValue_SetInt32 with value %d", set_value1);
+        rbusValue_SetInt32(value, set_value1);
+    }
+    else if (strcmp(parameter_type, "UnsignedInt") == 0)
+    {
+        unsigned int set_value1 = 0;
+        set_value1 = atoi(set_value);
+
+        DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_setValue calling rbusValue_SetUInt32 with value %d", set_value1);
+        rbusValue_SetUInt32(value, set_value1);
+    }
+
+    ret = rbus_set(bus_handle, param_name, value, NULL);
+
+    if (ret == RBUS_ERROR_SUCCESS)
+    {
+        DEBUG_PRINT(DEBUG_ERROR, "rbus_set success for [%s] with error [%d]\n", param_name, ret);
+        result = RETURN_OK;
+    }
+    else
+    {
+        DEBUG_PRINT(DEBUG_ERROR, "rbus_set Failed for [%s] with error [%d]\n", param_name, ret);
+        result = RETURN_ERR;
+    }
+
+    DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_setValue calling rbusValue_Release to release the structure value");
+    rbusValue_Release(value);
+
+    DEBUG_PRINT(DEBUG_ERROR, "Exit from ssp_rbus_setValue wrapper\n");
+    return result;
+}
