@@ -700,14 +700,12 @@ int ssp_GetMACsecOperationalStatus(int ethPort, BOOLEAN* pflag)
 int ssp_getFactoryCmVariant(char *pValue)
 {
         DEBUG_PRINT(DEBUG_TRACE, "Entering the ssp_getFactoryCmVariant wrapper\n");
-	char pro_info[64] = {'\0'};
 
-        if (platform_hal_getFactoryCmVariant(pro_info) != RETURN_OK )
+        if (platform_hal_getFactoryCmVariant(pValue) != RETURN_OK )
         {
                 DEBUG_PRINT(DEBUG_ERROR, "Platform funtion returns failure\n");
                 return RETURN_ERR;
         }
-	strcpy(pValue, pro_info);
         DEBUG_PRINT(DEBUG_TRACE, "Platform function returns success\n");
         return RETURN_OK;
 }
