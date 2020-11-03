@@ -25,7 +25,7 @@
   <primitive_test_name>CosaMTA_GetParamUlongValue</primitive_test_name>
   <primitive_test_version>1</primitive_test_version>
   <status>FREE</status>
-  <synopsis>Check if the total capacity of the battery is greater than zero if battery is installed</synopsis>
+  <synopsis>Check if the total capacity of the battery is greater than or equal to zero</synopsis>
   <groups_id/>
   <execution_time>1</execution_time>
   <long_duration>false</long_duration>
@@ -40,7 +40,7 @@
   </rdk_versions>
   <test_cases>
     <test_case_id>TC_COSAMTA_35</test_case_id>
-    <test_objective>Check if the total capacity of the battery is greater than zero if battery is installed</test_objective>
+    <test_objective>Check if the total capacity of the battery is greater than or equal to zero</test_objective>
     <test_type>Positive</test_type>
     <test_setup>Broadband</test_setup>
     <pre_requisite>1.Ccsp Components  should be in a running state else invoke cosa_start.sh manually that includes all the ccsp components and TDK Component
@@ -50,9 +50,9 @@
     <automation_approch>1. Load Cosamta module
 2. Check if the battery is installed or not
 3. Get the total capacity of the battery
-4. Check if total capacity of the battery is 0 if battery is not installed or greater than 0 if installed
+4. Check if total capacity of the battery is greater than or equal to zero.
 5. Unload Cosamta module</automation_approch>
-    <except_output>Total capacity of the battery is 0 if battery is not installed or greater than 0 if installed</except_output>
+    <except_output>Total capacity of the battery is greater than or equal to 0</except_output>
     <priority>High</priority>
     <test_stub_interface>cosamta</test_stub_interface>
     <test_script>TS_COSAMTA_GetBatteryTotalCapacity</test_script>
@@ -103,7 +103,7 @@ if "SUCCESS" in loadmodulestatus.upper():
         #Get the result of execution
         print "[TEST EXECUTION RESULT] : SUCCESS";
 
-	tdkTestObj = obj.createTestStep("CosaMTA_GetParamUlongValue");
+        tdkTestObj = obj.createTestStep("CosaMTA_GetParamUlongValue");
         tdkTestObj.addParameter("handleType",0);
         tdkTestObj.addParameter("paramName","BatteryTotalCapacity");
         tdkTestObj.executeTestCase(expectedresult);
@@ -117,11 +117,11 @@ if "SUCCESS" in loadmodulestatus.upper():
             print "TEST STEP 2: Get the BatteryTotalCapacity";
             print "EXPECTED RESULT 2: Should get the BatteryTotalCapacity successfully";
             print "ACTUAL RESULT 2: The BatteryTotalCapacity is %s" %resultDetails;
-            if (install == '0' and int(resultDetails) == 0) or (install == '1' and int(resultDetails) > 0):
-		tdkTestObj.setResultStatus("SUCCESS");
-		print "BatteryTotalCapacity is within the expected range"
+            if (int(resultDetails) >= 0):
+                tdkTestObj.setResultStatus("SUCCESS");
+                print "BatteryTotalCapacity is within the expected range"
                 print "[TEST EXECUTION RESULT] : SUCCESS";
-	    else:
+            else:
                 tdkTestObj.setResultStatus("FAILURE");
                 print "BatteryTotalCapacity is not within the expected range"
                 print "[TEST EXECUTION RESULT] : FAILURE";
