@@ -33,7 +33,7 @@
   <!--  -->
   <status>FREE</status>
   <!--  -->
-  <synopsis>Check if the remaining charge of the battery is greater than zero if battery is installed</synopsis>
+  <synopsis>Check if the remaining charge of the battery is greater than or equal to zero</synopsis>
   <!--  -->
   <groups_id />
   <!--  -->
@@ -57,7 +57,7 @@
   </rdk_versions>
   <test_cases>
     <test_case_id>TC_COSAMTA_30</test_case_id>
-    <test_objective>Check if the remaining charge of the battery is greater than zero if battery is installed</test_objective>
+    <test_objective>Check if the remaining charge of the battery is greater than or equal to zero</test_objective>
     <test_type>Positive</test_type>
     <test_setup>Broadband</test_setup>
     <pre_requisite>1.Ccsp Components  should be in a running state else invoke cosa_start.sh manually that includes all the ccsp components and TDK Component
@@ -67,9 +67,9 @@
     <automation_approch>1. Load Cosamta module
 2. Check if the battery is installed or not
 3. Get the remaining charge of the battery
-4. Check if remaining charge of the battery is 0 if battery is not installed or greater than 0 if installed
+4. Check if remaining charge of the battery is greater than or equal to 0.
 5. Unload Cosamta module</automation_approch>
-    <except_output>Remaining charge of the battery is 0 if battery is not installed or greater than 0 if installed</except_output>
+    <except_output>Remaining charge of the battery should be greater than or equal to zero</except_output>
     <priority>High</priority>
     <test_stub_interface>cosamta</test_stub_interface>
     <test_script>TS_COSAMTA_GetBatteryRemainingCharge</test_script>
@@ -80,7 +80,7 @@
   <script_tags />
 </xml>
 '''
-# use tdklib library,which provides a wrapper for tdk testcase script 
+# use tdklib library,which provides a wrapper for tdk testcase script
 import tdklib;
 
 #Test component to be tested
@@ -119,7 +119,7 @@ if "SUCCESS" in loadmodulestatus.upper():
         #Get the result of execution
         print "[TEST EXECUTION RESULT] : SUCCESS";
 
-	tdkTestObj = obj.createTestStep("CosaMTA_GetParamUlongValue");
+        tdkTestObj = obj.createTestStep("CosaMTA_GetParamUlongValue");
         tdkTestObj.addParameter("handleType",0);
         tdkTestObj.addParameter("paramName","BatteryRemainingCharge");
         tdkTestObj.executeTestCase(expectedresult);
@@ -133,11 +133,11 @@ if "SUCCESS" in loadmodulestatus.upper():
             print "TEST STEP 2: Get the BatteryRemainingCharge";
             print "EXPECTED RESULT 2: Should get the BatteryRemainingCharge successfully";
             print "ACTUAL RESULT 2: The BatteryRemainingCharge is %s" %resultDetails;
-            if (install == '0' and int(resultDetails) == 0) or (install == '1' and int(resultDetails) > 0):
-		tdkTestObj.setResultStatus("SUCCESS");
-		print "BatteryRemainingCharge is within the expected range"
+            if  int(resultDetails) >= 0:
+                tdkTestObj.setResultStatus("SUCCESS");
+                print "BatteryRemainingCharge is within the expected range"
                 print "[TEST EXECUTION RESULT] : SUCCESS";
-	    else:
+            else:
                 tdkTestObj.setResultStatus("FAILURE");
                 print "BatteryRemainingCharge is not within the expected range"
                 print "[TEST EXECUTION RESULT] : FAILURE";
