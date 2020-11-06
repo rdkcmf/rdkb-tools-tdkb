@@ -25,7 +25,7 @@
   <primitive_test_name>TADstub_Get</primitive_test_name>
   <primitive_test_version>3</primitive_test_version>
   <status>FREE</status>
-  <synopsis>Check if the diagnostic state is set as Error_CannotResolveHostName for the ping test done with an empty hostname</synopsis>
+  <synopsis>Check if the diagnostic state is set as Error_Other for the ping test done with an empty hostname</synopsis>
   <groups_id/>
   <execution_time>2</execution_time>
   <long_duration>false</long_duration>
@@ -42,7 +42,7 @@
   </rdk_versions>
   <test_cases>
     <test_case_id>TC_TAD_55</test_case_id>
-    <test_objective>Check if the diagnostic state is set as Error_CannotResolveHostName for the ping test done with an empty hostname</test_objective>
+    <test_objective>Check if the diagnostic state is set as Error_Other for the ping test done with an empty hostname</test_objective>
     <test_type>Positive</test_type>
     <test_setup>Broadband,Emulator,RPI.</test_setup>
     <pre_requisite>1.Ccsp Components  should be in a running state else invoke cosa_start.sh manually that includes all the ccsp components.
@@ -54,9 +54,9 @@ Device.IP.Diagnostics.TraceRoute.DiagnosticsState</input_parameters>
     <automation_approch>1. Load TAD module
 2. Set Device.IP.Diagnostics.TraceRoute.Host as an empty string
 3. Set Device.IP.Diagnostics.X_RDKCENTRAL-COM_PingTest.Run as true to start the ping test
-4. After ping test, check if the value of Device.IP.Diagnostics.IPPing.DiagnosticsState is Error_CannotResolveHostName 
+4. After ping test, check if the value of Device.IP.Diagnostics.IPPing.DiagnosticsState is Error_Other
 5. Unload the TAD module</automation_approch>
-    <except_output>On ping test with host name as empty, value of Device.IP.Diagnostics.IPPing.DiagnosticsState should be Error_CannotResolveHostName </except_output>
+    <except_output>On ping test with host name as empty, value of Device.IP.Diagnostics.IPPing.DiagnosticsState should be Error_Other </except_output>
     <priority>High</priority>
     <test_stub_interface>tad</test_stub_interface>
     <test_script>TS_TAD_IPPingTest_NoHost_CheckStatus</test_script>
@@ -67,11 +67,11 @@ Device.IP.Diagnostics.TraceRoute.DiagnosticsState</input_parameters>
 </xml>
 
 '''
-# use tdklib library,which provides a wrapper for tdk testcase script 
+# use tdklib library,which provides a wrapper for tdk testcase script
 import tdklib;
 import time;
 import tdkutility;
-from tdkutility import * 
+from tdkutility import *
 
 #Test component to be tested
 obj = tdklib.TDKScriptingLibrary("tad","1");
@@ -91,7 +91,7 @@ if "SUCCESS" in loadmodulestatus.upper():
     tdkTestObj.addParameter("ParamName","Device.IP.Diagnostics.IPPing.Host");
     tdkTestObj.addParameter("ParamValue","");
     tdkTestObj.addParameter("Type","string");
-    expectedresult="SUCCESS";
+    expectedresult="FAILURE";
     tdkTestObj.executeTestCase(expectedresult);
     actualresult = tdkTestObj.getResult();
     details = tdkTestObj.getResultDetails();
@@ -99,13 +99,13 @@ if "SUCCESS" in loadmodulestatus.upper():
         #Set the result status of execution
         tdkTestObj.setResultStatus("SUCCESS");
         print "TEST STEP 2: Set the host of IPPing as an empty URI";
-        print "EXPECTED RESULT 2: Should set an empty host for IPPing";
+        print "EXPECTED RESULT 2: Should not set an empty host for IPPing";
         print "ACTUAL RESULT 2: %s" %details;
         #Get the result of execution
         print "[TEST EXECUTION RESULT] : SUCCESS";
 
         #start the ping test after setting host value
-	tdkTestObj = obj.createTestStep('TADstub_Set');
+        tdkTestObj = obj.createTestStep('TADstub_Set');
         tdkTestObj.addParameter("ParamName","Device.IP.Diagnostics.X_RDKCENTRAL-COM_PingTest.Run")
         tdkTestObj.addParameter("ParamValue","true");
         tdkTestObj.addParameter("Type","boolean");
@@ -124,24 +124,24 @@ if "SUCCESS" in loadmodulestatus.upper():
             time.sleep(40);
 
             print "TEST STEP 4:  Check the DiagnosticsState value after ping"
-            print "EXPECTED RESULT 4: DiagnosticsState value should be Error_CannotResolveHostName";
-  	    tdkTestObj = obj.createTestStep('TADstub_Get');
-	    tdkTestObj.addParameter("paramName","Device.IP.Diagnostics.IPPing.DiagnosticsState");
-	    tdkTestObj.executeTestCase(expectedresult);
-	    actualresult = tdkTestObj.getResult();
-	    diagState =  tdkTestObj.getResultDetails();
-	    if expectedresult in actualresult and diagState == "Error_CannotResolveHostName":
-	        tdkTestObj.setResultStatus("SUCCESS");
-	        print "ACTUAL RESULT 4: DiagnosticsState value is %s" %diagState
-	        print "[TEST EXECUTION RESULT] : SUCCESS";
-	    else:
+            print "EXPECTED RESULT 4: DiagnosticsState value should be Error_Other";
+            tdkTestObj = obj.createTestStep('TADstub_Get');
+            tdkTestObj.addParameter("paramName","Device.IP.Diagnostics.IPPing.DiagnosticsState");
+            tdkTestObj.executeTestCase(expectedresult);
+            actualresult = tdkTestObj.getResult();
+            diagState =  tdkTestObj.getResultDetails();
+            if expectedresult in actualresult and diagState == "Error_Other":
+                tdkTestObj.setResultStatus("SUCCESS");
+                print "ACTUAL RESULT 4: DiagnosticsState value is %s" %diagState
+                print "[TEST EXECUTION RESULT] : SUCCESS";
+            else:
                 tdkTestObj.setResultStatus("FAILURE");
                 print "ACTUAL RESULT 4: %s" %diagState
                 print "[TEST EXECUTION RESULT] : FAILURE";
-	else:
+        else:
             tdkTestObj.setResultStatus("FAILURE");
             print "TEST STEP 3: Set PingTest.Run of IPPing as true";
-            print "EXPECTED RESULT 3: Should set PingTest.Run of IPPing as true";
+            print "EXPECTED RESULT 3: Should not set PingTest.Run of IPPing as true";
             print "ACTUAL RESULT 3: %s" %details;
             #Get the result of execution
             print "[TEST EXECUTION RESULT] : FAILURE";
