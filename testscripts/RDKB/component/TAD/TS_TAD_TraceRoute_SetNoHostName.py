@@ -26,7 +26,7 @@
   <primitive_test_name>TADstub_Set</primitive_test_name>
   <primitive_test_version>1</primitive_test_version>
   <status>FREE</status>
-  <synopsis>To set all trace route parameters except host name and check whether error is throwing correctly</synopsis>
+  <synopsis>To set all trace route parameters except host name and check whether TraceRoute is Error_MaxHopCountExceeded or Error_CannotResolveHostName</synopsis>
   <groups_id/>
   <execution_time>2</execution_time>
   <long_duration>false</long_duration>
@@ -43,7 +43,7 @@
   </rdk_versions>
   <test_cases>
     <test_case_id>TC_TAD_15</test_case_id>
-    <test_objective>To set all trace route parameters except host name and check whether error is throwing correctly</test_objective>
+    <test_objective>To set all trace route parameters except host name and check whether TraceRoute is Error_MaxHopCountExceeded or Error_CannotResolveHostName</test_objective>
     <test_type>Negative</test_type>
     <test_setup>XB3,Emulator</test_setup>
     <pre_requisite>1.Ccsp Components  should be in a running state else invoke cosa_start.sh manually that includes all the ccsp components.
@@ -77,7 +77,7 @@ TestManager GUI will publish the result as PASS in Execution/Console page of Tes
 </xml>
 
 '''
-						# use tdklib library,which provides a wrapper for tdk testcase script
+# use tdklib library,which provides a wrapper for tdk testcase script
 import tdklib;
 import time;
 
@@ -113,11 +113,11 @@ if "SUCCESS" in loadmodulestatus.upper():
         #Get the result of execution
         print "[TEST EXECUTION RESULT] : SUCCESS";
 
-	tdkTestObj = obj.createTestStep('TADstub_Set');
+        tdkTestObj = obj.createTestStep('TADstub_Set');
         tdkTestObj.addParameter("ParamName","Device.IP.Diagnostics.TraceRoute.Host");
         tdkTestObj.addParameter("ParamValue","");
         tdkTestObj.addParameter("Type","string");
-        expectedresult="SUCCESS";
+        expectedresult="FAILURE";
         tdkTestObj.executeTestCase(expectedresult);
         actualresult = tdkTestObj.getResult();
         details = tdkTestObj.getResultDetails();
@@ -125,12 +125,12 @@ if "SUCCESS" in loadmodulestatus.upper():
             #Set the result status of execution
             tdkTestObj.setResultStatus("SUCCESS");
             print "TEST STEP 2: Set the host of TraceRoute";
-            print "EXPECTED RESULT 2: Should set the host of TraceRoute as empty string";
+            print "EXPECTED RESULT 2: Should not set the host of TraceRoute as empty string";
             print "ACTUAL RESULT 2: %s" %details;
             #Get the result of execution
             print "[TEST EXECUTION RESULT] : SUCCESS";
 
-	    tdkTestObj = obj.createTestStep('TADstub_Set');
+            tdkTestObj = obj.createTestStep('TADstub_Set');
             tdkTestObj.addParameter("ParamName","Device.IP.Diagnostics.TraceRoute.DiagnosticsState");
             tdkTestObj.addParameter("ParamValue","Requested");
             tdkTestObj.addParameter("Type","string");
@@ -148,45 +148,45 @@ if "SUCCESS" in loadmodulestatus.upper():
                 print "[TEST EXECUTION RESULT] : SUCCESS";
                 time.sleep(50);
                 tdkTestObj = obj.createTestStep('TADstub_Get');
-	        tdkTestObj.addParameter("paramName","Device.IP.Diagnostics.TraceRoute.DiagnosticsState");
-	        expectedresult="SUCCESS";
+                tdkTestObj.addParameter("paramName","Device.IP.Diagnostics.TraceRoute.DiagnosticsState");
+                expectedresult="SUCCESS";
                 tdkTestObj.executeTestCase(expectedresult);
                 actualresult = tdkTestObj.getResult();
                 details = tdkTestObj.getResultDetails();
-	        if expectedresult in actualresult and "Error_CannotResolveHostName" in details:
-	    	    #Set the result status of execution
+                if expectedresult in actualresult and (("Error_CannotResolveHostName" in details) or ("Error_MaxHopCountExceeded" in details)) :
+                    #Set the result status of execution
                     tdkTestObj.setResultStatus("SUCCESS");
                     print "TEST STEP 3: Get DiagnosticsState of TraceRoute";
-                    print "EXPECTED RESULT 3: Should get DiagnosticsState of TraceRoute as Error_CannotResolveHostName";
+                    print "EXPECTED RESULT 3: Should get DiagnosticsState of TraceRoute as Error_MaxHopCountExceeded or Error_CannotResolveHostName";
                     print "ACTUAL RESULT 3: %s" %details;
                     #Get the result of execution
                     print "[TEST EXECUTION RESULT] : SUCCESS";
-	        else:
-	    	    #Set the result status of execution
+                else:
+                    #Set the result status of execution
                     tdkTestObj.setResultStatus("FAILURE");
                     print "TEST STEP 3: Get DiagnosticsState of TraceRoute";
-                    print "EXPECTED RESULT 3: Should get DiagnosticsState of TraceRoute as Error_CannotResolveHostName";
+                    print "EXPECTED RESULT 3: Should get DiagnosticsState of TraceRoute as Error_MaxHopCountExceeded or Error_CannotResolveHostName";
                     print "ACTUAL RESULT 3: %s" %details;
                     #Get the result of execution
                     print "[TEST EXECUTION RESULT] : FAILURE";
-	    else:
-	        #Set the result status of execution
+            else:
+                #Set the result status of execution
                 tdkTestObj.setResultStatus("FAILURE");
                 print "TEST STEP 2: Set DiagnosticsState of TraceRoute as Requested";
                 print "EXPECTED RESULT 2: Should set DiagnosticsState of TraceRoute as Requested";
                 print "ACTUAL RESULT 2: %s" %details;
                 #Get the result of execution
                 print "[TEST EXECUTION RESULT] : FAILURE";
-	else:
-	    #Set the result status of execution
+        else:
+            #Set the result status of execution
             tdkTestObj.setResultStatus("FAILURE");
             print "TEST STEP 2: Set the host of TraceRoute";
-            print "EXPECTED RESULT 2: Should set the host of TraceRoute as empty string";
+            print "EXPECTED RESULT 2: Should not set the host of TraceRoute as empty string";
             print "ACTUAL RESULT 2: %s" %details;
             #Get the result of execution
             print "[TEST EXECUTION RESULT] : FAILURE";
     else:
-	#Set the result status of execution
+        #Set the result status of execution
         tdkTestObj.setResultStatus("FAILURE");
         print "TEST STEP 1: Set the interface of TraceRoute";
         print "EXPECTED RESULT 1: Should set the interface of TraceRoute";
@@ -196,8 +196,6 @@ if "SUCCESS" in loadmodulestatus.upper():
     obj.unloadModule("tad");
 
 else:
-        print "Failed to load tad module";
-        obj.setLoadModuleStatus("FAILURE");
-        print "Module loading failed";
-
-					
+     print "Failed to load tad module";
+     obj.setLoadModuleStatus("FAILURE");
+     print "Module loading failed";
