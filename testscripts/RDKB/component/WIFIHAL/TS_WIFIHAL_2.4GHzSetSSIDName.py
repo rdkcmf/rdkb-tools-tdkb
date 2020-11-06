@@ -2,7 +2,7 @@
 # If not stated otherwise in this file or this component's Licenses.txt
 # file the following copyright and licenses apply:
 #
-# Copyright 2017 RDK Management
+# Copyright 2020 RDK Management
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,28 +17,47 @@
 # limitations under the License.
 ##########################################################################
 '''
-<?xml version="1.0" encoding="UTF-8"?><xml>
-  <id/>
-  <version>1</version>
+<?xml version='1.0' encoding='utf-8'?>
+<xml>
+  <id></id>
+  <!-- Do not edit id. This will be auto filled while exporting. If you are adding a new script keep the id empty -->
+  <version>3</version>
+  <!-- Do not edit version. This will be auto incremented while updating. If you are adding a new script you can keep the vresion as 1 -->
   <name>TS_WIFIHAL_2.4GHzSetSSIDName</name>
-  <primitive_test_id/>
+  <!-- If you are adding a new script you can specify the script name. Script Name should be unique same as this file name with out .py extension -->
+  <primitive_test_id> </primitive_test_id>
+  <!-- Do not change primitive_test_id if you are editing an existing script. -->
   <primitive_test_name>WIFIHAL_GetOrSetParamStringValue</primitive_test_name>
+  <!--  -->
   <primitive_test_version>8</primitive_test_version>
+  <!--  -->
   <status>FREE</status>
+  <!--  -->
   <synopsis>To set SSID Name using wifi_setSSIDName() and verify by getting with wifi_getSSIDName()</synopsis>
-  <groups_id/>
+  <!--  -->
+  <groups_id />
+  <!--  -->
   <execution_time>10</execution_time>
+  <!--  -->
   <long_duration>false</long_duration>
+  <!--  -->
   <advanced_script>false</advanced_script>
-  <remarks/>
+  <!-- execution_time is the time out time for test execution -->
+  <remarks></remarks>
+  <!-- Reason for skipping the tests if marked to skip -->
   <skip>false</skip>
+  <!--  -->
   <box_types>
     <box_type>Broadband</box_type>
+    <!--  -->
     <box_type>Emulator</box_type>
+    <!--  -->
     <box_type>RPI</box_type>
+    <!--  -->
   </box_types>
   <rdk_versions>
     <rdk_version>RDKB</rdk_version>
+    <!--  -->
   </rdk_versions>
   <test_cases>
     <test_case_id>TC_WIFIHAL_129</test_case_id>
@@ -59,19 +78,19 @@ apIndex: 0</input_parameters>
 5. Verify whether the set and get values are the same.
 6. Revert back to the initial SSIDName
 7. Unload wifihal module</automation_approch>
-    <except_output>Set and get values of the SSID Names should be the same</except_output>
+    <expected_output>Set and get values of the SSID Names should be the same</expected_output>
     <priority>High</priority>
     <test_stub_interface>WIFIHAL</test_stub_interface>
     <test_script>TS_WIFIHAL_2.4GHzSetSSIDName</test_script>
     <skipped>No</skipped>
-    <release_version/>
-    <remarks/>
+    <release_version></release_version>
+    <remarks></remarks>
   </test_cases>
+  <script_tags />
 </xml>
-
 '''
-# use tdklib library,which provides a wrapper for tdk testcase script 
-import tdklib; 
+# use tdklib library,which provides a wrapper for tdk testcase script
+import tdklib;
 from wifiUtility import *;
 
 #Test component to be tested
@@ -93,78 +112,84 @@ if "SUCCESS" in loadmodulestatus.upper():
 
     #Checking for AP Index 0, Similar way we can check for other APs
     tdkTestObjTemp, idx = getIndex(obj, radio);
-    
+
     if idx == -1:
         print "Failed to get radio index for radio %s\n" %radio;
         tdkTestObjTemp.setResultStatus("FAILURE");
 
-    else:        
+    else:
+        expectedresult="SUCCESS";
+        apIndex = idx;
+        getMethod = "getSSIDName"
+        primitive = 'WIFIHAL_GetOrSetParamStringValue'
 
-	    apIndex = idx;
-	    expectedresult="SUCCESS";
-	    getMethod = "getSSIDName"
-	    primitive = 'WIFIHAL_GetOrSetParamStringValue'
+        #Calling the method from wifiUtility to execute test case and set result status for the test.
+        tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, "0", getMethod)
 
-	    #Calling the method from wifiUtility to execute test case and set result status for the test.
-	    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, "0", getMethod)
+        if expectedresult in actualresult:
+            tdkTestObj.setResultStatus("SUCCESS");
+            initialName = details.split(":")[1].strip()
 
-	    if expectedresult in actualresult:
-		initialName = details.split(":")[1].strip()
-	
-		expectedresult="SUCCESS";
-		apIndex = idx;
-		setMethod = "setSSIDName"
-		setName = "ssid_0_name"
-		primitive = 'WIFIHAL_GetOrSetParamStringValue'
+            expectedresult="SUCCESS";
+            apIndex = idx;
+            setMethod = "setSSIDName"
+            setName = "ssid_0_name"
+            primitive = 'WIFIHAL_GetOrSetParamStringValue'
 
-		#Calling the method from wifiUtility to execute test case and set result status for the test.
-		tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, setName, setMethod)
+        #Calling the method from wifiUtility to execute test case and set result status for the test.
+            tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, setName, setMethod)
 
-		if expectedresult in actualresult:
-		    apIndex = idx;
-		    getMethod = "getSSIDName"
-		    primitive = 'WIFIHAL_GetOrSetParamStringValue'
-	
-		    #Calling the method from wifiUtility to execute test case and set result status for the test.
-		    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, "0", getMethod)
-		    finalName = details.split(":")[1].strip()
+            if expectedresult in actualresult:
+                tdkTestObj.setResultStatus("SUCCESS");
+                apIndex = idx;
+                getMethod = "getSSIDName"
+                primitive = 'WIFIHAL_GetOrSetParamStringValue'
 
-		    if expectedresult in actualresult:
-			if finalName == setName:
-			    tdkTestObj.setResultStatus("SUCCESS");
-			    print "TEST STEP : Compare set and get values of SSID Name"
-			    print "EXPECTED RESULT : Set and get values of SSID Name should be the same"
-			    print "ACTUAl RESULT : Set and get values of SSID Name are the same"
-			    print "setSSIDName = ",setName
-			    print "getSSIDName = ",finalName
-			    print "TEST EXECUTION RESULT :SUCCESS"
-			else:
-			    tdkTestObj.setResultStatus("FAILURE");
-			    print "TEST STEP : Compare set and get values of SSID Name"
-			    print "EXPECTED RESULT : Set and get values of SSID Name should be the same"
-			    print "ACTUAl RESULT : Set and get values of SSID Name are NOT the same"
-			    print "setSSIDName = ",setName
-			    print "getSSIDName = ",finalName
-			    print "TEST EXECUTION RESULT :FAILURE"
+                #Calling the method from wifiUtility to execute test case and set result status for the test.
+                tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, "0", getMethod)
+                tdkTestObj.setResultStatus("SUCCESS");
+                finalName = details.split(":")[1].strip()
 
-			#Revert the SSID NAme back o initial value
-			apIndex = idx;
-			setMethod = "setSSIDName"
-			primitive = 'WIFIHAL_GetOrSetParamStringValue'
-			#Calling the method from wifiUtility to execute test case and set result status for the test.
-		        tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, initialName, setMethod)
+                if expectedresult in actualresult:
+                    if finalName == setName:
+                        tdkTestObj.setResultStatus("SUCCESS");
+                        print "TEST STEP : Compare set and get values of SSID Name"
+                        print "EXPECTED RESULT : Set and get values of SSID Name should be the same"
+                        print "ACTUAl RESULT : Set and get values of SSID Name are the same"
+                        print "setSSIDName = ",setName
+                        print "getSSIDName = ",finalName
+                        print "TEST EXECUTION RESULT :SUCCESS"
+                    else:
+                        tdkTestObj.setResultStatus("FAILURE");
+                        print "TEST STEP : Compare set and get values of SSID Name"
+                        print "EXPECTED RESULT : Set and get values of SSID Name should be the same"
+                        print "ACTUAl RESULT : Set and get values of SSID Name are NOT the same"
+                        print "setSSIDName = ",setName
+                        print "getSSIDName = ",finalName
+                        print "TEST EXECUTION RESULT :FAILURE"
 
-			if expectedresult in actualresult:
-			    print "Successfully reverted back to initial value"
-			else:
-			    print "Unable to revert to initial value"
-		    else:
-			print "wifi_getSSIDName() function failed"
-		else:
-		    print "wifi_setSSIDName function failed";
-	    else:
-		print "wifi_getSSIDName function failed";
-		tdkTestObj.setResultStatus("FAILURE");
+                    #Revert the SSID NAme back o initial value
+                    apIndex = idx;
+                    setMethod = "setSSIDName"
+                    primitive = 'WIFIHAL_GetOrSetParamStringValue'
+                    #Calling the method from wifiUtility to execute test case and set result status for the test.
+                    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, initialName, setMethod)
+
+                    if expectedresult in actualresult:
+                        tdkTestObj.setResultStatus("SUCCESS");
+                        print "Successfully reverted back to initial value"
+                    else:
+                        tdkTestObj.setResultStatus("FAILURE");
+                        print "Unable to revert to initial value"
+                else:
+                    tdkTestObj.setResultStatus("FAILURE");
+                    print "wifi_getSSIDName() function failed"
+            else:
+                tdkTestObj.setResultStatus("FAILURE");
+                print "wifi_setSSIDName function failed";
+        else:
+            print "wifi_getSSIDName function failed";
+            tdkTestObj.setResultStatus("FAILURE");
 
     obj.unloadModule("wifihal");
 
