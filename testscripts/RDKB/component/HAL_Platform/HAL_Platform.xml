@@ -257,6 +257,12 @@
           <parameter name="SNMPonboard" value="  "/>
         </parameters>
       </primitiveTest>
+      <primitiveTest name="platform_stub_hal_GetRouterRegion" id=" " version="1">
+        <function>platform_stub_hal_GetRouterRegion</function>
+        <parameters>
+          <parameter name="flag" value=""/>
+        </parameters>
+      </primitiveTest>
     </primitiveTests>
   </module>
 </xml>
