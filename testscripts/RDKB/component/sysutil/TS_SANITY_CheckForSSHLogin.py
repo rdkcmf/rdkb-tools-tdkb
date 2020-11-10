@@ -193,7 +193,7 @@ if "SUCCESS" in loadmodulestatus.upper():
         tdkTestObj.setResultStatus("FAILURE");
         print "TEST STEP 1: Get the wan interface of device";
         print "EXPECTED RESULT 1: Should get the wan interface of device";
-        print "ACTUAL RESULT 1: %s" %inteface;
+        print "ACTUAL RESULT 1: %s" %interface;
         #Get the result of execution
         print "[TEST EXECUTION RESULT] : FAILURE"
     obj.unloadModule("sysutil");
