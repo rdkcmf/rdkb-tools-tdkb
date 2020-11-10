@@ -34,8 +34,6 @@
   <remarks/>
   <skip>false</skip>
   <box_types>
-    <box_type>Broadband</box_type>
-    <box_type>RPI</box_type>
   </box_types>
   <rdk_versions>
     <rdk_version>RDKB</rdk_version>
@@ -44,7 +42,7 @@
     <test_case_id>TC_SYSUTIL_21</test_case_id>
     <test_objective>To check if admin password from syscfg.db in /tmp and /nvram returns default password after factory reset</test_objective>
     <test_type>Positive</test_type>
-    <test_setup>XB3,RPI</test_setup>
+    <test_setup></test_setup>
     <pre_requisite>TDK Agent should be in running state or invoke it through StartTdk.sh script</pre_requisite>
     <api_or_interface_used>None</api_or_interface_used>
     <input_parameters>Device.X_CISCO_COM_DeviceControl.FactoryReset</input_parameters>
