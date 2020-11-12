@@ -1499,12 +1499,14 @@ int ssp_CMHAL_SetHTTP_Download_Url(char* httpURL, char* filename)
  * @param [in]          : None
  * @param [out]         : return status an integer value 0-success and 1-Failure
  ********************************************************************************************/
-int ssp_CMHAL_FWupdateAndFactoryReset()
+int ssp_CMHAL_FWupdateAndFactoryReset(char* url, char* name)
 {
     int return_status = 0;
     printf("\nEntering ssp_CMHAL_FWupdateAndFactoryReset function\n\n");
+    printf("\nssp_CMHAL_FWupdateAndFactoryReset URL is %s and image name is %s \n\n",url,name);
 
-    return_status = cm_hal_FWupdateAndFactoryReset();
+    return_status = cm_hal_FWupdateAndFactoryReset(url,name);
+
     printf("return_status of cm_hal_FWupdateAndFactoryReset is %d",return_status);
     if(return_status != SSP_SUCCESS)
     {

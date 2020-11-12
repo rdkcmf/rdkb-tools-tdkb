@@ -641,16 +641,17 @@ int ssp_ethsw_stub_hal_Get_AssociatedDevice(unsigned long int *array_size,eth_de
 int ssp_ethsw_stub_hal_Get_EthWanInterfaceName( char* interface, int isNegativeScenario)
 {
         int result = RETURN_ERR;
+        unsigned long max_size = MAX_STRING_SIZE;
 
         DEBUG_PRINT(DEBUG_TRACE, "Entering the ssp_ethsw_stub_hal_Get_EthWanInterfaceName wrapper\n");
 
         if(isNegativeScenario)
         {
-                result = GWP_GetEthWanInterfaceName(NULL);
+                result = GWP_GetEthWanInterfaceName(NULL,NULL);
         }
         else
         {
-                result = GWP_GetEthWanInterfaceName(interface);
+                result = GWP_GetEthWanInterfaceName(interface,max_size);
         }
 
         if(result == RETURN_OK)

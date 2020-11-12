@@ -41,7 +41,7 @@ extern "C"
     int ssp_CMHAL_Reboot_Now();
     int ssp_CMHAL_GetHTTP_Download_Url(char* httpURL, char* filename);
     int ssp_CMHAL_SetHTTP_Download_Url(char* httpURL, char* filename);
-    int ssp_CMHAL_FWupdateAndFactoryReset();
+    int ssp_CMHAL_FWupdateAndFactoryReset(char* url, char* name);
     int ssp_CMHAL_GetDsOfdmChanTable(char* paramName, char* value, int *numberofEntries);
     int ssp_CMHAL_GetUsOfdmChanTable(char* paramName, char* value, int *numberofEntries);
     int ssp_CMHAL_GetStatusOfdmaUsTable(char* paramName, char* value, int *numberofEntries);
