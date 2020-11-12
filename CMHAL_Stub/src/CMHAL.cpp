@@ -691,7 +691,8 @@ void CMHAL::CMHAL_SetHTTP_Download_Url(IN const Json::Value& req, OUT Json::Valu
  * Function Name        : CMHAL_FWupdateAndFactoryReset
  * Description          : This function will invoke the SSP  HAL wrapper to FWupdateAndFactoryReset
  *
- * @param [in] req-     : None
+ * @param [in] req-     : URL - Image URL
+                        : imageName - Name of the image
  * @param [out] response - filled with SUCCESS or FAILURE based on the output staus of operation
  *
  ********************************************************************************************/
@@ -700,8 +701,20 @@ void CMHAL::CMHAL_FWupdateAndFactoryReset(IN const Json::Value& req, OUT Json::V
     DEBUG_PRINT(DEBUG_TRACE,"\n CMHAL_FWupdateAndFactoryReset --->Entry \n");
     int returnValue = 0;
     char Details[64] = {'\0'};
+    char url[1024] = {'\0'};
+    char imagename[1024] = {'\0'};
 
-    returnValue = ssp_CMHAL_FWupdateAndFactoryReset();
+    if((&req["URL"]==NULL) || (&req["imageName"]==NULL))
+    {
+        response["result"]="FAILURE";
+        response["details"]="NULL parameter as input argument";
+        return;
+    }
+
+    strcpy(url, req["URL"].asCString());
+    strcpy(imagename, req["imageName"].asCString());
+
+    returnValue = ssp_CMHAL_FWupdateAndFactoryReset(url,imagename);
     if(0 == returnValue)
     {
         sprintf(Details,"CMHAL_FWupdateAndFactoryReset: success");

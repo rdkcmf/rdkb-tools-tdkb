@@ -63,7 +63,7 @@ class CMHAL : public RDKTestStubInterface,  public AbstractServer<CMHAL>
                   this->bindAndAddMethod(Procedure("CMHAL_Reboot_Now", PARAMS_BY_NAME, JSON_STRING,NULL), &CMHAL::CMHAL_Reboot_Now);
                   this->bindAndAddMethod(Procedure("CMHAL_GetHTTP_Download_Url", PARAMS_BY_NAME, JSON_STRING,NULL), &CMHAL::CMHAL_GetHTTP_Download_Url);
                   this->bindAndAddMethod(Procedure("CMHAL_SetHTTP_Download_Url", PARAMS_BY_NAME, JSON_STRING,"httpURL", JSON_STRING,"filename", JSON_STRING,NULL), &CMHAL::CMHAL_SetHTTP_Download_Url);
-                  this->bindAndAddMethod(Procedure("CMHAL_FWupdateAndFactoryReset", PARAMS_BY_NAME, JSON_STRING,NULL), &CMHAL::CMHAL_FWupdateAndFactoryReset);
+                  this->bindAndAddMethod(Procedure("CMHAL_FWupdateAndFactoryReset", PARAMS_BY_NAME, JSON_STRING,"URL", JSON_STRING, "imageName", JSON_STRING, NULL), &CMHAL::CMHAL_FWupdateAndFactoryReset);
                   this->bindAndAddMethod(Procedure("CMHAL_GetDsOfdmChanTable", PARAMS_BY_NAME, JSON_STRING,"paramName", JSON_STRING,NULL), &CMHAL::CMHAL_GetDsOfdmChanTable);
                   this->bindAndAddMethod(Procedure("CMHAL_GetUsOfdmChanTable", PARAMS_BY_NAME, JSON_STRING,"paramName", JSON_STRING,NULL), &CMHAL::CMHAL_GetUsOfdmChanTable);
                   this->bindAndAddMethod(Procedure("CMHAL_GetStatusOfdmaUsTable", PARAMS_BY_NAME, JSON_STRING,"paramName", JSON_STRING,NULL), &CMHAL::CMHAL_GetStatusOfdmaUsTable);
