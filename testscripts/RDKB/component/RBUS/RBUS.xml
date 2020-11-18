@@ -78,6 +78,14 @@
         <function>RBUS_CheckStatus</function>
         <parameters/>
       </primitiveTest>
+      <primitiveTest name="RBUS_RegisterOperation" id=" " version="4">
+        <function>RBUS_RegisterOperation</function>
+        <parameters>
+          <parameter name="operation" value=""/>
+          <parameter name="objectName" value=""/>
+          <parameter name="methodName" value=""/>
+        </parameters>
+      </primitiveTest>
     </primitiveTests>
   </module>
 </xml>

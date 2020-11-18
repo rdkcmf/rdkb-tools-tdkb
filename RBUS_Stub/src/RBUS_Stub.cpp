@@ -435,6 +435,53 @@ void RBUS::RBUS_SetValue(IN const Json::Value& req, OUT Json::Value& response)
     return;
 }
 
+/*****************************************************************************************************************
+ * Function Name : RBUS_RegisterOperation
+ * Description   : This function will invokes the wrapper function ssp_rbus_registerOperation
+ * @param [in]   : operation - operation to be performed
+                 : objectName - ObjectName / Component Name
+                 : methodName - Method Name
+ * @param [out]  : Filled with SUCCESS or FAILURE based on the output status of operation
+ **************************************************************************************************************/
+void RBUS::RBUS_RegisterOperation(IN const Json::Value& req, OUT Json::Value& response)
+{	
+    DEBUG_PRINT(DEBUG_TRACE,"\n RBUS_RegisterOperation  --->Entry \n");
+
+    int returnValue = RETURN_FAILURE;
+    char operation[MAX_PARAM_SIZE] = {'\0'};
+    char object_name[MAX_PARAM_SIZE] = {'\0'};
+    char method_name[MAX_PARAM_SIZE] = {'\0'};
+
+    if((&req["operation"]==NULL) || (&req["objectName"]==NULL) ||(&req["methodName"]==NULL) )
+    {
+        response["result"]="FAILURE";
+        response["details"]="NULL parameter as input argument";
+        return;
+    }
+
+    strcpy(operation, req["operation"].asCString());
+    strcpy(object_name, req["objectName"].asCString());
+    strcpy(method_name, req["methodName"].asCString());
+
+    DEBUG_PRINT(DEBUG_TRACE,"\n RBUS_RegisterOperation: Operation is %s, objectName is %s and methodName is %s \n",operation,object_name,method_name);
+	
+    returnValue = ssp_rbus_registerOperation(operation, object_name, method_name);
+
+    if(returnValue == RETURN_SUCCESS)
+    {
+        response["result"]="SUCCESS";
+        response["details"]="RBUS_RegisterOperation function was Successful";
+    }
+    else
+    {
+        response["result"]="FAILURE";
+        response["details"]="RBUS_RegisterOperation function has failed.Please check logs";
+    }
+	
+    DEBUG_PRINT(DEBUG_TRACE,"\n RBUS_RegisterOperation --->Exit\n");
+    return;
+}
+
 /***************************************************************************************************
  *Function Name   : CreateObject
  *Description     : This function is used to create a new object of the class "RBUS".

@@ -44,6 +44,7 @@
       <function name='RBUS_CheckStatus' />
       <function name='RBUS_Open' />
       <function name='RBUS_Close' />
+      <function name='RBUS_RegisterOperation' />
     </functions>
   <!-- Total parameters corresponding module  -->
     <parameters>
@@ -59,6 +60,9 @@
       <parameter funName='RBUS_SetValue' parameterName='paramName' parameterType='STRING' range='a-z' />
       <parameter funName='RBUS_SetValue' parameterName='paramType' parameterType='STRING' range='a-z' />
       <parameter funName='RBUS_SetValue' parameterName='paramValue' parameterType='STRING' range='a-z' />
+      <parameter funName='RBUS_RegisterOperation' parameterName='operation' parameterType='STRING' range='a-z' />
+      <parameter funName='RBUS_RegisterOperation' parameterName='objectName' parameterType='STRING' range='a-z' />
+      <parameter funName='RBUS_RegisterOperation' parameterName='methodName' parameterType='STRING' range='a-z' />
     </parameters>
   </module>
 </xml>

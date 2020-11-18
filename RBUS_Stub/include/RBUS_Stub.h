@@ -59,6 +59,7 @@ class RBUS : public RDKTestStubInterface, public AbstractServer<RBUS>
             this->bindAndAddMethod(Procedure("RBUS_Get", PARAMS_BY_NAME, JSON_STRING, "paramName", JSON_STRING, NULL), &RBUS::RBUS_Get);
             this->bindAndAddMethod(Procedure("RBUS_GetValue", PARAMS_BY_NAME, JSON_STRING, "paramName", JSON_STRING, "paramType", JSON_STRING, NULL), &RBUS::RBUS_GetValue);
             this->bindAndAddMethod(Procedure("RBUS_SetValue", PARAMS_BY_NAME, JSON_STRING, "paramName", JSON_STRING, "paramType", JSON_STRING, "paramValue", JSON_STRING, NULL), &RBUS::RBUS_SetValue);
+            this->bindAndAddMethod(Procedure("RBUS_RegisterOperation", PARAMS_BY_NAME, JSON_STRING, "operation", JSON_STRING, "objectName", JSON_STRING, "methodName", JSON_STRING, NULL), &RBUS::RBUS_RegisterOperation);
         }
 
         bool initialize(IN const char* szVersion);
@@ -75,5 +76,7 @@ class RBUS : public RDKTestStubInterface, public AbstractServer<RBUS>
         void RBUS_Get(IN const Json::Value& req, OUT Json::Value& response);
         void RBUS_GetValue(IN const Json::Value& req, OUT Json::Value& response);
         void RBUS_SetValue(IN const Json::Value& req, OUT Json::Value& response);
+        void RBUS_RegisterOperation(IN const Json::Value& req, OUT Json::Value& response);
 };
 #endif
+
