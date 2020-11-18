@@ -28,6 +28,8 @@
 #include "ssp_tdk_rbus_wrp.h"
 #include "ssp_hal_logger.h"
 
+#define DEFAULT_BUFFERSIZE 128
+
 static rbusHandle_t bus_handle;
 
 /*****************************************************************************************************************
@@ -137,7 +139,7 @@ int ssp_rbus_close( ) {
  * Function Name : ssp_rbus_dataElements
  * Description   : This function will invoke rbus_regDataElements / rbus_unregDataElements RBUS APIs
                  : rbus_regDataElements - To register one or more Data Elements that will be accessible/subscribable by other components
-				 : rbus_unregDataElements - To unregister one or more previously registered Data Elements that will no longer be accessible
+                 : rbus_unregDataElements - To unregister one or more previously registered Data Elements that will no longer be accessible
  * @param [in]   : element1 - Data Element name (Parameter Name)
                  : element2 - Data Element name (Parameter Name)
                  : operation - To specify, Regsister / UnRegister operation
@@ -517,5 +519,141 @@ int ssp_rbus_setValue(char* parameter_type,char* param_name, char* set_value) {
     rbusValue_Release(value);
 
     DEBUG_PRINT(DEBUG_ERROR, "Exit from ssp_rbus_setValue wrapper\n");
+    return result;
+}
+
+/*****************************************************************************************************************
+ * Function Name : ssp_rbus_registerOperation
+ * Description   : This function will invoke the different RBUS Register operations
+ * @param [in]   : Operation : Operation to be Performed
+                 : object_name : Name of the object / Component name
+                 : method_name : Method Name
+ * @param [out]  : return status an integer value 0-success and 1-Failure
+ ******************************************************************************************************************/
+int ssp_rbus_registerOperation(char* operation, char* object_name,char* method_name)
+{
+    DEBUG_PRINT(DEBUG_ERROR, "Entering the ssp_rbus_registerOperation wrapper\n");
+
+    int result = RETURN_ERR;
+    int ret = RBUS_ERROR_SUCCESS;
+    char object_buffer[DEFAULT_BUFFERSIZE] = {'\0'};;
+    char method_buffer[DEFAULT_BUFFERSIZE] = {'\0'};;
+
+    DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_registerOperation - Operation is %s object_name is %s method_name is %s \n",operation,object_name,method_name);
+
+    if (strcmp(operation,"openBrokerConnection") == 0)
+    {
+        DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_registerOperation --> openBrokerConnection Invoked...! \n");
+        //Object_name parameter carries value for Component name
+        //method_name parameter carries value for deciding the connection to close before open
+        if (strcmp(method_name,"CloseConnectionBeforeOpen") == 0)
+        {
+            rbus_closeBrokerConnection(); // Closing the Broker Connection to avoid duplicate connection
+        }
+
+        char component_name[DEFAULT_BUFFERSIZE] = {'\0'};;
+        memset(component_name, 0, DEFAULT_BUFFERSIZE );
+        snprintf(component_name, (sizeof(component_name) - 1), "%s", object_name);
+
+        ret = rbus_openBrokerConnection(component_name);
+
+        DEBUG_PRINT(DEBUG_ERROR, "openBrokerConnection Return value is %d \n",ret);
+    }
+    else if (strcmp(operation,"closeBrokerConnection") == 0)
+    {
+        DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_registerOperation --> closeBrokerConnection Invoked...! \n");
+
+        ret = rbus_closeBrokerConnection();
+
+        DEBUG_PRINT(DEBUG_ERROR, "closeBrokerConnection Return value is %d \n",ret);
+    }
+    else if (strcmp(operation,"registerObj") == 0)
+    {
+        DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_registerOperation --> registerObj Invoked...! \n");
+
+        memset( object_buffer, 0, DEFAULT_BUFFERSIZE );
+        snprintf(object_buffer, (sizeof(object_buffer) - 1), "%s", object_name);
+
+	ret = rbus_registerObj(object_buffer, NULL, NULL);
+
+        DEBUG_PRINT(DEBUG_ERROR, "registerObj Return value is %d \n",ret);
+    }
+    else if (strcmp(operation,"unregisterObj") == 0)
+    {
+        DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_registerOperation --> unregisterObj Invoked...! \n");
+
+        ret = rbus_unregisterObj(object_name);
+
+        DEBUG_PRINT(DEBUG_ERROR, "rbus_unregisterObj Return value is %d \n",ret);
+    }
+    else if (strcmp(operation,"registerMethod") == 0)
+    {
+        DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_registerOperation --> registerMethod Invoked...! \n");
+
+        memset(object_buffer, 0, DEFAULT_BUFFERSIZE );
+        snprintf(object_buffer, (sizeof(object_buffer) - 1), "%s", object_name);
+        memset(method_buffer, 0, DEFAULT_BUFFERSIZE );
+        snprintf(method_buffer, (sizeof(method_buffer) - 1), "%s", method_name);
+
+        ret = rbus_registerMethod(object_name, method_buffer, NULL, NULL);
+
+        DEBUG_PRINT(DEBUG_ERROR, "registerMethod Return value is %d \n",ret);
+    }
+    else if (strcmp(operation,"unregisterMethod") == 0)
+    {
+        DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_registerOperation --> unregisterMethod Invoked...! \n");
+
+        ret = rbus_unregisterMethod(object_name, method_name);
+
+        DEBUG_PRINT(DEBUG_ERROR, "unregisterMethod Return value is %d \n",ret);
+    }
+    else if (strcmp(operation,"registerEvent") == 0)
+    {
+        DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_registerOperation --> registerEvent Invoked...! \n");
+        char data[] = "data";
+
+        ret = rbus_registerEvent(object_name,method_name,NULL,data); // Methodname parameter holds value for Event Name
+
+        DEBUG_PRINT(DEBUG_ERROR, "registerEvent Return value is %d \n",ret);
+    }
+    else if (strcmp(operation,"unregisterEvent") == 0)
+    {
+        DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_registerOperation --> unregisterEvent Invoked...! \n");
+
+        ret = rbus_unregisterEvent(object_name,method_name); // Methodname parameter holds value for Event Name
+
+        DEBUG_PRINT(DEBUG_ERROR, "unregisterEvent Return value is %d \n",ret);
+    }
+    else if (strcmp(operation,"addElement") == 0)
+    {
+        DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_registerOperation --> addElement Invoked...! \n");
+
+        memset( method_buffer, 0, DEFAULT_BUFFERSIZE);
+        snprintf(method_buffer, (sizeof(method_buffer) - 1), "%s", method_name);  // Method_name parameter holds value for Element Name
+        ret =  rbus_addElement(object_name, method_buffer);
+
+        DEBUG_PRINT(DEBUG_ERROR, "addElement Return value is %d \n",ret);
+    }
+    else if (strcmp(operation,"removeElement") == 0)
+    {
+        DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_registerOperation --> removeElement Invoked...! \n");
+
+        memset( method_buffer, 0, DEFAULT_BUFFERSIZE);
+        snprintf(method_buffer, (sizeof(method_buffer) - 1), "%s", method_name);  // Method_name parameter holds value for Element Name
+        ret =  rbus_removeElement(object_name, method_buffer);
+
+        DEBUG_PRINT(DEBUG_ERROR, "removeElement Return value is %d \n",ret);
+    }
+    if(ret != RBUS_ERROR_SUCCESS)
+    {
+        DEBUG_PRINT(DEBUG_ERROR, "%s failed with error code %d \n", operation,ret);
+        result = RETURN_ERR;
+    }
+    else
+    {
+        DEBUG_PRINT(DEBUG_ERROR, "%s was successful, return value is %d \n",operation,ret);
+        result = RETURN_OK;
+    }
+
     return result;
 }
