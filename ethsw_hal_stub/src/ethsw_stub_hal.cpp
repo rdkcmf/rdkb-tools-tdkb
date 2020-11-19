@@ -420,7 +420,7 @@ void ethsw_stub_hal::ethsw_stub_hal_Get_AssociatedDevice(IN const Json::Value& r
     DEBUG_PRINT(DEBUG_TRACE,"Inside Function ethsw_stub_hal_Get_AssociatedDevice stub\n");
     int isNegativeScenario = 0;
     char details[120] = {'\0'};
-    eth_device_t eth_device_conf;
+    eth_device_t *eth_device_conf_ptr = NULL;
     unsigned long int array_size = 0;
 
     if(&req["flag"])
@@ -428,20 +428,33 @@ void ethsw_stub_hal::ethsw_stub_hal_Get_AssociatedDevice(IN const Json::Value& r
         isNegativeScenario = req["flag"].asInt();
     }
 
-    if(ssp_ethsw_stub_hal_Get_AssociatedDevice(&array_size,&eth_device_conf,isNegativeScenario) == RETURN_SUCCESS)
+    if(ssp_ethsw_stub_hal_Get_AssociatedDevice(&array_size,&eth_device_conf_ptr,isNegativeScenario) == RETURN_SUCCESS)
+    {
+        if(eth_device_conf_ptr != NULL && array_size > 0)
         {
-                sprintf(details, "port: %d, mac address : %s, status: %d, lanid: %d, devTxRate: %d, devRxRate: %d",eth_device_conf.eth_port,eth_device_conf.eth_devMacAddress,eth_device_conf.eth_Active,eth_device_conf.eth_vlanid,eth_device_conf.eth_devTxRate,eth_device_conf.eth_devRxRate);
+                sprintf(details, "array_size: %lu, port: %d, mac address: %02x:%02x:%02x:%02x:%02x:%02x, status: %d, lanid: %d, devTxRate: %d, devRxRate: %d",array_size, eth_device_conf_ptr->eth_port,eth_device_conf_ptr->eth_devMacAddress[0],eth_device_conf_ptr->eth_devMacAddress[1],eth_device_conf_ptr->eth_devMacAddress[2],eth_device_conf_ptr->eth_devMacAddress[3],eth_device_conf_ptr->eth_devMacAddress[4],eth_device_conf_ptr->eth_devMacAddress[5],eth_device_conf_ptr->eth_Active,eth_device_conf_ptr->eth_vlanid,eth_device_conf_ptr->eth_devTxRate,eth_device_conf_ptr->eth_devRxRate);
                 DEBUG_PRINT(DEBUG_TRACE, "Successfully retrieved the associated device status status\n");
                 response["result"] = "SUCCESS";
                 response["details"] = details;
+
+                free(eth_device_conf_ptr);
+                eth_device_conf_ptr = NULL;
                 return;
         }
         else
         {
-                response["result"] = "FAILURE";
-                response["details"] = "ethsw_stub_hal_Get_AssociatedDevice function has failed.Please check logs";
+                response["result"] = "SUCCESS";
+                response["details"] = "No Associated device found. CcspHalExtSw_getAssociatedDeviceice() returned empty buffer";
                 return;
         }
+
+    }
+    else
+    {
+            response["result"] = "FAILURE";
+            response["details"] = "ethsw_stub_hal_Get_AssociatedDevice function has failed.Please check logs";
+            return;
+    }
 }
 
 
