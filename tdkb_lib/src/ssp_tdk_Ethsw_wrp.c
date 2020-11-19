@@ -603,7 +603,7 @@ int ssp_ethsw_stub_hal_SetPortCfg(int portId, int linkRate, char *pDuplexMode)
                    isNegativeScenario - for negative scenario
  * @param [out]  : return status an integer value 0-success and 1-Failure
  ******************************************************************************************************************/
-int ssp_ethsw_stub_hal_Get_AssociatedDevice(unsigned long int *array_size,eth_device_t *eth_device_conf, int isNegativeScenario)
+int ssp_ethsw_stub_hal_Get_AssociatedDevice(unsigned long int *array_size,eth_device_t **eth_device_conf, int isNegativeScenario)
 {
         int result = RETURN_ERR;
 
@@ -615,12 +615,16 @@ int ssp_ethsw_stub_hal_Get_AssociatedDevice(unsigned long int *array_size,eth_de
         }
         else
         {
-                result = CcspHalExtSw_getAssociatedDevice(array_size,eth_device_conf);
+                result = CcspHalExtSw_getAssociatedDevice(array_size, eth_device_conf);
         }
 
-        if(result == RETURN_OK)
+        if(result != RETURN_OK)
         {
                 DEBUG_PRINT(DEBUG_ERROR, "ssp_ethsw_stub_hal_Get_AssociatedDevice function returns failure\n");
+        }
+        else
+        {
+                DEBUG_PRINT(DEBUG_TRACE, "ssp_ethsw_stub_hal_Get_AssociatedDevice function returns success\n");
         }
 
         return result;
