@@ -19,13 +19,13 @@
 '''
 <?xml version="1.0" encoding="UTF-8"?><xml>
   <id/>
-  <version>2</version>
-  <name>TS_ethsw_stub_hal_GetAssociatedDevice</name>
+  <version>1</version>
+  <name>TS_ethsw_stub_hal_GetAssociatedDevice_NoClient</name>
   <primitive_test_id/>
   <primitive_test_name>ethsw_stub_hal_Get_AssociatedDevice</primitive_test_name>
   <primitive_test_version>2</primitive_test_version>
   <status>FREE</status>
-  <synopsis>To get the configuration of Associated device</synopsis>
+  <synopsis>Check if CcspHalExtSw_getAssociatedDevice() returns success status and empty buffer when no client is connected</synopsis>
   <groups_id/>
   <execution_time>5</execution_time>
   <long_duration>false</long_duration>
@@ -39,31 +39,27 @@
     <rdk_version>RDKB</rdk_version>
   </rdk_versions>
   <test_cases>
-    <test_case_id>TC_HAL_Ethsw_11</test_case_id>
-    <test_objective>To get the configuration of Associated device using the api CcspHalExtSw_getAssociatedDevice
-()</test_objective>
+    <test_case_id>TC_HAL_Ethsw_41</test_case_id>
+    <test_objective>Check if CcspHalExtSw_getAssociatedDevice() returns success status and empty buffer when no client is connected</test_objective>
     <test_type>Positive</test_type>
     <test_setup>Broadband</test_setup>
     <pre_requisite>1.Ccsp Components  should be in a running state of DUT
 2.TDK Agent should be in running state or invoke it through StartTdk.sh script
-3. A lan client should be connected to DUT</pre_requisite>
-    <api_or_interface_used>CcspHalExtSw_getAssociatedDevice
-()</api_or_interface_used>
+3. No lan client should be connected to DUT</pre_requisite>
+    <api_or_interface_used>CcspHalExtSw_getAssociatedDevice()</api_or_interface_used>
     <input_parameters>None</input_parameters>
     <automation_approch>1. Load  halethsw module.
 2. From script invoke ethsw_stub_hal_Get_AssociatedDevice().
-3. Check if the api returns success and client count is not zero. Print the associated device details
-4. Unload  halethsw module.
-</automation_approch>
-    <expected_output>The api should return the configurations of associated device</expected_output>
+3. Check if api returns success status and client count as 0
+4. Unload  halethsw module.</automation_approch>
+    <expected_output>CcspHalExtSw_getAssociatedDevice() should return success status and empty buffer when no client is connected</expected_output>
     <priority>High</priority>
-    <test_stub_interface>HAL_Ethsw</test_stub_interface>
-    <test_script>TS_ethsw_stub_hal_GetAssociatedDevice</test_script>
+    <test_stub_interface>halethsw</test_stub_interface>
+    <test_script>TS_ethsw_stub_hal_GetAssociatedDevice_NoClient</test_script>
     <skipped>No</skipped>
-    <release_version>M61</release_version>
+    <release_version>M83</release_version>
     <remarks>None</remarks>
   </test_cases>
-  <script_tags/>
 </xml>
 
 '''
@@ -74,10 +70,10 @@ import tdklib;
 obj = tdklib.TDKScriptingLibrary("halethsw","1");
 
 #IP and Port of box, No need to change,
-#This will be replaced with corresponding Box Ip and port while executing script
+#This will be replaced with corresponding DUT Ip and port while executing script
 ip = <ipaddress>
 port = <port>
-obj.configureTestCase(ip,port,'TS_ethsw_stub_hal_GetAssociatedDevice');
+obj.configureTestCase(ip,port,'TS_ethsw_stub_hal_GetAssociatedDevice_NoClient');
 
 #Get the result of connection with test component and DUT
 loadmodulestatus =obj.getLoadModuleResult();
@@ -92,25 +88,21 @@ if "SUCCESS" in loadmodulestatus.upper():
         actualresult = tdkTestObj.getResult();
 
         details = tdkTestObj.getResultDetails();
-        if expectedresult in actualresult:
-            if "No Associated device" not in details:
+        if expectedresult in actualresult and "No Associated device" in details:
                 #Set the result status of execution
                 tdkTestObj.setResultStatus("SUCCESS");
-                print "TEST STEP 1: Retrieve the details of associated device";
-                print "EXPECTED RESULT 1: Should retrieve the details of associated device successfully";
+                print "TEST STEP 1: Invoke CcspHalExtSw_getAssociatedDevice() when no client is connected";
+                print "EXPECTED RESULT 1: CcspHalExtSw_getAssociatedDevice() should return success status and associated device count as zero";
                 #Get the result of execution
                 print "[TEST EXECUTION RESULT] : %s" %actualresult ;
-                print "%s" %details;
-            else:
-                print "ERROR: No Associated device found. Test requires a lan client"
-                tdkTestObj.setResultStatus("FAILURE");
-                print "[TEST EXECUTION RESULT] : FAILURE";
+                print "ACTUAL Result : %s" %details;
         else:
-            #Set the result status of execution
-            tdkTestObj.setResultStatus("FAILURE");
-            print "TEST STEP 1: Retrieve the details of associated device";
-            print "EXPECTED RESULT 1: Should retrieve the details of associated device successfully";
-            print "[TEST EXECUTION RESULT] : FAILURE" ;
+                #Set the result status of execution
+                tdkTestObj.setResultStatus("FAILURE");
+                print "TEST STEP 1: Invoke CcspHalExtSw_getAssociatedDevice() when no client is connected";
+                print "EXPECTED RESULT 1: CcspHalExtSw_getAssociatedDevice() should return success status and associated device count as zero";
+                print "[TEST EXECUTION RESULT] : FAILURE" ;
+                print "ACTUAL Result : %s" %details;
 
         obj.unloadModule("halethsw");
 else:
