@@ -517,11 +517,8 @@ void CMHAL::CMHAL_SetHTTP_Download_Interface(IN const Json::Value& req, OUT Json
     int returnValue = 0;
     unsigned int interface =0;
     char Details[64] = {'\0'};
-
     interface =req["interface"].asInt();
-
     returnValue = ssp_CMHAL_SetHTTP_Download_Interface(interface);
-
     if(0 == returnValue)
     {
         sprintf(Details,"CMHAL_SetHTTP_Download_Interface set interface successfully");
@@ -622,9 +619,20 @@ void CMHAL::CMHAL_GetHTTP_Download_Url(IN const Json::Value& req, OUT Json::Valu
     char httpURL[200]={'\0'};
     char Details[800] = {'\0'};
     char filename[200]= {'\0'};
+    char paramType[10] = {'\0'};
 
-    returnValue = ssp_CMHAL_GetHTTP_Download_Url(httpURL,filename);
+    strcpy(paramType, req["paramType"].asCString());
 
+    if(strcmp(paramType, "NULL"))
+    {
+      DEBUG_PRINT(DEBUG_TRACE,"\n Executing Positive Sceanrio\n");
+      returnValue = ssp_CMHAL_GetHTTP_Download_Url(httpURL,filename);
+    }
+    else
+    {
+        DEBUG_PRINT(DEBUG_TRACE,"\n Executing Negative Scenario\n");
+        returnValue = ssp_CMHAL_GetHTTP_Download_Url(NULL,NULL);
+    }
     if(0 == returnValue)
     {
        sprintf(Details,"url is %s, filename is %s",httpURL,filename);
@@ -729,7 +737,9 @@ void CMHAL::CMHAL_GetDsOfdmChanTable(IN const Json::Value& req, OUT Json::Value&
     char Details[800] = {'\0'};
     char value[700];
     int NoOfEntries = 0;
+    char paramType[10] = {'\0'};
 
+    strcpy(paramType, req["paramType"].asCString());
     /* Validate the input arguments */
     if(&req["paramName"]==NULL)
     {
@@ -738,7 +748,16 @@ void CMHAL::CMHAL_GetDsOfdmChanTable(IN const Json::Value& req, OUT Json::Value&
         return;
     }
     strcpy(paramName,req["paramName"].asCString());
-    returnValue = ssp_CMHAL_GetDsOfdmChanTable(paramName,value,&NoOfEntries);
+    if (strcmp(paramType, "NULL"))
+    {
+        DEBUG_PRINT(DEBUG_TRACE,"\n Executing Positive Sceanrio\n");
+        returnValue = ssp_CMHAL_GetDsOfdmChanTable(paramName,value,&NoOfEntries);
+    }
+    else
+    {
+         DEBUG_PRINT(DEBUG_TRACE,"\n Executing Negative Scenario\n");
+         returnValue = ssp_CMHAL_GetDsOfdmChanTable(paramName,value,NULL);
+    }
     if(0 == returnValue)
     {
        sprintf(Details,"No of Entries in table:%d; Value:%s", NoOfEntries,value);
@@ -774,6 +793,9 @@ void CMHAL::CMHAL_GetUsOfdmChanTable(IN const Json::Value& req, OUT Json::Value&
     char Details[800] = {'\0'};
     char value[700];
     int NoOfEntries = 0;
+    char paramType[10] = {'\0'};
+
+    strcpy(paramType, req["paramType"].asCString());
 
     /* Validate the input arguments */
     if(&req["paramName"]==NULL)
@@ -783,8 +805,16 @@ void CMHAL::CMHAL_GetUsOfdmChanTable(IN const Json::Value& req, OUT Json::Value&
         return;
     }
     strcpy(paramName,req["paramName"].asCString());
-
-    returnValue = ssp_CMHAL_GetUsOfdmChanTable(paramName,value,&NoOfEntries);
+    if(strcmp(paramType, "NULL"))
+    {
+       DEBUG_PRINT(DEBUG_TRACE,"\n Executing Positive Sceanrio\n");
+       returnValue = ssp_CMHAL_GetUsOfdmChanTable(paramName,value,&NoOfEntries);
+    }
+    else
+    {
+        DEBUG_PRINT(DEBUG_TRACE,"\n Executing Negative Scenario\n");
+        returnValue = ssp_CMHAL_GetUsOfdmChanTable(paramName,value,NULL);
+    }
     if(0 == returnValue)
     {
        sprintf(Details,"No of Entries in table:%d; Value:%s", NoOfEntries,value);
@@ -820,6 +850,8 @@ void CMHAL::CMHAL_GetStatusOfdmaUsTable(IN const Json::Value& req, OUT Json::Val
     char Details[800] = {'\0'};
     char value[700];
     int NoOfEntries = 0;
+    char paramType[10] = {'\0'};
+    strcpy(paramType, req["paramType"].asCString());
 
     /* Validate the input arguments */
     if(&req["paramName"]==NULL)
@@ -829,7 +861,17 @@ void CMHAL::CMHAL_GetStatusOfdmaUsTable(IN const Json::Value& req, OUT Json::Val
         return;
     }
     strcpy(paramName,req["paramName"].asCString());
-    returnValue = ssp_CMHAL_GetStatusOfdmaUsTable(paramName,value,&NoOfEntries);
+
+    if(strcmp(paramType, "NULL"))
+    {
+       DEBUG_PRINT(DEBUG_TRACE,"\n Executing Positive Sceanrio\n");
+       returnValue = ssp_CMHAL_GetStatusOfdmaUsTable(paramName,value,&NoOfEntries);
+    }
+    else
+    {
+        DEBUG_PRINT(DEBUG_TRACE,"\n Executing Negative Scenario\n");
+        returnValue = ssp_CMHAL_GetStatusOfdmaUsTable(paramName,value,NULL);
+    }
     if(0 == returnValue)
     {
        sprintf(Details,"No of Entries in table:%d; Value:%s", NoOfEntries,value);
@@ -862,8 +904,19 @@ void CMHAL::CMHAL_IsEnergyDetected(IN const Json::Value& req, OUT Json::Value& r
     int returnValue = 0;
     char* energyDetected = 0;
     char Details[800] = {'\0'};
+    char paramType[10] = {'\0'};
 
-    returnValue = ssp_CMHAL_IsEnergyDetected(energyDetected);
+    strcpy(paramType, req["paramType"].asCString());
+    if(strcmp(paramType, "NULL"))
+    {
+       DEBUG_PRINT(DEBUG_TRACE,"\n Executing Positive Sceanrio\n");
+       returnValue = ssp_CMHAL_IsEnergyDetected(energyDetected);
+    }
+    else
+    {
+       DEBUG_PRINT(DEBUG_TRACE,"\n Executing Negative Sceanrio\n");
+       returnValue = ssp_CMHAL_IsEnergyDetected(NULL);
+    }
     if(0 == returnValue)
     {
        if(energyDetected != NULL)
