@@ -239,17 +239,24 @@ int ssp_CMHAL_GetParamCharValue(char* paramName, char* value)
             }
             else
             {
-                return_status = docsis_GetUSChannel(&pUsFreq);
-
-                int i = 0;
-                strcpy(value,"");
-                for(i=0;i<count;i++)
+                if (value)
                 {
+                    return_status = docsis_GetUSChannel(&pUsFreq);
+                    int i = 0;
+                    strcpy(value,"");
+                    for(i=0;i<count;i++)
+                   {
                     printf("ssp_CMHAL_GetParamCharValue: US Frequency retreived :%s\n",pUsFreq[i].Frequency);
                     char FreqString[64] = {0};
                     strcpy(FreqString,pUsFreq[i].Frequency);
                     strcat(value, FreqString);
                     strcat(value, ",");
+                   }
+                }   
+                else
+                {
+                    return_status = docsis_GetUSChannel(NULL);
+                    printf("docsis_GetUSChannel return status is %d",return_status);
                 }
             }
             if(pUsFreq != NULL)
@@ -273,20 +280,27 @@ int ssp_CMHAL_GetParamCharValue(char* paramName, char* value)
             }
             else
             {
-                return_status = docsis_GetDSChannel(&pDsFreq);
-
-                int i = 0;
-                strcpy(value, "");
-                for(i=0;i<count;i++)
+                if (value)
                 {
-                    printf("ssp_CMHAL_GetParamCharValue: DS Modulation retreived :%s\n",pDsFreq[i].Modulation);
-                    printf("ssp_CMHAL_GetParamCharValue: DS SNR Level retreived :%s\n",pDsFreq[i].SNRLevel);
-                    char SNRString[64] = {0};
-                    strcpy(SNRString,pDsFreq[i].SNRLevel);
-                    strcat(value, pDsFreq[i].Modulation);
-                    strcat(value, ":");
-                    strcat(value, SNRString);
-                    strcat(value, ",");
+                   return_status = docsis_GetDSChannel(&pDsFreq);
+                   int i = 0;
+                   strcpy(value, "");
+                   for(i=0;i<count;i++)
+                   {
+                      printf("ssp_CMHAL_GetParamCharValue: DS Modulation retreived :%s\n",pDsFreq[i].Modulation);
+                      printf("ssp_CMHAL_GetParamCharValue: DS SNR Level retreived :%s\n",pDsFreq[i].SNRLevel);
+                      char SNRString[64] = {0};
+                      strcpy(SNRString,pDsFreq[i].SNRLevel);
+                      strcat(value, pDsFreq[i].Modulation);
+                      strcat(value, ":");
+                      strcat(value, SNRString);
+                      strcat(value, ",");
+                   }
+                }
+                else
+                {
+                    return_status = docsis_GetDSChannel(NULL);
+                    printf("docsis_GetDSChannel return status is %d",return_status);
                 }
             }
             if(pDsFreq != NULL)
@@ -1518,164 +1532,168 @@ int ssp_CMHAL_GetDsOfdmChanTable(char* paramName, char* value, int *numberofEntr
     int return_status = 0;
     PDOCSIF31_CM_DS_OFDM_CHAN pDsOfdmDetails = {0};
     printf("\nEntering ssp_CMHAL_GetDsOfdmChanTable function\n\n");
-
     int i =0;
-    strcpy(value, "");
-
-    return_status = docsis_GetDsOfdmChanTable(&pDsOfdmDetails,numberofEntries);
-    printf("ssp_CMHAL_GetDsOfdmChanTable: no of entries in table:%d\n",*numberofEntries);
-
-    printf("return status is %d",return_status);
-    if (*numberofEntries==0)
-        return_status =0;
-    else if (return_status == 0 && *numberofEntries>0)
+    if (numberofEntries)
     {
-        if( !(strcmp(paramName, "DS_OFDM_ChannelId")) )
-        {
-            for(i=0;i<*numberofEntries;i++)
+       strcpy(value, "");
+       return_status = docsis_GetDsOfdmChanTable(&pDsOfdmDetails,numberofEntries);
+       printf("ssp_CMHAL_GetDsOfdmChanTable: no of entries in table:%d\n",*numberofEntries);
+       printf("return status is %d",return_status);
+       if (*numberofEntries==0)
+          return_status =0;
+       else if (return_status == 0 && *numberofEntries>0)
+       {
+            if( !(strcmp(paramName, "DS_OFDM_ChannelId")) )
             {
-                printf("ssp_CMHAL_GetDsOfdmChanTable: DS OFDM ChannelID retreived :%d\n",pDsOfdmDetails[i].ChannelId);
-                sprintf(value,"%d",pDsOfdmDetails[i].ChannelId);
-                strcat(value, ",");
+               for(i=0;i<*numberofEntries;i++)
+               {
+                  printf("ssp_CMHAL_GetDsOfdmChanTable: DS OFDM ChannelID retreived :%d\n",pDsOfdmDetails[i].ChannelId);
+                  sprintf(value,"%d",pDsOfdmDetails[i].ChannelId);
+                  strcat(value, ",");
+               }
             }
-        }
-	else if( !(strcmp(paramName, "DS_OFDM_ChannelIndicator")) )
-        {
-	    for(i=0;i<*numberofEntries;i++)
+	    else if( !(strcmp(paramName, "DS_OFDM_ChannelIndicator")) )
             {
-		printf("ssp_CMHAL_GetParamCharValue: DS OFDM Channel Indicator retrieved :%d\n",pDsOfdmDetails[i].ChanIndicator);
-                sprintf(value,"%d",pDsOfdmDetails[i].ChanIndicator);
-                strcat(value, ",");
-            }
-	}
-        else if( !(strcmp(paramName, "DS_OFDM_FirstActiveSubcarrierNum")) )
-        {
-            for(i=0;i<*numberofEntries;i++)
+	        for(i=0;i<*numberofEntries;i++)
+                {
+		   printf("ssp_CMHAL_GetParamCharValue: DS OFDM Channel Indicator retrieved :%d\n",pDsOfdmDetails[i].ChanIndicator);
+                   sprintf(value,"%d",pDsOfdmDetails[i].ChanIndicator);
+                   strcat(value, ",");
+                }
+	    }
+            else if( !(strcmp(paramName, "DS_OFDM_FirstActiveSubcarrierNum")) )
             {
-                printf("ssp_CMHAL_GetParamCharValue:  Number of FirstActiveSubcarrier retrieved :%d\n",pDsOfdmDetails[i].FirstActiveSubcarrierNum);
-                sprintf(value,"%d",pDsOfdmDetails[i].FirstActiveSubcarrierNum);
-                strcat(value, ",");
+                 for(i=0;i<*numberofEntries;i++)
+                 {
+                    printf("ssp_CMHAL_GetParamCharValue:  Number of FirstActiveSubcarrier retrieved :%d\n",pDsOfdmDetails[i].FirstActiveSubcarrierNum);
+                    sprintf(value,"%d",pDsOfdmDetails[i].FirstActiveSubcarrierNum);
+                    strcat(value, ",");
+                 }
             }
-        }
-	else if( !(strcmp(paramName, "DS_OFDM_LastActiveSubcarrierNum")) )
-        {
-            for(i=0;i<*numberofEntries;i++)
+	    else if( !(strcmp(paramName, "DS_OFDM_LastActiveSubcarrierNum")) )
             {
-                printf("ssp_CMHAL_GetParamCharValue:  Number of LastActiveSubcarrier retrieved :%d\n",pDsOfdmDetails[i].LastActiveSubcarrierNum);
-                sprintf(value,"%d",pDsOfdmDetails[i].LastActiveSubcarrierNum);
-                strcat(value, ",");
-            }
-        }
-	else if( !(strcmp(paramName, "DS_OFDM_NumActiveSubcarriers")) )
-        {
-            for(i=0;i<*numberofEntries;i++)
+                 for(i=0;i<*numberofEntries;i++)
+                 {
+                    printf("ssp_CMHAL_GetParamCharValue:  Number of LastActiveSubcarrier retrieved :%d\n",pDsOfdmDetails[i].LastActiveSubcarrierNum);
+                    sprintf(value,"%d",pDsOfdmDetails[i].LastActiveSubcarrierNum);
+                    strcat(value, ",");
+                 }
+            }  
+	    else if( !(strcmp(paramName, "DS_OFDM_NumActiveSubcarriers")) )
             {
-                printf("ssp_CMHAL_GetParamCharValue:  Number of ActiveSubcarrier retrieved :%d\n",pDsOfdmDetails[i].NumActiveSubcarriers);
-                sprintf(value,"%d",pDsOfdmDetails[i].NumActiveSubcarriers);
-                strcat(value, ",");
+                 for(i=0;i<*numberofEntries;i++)
+                 {
+                    printf("ssp_CMHAL_GetParamCharValue:  Number of ActiveSubcarrier retrieved :%d\n",pDsOfdmDetails[i].NumActiveSubcarriers);
+                    sprintf(value,"%d",pDsOfdmDetails[i].NumActiveSubcarriers);
+                    strcat(value, ",");
+                 }
             }
-        }
-	else if( !(strcmp(paramName, "DS_OFDM_SubcarrierSpacing")) )
-        {
-            for(i=0;i<*numberofEntries;i++)
+	    else if( !(strcmp(paramName, "DS_OFDM_SubcarrierSpacing")) )
             {
-                printf("ssp_CMHAL_GetParamCharValue:  SubcarrierSpacing retrieved :%d\n",pDsOfdmDetails[i].SubcarrierSpacing);
-                sprintf(value,"%d",pDsOfdmDetails[i].SubcarrierSpacing);
-                strcat(value, ",");
+                 for(i=0;i<*numberofEntries;i++)
+                 {
+                    printf("ssp_CMHAL_GetParamCharValue:  SubcarrierSpacing retrieved :%d\n",pDsOfdmDetails[i].SubcarrierSpacing);
+                    sprintf(value,"%d",pDsOfdmDetails[i].SubcarrierSpacing);
+                    strcat(value, ",");
+                 }
             }
-        }
-	else if( !(strcmp(paramName, "DS_OFDM_CyclicPrefix")) )
-        {
-            for(i=0;i<*numberofEntries;i++)
+	    else if( !(strcmp(paramName, "DS_OFDM_CyclicPrefix")) )
             {
-                printf("ssp_CMHAL_GetParamCharValue:  OFDM CyclicPrefix retrieved :%d\n",pDsOfdmDetails[i].CyclicPrefix);
-                sprintf(value,"%d",pDsOfdmDetails[i].CyclicPrefix);
-                strcat(value, ",");
+                 for(i=0;i<*numberofEntries;i++)
+                 {
+                     printf("ssp_CMHAL_GetParamCharValue:  OFDM CyclicPrefix retrieved :%d\n",pDsOfdmDetails[i].CyclicPrefix);
+                     sprintf(value,"%d",pDsOfdmDetails[i].CyclicPrefix);
+                     strcat(value, ",");
+                 }
             }
-        }
-	else if( !(strcmp(paramName, "DS_OFDM_RollOffPeriod")) )
-        {
-            for(i=0;i<*numberofEntries;i++)
+	    else if( !(strcmp(paramName, "DS_OFDM_RollOffPeriod")) )
             {
-                printf("ssp_CMHAL_GetParamCharValue:  OFDM RollOffPeriod retrieved :%d\n",pDsOfdmDetails[i].RollOffPeriod);
-                sprintf(value,"%d",pDsOfdmDetails[i].RollOffPeriod);
-                strcat(value, ",");
+                 for(i=0;i<*numberofEntries;i++)
+                 {
+                    printf("ssp_CMHAL_GetParamCharValue:  OFDM RollOffPeriod retrieved :%d\n",pDsOfdmDetails[i].RollOffPeriod);
+                    sprintf(value,"%d",pDsOfdmDetails[i].RollOffPeriod);
+                    strcat(value, ",");
+                 }
             }
-        }
-	else if( !(strcmp(paramName, "DS_OFDM_PlcFreq")) )
-        {
-            for(i=0;i<*numberofEntries;i++)
+	    else if( !(strcmp(paramName, "DS_OFDM_PlcFreq")) )
             {
-                printf("ssp_CMHAL_GetParamCharValue:  OFDM PlcFreq retrieved :%d\n",pDsOfdmDetails[i].PlcFreq);
-                sprintf(value,"%d",pDsOfdmDetails[i].PlcFreq);
-                strcat(value, ",");
+                 for(i=0;i<*numberofEntries;i++)
+                 {
+                    printf("ssp_CMHAL_GetParamCharValue:  OFDM PlcFreq retrieved :%d\n",pDsOfdmDetails[i].PlcFreq);
+                    sprintf(value,"%d",pDsOfdmDetails[i].PlcFreq);
+                    strcat(value, ",");
+                 }
             }
-        }
-	else if( !(strcmp(paramName, "DS_OFDM_NumPilots")) )
-        {
-            for(i=0;i<*numberofEntries;i++)
+	    else if( !(strcmp(paramName, "DS_OFDM_NumPilots")) )
             {
-                printf("ssp_CMHAL_GetParamCharValue:  OFDM NumPilots retrieved :%d\n",pDsOfdmDetails[i].NumPilots);
-                sprintf(value,"%d",pDsOfdmDetails[i].NumPilots);
-                strcat(value, ",");
+                 for(i=0;i<*numberofEntries;i++)
+                 {
+                     printf("ssp_CMHAL_GetParamCharValue:  OFDM NumPilots retrieved :%d\n",pDsOfdmDetails[i].NumPilots);
+                     sprintf(value,"%d",pDsOfdmDetails[i].NumPilots);
+                     strcat(value, ",");
+                 }
             }
-        }
-	else if( !(strcmp(paramName, "DS_OFDM_TimeInterleaverDepth")) )
-        {
-            for(i=0;i<*numberofEntries;i++)
+	    else if( !(strcmp(paramName, "DS_OFDM_TimeInterleaverDepth")) )
             {
-                printf("ssp_CMHAL_GetParamCharValue:  OFDM TimeInterleaverDepth retrieved :%d\n",pDsOfdmDetails[i].TimeInterleaverDepth);
-                sprintf(value,"%d",pDsOfdmDetails[i].TimeInterleaverDepth);
-                strcat(value, ",");
+                 for(i=0;i<*numberofEntries;i++)
+                 {
+                     printf("ssp_CMHAL_GetParamCharValue:  OFDM TimeInterleaverDepth retrieved :%d\n",pDsOfdmDetails[i].TimeInterleaverDepth);
+                     sprintf(value,"%d",pDsOfdmDetails[i].TimeInterleaverDepth);
+                     strcat(value, ",");
+                 }
             }
-        }
-	else if( !(strcmp(paramName, "DS_OFDM_PlcTotalCodewords")) )
-        {
-            for(i=0;i<*numberofEntries;i++)
+	    else if( !(strcmp(paramName, "DS_OFDM_PlcTotalCodewords")) )
             {
-                printf("ssp_CMHAL_GetParamCharValue:  OFDM PlcTotalCodewords retrieved :%d\n",pDsOfdmDetails[i].PlcTotalCodewords);
-                sprintf(value,"%d",pDsOfdmDetails[i].PlcTotalCodewords);
-                strcat(value, ",");
+                 for(i=0;i<*numberofEntries;i++)
+                 {
+                    printf("ssp_CMHAL_GetParamCharValue:  OFDM PlcTotalCodewords retrieved :%d\n",pDsOfdmDetails[i].PlcTotalCodewords);
+                    sprintf(value,"%d",pDsOfdmDetails[i].PlcTotalCodewords);
+                    strcat(value, ",");
+                 }
             }
-        }
-	else if( !(strcmp(paramName, "DS_OFDM_PlcUnreliableCodewords")) )
-        {
-            for(i=0;i<*numberofEntries;i++)
+	    else if( !(strcmp(paramName, "DS_OFDM_PlcUnreliableCodewords")) )
             {
-                printf("ssp_CMHAL_GetParamCharValue:  OFDM PlcUnreliableCodewords retrieved :%d\n",pDsOfdmDetails[i].PlcUnreliableCodewords);
-                sprintf(value,"%d",pDsOfdmDetails[i].PlcUnreliableCodewords);
-                strcat(value, ",");
+                 for(i=0;i<*numberofEntries;i++)
+                 {
+                     printf("ssp_CMHAL_GetParamCharValue:  OFDM PlcUnreliableCodewords retrieved :%d\n",pDsOfdmDetails[i].PlcUnreliableCodewords);
+                     sprintf(value,"%d",pDsOfdmDetails[i].PlcUnreliableCodewords);
+                     strcat(value, ",");
+                 }
             }
-        }
-	else if( !(strcmp(paramName, "DS_OFDM_NcpTotalFields")) )
-        {
-            for(i=0;i<*numberofEntries;i++)
+	    else if( !(strcmp(paramName, "DS_OFDM_NcpTotalFields")) )
             {
-                printf("ssp_CMHAL_GetParamCharValue:  OFDM NcpTotalFields retrieved :%d\n",pDsOfdmDetails[i].NcpTotalFields);
-                sprintf(value,"%d",pDsOfdmDetails[i].NcpTotalFields);
-                strcat(value, ",");
+                 for(i=0;i<*numberofEntries;i++)
+                 {
+                    printf("ssp_CMHAL_GetParamCharValue:  OFDM NcpTotalFields retrieved :%d\n",pDsOfdmDetails[i].NcpTotalFields);
+                    sprintf(value,"%d",pDsOfdmDetails[i].NcpTotalFields);
+                    strcat(value, ",");
+                 }
             }
-        }
-	else if( !(strcmp(paramName, "DS_OFDM_NcpFieldCrcFailures")) )
-        {
-            for(i=0;i<*numberofEntries;i++)
+	    else if( !(strcmp(paramName, "DS_OFDM_NcpFieldCrcFailures")) )
             {
-                printf("ssp_CMHAL_GetParamCharValue:  OFDM NcpFieldCrcFailures retrieved :%d\n",pDsOfdmDetails[i].NcpFieldCrcFailures);
-                sprintf(value,"%d",pDsOfdmDetails[i].NcpFieldCrcFailures);
-                strcat(value, ",");
+                 for(i=0;i<*numberofEntries;i++)
+                 {
+                    printf("ssp_CMHAL_GetParamCharValue:  OFDM NcpFieldCrcFailures retrieved :%d\n",pDsOfdmDetails[i].NcpFieldCrcFailures);
+                    sprintf(value,"%d",pDsOfdmDetails[i].NcpFieldCrcFailures);
+                    strcat(value, ",");
+                 }
             }
-        }
 	
-        else
-        {
-             printf("Invalid parameter name");
-             return_status = SSP_FAILURE;
-        }
-    }
-    else
-        printf("\ndocsis_GetDsOfdmChanTable returns failure\n\n");
-    return return_status;
-
+            else
+            {
+                 printf("Invalid parameter name");
+                 return_status = SSP_FAILURE;
+            }
+       }
+       else
+           pintf("\ndocsis_GetDsOfdmChanTable returns failure\n\n");
+   }
+   else
+   {
+       return_status = docsis_GetDsOfdmChanTable(NULL,NULL);
+       printf("docsis_GetDsOfdmChanTable return status is %d",return_status);
+   }
+   return return_status;
 }
 /*******************************************************************************************
  *
@@ -1686,123 +1704,127 @@ int ssp_CMHAL_GetDsOfdmChanTable(char* paramName, char* value, int *numberofEntr
                           value: returns the value of the parameter
  * @param [out]         : return status an integer value 0-success and 1-Failure
  ********************************************************************************************/
-
 int ssp_CMHAL_GetUsOfdmChanTable(char* paramName, char* value, int *numberofEntries)
 {
     int return_status = 0;
     PDOCSIF31_CM_US_OFDMA_CHAN pUsOfdmDetails = {0};
     printf("\nEntering ssp_CMHAL_GetUsOfdmChanTable function\n\n");
-
     int i =0;
     strcpy(value, "");
-
-    return_status = docsis_GetUsOfdmaChanTable(&pUsOfdmDetails,numberofEntries);
-    printf("ssp_CMHAL_GetUsOfdmChanTable: no of entries in table:%d\n",*numberofEntries);
-    printf("return status is %d",return_status);    
-    if (*numberofEntries==0)
-	return_status =0;
-    else if (return_status == 0 && *numberofEntries>0)
+    if (numberofEntries)
     {
-        if( !(strcmp(paramName, "US_OFDM_ChannelId")) )
+        return_status = docsis_GetUsOfdmaChanTable(&pUsOfdmDetails,numberofEntries);
+        printf("ssp_CMHAL_GetUsOfdmChanTable: no of entries in table:%d\n",*numberofEntries);
+        printf("return status is %d",return_status);    
+        if (*numberofEntries==0)
+	   return_status =0;
+        else if (return_status == 0 && *numberofEntries>0)
         {
-            for(i=0;i<*numberofEntries;i++)
-            {
+           if( !(strcmp(paramName, "US_OFDM_ChannelId")) )
+           {
+              for(i=0;i<*numberofEntries;i++)
+              {
                 printf("ssp_CMHAL_GetUsOfdmChanTable: US OFDM ChannelID retreived :%d\n",pUsOfdmDetails[i].ChannelId);
                 sprintf(value,"%d",pUsOfdmDetails[i].ChannelId);
                 strcat(value, ",");
-            }
-        }
-	else if( !(strcmp(paramName, "US_OFDM_FirstActiveSubcarrierNum")) )
-        {
-            for(i=0;i<*numberofEntries;i++)
-            {
-                printf("ssp_CMHAL_GetUsOfdmChanTable: US OFDM FirstActiveSubcarrier retrieved :%d\n",pUsOfdmDetails[i].FirstActiveSubcarrierNum);
-                sprintf(value,"%d",pUsOfdmDetails[i].FirstActiveSubcarrierNum);
-                strcat(value, ",");
-            }
-        }
-	else if( !(strcmp(paramName, "US_OFDM_LastActiveSubcarrierNum")) )
-        {
-            for(i=0;i<*numberofEntries;i++)
-            {
-                printf("ssp_CMHAL_GetUsOfdmChanTable: US OFDM LastActiveSubcarrier retrieved :%d\n",pUsOfdmDetails[i].LastActiveSubcarrierNum);
-                sprintf(value,"%d",pUsOfdmDetails[i].LastActiveSubcarrierNum);
-                strcat(value, ",");
-            }
-        }
-	else if( !(strcmp(paramName, "US_OFDM_ActiveSubcarriers")) )
-        {
-            for(i=0;i<*numberofEntries;i++)
-            {
-                printf("ssp_CMHAL_GetUsOfdmChanTable: US OFDM ActiveSubcarriers retrieved :%d\n",pUsOfdmDetails[i].NumActiveSubcarriers);
-                sprintf(value,"%d",pUsOfdmDetails[i].NumActiveSubcarriers);
-                strcat(value, ",");
-            }
-        }
-	else if( !(strcmp(paramName, "US_OFDM_SubcarrierSpacing")) )
-        {
-            for(i=0;i<*numberofEntries;i++)
-            {
-                printf("ssp_CMHAL_GetUsOfdmChanTable: US OFDM SubcarrierSpacing retrieved :%d\n",pUsOfdmDetails[i].SubcarrierSpacing);
-                sprintf(value,"%d",pUsOfdmDetails[i].SubcarrierSpacing);
-                strcat(value, ",");
-            }
-        }
-	else if( !(strcmp(paramName, "US_OFDM_CyclicPrefix")) )
-        {
-            for(i=0;i<*numberofEntries;i++)
-            {
-                printf("ssp_CMHAL_GetUsOfdmChanTable: US OFDM CyclicPrefix retrieved :%d\n",pUsOfdmDetails[i].CyclicPrefix);
-                sprintf(value,"%d",pUsOfdmDetails[i].CyclicPrefix);
-                strcat(value, ",");
-            }
-        }
-	else if( !(strcmp(paramName, "US_OFDM_RollOffPeriod")) )
-        {
-            for(i=0;i<*numberofEntries;i++)
-            {
-                printf("ssp_CMHAL_GetUsOfdmChanTable: US OFDM RollOffPeriod retrieved :%d\n",pUsOfdmDetails[i].RollOffPeriod);
-                sprintf(value,"%d",pUsOfdmDetails[i].RollOffPeriod);
-                strcat(value, ",");
-            }
-        }
-	else if( !(strcmp(paramName, "US_OFDM_NumSymbolsPerFrame")) )
-        {
-            for(i=0;i<*numberofEntries;i++)
-            {
-                printf("ssp_CMHAL_GetUsOfdmChanTable: US OFDM NumSymbolsPerFrame retrieved :%d\n",pUsOfdmDetails[i].NumSymbolsPerFrame);
-                sprintf(value,"%d",pUsOfdmDetails[i].NumSymbolsPerFrame);
-                strcat(value, ",");
-            }
-        }
-	else if( !(strcmp(paramName, "US_OFDM_TxPower")) )
-        {
-            for(i=0;i<*numberofEntries;i++)
-            {
-                printf("ssp_CMHAL_GetUsOfdmChanTable: US OFDM TxPower retrieved :%d\n",pUsOfdmDetails[i].TxPower);
-                sprintf(value,"%d",pUsOfdmDetails[i].TxPower);
-                strcat(value, ",");
-            }
-        }
-	else if( !(strcmp(paramName, "US_OFDM_PreEqEnabled")) )
-        {
-            for(i=0;i<*numberofEntries;i++)
-            {
-                printf("ssp_CMHAL_GetUsOfdmChanTable: US OFDM PreEqEnabled retrieved :%d\n",pUsOfdmDetails[i].PreEqEnabled);
-                sprintf(value,"%d",pUsOfdmDetails[i].PreEqEnabled);
-                strcat(value, ",");
-            }
+              }
+           }     
+	   else if( !(strcmp(paramName, "US_OFDM_FirstActiveSubcarrierNum")) )
+           {
+                for(i=0;i<*numberofEntries;i++)
+                {
+                   printf("ssp_CMHAL_GetUsOfdmChanTable: US OFDM FirstActiveSubcarrier retrieved :%d\n",pUsOfdmDetails[i].FirstActiveSubcarrierNum);
+                   sprintf(value,"%d",pUsOfdmDetails[i].FirstActiveSubcarrierNum);
+                   strcat(value, ",");
+                }
+           } 
+	   else if( !(strcmp(paramName, "US_OFDM_LastActiveSubcarrierNum")) )
+           {
+                for(i=0;i<*numberofEntries;i++)
+                {
+                   printf("ssp_CMHAL_GetUsOfdmChanTable: US OFDM LastActiveSubcarrier retrieved :%d\n",pUsOfdmDetails[i].LastActiveSubcarrierNum);
+                   sprintf(value,"%d",pUsOfdmDetails[i].LastActiveSubcarrierNum);
+                   strcat(value, ",");
+                }
+           }
+	   else if( !(strcmp(paramName, "US_OFDM_ActiveSubcarriers")) )
+           {
+                for(i=0;i<*numberofEntries;i++)
+                {
+                    printf("ssp_CMHAL_GetUsOfdmChanTable: US OFDM ActiveSubcarriers retrieved :%d\n",pUsOfdmDetails[i].NumActiveSubcarriers);
+                    sprintf(value,"%d",pUsOfdmDetails[i].NumActiveSubcarriers);
+                    strcat(value, ",");
+                }
+           }
+	   else if( !(strcmp(paramName, "US_OFDM_SubcarrierSpacing")) )
+           {
+                for(i=0;i<*numberofEntries;i++)
+                {
+                    printf("ssp_CMHAL_GetUsOfdmChanTable: US OFDM SubcarrierSpacing retrieved :%d\n",pUsOfdmDetails[i].SubcarrierSpacing);
+                    sprintf(value,"%d",pUsOfdmDetails[i].SubcarrierSpacing);
+                    strcat(value, ",");
+                }
+           }
+	   else if( !(strcmp(paramName, "US_OFDM_CyclicPrefix")) )
+           {
+                for(i=0;i<*numberofEntries;i++)
+                {
+                    printf("ssp_CMHAL_GetUsOfdmChanTable: US OFDM CyclicPrefix retrieved :%d\n",pUsOfdmDetails[i].CyclicPrefix);
+                    sprintf(value,"%d",pUsOfdmDetails[i].CyclicPrefix);
+                    strcat(value, ",");
+                }
+           }
+	   else if( !(strcmp(paramName, "US_OFDM_RollOffPeriod")) )
+           {
+                for(i=0;i<*numberofEntries;i++)
+                {
+                    printf("ssp_CMHAL_GetUsOfdmChanTable: US OFDM RollOffPeriod retrieved :%d\n",pUsOfdmDetails[i].RollOffPeriod);
+                    sprintf(value,"%d",pUsOfdmDetails[i].RollOffPeriod);
+                    strcat(value, ",");
+                }
+           }
+	   else if( !(strcmp(paramName, "US_OFDM_NumSymbolsPerFrame")) )
+           { 
+                for(i=0;i<*numberofEntries;i++)
+                {
+                    printf("ssp_CMHAL_GetUsOfdmChanTable: US OFDM NumSymbolsPerFrame retrieved :%d\n",pUsOfdmDetails[i].NumSymbolsPerFrame);
+                    sprintf(value,"%d",pUsOfdmDetails[i].NumSymbolsPerFrame);
+                    strcat(value, ",");
+                }
+           }
+	   else if( !(strcmp(paramName, "US_OFDM_TxPower")) )
+           {
+                for(i=0;i<*numberofEntries;i++)
+                {
+                    printf("ssp_CMHAL_GetUsOfdmChanTable: US OFDM TxPower retrieved :%d\n",pUsOfdmDetails[i].TxPower);
+                    sprintf(value,"%d",pUsOfdmDetails[i].TxPower);
+                    strcat(value, ",");
+                }
+           }
+	   else if( !(strcmp(paramName, "US_OFDM_PreEqEnabled")) )
+           {
+                for(i=0;i<*numberofEntries;i++)
+                {
+                   printf("ssp_CMHAL_GetUsOfdmChanTable: US OFDM PreEqEnabled retrieved :%d\n",pUsOfdmDetails[i].PreEqEnabled);
+                   sprintf(value,"%d",pUsOfdmDetails[i].PreEqEnabled);
+                   strcat(value, ",");
+                }
+           }
+           else
+           {
+               printf("Invalid parameter name");
+               return_status = SSP_FAILURE;
+           }
         }
         else
-        {
-             printf("Invalid parameter name");
-             return_status = SSP_FAILURE;
-        }
+        printf("\ndocsis_GetUsOfdmChanTable returns failure\n\n");
     }
     else
-        printf("\ndocsis_GetUsOfdmChanTable returns failure\n\n");
+    {
+        return_status =docsis_GetUsOfdmaChanTable(NULL,NULL);
+        printf("docsis_GetUsOfdmaChanTable return status is %d",return_status);
+    }
     return return_status;
-
 }
 /*******************************************************************************************
  *
@@ -1821,86 +1843,94 @@ int ssp_CMHAL_GetStatusOfdmaUsTable(char* paramName, char* value, int *numberofE
 
     int i =0;
     strcpy(value, "");
-
-    return_status = docsis_GetStatusOfdmaUsTable(&pdmaUsTableStatus,numberofEntries);
-    printf("ssp_CMHAL_GetStatusOfdmaUsTable: no of entries in table:%d\n",*numberofEntries);
-
-    printf("return status is %d",return_status);
-    if (*numberofEntries==0)
-        return_status =0;
-    else if (return_status == 0 && *numberofEntries>0)
+   
+    if (numberofEntries)
     {
-        if( !(strcmp(paramName, "USTable_Numberofentries")) )
-        {
-            for(i=0;i<*numberofEntries;i++)
+       return_status = docsis_GetStatusOfdmaUsTable(&pdmaUsTableStatus,numberofEntries);
+       printf("ssp_CMHAL_GetStatusOfdmaUsTable: no of entries in table:%d\n",*numberofEntries);
+
+       printf("return status is %d",return_status);
+       if (*numberofEntries==0)
+        return_status =0;
+       else if (return_status == 0 && *numberofEntries>0)
+       {
+            if( !(strcmp(paramName, "USTable_Numberofentries")) )
             {
-                printf("ssp_CMHAL_GetStatusOfdmaUsTable: USTable ChannelID Status  retreived :%d\n",pdmaUsTableStatus[i].ChannelId);
-                sprintf(value,"%d",pdmaUsTableStatus[i].ChannelId);
-                strcat(value, ",");
+                for(i=0;i<*numberofEntries;i++)
+                {
+                   printf("ssp_CMHAL_GetStatusOfdmaUsTable: USTable ChannelID Status  retreived :%d\n",pdmaUsTableStatus[i].ChannelId);
+                   sprintf(value,"%d",pdmaUsTableStatus[i].ChannelId);
+                   strcat(value, ",");
+                }
             }
-        }
-        else if( !(strcmp(paramName, "USTable_T3Timeouts_Status")) )
-        {
-            for(i=0;i<*numberofEntries;i++)
+            else if( !(strcmp(paramName, "USTable_T3Timeouts_Status")) )
             {
-                printf("ssp_CMHAL_GetStatusOfdmaUsTable: USTable T3Timeouts Status retrieved :%d\n",pdmaUsTableStatus[i].T3Timeouts);
-                sprintf(value,"%d",pdmaUsTableStatus[i].T3Timeouts);
-                strcat(value, ",");
+                for(i=0;i<*numberofEntries;i++)
+                {
+                    printf("ssp_CMHAL_GetStatusOfdmaUsTable: USTable T3Timeouts Status retrieved :%d\n",pdmaUsTableStatus[i].T3Timeouts);
+                    sprintf(value,"%d",pdmaUsTableStatus[i].T3Timeouts);
+                    strcat(value, ",");
+                }
             }
-        }
-        else if( !(strcmp(paramName, "USTable_T4Timeouts_Status")) )
-        {
-            for(i=0;i<*numberofEntries;i++)
+            else if( !(strcmp(paramName, "USTable_T4Timeouts_Status")) )
             {
-                printf("ssp_CMHAL_GetStatusOfdmaUsTable: USTable T4Timeouts Status retrieved :%d\n",pdmaUsTableStatus[i].T4Timeouts);
-                sprintf(value,"%d",pdmaUsTableStatus[i].T4Timeouts);
-                strcat(value, ",");
+                 for(i=0;i<*numberofEntries;i++)
+                 {
+                    printf("ssp_CMHAL_GetStatusOfdmaUsTable: USTable T4Timeouts Status retrieved :%d\n",pdmaUsTableStatus[i].T4Timeouts);
+                    sprintf(value,"%d",pdmaUsTableStatus[i].T4Timeouts);
+                    strcat(value, ",");
+                 }
             }
-        }
-        else if( !(strcmp(paramName, "USTable_RangingAborteds_Status")) )
-        {
-            for(i=0;i<*numberofEntries;i++)
+            else if( !(strcmp(paramName, "USTable_RangingAborteds_Status")) )
             {
-                printf("ssp_CMHAL_GetStatusOfdmaUsTable: USTable RangingAborteds Status retrieved :%d\n",pdmaUsTableStatus[i].RangingAborteds);
-                sprintf(value,"%d",pdmaUsTableStatus[i].RangingAborteds);
-                strcat(value, ",");
+                 for(i=0;i<*numberofEntries;i++)
+                 {
+                     printf("ssp_CMHAL_GetStatusOfdmaUsTable: USTable RangingAborteds Status retrieved :%d\n",pdmaUsTableStatus[i].RangingAborteds);
+                     sprintf(value,"%d",pdmaUsTableStatus[i].RangingAborteds);
+                     strcat(value, ",");
+                 }
             }
-        }
-        else if( !(strcmp(paramName, "USTable_T3Exceededs_Status")) )
-        {
-            for(i=0;i<*numberofEntries;i++)
+            else if( !(strcmp(paramName, "USTable_T3Exceededs_Status")) )
             {
-                printf("ssp_CMHAL_GetStatusOfdmaUsTable: USTable T3Exceededs Status retrieved :%d\n",pdmaUsTableStatus[i].T3Exceededs);
-                sprintf(value,"%d",pdmaUsTableStatus[i].T3Exceededs);
-                strcat(value, ",");
+                 for(i=0;i<*numberofEntries;i++)
+                 {
+                    printf("ssp_CMHAL_GetStatusOfdmaUsTable: USTable T3Exceededs Status retrieved :%d\n",pdmaUsTableStatus[i].T3Exceededs);
+                    sprintf(value,"%d",pdmaUsTableStatus[i].T3Exceededs);
+                    strcat(value, ",");
+                 }
             }
-        }
-        else if( !(strcmp(paramName, "USTable_IsMuted_Status")) )
-        {
-            for(i=0;i<*numberofEntries;i++)
+            else if( !(strcmp(paramName, "USTable_IsMuted_Status")) )
             {
-                printf("ssp_CMHAL_GetStatusOfdmaUsTable: USTable IsMuted Status retrieved :%d\n",pdmaUsTableStatus[i].IsMuted);
-                sprintf(value,"%d",pdmaUsTableStatus[i].IsMuted);
-                strcat(value, ",");
+                 for(i=0;i<*numberofEntries;i++)
+                 {
+                    printf("ssp_CMHAL_GetStatusOfdmaUsTable: USTable IsMuted Status retrieved :%d\n",pdmaUsTableStatus[i].IsMuted);
+                    sprintf(value,"%d",pdmaUsTableStatus[i].IsMuted);
+                    strcat(value, ",");
+                 }
             }
-        }
-        else if( !(strcmp(paramName, "USTable_RangingStatus_Status")) )
-        {
-            for(i=0;i<*numberofEntries;i++)
+            else if( !(strcmp(paramName, "USTable_RangingStatus_Status")) )
             {
-                printf("ssp_CMHAL_GetStatusOfdmaUsTable: USTable RangingStatus Status retrieved :%d\n",pdmaUsTableStatus[i].RangingStatus);
-                sprintf(value,"%d",pdmaUsTableStatus[i].RangingStatus);
-                strcat(value, ",");
+                 for(i=0;i<*numberofEntries;i++)
+                 {
+                    printf("ssp_CMHAL_GetStatusOfdmaUsTable: USTable RangingStatus Status retrieved :%d\n",pdmaUsTableStatus[i].RangingStatus);
+                    sprintf(value,"%d",pdmaUsTableStatus[i].RangingStatus);
+                    strcat(value, ",");
+                 }
             }
-        }
-        else
-        {
-             printf("Invalid parameter name");
-             return_status = SSP_FAILURE;
-        }
+            else
+            {
+                 printf("Invalid parameter name");
+                 return_status = SSP_FAILURE;
+            }
+       }
+       else
+           printf("\ndocsis_GetDsOfdmChanTable returns failure\n\n");
     }
     else
-        printf("\ndocsis_GetDsOfdmChanTable returns failure\n\n");
+    {  
+        return_status = docsis_GetStatusOfdmaUsTable(NULL,NULL);
+        printf("docsis_GetStatusOfdmaUsTable return status is %d",return_status);
+    }
     return return_status;
 
 }
