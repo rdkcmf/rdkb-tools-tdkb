@@ -110,7 +110,10 @@ int ssp_WIFIHALGetOrSetParamBoolValue(int radioIndex, unsigned char *enable, cha
 {
     printf("\n ssp_WIFIHALGetOrSetParamBoolValue----> Entry\n");
     printf("Radio index:%d\n",radioIndex);
-    printf("GetorSetParam: %d\n" , *enable);
+    if(enable)
+        printf("GetorSetParam: %d\n" , *enable);
+    else
+        printf("Validation with NULL buffer\n");
     printf("MethodName: %s\n", method);
     int return_status = 0;
 
@@ -258,14 +261,77 @@ int ssp_WIFIHALGetOrSetParamBoolValue(int radioIndex, unsigned char *enable, cha
         return_status = wifi_getBSSTransitionImplemented(radioIndex,enable);
     else if(!strcmp(method, "getBSSTransitionActivation"))
         return_status = wifi_getBSSTransitionActivation(radioIndex,enable);
+    else if(!strcmp(method, "setCountryIe"))
+        return_status = wifi_setCountryIe(radioIndex, *enable);
+    else if(!strcmp(method, "setLayer2TrafficInspectionFiltering"))
+        return_status = wifi_setLayer2TrafficInspectionFiltering(radioIndex, *enable);
+    else if(!strcmp(method, "setDownStreamGroupAddress"))
+        return_status = wifi_setDownStreamGroupAddress(radioIndex, *enable);
+    else if(!strcmp(method, "setBssLoad"))
+        return_status = wifi_setBssLoad(radioIndex, *enable);
+    else if(!strcmp(method, "setProxyArp"))
+        return_status = wifi_setProxyArp(radioIndex, *enable);
+    else if(!strcmp(method, "pushApHotspotElement"))
+        return_status = wifi_pushApHotspotElement(radioIndex, *enable);
+    else if(!strcmp(method, "setP2PCrossConnect"))
+        return_status = wifi_setP2PCrossConnect(radioIndex, *enable);
+    else if(!strcmp(method, "getCountryIe"))
+    {
+        if(enable)
+            return_status = wifi_getCountryIe(radioIndex, enable);
+        else
+            return_status = wifi_getCountryIe(radioIndex, NULL);
+    }
+    else if(!strcmp(method, "getLayer2TrafficInspectionFiltering"))
+    {
+        if(enable)
+            return_status = wifi_getLayer2TrafficInspectionFiltering(radioIndex, enable);
+        else
+            return_status = wifi_getLayer2TrafficInspectionFiltering(radioIndex, NULL);
+    }
+    else if(!strcmp(method, "getDownStreamGroupAddress"))
+    {
+        if(enable)
+            return_status = wifi_getDownStreamGroupAddress(radioIndex, enable);
+        else
+            return_status = wifi_getDownStreamGroupAddress(radioIndex, NULL);
+    }
+    else if(!strcmp(method, "getBssLoad"))
+    {
+        if(enable)
+            return_status = wifi_getBssLoad(radioIndex, enable);
+        else
+            return_status = wifi_getBssLoad(radioIndex, NULL);
+    }
+    else if(!strcmp(method, "getProxyArp"))
+    {
+        if(enable)
+            return_status = wifi_getProxyArp(radioIndex, enable);
+        else
+            return_status = wifi_getProxyArp(radioIndex, NULL);
+    }
+    else if(!strcmp(method, "getApHotspotElement"))
+    {
+        if(enable)
+            return_status = wifi_getApHotspotElement(radioIndex, enable);
+        else
+            return_status = wifi_getApHotspotElement(radioIndex, NULL);
+    }
+    else if(!strcmp(method, "getP2PCrossConnect"))
+    {
+        if(enable)
+            return_status = wifi_getP2PCrossConnect(radioIndex, enable);
+        else
+            return_status = wifi_getP2PCrossConnect(radioIndex, NULL);
+    }
     else
     {
         return_status = SSP_FAILURE;
         printf("\n ssp_WIFIHALGetOrSetParamBoolValue: Invalid methodName\n");
     }
-
-    printf("ssp_WIFIHALGetOrSetParamBoolValue: Enable status is %d, ret:status %d\n", *enable, return_status);
-    printf("\n ssp_WIFIHALGetOrSetParamBoolValue----> Exit\n");
+    if(enable)
+        printf("ssp_WIFIHALGetOrSetParamBoolValue: Enable status is %d\n", *enable);
+    printf("\n ssp_WIFIHALGetOrSetParamBoolValue----> Exit, ret:status %d \n", return_status);
     return return_status;
 }
 
