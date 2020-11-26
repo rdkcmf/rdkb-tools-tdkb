@@ -88,6 +88,8 @@ from tdkbVariables import *;
 #Test component to be tested
 obj = tdklib.TDKScriptingLibrary("sysutil","1");
 obj1 = tdklib.TDKScriptingLibrary("tdkbtr181","1");
+retryCount =0;
+MAX_RETRY=4;
 #IP and Port of box, No need to change,
 #This will be replaced with corresponding Box Ip and port while executing script
 ip = <ipaddress>
@@ -167,11 +169,9 @@ if "SUCCESS" in loadmodulestatus.upper() and "SUCCESS" in loadmodulestatus1.uppe
                      break;
 
        if  Ethclientfound == 1:
-           retryCount=0;
-           MAX_RETRY=4;
            for i in range (1,5):
                tdkTestObj = obj1.createTestStep('TDKB_TR181Stub_Get');
-               tdkTestObj.addParameter("ParamName","Device.Ethernet.Interface.%s.X_RDKCENTRAL-COM_AssociatedDevice.%s.MACAddress"%(i,i));
+               tdkTestObj.addParameter("ParamName","Device.Ethernet.Interface.%s.X_RDKCENTRAL-COM_AssociatedDevice.1.MACAddress"%i);
                #Execute the test case in DUT
                tdkTestObj.executeTestCase(expectedresult);
                actualresult = tdkTestObj.getResult();
@@ -181,7 +181,7 @@ if "SUCCESS" in loadmodulestatus.upper() and "SUCCESS" in loadmodulestatus1.uppe
                   tdkTestObj.setResultStatus("SUCCESS");
                   print "TEST STEP 3: Get the MAC address of the Ethernet interface";
                   print "EXPECTED RESULT 3: Should get the MAC address of the Ethernet interface"
-                  print "ACTUAL RESULT 3:Device.Ethernet.Interface.%s.X_RDKCENTRAL-COM_AssociatedDevice.%s.MACAddress is %s" %(i,i,associatedMACAddress);
+                  print "ACTUAL RESULT 3:Device.Ethernet.Interface.%s.X_RDKCENTRAL-COM_AssociatedDevice.1.MACAddress is %s" %(i,associatedMACAddress);
                   print "LAN client interafce connected at :%s" %i
                   #Get the result of execution
                   print "[TEST EXECUTION RESULT] : SUCCESS";
