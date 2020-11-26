@@ -91,9 +91,11 @@
           <parameter name="interface" value=""/>
         </parameters>
       </primitiveTest>
-      <primitiveTest id="" name="CMHAL_GetHTTP_Download_Url" version="1">
+      <primitiveTest name="CMHAL_GetHTTP_Download_Url" id=" " version="3">
         <function>CMHAL_GetHTTP_Download_Url</function>
-        <parameters/>
+        <parameters>
+          <parameter name="paramType" value="  "/>
+        </parameters>
       </primitiveTest>
       <primitiveTest id=" " name="CMHAL_SetHTTP_Download_Url" version="1">
         <function>CMHAL_SetHTTP_Download_Url</function>
@@ -118,22 +120,27 @@
         <function>CMHAL_GetDsOfdmChanTable</function>
         <parameters>
           <parameter name="paramName" value=""/>
+          <parameter name="paramType" value="   "/>
         </parameters>
       </primitiveTest>
       <primitiveTest name="CMHAL_GetUsOfdmChanTable" id=" " version="1">
         <function>CMHAL_GetUsOfdmChanTable</function>
         <parameters>
           <parameter name="paramName" value=""/>
+          <parameter name="paramType" value="   "/>
         </parameters>
       </primitiveTest>
       <primitiveTest name="CMHAL_GetStatusOfdmaUsTable" id=" " version="1">
         <function>CMHAL_GetStatusOfdmaUsTable</function>
         <parameters>
           <parameter name="paramName" value=""/>
+          <parameter name="paramType" value="   "/>
         </parameters>
       </primitiveTest>
       <primitiveTest name="CMHAL_IsEnergyDetected" id="" version="1">
         <function>CMHAL_IsEnergyDetected</function>
+        <parameters>
+          <parameter name="paramType" value="  "/>
         <parameters/>
       </primitiveTest>
     </primitiveTests>
