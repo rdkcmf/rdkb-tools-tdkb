@@ -523,6 +523,20 @@ int ssp_rbus_setValue(char* parameter_type,char* param_name, char* set_value) {
 }
 
 /*****************************************************************************************************************
+ * Function Name : event_callback
+ * Description   : This callback function is mandatory for rbus_subscribeToEvent function
+ * @param [in]   : object_name : Object Name
+                 : event_name  : Event Name
+ * @param [out]  : return status an integer value 0-success and 1-Failure
+ ******************************************************************************************************************/
+static int event_callback(const char * object_name,  const char * event_name)
+{
+    DEBUG_PRINT(DEBUG_ERROR, "In event callback for object %s, event %s.\n", object_name, event_name);
+    return 0;
+}
+
+
+/*****************************************************************************************************************
  * Function Name : ssp_rbus_registerOperation
  * Description   : This function will invoke the different RBUS Register operations
  * @param [in]   : Operation : Operation to be Performed
@@ -574,7 +588,7 @@ int ssp_rbus_registerOperation(char* operation, char* object_name,char* method_n
         memset( object_buffer, 0, DEFAULT_BUFFERSIZE );
         snprintf(object_buffer, (sizeof(object_buffer) - 1), "%s", object_name);
 
-	ret = rbus_registerObj(object_buffer, NULL, NULL);
+        ret = rbus_registerObj(object_buffer, NULL, NULL);
 
         DEBUG_PRINT(DEBUG_ERROR, "registerObj Return value is %d \n",ret);
     }
@@ -612,7 +626,7 @@ int ssp_rbus_registerOperation(char* operation, char* object_name,char* method_n
         DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_registerOperation --> registerEvent Invoked...! \n");
         char data[] = "data";
 
-        ret = rbus_registerEvent(object_name,method_name,NULL,data); // Methodname parameter holds value for Event Name
+        ret = rbus_registerEvent(object_name,method_name,NULL,data); // method_name parameter holds value for Event Name
 
         DEBUG_PRINT(DEBUG_ERROR, "registerEvent Return value is %d \n",ret);
     }
@@ -620,9 +634,34 @@ int ssp_rbus_registerOperation(char* operation, char* object_name,char* method_n
     {
         DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_registerOperation --> unregisterEvent Invoked...! \n");
 
-        ret = rbus_unregisterEvent(object_name,method_name); // Methodname parameter holds value for Event Name
+        ret = rbus_unregisterEvent(object_name,method_name); // method_name parameter holds value for Event Name
 
         DEBUG_PRINT(DEBUG_ERROR, "unregisterEvent Return value is %d \n",ret);
+    }
+    else if (strcmp(operation,"rbus_subscribeToEvent") == 0)
+    {
+        DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_registerOperation --> rbus_subscribeToEvent Invoked...! \n");
+
+        //To check the negative scenario
+        if (strcmp(method_name,"NullCallBack") == 0)
+        {
+            DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_registerOperation --> rbus_subscribeToEvent Invoked with NULL CallBack...! \n");
+            ret = rbus_subscribeToEvent(object_name,"method1",NULL, NULL, NULL);
+        }
+        else
+        {
+            DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_registerOperation --> rbus_subscribeToEvent Invoked with callback...! \n");
+            ret = rbus_subscribeToEvent(object_name,method_name,event_callback, NULL, NULL); // method_name parameter holds value for Event Name
+        }
+        DEBUG_PRINT(DEBUG_ERROR, "rbus_subscribeToEvent Return value is %d \n",ret);
+    }
+    else if (strcmp(operation,"rbus_unsubscribeFromEvent") == 0)
+    {
+        DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_registerOperation --> rbus_unsubscribeFromEvent Invoked...! \n");
+
+        ret = rbus_unregisterEvent(object_name,method_name); // method_name parameter holds value for Event Name
+
+        DEBUG_PRINT(DEBUG_ERROR, "rbus_unsubscribeFromEvent Return value is %d \n",ret);
     }
     else if (strcmp(operation,"addElement") == 0)
     {
