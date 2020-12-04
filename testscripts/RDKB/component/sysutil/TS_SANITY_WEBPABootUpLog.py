@@ -21,7 +21,7 @@
 <xml>
   <id></id>
   <!-- Do not edit id. This will be auto filled while exporting. If you are adding a new script keep the id empty -->
-  <version>4</version>
+  <version>5</version>
   <!-- Do not edit version. This will be auto incremented while updating. If you are adding a new script you can keep the vresion as 1 -->
   <name>TS_SANITY_WEBPABootUpLog</name>
   <!-- If you are adding a new script you can specify the script name. Script Name should be unique same as this file name with out .py extension -->
@@ -50,6 +50,8 @@
   <box_types>
     <box_type>Broadband</box_type>
     <!--  -->
+    <box_type>Emulator</box_type>
+    <!--  -->
     <box_type>RPI</box_type>
     <!--  -->
   </box_types>
@@ -61,7 +63,7 @@
     <test_case_id>TC_SYSUTIL_42</test_case_id>
     <test_objective>This test case is to check if all the expected Webpa logs are present on Boot up.</test_objective>
     <test_type>Positive</test_type>
-    <test_setup>Broadband,RPI</test_setup>
+    <test_setup>Broadband,RPI,Emulator</test_setup>
     <pre_requisite>1.Ccsp Components in DUT should be in a running state that includes component under test Cable Modem
 2.TDK Agent should be in running state or invoke it through StartTdk.sh script</pre_requisite>
     <api_or_interface_used>None</api_or_interface_used>

@@ -141,7 +141,7 @@
         <function>CMHAL_IsEnergyDetected</function>
         <parameters>
           <parameter name="paramType" value="  "/>
-        <parameters/>
+        </parameters>
       </primitiveTest>
     </primitiveTests>
   </module>
