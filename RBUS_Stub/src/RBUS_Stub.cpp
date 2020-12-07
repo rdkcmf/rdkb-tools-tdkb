@@ -444,7 +444,7 @@ void RBUS::RBUS_SetValue(IN const Json::Value& req, OUT Json::Value& response)
  * @param [out]  : Filled with SUCCESS or FAILURE based on the output status of operation
  **************************************************************************************************************/
 void RBUS::RBUS_RegisterOperation(IN const Json::Value& req, OUT Json::Value& response)
-{	
+{
     DEBUG_PRINT(DEBUG_TRACE,"\n RBUS_RegisterOperation  --->Entry \n");
 
     int returnValue = RETURN_FAILURE;
@@ -464,7 +464,7 @@ void RBUS::RBUS_RegisterOperation(IN const Json::Value& req, OUT Json::Value& re
     strcpy(method_name, req["methodName"].asCString());
 
     DEBUG_PRINT(DEBUG_TRACE,"\n RBUS_RegisterOperation: Operation is %s, objectName is %s and methodName is %s \n",operation,object_name,method_name);
-	
+
     returnValue = ssp_rbus_registerOperation(operation, object_name, method_name);
 
     if(returnValue == RETURN_SUCCESS)
@@ -477,7 +477,7 @@ void RBUS::RBUS_RegisterOperation(IN const Json::Value& req, OUT Json::Value& re
         response["result"]="FAILURE";
         response["details"]="RBUS_RegisterOperation function has failed.Please check logs";
     }
-	
+
     DEBUG_PRINT(DEBUG_TRACE,"\n RBUS_RegisterOperation --->Exit\n");
     return;
 }
