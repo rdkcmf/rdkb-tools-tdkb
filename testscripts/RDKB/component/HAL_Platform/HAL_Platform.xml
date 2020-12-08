@@ -243,7 +243,9 @@
       </primitiveTest>
       <primitiveTest name="platform_stub_hal_getFactoryCmVariant" id="" version="1">
         <function>platform_stub_hal_getFactoryCmVariant</function>
-        <parameters/>
+        <parameters>
+          <parameter name="flag" value=""/>
+        </parameters>
       </primitiveTest>
       <primitiveTest name="platform_stub_hal_setFactoryCmVariant" id=" " version="3">
         <function>platform_stub_hal_setFactoryCmVariant</function>
