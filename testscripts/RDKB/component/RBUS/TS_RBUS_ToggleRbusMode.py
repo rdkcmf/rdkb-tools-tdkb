@@ -21,7 +21,7 @@
 <xml>
   <id></id>
   <!-- Do not edit id. This will be auto filled while exporting. If you are adding a new script keep the id empty -->
-  <version>4</version>
+  <version>5</version>
   <!-- Do not edit version. This will be auto incremented while updating. If you are adding a new script you can keep the vresion as 1 -->
   <name>TS_RBUS_ToggleRbusMode</name>
   <!-- If you are adding a new script you can specify the script name. Script Name should be unique same as this file name with out .py extension -->
@@ -120,7 +120,7 @@ if "SUCCESS" in loadmodulestatus.upper() and "SUCCESS" in loadmodulestatus1.uppe
     def_result, default_value = isRBUSEnabled(tdkTestObj_Tr181_Get);
 
     if expectedresult in def_result:
-        tdkTestObj_Tr181_Set.setResultStatus("SUCCESS");
+        tdkTestObj_Tr181_Get.setResultStatus("SUCCESS");
         print "TEST STEP 1: Get the Enable Status of RBUS"
         print "EXPECTED RESULT 1: Should Get the Enable Status of RBUS"
         print "ACTUAL RESULT 1: RBUS Enable Status retrieved successfully"
@@ -143,7 +143,7 @@ if "SUCCESS" in loadmodulestatus.upper() and "SUCCESS" in loadmodulestatus1.uppe
                     print "EXPECTED RESULT 3:  Set Operation should be success";
                     print "ACTUAL RESULT 3: Set operation was success";
                     print "[TEST EXECUTION RESULT] 3: SUCCESS";
-                    tdkTestObj_Tr181_Set.setResultStatus("SUCCESS");
+                    tdkTestObj_Tr181_Get.setResultStatus("SUCCESS");
 
                     actualresult,pid_value = getPID(tdkTestObj_Sys_ExeCmd,"rbus_session_mgr");
                     if expectedresult  in actualresult and pid_value == "":
@@ -169,7 +169,7 @@ if "SUCCESS" in loadmodulestatus.upper() and "SUCCESS" in loadmodulestatus1.uppe
                 print "EXPECTED RESULT 2:  Should get the PID value of RBUS";
                 print "ACTUAL RESULT 2: Failed to get the PID value of RBUS"
                 print "[TEST EXECUTION RESULT] 2: FAILURE";
-                tdkTestObj_Tr181_Set.setResultStatus("FAILURE");
+                tdkTestObj_Sys_ExeCmd.setResultStatus("FAILURE");
         else:
             actualresult,pid_value = getPID(tdkTestObj_Sys_ExeCmd,"rbus_session_mgr");
             if expectedresult  in actualresult and pid_value == "":
@@ -185,7 +185,7 @@ if "SUCCESS" in loadmodulestatus.upper() and "SUCCESS" in loadmodulestatus1.uppe
                     print "EXPECTED RESULT 3:  Set Operation should be success";
                     print "ACTUAL RESULT 3: Set operation was success";
                     print "[TEST EXECUTION RESULT] 3: SUCCESS";
-                    tdkTestObj_Tr181_Set.setResultStatus("SUCCESS");
+                    tdkTestObj_Tr181_Get.setResultStatus("SUCCESS");
 
                     actualresult,pid_value = getPID(tdkTestObj_Sys_ExeCmd,"rbus_session_mgr");
                     if expectedresult  in actualresult and pid_value != "":
@@ -211,7 +211,7 @@ if "SUCCESS" in loadmodulestatus.upper() and "SUCCESS" in loadmodulestatus1.uppe
                 print "EXPECTED RESULT 2:  Should get the PID value of RBUS";
                 print "ACTUAL RESULT 2: Failed to get the PID value of RBUS"
                 print "[TEST EXECUTION RESULT] 2: FAILURE";
-                tdkTestObj_Tr181_Set.setResultStatus("FAILURE");
+                tdkTestObj_Sys_ExeCmd.setResultStatus("FAILURE");
 
     if revert_flag == 1:
         rbus_set,revert_flag = doEnableDisableRBUS(default_value,sysobj,tdkTestObj_Tr181_Get,tdkTestObj_Tr181_Set);
@@ -220,13 +220,13 @@ if "SUCCESS" in loadmodulestatus.upper() and "SUCCESS" in loadmodulestatus1.uppe
             print "EXPECTED RESULT 5: Revert operation should be success";
             print "ACTUAL RESULT 5: REvert operation was success";
             print "[TEST EXECUTION RESULT] 5: SUCCESS";
-            tdkTestObj_Tr181_Set.setResultStatus("SUCCESS");
+            tdkTestObj_Tr181_Get.setResultStatus("SUCCESS");
         else:
             print "TEST STEP 5: Set RBUS Enable Status value to initial value",;
             print "EXPECTED RESULT 5: Revert operation should be success";
             print "ACTUAL RESULT 5: REvert operation was Failed";
             print "[TEST EXECUTION RESULT] 5: FAILURE";
-            tdkTestObj_Tr181_Set.setResultStatus("FAILURE");
+            tdkTestObj_Tr181_Get.setResultStatus("FAILURE");
 
     tr181obj.unloadModule("tdkbtr181");
     sysobj.unloadModule("sysutil");
