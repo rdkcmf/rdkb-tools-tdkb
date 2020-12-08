@@ -21,7 +21,7 @@
 <xml>
   <id></id>
   <!-- Do not edit id. This will be auto filled while exporting. If you are adding a new script keep the id empty -->
-  <version>4</version>
+  <version>5</version>
   <!-- Do not edit version. This will be auto incremented while updating. If you are adding a new script you can keep the vresion as 1 -->
   <name>TS_RBUS_CheckMemoryusage</name>
   <!-- If you are adding a new script you can specify the script name. Script Name should be unique same as this file name with out .py extension -->
@@ -123,7 +123,7 @@ if "SUCCESS" in loadmodulestatus.upper() and "SUCCESS" in loadmodulestatus1.uppe
     def_result, default_value = isRBUSEnabled(tdkTestObj_Tr181_Get);
 
     if expectedresult in def_result:
-        tdkTestObj_Tr181_Set.setResultStatus("SUCCESS");
+        tdkTestObj_Tr181_Get.setResultStatus("SUCCESS");
         print "TEST STEP 1: Get the Enable Status of RBUS"
         print "EXPECTED RESULT 1: Should Get the Enable Status of RBUS"
         print "ACTUAL RESULT 1: RBUS Enable Status retrieved successfully"
@@ -141,7 +141,7 @@ if "SUCCESS" in loadmodulestatus.upper() and "SUCCESS" in loadmodulestatus1.uppe
         mem_result,mem_value1 = getMemUsageFromTOP(tdkTestObj_Sys_ExeCmd);
 
         if expectedresult in mem_result:
-            tdkTestObj_Tr181_Set.setResultStatus("SUCCESS");
+            tdkTestObj_Sys_ExeCmd.setResultStatus("SUCCESS");
             print "TEST STEP 2: Get the Memory Usage value for ",current_mode
             print "EXPECTED RESULT 2: Should Get the Memory usage value of ",current_mode
             print "ACTUAL RESULT 2: Memory Usage value retrieved successfully"
@@ -150,7 +150,7 @@ if "SUCCESS" in loadmodulestatus.upper() and "SUCCESS" in loadmodulestatus1.uppe
 
             rbus_set,revert_flag = doEnableDisableRBUS(value_to_set,sysobj,tdkTestObj_Tr181_Get,tdkTestObj_Tr181_Set);
             if rbus_set == 1:
-                tdkTestObj_Tr181_Set.setResultStatus("SUCCESS");
+                tdkTestObj_Tr181_Get.setResultStatus("SUCCESS");
                 print "TEST STEP 3: Set the RBUS Enable status to ",value_to_set
                 print "EXPECTED RESULT 3: Should set the RBUS Enable status to ",value_to_set
                 print "ACTUAL RESULT 3: Set operation was successful"
@@ -167,7 +167,7 @@ if "SUCCESS" in loadmodulestatus.upper() and "SUCCESS" in loadmodulestatus1.uppe
                 mem_result1,mem_value2 = getMemUsageFromTOP(tdkTestObj_Sys_ExeCmd);
 
                 if expectedresult in mem_result:
-                    tdkTestObj_Tr181_Set.setResultStatus("SUCCESS");
+                    tdkTestObj_Sys_ExeCmd.setResultStatus("SUCCESS");
                     print "TEST STEP 4: Get the Memory Usage value for ",current_mode
                     print "EXPECTED RESULT 4: Should Get the Memory usage value of ",current_mode
                     print "ACTUAL RESULT 4: Memory Usage value retrieved successfully"
@@ -180,25 +180,25 @@ if "SUCCESS" in loadmodulestatus.upper() and "SUCCESS" in loadmodulestatus1.uppe
                         RBUS_memory = int(mem_value2);
 
                 else:
-                    tdkTestObj_Tr181_Set.setResultStatus("FAILURE");
+                    tdkTestObj_Sys_ExeCmd.setResultStatus("FAILURE");
                     print "TEST STEP 4: Get the Memory Usage value for ",current_mode
                     print "EXPECTED RESULT 4: Should Get the Memory usage value of ",current_mode
                     print "ACTUAL RESULT 4: Failed to get Memory Usage value "
                     print "[TEST EXECUTION RESULT] 4: FAILURE";
             else:
-                tdkTestObj_Tr181_Set.setResultStatus("FAILURE");
+                tdkTestObj_Tr181_Get.setResultStatus("FAILURE");
                 print "TEST STEP 3: Set the RBUS Enable status to ",value_to_set
                 print "EXPECTED RESULT 3: Should set the RBUS Enable status to ",value_to_set
                 print "ACTUAL RESULT 3: Set operation was FAILED"
                 print "[TEST EXECUTION RESULT] 3: FAILURE";
         else:
-            tdkTestObj_Tr181_Set.setResultStatus("FAILURE");
+            tdkTestObj_Sys_ExeCmd.setResultStatus("FAILURE");
             print "TEST STEP 2: Get the Memory Usage value for ",current_mode
             print "EXPECTED RESULT 2: Should Get the Memory usage value of ",current_mode
             print "ACTUAL RESULT 2: Failed to get Memory Usage value "
             print "[TEST EXECUTION RESULT] 2: FAILURE";
     else:
-        tdkTestObj_Tr181_Set.setResultStatus("FAILURE");
+        tdkTestObj_Tr181_Get.setResultStatus("FAILURE");
         print "TEST STEP 1: Get the Enable Status of RBUS"
         print "EXPECTED RESULT 1: Should Get the Enable Status of RBUS"
         print "ACTUAL RESULT 1: Failed to get RBUS Enable Status"
@@ -207,32 +207,32 @@ if "SUCCESS" in loadmodulestatus.upper() and "SUCCESS" in loadmodulestatus1.uppe
 
     if DBUS_memory > 0 and RBUS_memory > 0:
         if DBUS_memory >= RBUS_memory:
-            tdkTestObj_Tr181_Set.setResultStatus("SUCCESS");
+            tdkTestObj_Tr181_Get.setResultStatus("SUCCESS");
             print "TEST STEP 5: Compare the Memory Usage value of RBUS and DBUS"
             print "EXPECTED RESULT 5: RBUS Memory Usage should be less than DBUS"
             print "ACTUAL RESULT 5: RBUS Memory Usage is lesser the DBUS Memory Usage "
             print "[TEST EXECUTION RESULT] 5: SUCCESS";
         else:
             print "Memory and CPU usage in RBUS is GREATER than DBUS"
-            tdkTestObj_Tr181_Set.setResultStatus("FAILURE");
+            tdkTestObj_Tr181_Get.setResultStatus("FAILURE");
             print "TEST STEP 5: Compare the Memory Usage value of RBUS and DBUS"
             print "EXPECTED RESULT 5: RBUS Memory Usage should be less than DBUS"
             print "ACTUAL RESULT 5: RBUS Memory Usage is lesser the DBUS Memory Usage "
             print "[TEST EXECUTION RESULT] 5: FAILURE";
     else:
         print "Unable to get Memory usage value of RBUS and DBUS"
-        tdkTestObj_Tr181_Set.setResultStatus("FAILURE");
+        tdkTestObj_Tr181_Get.setResultStatus("FAILURE");
 
     if revert_flag == 1:
         rbus_set,revert_flag = doEnableDisableRBUS(default_value,sysobj,tdkTestObj_Tr181_Get,tdkTestObj_Tr181_Set);
         if rbus_set == 1:
-            tdkTestObj_Tr181_Set.setResultStatus("SUCCESS");
+            tdkTestObj_Tr181_Get.setResultStatus("SUCCESS");
             print "TEST STEP 6: Revert the RBUS enable status value"
             print "EXPECTED RESULT 6: Revert operation should be success"
             print "ACTUAL RESULT 6: Revert operation was successful "
             print "[TEST EXECUTION RESULT] 6: SUCCESS";
         else:
-            tdkTestObj_Tr181_Set.setResultStatus("FAILURE");
+            tdkTestObj_Tr181_Get.setResultStatus("FAILURE");
             print "TEST STEP 6: Revert the RBUS enable status value"
             print "EXPECTED RESULT 6: Revert operation should be success"
             print "ACTUAL RESULT 6: Revert operation was FAILED "
