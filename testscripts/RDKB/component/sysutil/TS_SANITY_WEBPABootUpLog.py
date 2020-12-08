@@ -103,29 +103,44 @@ if "SUCCESS" in loadmodulestatus.upper():
     obj.setLoadModuleStatus("SUCCESS");
 
     obj.initiateReboot();
+    print "Device going for reboot waiting for 300 sec untill device comes up";
     sleep(300);
 
     logFile = "/rdklogs/logs/WEBPAlog.txt.0";
-    logMsg = ["Init for parodus Success","Component caching is completed","WEBPA: Received reboot_reason as","webpaagent"];
+    logMsg = ["Init for parodus Success","WEBPA: Received reboot_reason as","webpaagent", "Component caching is completed"];
     print "***************************************************";
     print "TEST STEP 1: Checking if the following Log Message are present in /rdklogs/logs/WEBPAlog.txt.0";
     print "%s" %logMsg;
+
     for item in logMsg:
-        print "\n*** Checking if %s Log Message is present in WEBPAlog File***" %item;
-        query="grep -rin \"%s\" \"%s\"" %(item,logFile);
-        print "query:%s" %query
-        tdkTestObj = obj.createTestStep('ExecuteCmd');
-        tdkTestObj.addParameter("command", query)
-        expectedresult="SUCCESS";
-        tdkTestObj.executeTestCase(expectedresult);
-        actualresult = tdkTestObj.getResult();
-        details = tdkTestObj.getResultDetails().strip().replace("\\n","");
-        if (len(details) != 0)  and  item in details:
+        markerfound = 0;
+        for i in range(1,3):
+            if markerfound == 1:
+               break;
+            else:
+                print "\n*** Checking if %s Log Message is present in WEBPAlog File***" %item;
+                query="grep -rin \"%s\" \"%s\"" %(item,logFile);
+                print "query:%s" %query
+                tdkTestObj = obj.createTestStep('ExecuteCmd');
+                tdkTestObj.addParameter("command", query)
+                expectedresult="SUCCESS";
+                tdkTestObj.executeTestCase(expectedresult);
+                actualresult = tdkTestObj.getResult();
+                details = tdkTestObj.getResultDetails().strip().replace("\\n","");
+                if (len(details) != 0)  and  item in details:
+                   markerfound = 1;
+                   waittime = ((i-1) *300);
+                   print " %s found within %d sec of extra waitime after bootup" %(item,waittime);
+                   print details;
+                else:
+                    #In case of emulator an additional wait time of 5 min is required
+                     sleep(300);
+        if markerfound == 1:
            tdkTestObj.setResultStatus("SUCCESS");
-           print "Search Result :%s "%details;
         else:
             tdkTestObj.setResultStatus("FAILURE");
             print "Search Result :%s "%details;
+            print "failed to get %s even with wait time of 10 min" %item;
     obj.unloadModule("sysutil");
 else:
     print "Failed to load sysutil module";
