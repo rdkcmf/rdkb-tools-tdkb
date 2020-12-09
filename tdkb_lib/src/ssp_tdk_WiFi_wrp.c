@@ -18,6 +18,8 @@
 */
 
 #include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
 #include "ssp_tdk_WiFi_wrp.h"
 
 
@@ -300,7 +302,7 @@ int ssp_WIFIHALGetOrSetParamBoolValue(int radioIndex, unsigned char *enable, cha
         if(enable)
            return_status = wifi_setATMEnable(*enable);
         else
-            return_status = wifi_setATMEnable(NULL);
+            return_status = wifi_setATMEnable(0);
     }
     else if(!strcmp(method, "getCountryIe"))
     {
@@ -487,7 +489,8 @@ int ssp_WIFIHALGetOrSetParamStringValue(int radioIndex, char* output, char* meth
         printf("Validation with NULL buffer\n");
     printf("MethodName: %s\n", method);
     int return_status = 0;
-    wifi_device_t dev = {0};
+    wifi_device_t dev;
+    memset(&dev, 0, sizeof(wifi_device_t));
     char mac[64] = {'\0'};
     char *token = NULL;
     int count = 0;
@@ -692,7 +695,7 @@ int ssp_WIFIHALGetOrSetParamIntValue(int radioIndex, int* output, char* method)
     if(output)
         printf("GetorSetParam: %d\n" , *output);
     else
-        print("NULL buffer validation\n");
+        printf("NULL buffer validation\n");
     printf("MethodName: %s\n", method);
     int return_status = 0;
 
@@ -776,21 +779,21 @@ int ssp_WIFIHALGetOrSetParamIntValue(int radioIndex, int* output, char* method)
     else if(!strcmp(method, "getDownlinkMuType"))
     {
         if(output)
-            return_status = wifi_getDownlinkMuType(radioIndex, output);
+            return_status = wifi_getDownlinkMuType(radioIndex, (void *)output);
         else
             return_status = wifi_getDownlinkMuType(radioIndex, NULL);
     }
     else if(!strcmp(method, "getUplinkMuType"))
     {
         if(output)
-            return_status = wifi_getUplinkMuType(radioIndex, output);
+            return_status = wifi_getUplinkMuType(radioIndex, (void *)output);
         else
             return_status = wifi_getUplinkMuType(radioIndex, NULL);
     }
     else if(!strcmp(method, "getGuardInterval"))
     {
         if(output)
-            return_status = wifi_getGuardInterval(radioIndex, output);
+            return_status = wifi_getGuardInterval(radioIndex, (void *)output);
         else
             return_status = wifi_getGuardInterval(radioIndex, NULL);
     }
@@ -1807,12 +1810,12 @@ int ssp_WIFIHALGetRadioChannelStats2(int radioIndex, wifi_channelStats2_t *outpu
     printf("return value from ssp_WIFIHALGetRadioChannelStats2 is %d\n",return_status);
     if(return_status != SSP_SUCCESS)
     {
-        printf("\ssp_WIFIHALGetRadioChannelStats2::Failed\n");
+        printf("\n ssp_WIFIHALGetRadioChannelStats2::Failed\n");
         return_status = SSP_FAILURE;
     }
     else
     {
-        printf("\ssp_WIFIHALGetRadioChannelStats2::Success\n");
+        printf("\n ssp_WIFIHALGetRadioChannelStats2::Success\n");
     }
     printf("\n ssp_WIFIHALGetRadioChannelStats2---> Exit\n");
     return return_status;
@@ -1883,7 +1886,7 @@ int ssp_WIFIHALGetApAssociatedDeviceStats(int apIndex, mac_address_t *clientMacA
 {
     printf("\n ssp_WIFIHALGetApAssociatedDeviceStats ----> Entry\n");
     printf("ap index:%d\n",apIndex);
-    printf("MAC:%s\n",clientMacAddress);
+    printf("MAC:%s\n",(char*)clientMacAddress);
     int return_status = 0;
     return_status = wifi_getApAssociatedDeviceStats(apIndex, clientMacAddress, associated_dev_stats, handle);
     if(return_status != SSP_SUCCESS)
@@ -2072,7 +2075,7 @@ int ssp_WIFIHALGetBandSteeringLog(int record_index, unsigned long *pSteeringTime
 {
     printf("\n ssp_WIFIHALGetBandSteeringLog ----> Entry\n");
     printf("record index:%d\n",record_index);
-    printf ("pClientMAC : %s\n",*pClientMAC);
+    printf ("pClientMAC : %s\n", pClientMAC);
     int return_status = 0;
     return_status = wifi_getBandSteeringLog(record_index, pSteeringTime, pClientMAC,pSourceSSIDIndex,pDestSSIDIndex,pSteeringReason);
     if(return_status != SSP_SUCCESS)

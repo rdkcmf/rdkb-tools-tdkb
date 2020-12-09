@@ -800,7 +800,7 @@ void MTAHAL::MTAHAL_GetLineRegisterStatus(IN const Json::Value& req, OUT Json::V
         if(isNegativeScenario)
         {
           DEBUG_PRINT(DEBUG_TRACE, "Executing negative scenario\n");
-          returnValue = ssp_MTAHAL_getLineRegisterStatus(NULL,NULL);
+          returnValue = ssp_MTAHAL_getLineRegisterStatus(NULL,0);
         }
         else
         {

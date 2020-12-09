@@ -25,6 +25,7 @@
 #include <unistd.h>
 #include <inttypes.h>
 #include <rbus/rbus.h>
+#include <rbus-core/rbus_core.h>
 #include "ssp_tdk_rbus_wrp.h"
 #include "ssp_hal_logger.h"
 
@@ -163,8 +164,8 @@ int ssp_rbus_dataElements (char* element1, char* element2,char* operation) {
     if (bus_handle != NULL)
     {
         rbusDataElement_t dataElements[2] = {
-        {element1, RBUS_ELEMENT_TYPE_EVENT, {NULL, NULL, NULL, NULL, NULL}},
-        {element2, RBUS_ELEMENT_TYPE_EVENT, {NULL, NULL, NULL, NULL, NULL}}
+        {element1, RBUS_ELEMENT_TYPE_EVENT, {NULL, NULL, NULL, NULL, NULL, NULL}},
+        {element2, RBUS_ELEMENT_TYPE_EVENT, {NULL, NULL, NULL, NULL, NULL, NULL}}
         };
 
         if (strcmp(operation, "Register") == 0)
@@ -238,7 +239,7 @@ int ssp_rbus_session(char* operation, unsigned int *sessionID) {
         else
         {
             DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_session Operation %s Success: %d\n",operation, ret);
-            DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_session Session ID is: %d\n", sessionID);
+            DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_session Session ID is: %d\n", *sessionID);
             result = RETURN_OK;
         }
     }
@@ -420,11 +421,11 @@ int ssp_rbus_getValue(char* parameter_type,char* parameter_name, const char** ge
         }
         else if (strcmp(parameter_type, "Integer") == 0)
         {
-            *getvalue_i = rbusValue_GetInt32(value);
-
             if (getvalue_i != NULL)
             {
-                DEBUG_PRINT(DEBUG_ERROR, "Value Received on Integer is %d",*getvalue_i);
+                int getv = rbusValue_GetInt32(value);
+                *getvalue_i = &getv;
+                DEBUG_PRINT(DEBUG_ERROR, "Value Received on Integer is %d", *(*getvalue_i));
                 result = RETURN_OK;
             }
             else
@@ -435,13 +436,11 @@ int ssp_rbus_getValue(char* parameter_type,char* parameter_name, const char** ge
         }
         else if (strcmp(parameter_type, "UnsignedInt") == 0)
         {
-            unsigned int getv = 0;
-            getv = rbusValue_GetUInt32(value);
-            *getvalue_i = (int)getv;
-
             if (getvalue_i != NULL)
             {
-                DEBUG_PRINT(DEBUG_ERROR, "Value Received on UnsignedInt is %d",*getvalue_i);
+                unsigned int getv = rbusValue_GetUInt32(value);
+                *getvalue_i = (int *)&getv;
+                DEBUG_PRINT(DEBUG_ERROR, "Value Received on UnsignedInt is %d", *(*getvalue_i));
                 result = RETURN_OK;
             }
             else
@@ -535,7 +534,7 @@ int ssp_rbus_setValue(char* parameter_type,char* param_name, char* set_value) {
                  : event_name  : Event Name
  * @param [out]  : return status an integer value 0-success and 1-Failure
  ******************************************************************************************************************/
-static int event_callback(const char * object_name,  const char * event_name)
+static int event_callback(const char * object_name,  const char * event_name, rtMessage message, void * user_data)
 {
     DEBUG_PRINT(DEBUG_ERROR, "In event callback for object %s, event %s.\n", object_name, event_name);
     return 0;
@@ -657,7 +656,7 @@ int ssp_rbus_registerOperation(char* operation, char* object_name,char* method_n
         else
         {
             DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_registerOperation --> rbus_subscribeToEvent Invoked with callback...! \n");
-            ret = rbus_subscribeToEvent(object_name,method_name,event_callback, NULL, NULL); // method_name parameter holds value for Event Name
+            ret = rbus_subscribeToEvent(object_name,method_name,(rbus_event_callback_t)event_callback, NULL, NULL); // method_name parameter holds value for Event Name
         }
         DEBUG_PRINT(DEBUG_ERROR, "rbus_subscribeToEvent Return value is %d \n",ret);
     }
@@ -718,10 +717,9 @@ int ssp_rbus_property_apis(char* operation, int prop_count, char *property_name,
     DEBUG_PRINT(DEBUG_ERROR, "Entering the ssp_rbus_property_apis wrapper\n");
     DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_property_apis - Operation is %s prop_count is %d and property_name is %s \n",operation,prop_count,property_name);
 
-    char const* name;
+    char* name = "\0";
     int result = RETURN_ERR;
     int ret = RBUS_ERROR_SUCCESS;
-    int return_Value = 0;
     int len = 0;
 
     if (strcmp(operation,"rbusProperty_Init") == 0)
@@ -756,20 +754,20 @@ int ssp_rbus_property_apis(char* operation, int prop_count, char *property_name,
         if(prop_count == 1)
         {
             DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_property_apis - Calling rbusProperty_GetName function with prop1 ");
-            name = rbusProperty_GetName(prop1);
+            name = (char*)rbusProperty_GetName(prop1);
         }
         else if(prop_count == 2)
         {
             DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_property_apis - Calling rbusProperty_GetName function with prop2 ");
-            name = rbusProperty_GetName(prop2);
+            name = (char*)rbusProperty_GetName(prop2);
         }
         else if(prop_count == 3)
         {
             DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_property_apis - Calling rbusProperty_GetName function with prop3 ");
-            name = rbusProperty_GetName(prop3);
+            name = (char*)rbusProperty_GetName(prop3);
         }
 
-        if (name != "")
+        if (strcmp(name,"") != 0)
         {
             strcpy(name_value,name);
             DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_property_apis - rbusProperty_GetName function completed successfully name is %s",name);
@@ -834,8 +832,8 @@ int ssp_rbus_property_apis(char* operation, int prop_count, char *property_name,
             DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_property_apis - Calling rbusProperty_GetValue function with prop3");
             value = rbusProperty_GetValue(prop3);
         }
-        name = rbusValue_GetString(value, &len);
-        if (name != "")
+        name = (char*)rbusValue_GetString(value, &len);
+        if (strcmp(name,"") != 0)
         {
             strcpy(name_value,name);
             DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_property_apis - rbusProperty_GetValue function completed successfully");
@@ -954,9 +952,7 @@ int ssp_rbus_property_apis(char* operation, int prop_count, char *property_name,
         char *pRet = NULL;
         char *stream_buf;
         size_t len;
-        char type_buf[32]  = {0};
-        char val_buf[1024] = {0};
-
+               
         stream = open_memstream(&stream_buf, &len);
 
         if (prop_count == 1)
@@ -1029,7 +1025,7 @@ int ssp_rbus_object_apis(char* operation, int obj_count, char *object_name, char
     DEBUG_PRINT(DEBUG_ERROR, "Entering the ssp_rbus_object_apis wrapper\n");
     DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_object_apis - Operation is %s obj_count is %d and object_name is %s \n",operation,obj_count,object_name);
 
-    char const* name;
+    char * name = "";
     int result = RETURN_ERR;
     int ret = RBUS_ERROR_SUCCESS;
 
@@ -1063,24 +1059,24 @@ int ssp_rbus_object_apis(char* operation, int obj_count, char *object_name, char
         if(obj_count == 1)
         {
             DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_property_apis - Calling rbusObject_GetName function with obj1 ");
-            name = rbusObject_GetName(obj1);
+            name = (char*)rbusObject_GetName(obj1);
         }
         else if(obj_count == 2)
         {
             DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_property_apis - Calling rbusObject_GetName function with obj2 ");
-            name = rbusObject_GetName(obj2);
+            name = (char*)rbusObject_GetName(obj2);
         }
         else if(obj_count == 3)
         {
             DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_property_apis - Calling rbusObject_GetName function with obj_ch1 ");
-            name = rbusObject_GetName(obj_ch1);
+            name = (char*)rbusObject_GetName(obj_ch1);
         }
         else if(obj_count == 4)
         {
             DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_property_apis - Calling rbusObject_GetName function with obj_ch2 ");
-            name = rbusObject_GetName(obj_ch2);
+            name = (char*)rbusObject_GetName(obj_ch2);
         }
-        if (name != "")
+        if (strcmp(name,"") != 0)
         {
             strcpy(name_value,name);
             DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_property_apis - rbusObject_GetName function completed successfully name is %s",name);
@@ -1140,7 +1136,7 @@ int ssp_rbus_object_apis(char* operation, int obj_count, char *object_name, char
             value = rbusObject_GetValue(obj_ch2, object_name);
         }
         name = rbusValue_ToString(value, NULL, 0);
-        if (name != "")
+        if (strcmp(name,"") != 0)
         {
             strcpy(name_value,name);
             DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_property_apis - rbusProperty_GetValue function completed successfully");

@@ -19,6 +19,7 @@
 
 #include "ssp_tdk_mso_mgmt_hal_wrp.h"
 #include "ssp_hal_logger.h"
+#include "mso_mgmt_hal.h"
 /*******************************************************************************************
  *
  * Function Name        : ssp_mso_mgmt_hal_GetMsoPodSeed

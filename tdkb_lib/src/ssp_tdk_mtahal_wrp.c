@@ -145,7 +145,7 @@ int ssp_MTAHAL_GetParamUlongValue(char* paramName, unsigned long* value)
     }    
     else if( !(strcmp(paramName, "DSXLogEnable")) )
     {
-        return_status = mta_hal_GetDSXLogEnable(value);
+        return_status = mta_hal_GetDSXLogEnable((unsigned char*)value);
         printf("Return status of mta_hal_GetDSXLogEnable %d", return_status);
         if ( return_status != SSP_SUCCESS)
         {
@@ -155,7 +155,7 @@ int ssp_MTAHAL_GetParamUlongValue(char* paramName, unsigned long* value)
     }    
     else if( !(strcmp(paramName, "CallSignallingLogEnable")) )
     {
-        return_status = mta_hal_GetCallSignallingLogEnable(value);
+        return_status = mta_hal_GetCallSignallingLogEnable((unsigned char*)value);
         printf("Return status of mta_hal_GetCallSignallingLogEnable %d", return_status);
         if ( return_status != SSP_SUCCESS)
         {
@@ -298,7 +298,7 @@ int ssp_MTAHAL_SetParamUlongValue(char* paramName, unsigned long value)
     if( !(strcmp(paramName, "DSXLogEnable")) )
     {
         return_status = mta_hal_SetDSXLogEnable((BOOLEAN)value);
-        printf("Return status of mta_hal_SetDSXLogEnable(%d) %d", value, return_status);
+        printf("Return status of mta_hal_SetDSXLogEnable(%lu) %d", value, return_status);
         if ( return_status != SSP_SUCCESS)
         {
             printf("ssp_MTAHAL_SetParamUlongValue : Failed to set the MTA DSX Log Enable\n");
@@ -308,7 +308,7 @@ int ssp_MTAHAL_SetParamUlongValue(char* paramName, unsigned long value)
     else if( !(strcmp(paramName, "ClearDSXLog")) )
     {
         return_status = mta_hal_ClearDSXLog((BOOLEAN)value);
-        printf("Return status of mta_hal_ClearDSXLog(%d) %d", value, return_status);
+        printf("Return status of mta_hal_ClearDSXLog(%lu) %d", value, return_status);
         if ( return_status != SSP_SUCCESS)
         {
             printf("ssp_MTAHAL_SetParamUlongValue : Failed to set the MTA DSX Log Enable\n");
@@ -318,7 +318,7 @@ int ssp_MTAHAL_SetParamUlongValue(char* paramName, unsigned long value)
     else if( !(strcmp(paramName, "CallSignallingLogEnable")) )
     {
         return_status = mta_hal_SetCallSignallingLogEnable((BOOLEAN)value);
-        printf("Return status of mta_hal_SetCallSignallingLogEnable(%d) %d", value, return_status);
+        printf("Return status of mta_hal_SetCallSignallingLogEnable(%lu) %d", value, return_status);
         if ( return_status != SSP_SUCCESS)
         {
             printf("ssp_MTAHAL_SetParamUlongValue : Failed to set the MTA Call Signalling Log Enable\n");
@@ -328,7 +328,7 @@ int ssp_MTAHAL_SetParamUlongValue(char* paramName, unsigned long value)
     else if( !(strcmp(paramName, "ClearCallSignallingLog")) )
     {
         return_status = mta_hal_ClearCallSignallingLog((BOOLEAN)value);
-        printf("Return status of mta_hal_ClearCallSignallingLog(%d) %d", value, return_status);
+        printf("Return status of mta_hal_ClearCallSignallingLog(%lu) %d", value, return_status);
         if ( return_status != SSP_SUCCESS)
         {
             printf("ssp_MTAHAL_SetParamUlongValue : Failed to set the MTA Call Signalling Log Enable\n");
@@ -953,7 +953,7 @@ static int lineRegisterStatus_callback(MTAMGMT_MTA_STATUS *output_status_array, 
     if (output_status_array == NULL || array_size < 1)
     {
         printf("The output_status_array array is empty\n");
-        return;
+        return SSP_FAILURE;
     }
 
     printf("==== Line Register Status Callback ====\n");
@@ -963,7 +963,7 @@ static int lineRegisterStatus_callback(MTAMGMT_MTA_STATUS *output_status_array, 
     }
     printf("==== Line Register Status Callback ====\n");
 
-    return;
+    return SSP_SUCCESS;
 }
 
 int ssp_MTAHAL_LineRegisterStatus_callback_register(void)

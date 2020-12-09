@@ -64,8 +64,7 @@ extern "C"
     int ssp_mbus_register_base();
     int ssp_mbus_getHealth(char *cmpId, char*cmpPath);
     int ssp_mbus_SendsystemReadySignal(void);
-    int ssp_mbus_unloadcfg();
-
+    int ssp_mbus_unloadcfg();    
 };
 
 /***************************************************************************

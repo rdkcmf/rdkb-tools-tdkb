@@ -21,7 +21,11 @@
 #define __SSP_TDK_WRP_H__
 
 #define	MAX_ATTRIBUTE_SIZE	100
+
+#ifndef MAX_PARAM_SIZE
 #define MAX_PARAM_SIZE		200
+#endif
+
 #define MAX_PARAMS_COMP		100
 #define MAX_COMP_ARRAY		20
 #define MAX_PARAM_NAMES_ARRAY   1000
@@ -32,17 +36,22 @@
 #define SSP_FAILURE       1
 
 #define  DIAG_CFG_REF_STRING_LENGTH  256
+#ifdef IFNAMSIZ
+ #undef IFNAMSIZ
+#endif
 #define  IFNAMSIZ  50
 #define PING_DEF_COUNT        3
 #define PING_DEF_TIMEO       1
 #define PING_DEF_BSIZE       56
 
+#ifndef ANSC_IPV4_ADDRESS
 #define  ANSC_IPV4_ADDRESS                             \
          union                                         \
          {                                             \
             unsigned char                   Dot[4];    \
             unsigned long                   Value;     \
          }
+#endif
 
 #ifndef MTA_HAL_SHORT_VALUE_LEN
 #define  MTA_HAL_SHORT_VALUE_LEN   16
@@ -289,4 +298,7 @@ MTA_HANDSETS_INFO
     char                            SupportedTN[64];
 }
 MTA_HANDSETS_INFO, *PMTA_HANDSETS_INFO;
+
+int CcspBaseIf_getHealth(void* bus_handle, const char* dst_component_id, char* dbus_path, int *health);
+
 #endif

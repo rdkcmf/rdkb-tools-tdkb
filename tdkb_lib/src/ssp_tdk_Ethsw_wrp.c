@@ -647,11 +647,11 @@ int ssp_ethsw_stub_hal_Get_EthWanInterfaceName( char* interface, int isNegativeS
 
         if(isNegativeScenario)
         {
-                result = GWP_GetEthWanInterfaceName(NULL,NULL);
+                result = GWP_GetEthWanInterfaceName(NULL, 0);
         }
         else
         {
-                result = GWP_GetEthWanInterfaceName(interface,max_size);
+                result = GWP_GetEthWanInterfaceName(interface, max_size);
         }
 
         if(result == RETURN_OK)
@@ -755,7 +755,7 @@ int ssp_ethsw_stub_hal_Get_EthWanPort( unsigned int* portNum, int isNegativeScen
 
         if(result == RETURN_OK)
         {
-                DEBUG_PRINT(DEBUG_ERROR, "ssp_ethsw_stub_hal_Get_EthWanPort function returns port number as %lu\n", *portNum);
+                DEBUG_PRINT(DEBUG_ERROR, "ssp_ethsw_stub_hal_Get_EthWanPort function returns port number as %u\n", *portNum);
         }
         else
         {

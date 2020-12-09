@@ -68,8 +68,7 @@ GETPARAMVALUES* ssp_getParameterValue(char *pParamName,int *pParamsize)
     int i;
     int cmpt;
     char *pCompArr_ParamName[MAX_PARAM_SIZE];
-    char *pParamValue[MAX_PARAM_NAMES_ARRAY];
-
+    
     printf("\nssp_getParameterValue::Entering ssp_getParameterValue Function in Component Stub ...\n");
 
     pCompArr_ParamName[0] = pParamName;
@@ -194,9 +193,6 @@ int ssp_setParameterValue(char *pParamName,char *pParamValue,char *pParamType, i
     int         ret ;
     char *      dst_componentid         =  NULL;
     char *      dst_pathname            =  NULL;
-    parameterValStruct_t **parameterVal = NULL;
-    int         size = 0;
-    int         i;
     unsigned char bTmp = 0;
     char * pFaultParameter = NULL;
     parameterValStruct_t val[MAX_COMP_ARRAY] = {{0}};
@@ -833,7 +829,7 @@ int ssp_setSessionId(int priority, int sessionId,int *pComponentName,int overrid
             (
              bus_handle_client,
              dst_pathname_cr,
-             pComponentName,
+             (const char*)pComponentName,
              subsystem_prefix,
              &ppComponents,
              &size2
@@ -914,7 +910,6 @@ GETPARAMATTR* ssp_getParameterAttr(char *pParamAttr,int *pParamAttrSize)
     int ret ;
     char *dst_componentid = NULL;
     char *dst_pathname = NULL;
-    int size = 0;
     int i;
     int cmpt;
     char *pParamNameAttr[MAX_PARAM_NAMES_ARRAY];
@@ -1064,8 +1059,6 @@ int ssp_setParameterAttr(char *pParamName,char *pAttrNotify,char *pAttrAccess)
     char *dst_componentid         =  NULL;
     char *dst_pathname            =  NULL;
     int size = 0;
-    int i;
-    int nCcspAttrArraySize   = 0;
     parameterAttributeStruct_t valAttr[MAX_COMP_ARRAY] = {{0}};
 
     strcat(dst_pathname_cr,subsystem_prefix);
@@ -1231,13 +1224,10 @@ int ssp_setMultipleParameterValue(char **paramList, int size)
     int         ret ;
     char *      dst_componentid         =  NULL;
     char *      dst_pathname            =  NULL;
-    parameterValStruct_t **parameterVal = NULL;
-    int         j, i = 0;
+    int         j = 0, i = 0;
     unsigned char bTmp = 0;
     char * pFaultParameter = NULL;
     parameterValStruct_t val[MAX_COMP_ARRAY] = {{NULL},{NULL},{NULL}};
-    int index = 0;
-    char *pParamName = NULL;
     char* pParamType = NULL;
 
     strcat(dst_pathname_cr,subsystem_prefix);
@@ -1403,8 +1393,7 @@ int ssp_Diag_Start(int mode)
 {
     diag_err_t status;
     diag_mode_t diag_mode = mode;
-    diag_obj_t *diag_ping_obj;
-
+    
     status = diag_start(diag_mode);
     if(status == DIAG_ERR_OK)
     {
@@ -1422,8 +1411,7 @@ int ssp_Diag_Start(int mode)
 int ssp_Diag_Stop(int mode)
 {
     diag_err_t status;
-    diag_mode_t diag_mode = mode;
-
+    
     status = diag_stop(mode);
     sleep(20);
 
@@ -1486,7 +1474,7 @@ int ssp_Diag_GetState(int mode, int *state)
     printf("In ssp_Diag_GetState\n");
     diag_err_t status;
 
-    status = diag_getstate(mode, state);
+    status = diag_getstate(mode, (diag_state_t *)state);
     if(status == DIAG_ERR_OK ){
         printf("diag_getstate success.\n");
         return 0;

@@ -35,6 +35,9 @@
 #define OUT
 #define TEST_SUCCESS true
 #define TEST_FAILURE false
+#ifdef MAX_PARAM_SIZE
+ #undef MAX_PARAM_SIZE
+#endif
 #define MAX_PARAM_SIZE  100
 #define MAX_PARAM_NAMES_ARRAY   1000
 

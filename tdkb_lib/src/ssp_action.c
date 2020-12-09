@@ -94,7 +94,7 @@ extern  PCCSP_CCD_INTERFACE             pPnmCcdIf;
 extern  ANSC_HANDLE                     bus_handle;
 extern char                             g_Subsystem[32];
 
-static  COMPONENT_COMMON_DM             CommonDm = {0};
+//static  COMPONENT_COMMON_DM             CommonDm = {0};
 
 ANSC_STATUS
     ssp_create_pnm

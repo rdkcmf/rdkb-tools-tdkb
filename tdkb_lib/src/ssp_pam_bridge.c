@@ -50,12 +50,68 @@
 #include "cosa_bridging_dml.h"
 #include "cosa_x_cisco_com_multilan_apis.h"
 #include "cosa_ethernet_apis_multilan.h"
+#include "cosa_upnp_apis.h"
 
 #define SSP_SUCCESS       0
 
 #define SSP_FAILURE       1
 
 #define BUFFER_SIZE       1023
+
+ANSC_STATUS
+CosaDmlDiInit
+    (
+        ANSC_HANDLE                 hDml,
+        PANSC_HANDLE                phContext
+    );
+
+ANSC_STATUS
+CosaDmlDiGetManufacturer
+    (
+        ANSC_HANDLE                 hContext,
+        char*                       pValue,
+        ULONG*                      pulSize
+    );
+
+ANSC_STATUS
+CosaDmlDiGetManufacturerOUI
+    (
+        ANSC_HANDLE                 hContext,
+        char*                       pValue,
+        ULONG*                      pulSize
+    );
+
+ANSC_STATUS
+CosaDmlDiGetModelName
+    (
+        ANSC_HANDLE                 hContext,
+        char*                       pValue,
+        ULONG*                      pulSize
+    );
+
+ANSC_STATUS
+CosaDmlDiGetDescription
+    (
+        ANSC_HANDLE                 hContext,
+        char*                       pValue,
+        ULONG*                      pulSize
+    );
+
+ANSC_STATUS
+CosaDmlDiGetProductClass
+    (
+        ANSC_HANDLE                 hContext,
+        char*                       pValue,
+        ULONG*                      pulSize
+    );
+
+ANSC_STATUS
+CosaDmlDiGetSerialNumber
+    (
+        ANSC_HANDLE                 hContext,
+        char*                       pValue,
+        ULONG*                      pulSize
+    );
 
 /*******************************************************************************************
  *
@@ -200,7 +256,6 @@ int ssp_CRRestart()
 int ssp_pam_Init()
 {
     int return_status = 0;
-    unsigned long value = 0;
     printf("\n Entering ssp_pam_Init function\n\n");
        return_status = CosaDmlDiInit(NULL,NULL);
 
@@ -300,7 +355,6 @@ int ssp_DmlMlanGetParamValue(char* MethodName, char* pValue, PULONG size)
 int ssp_DmlEthGetParamValue(char* MethodName)
 {
     int return_status = 0;
-    int unload_status = 0;
     ANSC_HANDLE hContext = NULL;
     unsigned long count = 0;
     printf("\n Entering ssp_DmlEthGetParamValue function\n\n");
@@ -339,7 +393,7 @@ int ssp_DmlEthGetParamValue(char* MethodName)
 	char status[20]="";
         COSA_DML_ETH_PORT_DINFO dinfo = {0};
         return_status = CosaDmlEthPortGetDinfo(hContext, 1, &dinfo);
-	printf("In ssp CosaDmlEthGetParamVal() dinfo.Status %lu\n", dinfo.Status);
+	printf("In ssp CosaDmlEthGetParamVal() dinfo.Status %d\n", dinfo.Status);
 	if( dinfo.Status == 1)
           sprintf(status,"Up");
         else if( dinfo.Status == 2)
@@ -381,7 +435,8 @@ int ssp_DmlEthGetParamValue(char* MethodName)
 
     else if( !(strcmp(MethodName, "GetEntry")) )
     {
-        COSA_DML_ETH_PORT_FULL entry = {0};
+        COSA_DML_ETH_PORT_FULL entry;
+        memset(&entry, 0, sizeof(COSA_DML_ETH_PORT_FULL));
         return_status = CosaDmlEthPortGetEntry(hContext, 1, &entry);
         printf("In ssp CosaDmlEthGetParamVal() entry name %s\n", entry.StaticInfo.Name);
 
@@ -415,7 +470,6 @@ int ssp_DmlEthGetParamValue(char* MethodName)
 int ssp_DmlDiGetParamValue(char* MethodName, char* pValue, PULONG size)
 {
     int return_status = 0;
-    int unload_status = 0;
     ANSC_HANDLE hContext = NULL;
     *size = 0;
     printf("\n Entering ssp_DmlMlanGetParamValue function\n\n");
@@ -621,7 +675,7 @@ int ssp_CosaDmlDhcpGet(char* MethodName, void* cfg)
 	DhcpCfg.InstanceNumber =1;
         return_status = CosaDmlDhcpcGetCfg(pam_handle,&DhcpCfg);
 
-        printf("ssp_CosaDmlDhcpcGetCfg: Instance Number  retrieved:%d\n",DhcpCfg.InstanceNumber);
+        printf("ssp_CosaDmlDhcpcGetCfg: Instance Number  retrieved:%lu\n",DhcpCfg.InstanceNumber);
         printf("ssp_CosaDmlDhcpcGetCfg: Alias retrieved:%s\n",DhcpCfg.Alias);
         printf("ssp_CosaDmlDhcpcGetCfg: Status retrieved:%d\n",DhcpCfg.bEnabled);
         printf("ssp_CosaDmlDhcpcGetCfg: Interface retrieved:%s\n",DhcpCfg.Interface);
@@ -641,8 +695,8 @@ int ssp_CosaDmlDhcpGet(char* MethodName, void* cfg)
 
         printf("ssp_CosaDmlDhcpcGetInfo: Status retrieved:%d\n",DhcpInfo.Status);
         printf("ssp_CosaDmlDhcpcGetInfo: DHCP status retrieved:%d\n",DhcpInfo.DHCPStatus);
-        printf("ssp_CosaDmlDhcpcGetInfo: DhcpInfo of IP routers retrieved:%d\n",DhcpInfo.NumIPRouters);
-        printf("ssp_CosaDmlDhcpcGetInfo: DhcpInfo of Dns servers retrieved:%d\n",DhcpInfo.NumDnsServers);
+        printf("ssp_CosaDmlDhcpcGetInfo: DhcpInfo of IP routers retrieved:%lu\n",DhcpInfo.NumIPRouters);
+        printf("ssp_CosaDmlDhcpcGetInfo: DhcpInfo of Dns servers retrieved:%lu\n",DhcpInfo.NumDnsServers);
 
         temp->Status=(unsigned long)DhcpInfo.Status;
         temp->DHCPStatus =(unsigned long)DhcpInfo.DHCPStatus;
@@ -666,7 +720,7 @@ int ssp_CosaDmlDhcpGet(char* MethodName, void* cfg)
        CFG* temp =cfg;
        DhcpCfg.InstanceNumber =1;
        return_status = CosaDmlDhcpcGetCfg(pam_handle,&DhcpCfg);
-       printf("ssp_CosaDmlDhcpcGetCfg: Instance Number  retrieved:%d\n",DhcpCfg.InstanceNumber);
+       printf("ssp_CosaDmlDhcpcGetCfg: Instance Number  retrieved:%lu\n",DhcpCfg.InstanceNumber);
        temp->InstanceNumber =(unsigned long)DhcpCfg.InstanceNumber;
     }
 
@@ -780,7 +834,7 @@ int ssp_CosaDmlDnsGet(char* MethodName, void* cfg)
        DNS* temp= cfg;
        return_status = CosaDmlDnsClientGetServer(pam_handle,&DnsCfg);
 
-       printf("ssp_CosaDmlDnsClientGetServer: Instance Number  retrieved:%d\n",DnsCfg.InstanceNumber);
+       printf("ssp_CosaDmlDnsClientGetServer: Instance Number  retrieved:%lu\n",DnsCfg.InstanceNumber);
        printf("ssp_CosaDmlDnsGet: Alias retrieved:%s\n",DnsCfg.Alias);
        printf("ssp_CosaDmlDnsGet: Status retrieved:%d\n",DnsCfg.bEnabled);
        printf("ssp_CosaDmlDnsGet: Interface retrieved:%s\n",DnsCfg.Interface);
@@ -808,10 +862,10 @@ int ssp_CosaDmlDnsGet(char* MethodName, void* cfg)
     else if( !(strcmp(MethodName, "DnsClientServers")) )
     {
        int* temp =cfg;
-       return_status = CosaDmlDnsClientGetServers(pam_handle,&DNSServers);
+       return_status = (int)CosaDmlDnsClientGetServers(pam_handle,&DNSServers);
        if (return_status != 0)
        {
-       printf("ssp_CosaDmlDnsGet: number of servers is %d\n",DNSServers);
+       printf("ssp_CosaDmlDnsGet: number of servers is %lu\n",DNSServers);
        *temp = (int)DNSServers;
        return_status =0;
        }
@@ -833,10 +887,10 @@ int ssp_CosaDmlDnsGet(char* MethodName, void* cfg)
     else if( !(strcmp(MethodName, "DnsRelayServers")) )
     {
        int* temp =cfg;
-       return_status = CosaDmlDnsRelayGetServers(pam_handle,&DNSServers);
+       return_status = (int)CosaDmlDnsRelayGetServers(pam_handle,&DNSServers);
        if (return_status != 0)
        {
-       printf("ssp_CosaDmlDnsGet: number of servers is %d\n",DNSServers);
+       printf("ssp_CosaDmlDnsGet: number of servers is %lu\n",DNSServers);
        *temp = (int)DNSServers;
        return_status =0;
         }

@@ -615,7 +615,7 @@ void CosaMTA::CosaMTA_DectGetEnable(IN const Json::Value& req, OUT Json::Value& 
     if(isNegativeScenario)
     {
        DEBUG_PRINT(DEBUG_TRACE, "Executing negative scenario\n");
-       returnValue = ssp_CosaDmlMTADectGetEnable(NULL,NULL);
+       returnValue = ssp_CosaDmlMTADectGetEnable(0,0);
     }
     else
     {
@@ -685,7 +685,7 @@ void CosaMTA::CosaMTA_DectSetEnable(IN const Json::Value& req, OUT Json::Value& 
     if(isNegativeScenario)
     {
        DEBUG_PRINT(DEBUG_TRACE, "Executing negative scenario\n");
-       returnValue = ssp_CosaDmlMTADectSetEnable(NULL,NULL);
+       returnValue = ssp_CosaDmlMTADectSetEnable(0,0);
     }
     else
     {
@@ -754,7 +754,7 @@ void CosaMTA::CosaMTA_DectGetRegistrationMode(IN const Json::Value& req, OUT Jso
     if(isNegativeScenario)
     {
        DEBUG_PRINT(DEBUG_TRACE, "Executing negative scenario\n");
-       returnValue = ssp_CosaDmlMTADectGetRegistrationMode(NULL,NULL);
+       returnValue = ssp_CosaDmlMTADectGetRegistrationMode(0,0);
     }
     else
     {
@@ -823,7 +823,7 @@ void CosaMTA::CosaMTA_DectSetRegistrationMode(IN const Json::Value& req, OUT Jso
     if(isNegativeScenario)
     {
        DEBUG_PRINT(DEBUG_TRACE, "Executing negative scenario\n");
-       returnValue = ssp_CosaDmlMTADectSetRegistrationMode(NULL,NULL);
+       returnValue = ssp_CosaDmlMTADectSetRegistrationMode(0,0);
     }
     else
     {
@@ -894,7 +894,7 @@ void CosaMTA::CosaMTA_GetDect(IN const Json::Value& req, OUT Json::Value& respon
     if(isNegativeScenario)
     {
        DEBUG_PRINT(DEBUG_TRACE, "Executing negative scenario\n");
-       returnValue = ssp_CosaDmlMTAGetDect(NULL,NULL,NULL);
+       returnValue = ssp_CosaDmlMTAGetDect(0,0,NULL);
     }
     else
     {
@@ -965,7 +965,7 @@ void CosaMTA::CosaMTA_GetDectPIN(IN const Json::Value& req, OUT Json::Value& res
     if(isNegativeScenario)
     {
        DEBUG_PRINT(DEBUG_TRACE, "Executing negative scenario\n");
-       returnValue = ssp_CosaDmlMTAGetDectPIN(NULL,NULL,NULL);
+       returnValue = ssp_CosaDmlMTAGetDectPIN(0,0,NULL);
     }
     else
     {
@@ -1033,7 +1033,7 @@ void CosaMTA::CosaMTA_SetDectPIN(IN const Json::Value& req, OUT Json::Value& res
     if(isNegativeScenario)
     {
        DEBUG_PRINT(DEBUG_TRACE, "Executing negative scenario\n");
-       returnValue = ssp_CosaDmlMTASetDectPIN(NULL,NULL,NULL);
+       returnValue = ssp_CosaDmlMTASetDectPIN(0,0,NULL);
     }
     else
     {

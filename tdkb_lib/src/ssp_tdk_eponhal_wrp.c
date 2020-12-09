@@ -60,7 +60,7 @@ int ssp_EPONHAL_GetParamUlongValue(char* paramName, unsigned long* value)
     {
         return_status = dpoe_LlidForwardingStateGetEntryCount(&llidEntry);
         *value = llidEntry;
-        DEBUG_PRINT(DEBUG_TRACE, "Return status of dpoe_LlidForwardingStateGetEntryCount %d, llidEntry: %u, output:%lu", return_status, llidEntry, value);
+        DEBUG_PRINT(DEBUG_TRACE, "Return status of dpoe_LlidForwardingStateGetEntryCount %d, llidEntry: %u, output:%lu", return_status, llidEntry, *value);
         if ( return_status != RETURN_OK)
         {
             DEBUG_PRINT(DEBUG_ERROR,"ssp_EPONHAL_GetParamUlongValue : Failed to get LlidForwardingStateGetEntryCount\n");
@@ -69,7 +69,7 @@ int ssp_EPONHAL_GetParamUlongValue(char* paramName, unsigned long* value)
     else if( !(strcmp(paramName, "GetErouterResetCount")) )
     {
        return_status = dpoe_hal_Get_ErouterResetCount(value);
-       DEBUG_PRINT(DEBUG_TRACE,"Return status of dpoe_hal_Get_ErouterResetCount %d,value : %lu", return_status,value);
+       DEBUG_PRINT(DEBUG_TRACE,"Return status of dpoe_hal_Get_ErouterResetCount %d,value : %lu", return_status,*value);
        if ( return_status != RETURN_OK)
        {
             DEBUG_PRINT(DEBUG_ERROR,"ssp_EPONHAL_GetParamUlongValue : Failed to get the Erouter Reset Count \n");
@@ -78,7 +78,7 @@ int ssp_EPONHAL_GetParamUlongValue(char* paramName, unsigned long* value)
     else if( !(strcmp(paramName, "GetLocalResetCount")) )
     {
        return_status = dpoe_hal_LocalResetCount(value);
-       DEBUG_PRINT(DEBUG_TRACE,"Return status of dpoe_hal_LocalResetCount %d ,value : %lu", return_status,value);
+       DEBUG_PRINT(DEBUG_TRACE,"Return status of dpoe_hal_LocalResetCount %d ,value : %lu", return_status,*value);
        if ( return_status != RETURN_OK)
        {
             DEBUG_PRINT(DEBUG_ERROR,"ssp_EPONHAL_GetParamUlongValue : Failed to get the Local Reset count\n");
@@ -87,7 +87,7 @@ int ssp_EPONHAL_GetParamUlongValue(char* paramName, unsigned long* value)
     else if( !(strcmp(paramName, "GetEponResetCount")) )
     {
        return_status = dpoe_hal_Get_eponResetCount(value);
-       DEBUG_PRINT(DEBUG_TRACE,"Return status of dpoe_hal_Get_eponResetCount %d,value : %lu", return_status,value);
+       DEBUG_PRINT(DEBUG_TRACE,"Return status of dpoe_hal_Get_eponResetCount %d,value : %lu", return_status,*value);
        if ( return_status != RETURN_OK)
        {
             DEBUG_PRINT(DEBUG_ERROR,"ssp_EPONHAL_GetParamUlongValue : Failed to get the Epon Reset count\n");
@@ -97,7 +97,7 @@ int ssp_EPONHAL_GetParamUlongValue(char* paramName, unsigned long* value)
     {
         return_status = dpoe_OnuLinkStatisticsGetEntryCount(&llidEntry);
         *value = llidEntry;
-        DEBUG_PRINT(DEBUG_TRACE,"Return status of dpoe_OnuLinkStatisticsGetEntryCount: %d llidEntry:%u  value:%lu ", return_status,llidEntry, value);
+        DEBUG_PRINT(DEBUG_TRACE,"Return status of dpoe_OnuLinkStatisticsGetEntryCount: %d llidEntry:%u  value:%lu ", return_status,llidEntry, *value);
         if ( return_status != RETURN_OK)
         {
             DEBUG_PRINT(DEBUG_ERROR,"ssp_EPONHAL_GetParamUlongValue : Failed to get the count of Onu Link Statstics\n");
@@ -107,7 +107,7 @@ int ssp_EPONHAL_GetParamUlongValue(char* paramName, unsigned long* value)
     {
         return_status = dpoe_OamFrameRateGetEntryCount(&llidEntry);
         *value = llidEntry;
-        DEBUG_PRINT(DEBUG_TRACE,"Return status of dpoe_OamFrameRateGetEntryCount : %d  llidEntry:%u value:%lu", return_status,llidEntry, value);
+        DEBUG_PRINT(DEBUG_TRACE,"Return status of dpoe_OamFrameRateGetEntryCount : %d  llidEntry:%u value:%lu", return_status,llidEntry, *value);
         if ( return_status != RETURN_OK)
         {
             DEBUG_PRINT(DEBUG_ERROR,"ssp_EPONHAL_GetParamUlongValue : Failed to get the count of  Frame Rate Entry\n");
@@ -117,7 +117,7 @@ int ssp_EPONHAL_GetParamUlongValue(char* paramName, unsigned long* value)
     {
         return_status = dpoe_getMacLearningAggregateLimit(&llidEntry);
         *value = llidEntry;
-        DEBUG_PRINT(DEBUG_TRACE,"Return status of dpoe_getMacLearningAggregateLimit : %d llidEntry:%u value:%lu", return_status,llidEntry, value);
+        DEBUG_PRINT(DEBUG_TRACE,"Return status of dpoe_getMacLearningAggregateLimit : %d llidEntry:%u value:%lu", return_status,llidEntry, *value);
         if ( return_status != RETURN_OK)
         {
             DEBUG_PRINT(DEBUG_ERROR,"ssp_EPONHAL_GetParamUlongValue : Failed to get the count of  Frame Rate Entry\n");
@@ -127,7 +127,7 @@ int ssp_EPONHAL_GetParamUlongValue(char* paramName, unsigned long* value)
     {
         return_status = dpoe_hal_Reboot_Ready(value);
         if (value)
-             DEBUG_PRINT(DEBUG_TRACE,"Return status of dpoe_hal_Reboot_Ready  %d,value : %lu\n", return_status,value);
+             DEBUG_PRINT(DEBUG_TRACE,"Return status of dpoe_hal_Reboot_Ready  %d,value : %lu\n", return_status,*value);
         else
              DEBUG_PRINT(DEBUG_TRACE,"Return status of dpoe_hal_Reboot_Ready  %d\n", return_status);
         if ( return_status != RETURN_OK)
@@ -139,7 +139,7 @@ int ssp_EPONHAL_GetParamUlongValue(char* paramName, unsigned long* value)
     {
         return_status = dpoe_getDynamicMacAddressAgeLimit(&llidEntry);
         *value = llidEntry;
-        DEBUG_PRINT(DEBUG_TRACE, "Return status of dpoe_getDynamicMacAddressAgeLimit %d, llidEntry: %u, output:%lu", return_status, llidEntry, value);
+        DEBUG_PRINT(DEBUG_TRACE, "Return status of dpoe_getDynamicMacAddressAgeLimit %d, llidEntry: %u, output:%lu", return_status, llidEntry, *value);
         if ( return_status != RETURN_OK)
         {
             DEBUG_PRINT(DEBUG_ERROR,"ssp_EPONHAL_GetParamUlongValue : Failed to get DynamicMacAddressAgeLimit\n");
@@ -149,7 +149,7 @@ int ssp_EPONHAL_GetParamUlongValue(char* paramName, unsigned long* value)
     {
         return_status = dpoe_getDynamicMacLearningTableSize(&llidEntry);
         *value = llidEntry;
-        DEBUG_PRINT(DEBUG_TRACE, "Return status of dpoe_getDynamicMacLearningTableSize %d, llidEntry: %u, output:%lu", return_status, llidEntry, value);
+        DEBUG_PRINT(DEBUG_TRACE, "Return status of dpoe_getDynamicMacLearningTableSize %d, llidEntry: %u, output:%lu", return_status, llidEntry, *value);
         if ( return_status != RETURN_OK)
         {
             DEBUG_PRINT(DEBUG_ERROR,"ssp_EPONHAL_GetParamUlongValue : Failed to get dpoe_getDynamicMacLearningTableSize\n");
@@ -298,7 +298,7 @@ int ssp_EPONHAL_GetOnuId(char* macAddress)
     if ( return_status == RETURN_OK)
     {
         sprintf(macAddress, "%02x:%02x:%02x:%02x:%02x:%02x",dpoe_mac.macAddress[0], dpoe_mac.macAddress[1], dpoe_mac.macAddress[2], dpoe_mac.macAddress[3], dpoe_mac.macAddress[4],dpoe_mac.macAddress[5]);
-        DEBUG_PRINT(DEBUG_ERROR,"ssp_EPONHAL_GetOnuId : Successfully got the ONU ID dpoe_mac.macAddress=%u macAddress=%s\n", dpoe_mac.macAddress, macAddress);
+        DEBUG_PRINT(DEBUG_ERROR,"ssp_EPONHAL_GetOnuId : Successfully got the ONU ID dpoe_mac.macAddress=%s macAddress=%s\n", dpoe_mac.macAddress, macAddress);
         return return_status;
     }
     else

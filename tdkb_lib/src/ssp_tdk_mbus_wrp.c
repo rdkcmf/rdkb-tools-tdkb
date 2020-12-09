@@ -58,7 +58,7 @@ extern char subsystem_prefix[32];
 int ssp_mbus_loadcfg(char *pCmpCfg)
 {
     int return_status = SSP_MBUS_FAILURE;
-    int eRTName[100] = {0};
+    char eRTName[100] = {0};
     printf("\n ssp_mbus_loadcfg :: Make file option for subsytem flag eRT is set to %d",eRT);
     if(eRT == 1)
     {
@@ -88,7 +88,7 @@ int ssp_mbus_loadcfg(char *pCmpCfg)
     printf("\ngpTDKStartCfg->ComponentId is %s",gpTDKStartCfg->ComponentId);
     printf("\ngpTDKStartCfg->ComponentName is %s",gpTDKStartCfg->ComponentName);
     printf("\ngpTDKStartCfg->DbusPath is %s",gpTDKStartCfg->DbusPath);
-    printf("\ngpTDKStartCfg->Version is %d",gpTDKStartCfg->Version);
+    printf("\ngpTDKStartCfg->Version is %lu",gpTDKStartCfg->Version);
 
     if(return_status != SSP_MBUS_SUCCESS)
     {
@@ -159,12 +159,12 @@ int ssp_mbus_init(char *pCfg)
     return_status = CCSP_Message_Bus_Init(gpTDKStartCfg->ComponentName,
             pCfg,
             &tdk_bus_handle,
-            Ansc_AllocateMemory_Callback,
+            (CCSP_MESSAGE_BUS_MALLOC)Ansc_AllocateMemory_Callback,
             Ansc_FreeMemory_Callback);
 
     if ( return_status == SSP_MBUS_SUCCESS )
     {
-        printf("\n ssp_mbus_init :: CCSP_Message_Bus_Init Success and bus hadle instance is %x",tdk_bus_handle);
+        printf("\n ssp_mbus_init :: CCSP_Message_Bus_Init Success and bus handle instance is %p",tdk_bus_handle);
     }
     else
     {
@@ -188,8 +188,7 @@ int ssp_mbus_init(char *pCfg)
 int ssp_mbus_exit()
 {
 
-    int return_status = SSP_MBUS_FAILURE;
-
+    
     CCSP_Message_Bus_Exit(tdk_bus_handle);
     tdk_bus_handle = NULL;
 
@@ -201,7 +200,7 @@ int ssp_mbus_exit()
     }
     else
     {
-        printf("\n ssp_mbus_exit :: CCSP_Message_Bus_Exit FAILURE. Existing bus handle %x is not closed\n",tdk_bus_handle);
+        printf("\n ssp_mbus_exit :: CCSP_Message_Bus_Exit FAILURE. Existing bus handle %p is not closed\n",tdk_bus_handle);
     }
 
     return SSP_MBUS_FAILURE;
@@ -428,7 +427,7 @@ int ssp_mbus_register_event(char *pEventName)
 
     CCSP_Base_Func_CB cb;
     memset(&cb, 0 , sizeof(cb));
-    cb.systemReadySignal = registerEventCb;
+    cb.systemReadySignal = (void*)registerEventCb;
 
     CcspBaseIf_SetCallback
         (
@@ -690,7 +689,7 @@ int ssp_mbus_get_registered_components()
     int return_status = SSP_MBUS_FAILURE;
     return_status = CcspBaseIf_getRegisteredComponents(tdk_bus_handle,
             CCSP_CR_NAME,
-            &component,
+            (registeredComponent_t***)&component,
             &componentSize);
 
     if(return_status == CCSP_SUCCESS)
@@ -722,7 +721,6 @@ int ssp_mbus_get_registered_components()
 
 int ssp_mbus_check_namespace_datatype()
 {
-    name_spaceType_t NameSt;
     dbus_bool   typeRet;
     int return_status = SSP_MBUS_FAILURE;
     return_status = CcspBaseIf_checkNamespaceDataType (tdk_bus_handle,

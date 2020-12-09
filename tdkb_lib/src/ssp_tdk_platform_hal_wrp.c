@@ -16,6 +16,10 @@ limitations under the License.
 #include "ssp_tdk_platform_hal_wrp.h"
 #include "ssp_hal_logger.h"
 
+INT platform_hal_getCMTSMac(CHAR *pValue);
+int platform_hal_SetFanSpeed(unsigned long int Value);
+int platform_hal_GetChipTemperature(unsigned int chipIndex, unsigned long int* pTempValue);
+
 /*******************************************************************************************
  * * Function Name       : ssp_DocsisParamsDBInit
  ** Description          : This function will invoke the HAL api to intialize Docsis DB
@@ -753,7 +757,7 @@ int ssp_getRPM(unsigned int fanIndex,unsigned int *rpmbuf)
         *rpmbuf = rpmValue;
         DEBUG_PRINT(DEBUG_TRACE, "Value of RPM is %d\n",rpmValue);
 
-        if (rpmValue < 0 )
+        if ((signed)rpmValue < 0 )
         {
                 DEBUG_PRINT(DEBUG_ERROR, "Platform funtion returns failure\n");
                 return RETURN_ERR;

@@ -378,7 +378,7 @@ void RBUS::RBUS_GetValue(IN const Json::Value& req, OUT Json::Value& response)
         if ((strcmp(paramtype,"String") == 0) || (strcmp(paramtype,"Boolean") == 0))
             sprintf(details, "%s", getvalue);
         else
-            sprintf(details, "%d", getvalue_i);
+            sprintf(details, "%d", *getvalue_i);
 
         response["result"]="SUCCESS";
         response["details"]=details;

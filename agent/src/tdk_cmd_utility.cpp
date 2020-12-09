@@ -219,6 +219,7 @@ string getStubFunctionName(int lineNo,string file,string moduleName)
     }
     else
         cout << "\n\nUnable to open the configuration file\n\n";
+    return "";
 }
 
 

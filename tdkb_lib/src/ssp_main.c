@@ -57,17 +57,18 @@ BOOL                            g_bActive               = FALSE;
 #define DEBUG_INI_NAME "/etc/debug.ini"
 char tdkDebugIniFile[100] = {0};
 
+void
+CcspBaseIf_deadlock_detection_log_print
+(
+    int sig
+);
+
 int  cmd_dispatch(int  command)
 {
-    ULONG                           ulInsNumber        = 0;
-    parameterValStruct_t            val[3]             = {0};
     char*                           pParamNames[]      = {"Device."};
     parameterValStruct_t**          ppReturnVal        = NULL;
-    parameterInfoStruct_t**         ppReturnValNames   = NULL;
-    parameterAttributeStruct_t**    ppReturnvalAttr    = NULL;
-    ULONG                           ulReturnValCount   = 0;
+    int                             ulReturnValCount   = 0;
     ULONG                           i                  = 0;
-    char *pParamName = pParamNames[0];
     switch ( command )
     {
         case	'e' :
@@ -191,7 +192,6 @@ static void _print_stack_backtrace(void)
 
 #if defined(_ANSC_LINUX)
 static void daemonize(void) {
-    int fd;
     switch (fork()) {
         case 0:
             break;
@@ -386,10 +386,7 @@ int ssp_register(bool bexecVal)
 {
 
 
-    ANSC_STATUS                     returnStatus       = ANSC_STATUS_SUCCESS;
-    int                             cmdChar            = 0;
     BOOL                            bRunAsDaemon       = FALSE;
-    int                             idx                = 0;
     char                            cmd[1024]          = {0};
     FILE                           *fd                 = NULL;
     DmErr_t                         err;
@@ -466,7 +463,7 @@ int ssp_register(bool bexecVal)
     printf("\ngpPnmStartCfg->ComponentId is %s",gpPnmStartCfg->ComponentId);
     printf("\ngpPnmStartCfg->ComponentName is %s",gpPnmStartCfg->ComponentName);
     printf("\ngpPnmStartCfg->DbusPath is %s",gpPnmStartCfg->DbusPath);
-    printf("\ngpPnmStartCfg->Version is %d",gpPnmStartCfg->Version);
+    printf("\ngpPnmStartCfg->Version is %lu",gpPnmStartCfg->Version);
     AnscSetTraceLevel(CCSP_TRACE_LEVEL_INFO);
 
 #if defined(_DEBUG) && defined(_COSA_SIM_)

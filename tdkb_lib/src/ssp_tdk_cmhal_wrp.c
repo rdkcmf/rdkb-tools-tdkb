@@ -18,6 +18,9 @@
 */
 
 #include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <time.h>
 #include "ssp_tdk_cmhal_wrp.h"
 
 
@@ -92,7 +95,7 @@ int ssp_CMHAL_GetParamCharValue(char* paramName, char* value)
            strcpy(value, docsisinfo.DOCSISVersion);
        }
        else
-           return_status = docsis_GetDOCSISInfo(value);
+           return_status = docsis_GetDOCSISInfo((PCMMGMT_CM_DOCSIS_INFO)value);
     }
     else if( !(strcmp(paramName, "Ipv6DhcpBootFileName")) )
     {
@@ -104,7 +107,7 @@ int ssp_CMHAL_GetParamCharValue(char* paramName, char* value)
             strcpy(value, v6dhcpinfo.IPv6BootFileName);
         }
         else
-            return_status = cm_hal_GetIPv6DHCPInfo(value);
+            return_status = cm_hal_GetIPv6DHCPInfo((PCMMGMT_CM_IPV6DHCP_INFO)value);
     }
     else if( !(strcmp(paramName, "RebindTimeRemaining")) )
     {
@@ -116,7 +119,7 @@ int ssp_CMHAL_GetParamCharValue(char* paramName, char* value)
             strcpy(value, v4dhcpinfo.RebindTimeRemaining);
         }
         else
-            return_status = cm_hal_GetDHCPInfo(value);
+            return_status = cm_hal_GetDHCPInfo((PCMMGMT_CM_DHCP_INFO)value);
     }
     else if( !(strcmp(paramName, "RenewTimeRemaining")) )
     {
@@ -128,7 +131,7 @@ int ssp_CMHAL_GetParamCharValue(char* paramName, char* value)
             strcpy(value, v4dhcpinfo.RenewTimeRemaining);
         }
         else
-            return_status = cm_hal_GetDHCPInfo(value);
+            return_status = cm_hal_GetDHCPInfo((PCMMGMT_CM_DHCP_INFO)value);
     }
     else if( !(strcmp(paramName, "Ipv4DhcpBootFileName")) )
     {
@@ -140,7 +143,7 @@ int ssp_CMHAL_GetParamCharValue(char* paramName, char* value)
             strcpy(value, v4dhcpinfo.BootFileName);
         }
         else
-            return_status = cm_hal_GetDHCPInfo(value);
+            return_status = cm_hal_GetDHCPInfo((PCMMGMT_CM_DHCP_INFO)value);
     }
     else if( !(strcmp(paramName, "Ipv6DhcpIPAddress")) )
     {
@@ -152,7 +155,7 @@ int ssp_CMHAL_GetParamCharValue(char* paramName, char* value)
             strcpy(value, v6dhcpinfo.IPv6Address);
 	 }
         else
-            return_status = cm_hal_GetIPv6DHCPInfo(value);
+            return_status = cm_hal_GetIPv6DHCPInfo((PCMMGMT_CM_IPV6DHCP_INFO)value);
     }
     else if( !(strcmp(paramName, "ConfigFileName")) )
     {
@@ -164,7 +167,7 @@ int ssp_CMHAL_GetParamCharValue(char* paramName, char* value)
             strcpy(value, docsisinfo.DOCSISConfigFileName);
         }
         else
-            return_status = docsis_GetDOCSISInfo(value);
+            return_status = docsis_GetDOCSISInfo((PCMMGMT_CM_DOCSIS_INFO)value);
     }
     else if( !(strcmp(paramName, "DS_DataRate")) )
     {
@@ -175,7 +178,7 @@ int ssp_CMHAL_GetParamCharValue(char* paramName, char* value)
             strcpy(value, docsisinfo.DOCSISDownstreamDataRate);
         }
         else
-            return_status = docsis_GetDOCSISInfo(value);
+            return_status = docsis_GetDOCSISInfo((PCMMGMT_CM_DOCSIS_INFO)value);
     }
     else if( !(strcmp(paramName, "US_DataRate")) )
     {
@@ -186,13 +189,13 @@ int ssp_CMHAL_GetParamCharValue(char* paramName, char* value)
             strcpy(value, docsisinfo.DOCSISUpstreamDataRate);
         }
         else
-            return_status = docsis_GetDOCSISInfo(value);
+            return_status = docsis_GetDOCSISInfo((PCMMGMT_CM_DOCSIS_INFO)value);
     }
     else if( !(strcmp(paramName, "DS_Frequency")) )
     {
        long unsigned int  count = 0;
        return_status = docsis_GetNumOfActiveRxChannels(&count);
-       printf("Count of Active Rx channels is %d\n",count);
+       printf("Count of Active Rx channels is %lu\n",count);
        if (return_status == 0)
        {
            pDsFreq = (PCMMGMT_CM_DS_CHANNEL) malloc(sizeof(CMMGMT_CM_DS_CHANNEL)*count);
@@ -228,7 +231,7 @@ int ssp_CMHAL_GetParamCharValue(char* paramName, char* value)
     {
         long unsigned int  count = 0;
        return_status = docsis_GetNumOfActiveTxChannels(&count);
-        printf("Count of Active Tx channels is %d\n",count);
+        printf("Count of Active Tx channels is %lu\n",count);
         if (return_status == 0)
         {
             pUsFreq = (PCMMGMT_CM_US_CHANNEL) malloc(sizeof(CMMGMT_CM_US_CHANNEL)*count);
@@ -269,7 +272,7 @@ int ssp_CMHAL_GetParamCharValue(char* paramName, char* value)
     {
         long unsigned int  count = 0;
         return_status = docsis_GetNumOfActiveRxChannels(&count);
-        printf("Count of Active Rx channels is %d\n",count);
+        printf("Count of Active Rx channels is %lu\n",count);
 	if (return_status == 0)
         {
             pDsFreq = (PCMMGMT_CM_DS_CHANNEL) malloc(sizeof(CMMGMT_CM_DS_CHANNEL)*count);
@@ -313,7 +316,7 @@ int ssp_CMHAL_GetParamCharValue(char* paramName, char* value)
     {
         long unsigned int  count = 0;
         return_status = docsis_GetNumOfActiveRxChannels(&count);
-        printf("Count of Active Rx channels is %d\n",count);
+        printf("Count of Active Rx channels is %lu\n",count);
         if (return_status == 0)
         {
             pDsFreq = (PCMMGMT_CM_DS_CHANNEL) malloc(sizeof(CMMGMT_CM_DS_CHANNEL)*count);
@@ -331,9 +334,9 @@ int ssp_CMHAL_GetParamCharValue(char* paramName, char* value)
                 for(i=0;i<count;i++)
                 {
                     printf("ssp_CMHAL_GetParamCharValue: DS LockStatus retreived :%s\n",pDsFreq[i].LockStatus);
-                    printf("ssp_CMHAL_GetParamCharValue: DS ChannelID retreived :%d\n",pDsFreq[i].ChannelID);
+                    printf("ssp_CMHAL_GetParamCharValue: DS ChannelID retreived :%lu\n",pDsFreq[i].ChannelID);
                     char Channelid[16] = {0};
-                    sprintf(Channelid,"%d",pDsFreq[i].ChannelID);
+                    sprintf(Channelid,"%lu",pDsFreq[i].ChannelID);
                     strcat(value, pDsFreq[i].LockStatus);
 		    strcat(value, ":");
                     strcat(value, Channelid);
@@ -350,7 +353,7 @@ int ssp_CMHAL_GetParamCharValue(char* paramName, char* value)
     {
         long unsigned int  count = 0;
         return_status = docsis_GetNumOfActiveTxChannels(&count);
-        printf("Count of Active Tx channels is %d\n",count);
+        printf("Count of Active Tx channels is %lu\n",count);
         if (return_status == 0)
         {
             pUsPower = (PCMMGMT_CM_US_CHANNEL) malloc(sizeof(CMMGMT_CM_US_CHANNEL)*count);
@@ -384,7 +387,7 @@ int ssp_CMHAL_GetParamCharValue(char* paramName, char* value)
     {
        long unsigned int  count;
        return_status = docsis_GetNumOfActiveRxChannels(&count);
-       printf("Count of Active Rx channels is %d\n",count);
+       printf("Count of Active Rx channels is %lu\n",count);
        if (return_status == 0)
        {
            pDsPower = (PCMMGMT_CM_DS_CHANNEL) malloc(sizeof(CMMGMT_CM_DS_CHANNEL)*count);
@@ -421,7 +424,7 @@ int ssp_CMHAL_GetParamCharValue(char* paramName, char* value)
             strcpy(value,v6dhcpinfo.IPv6TimeServer);
         }
         else
-            return_status = cm_hal_GetIPv6DHCPInfo(value);
+            return_status = cm_hal_GetIPv6DHCPInfo((PCMMGMT_CM_IPV6DHCP_INFO)value);
     }
 
     else if( !(strcmp(paramName, "Ipv4TimeServer")) )
@@ -434,14 +437,14 @@ int ssp_CMHAL_GetParamCharValue(char* paramName, char* value)
             strcpy(value, v4dhcpinfo.TimeServer);
         }
         else
-            return_status = cm_hal_GetDHCPInfo(value);
+            return_status = cm_hal_GetDHCPInfo((PCMMGMT_CM_DHCP_INFO)value);
     }
   
     else if( !(strcmp(paramName, "USChannelIDAndFrequency")) )
     {
         long unsigned int  count;
         return_status = docsis_GetNumOfActiveTxChannels(&count);
-        printf("Count of Active Tx channels is %d\n",count);
+        printf("Count of Active Tx channels is %lu\n",count);
         if (return_status == 0)
         {
             pUsFreq = (PCMMGMT_CM_US_CHANNEL) malloc(sizeof(CMMGMT_CM_US_CHANNEL)*count);
@@ -457,11 +460,11 @@ int ssp_CMHAL_GetParamCharValue(char* paramName, char* value)
                 temp_UsFreq=pUsFreq;
                 for(i=0;i<count;i++)
                 {
-                    printf("ssp_CMHAL_GetParamCharValue: US Channel ID retreived :%d\n",temp_UsFreq->ChannelID);
+                    printf("ssp_CMHAL_GetParamCharValue: US Channel ID retreived :%lu\n",temp_UsFreq->ChannelID);
                     printf("ssp_CMHAL_GetParamCharValue: US Frequency retreived :%s\n",temp_UsFreq->Frequency);
                     char FreqString[64];
 		    char Channelid[16];
-                    sprintf(Channelid,"%d",temp_UsFreq->ChannelID);
+                    sprintf(Channelid,"%lu",temp_UsFreq->ChannelID);
                     strcpy(FreqString,temp_UsFreq->Frequency);
                     strcat(value, Channelid);
                     strcat(value, ":");
@@ -477,7 +480,7 @@ int ssp_CMHAL_GetParamCharValue(char* paramName, char* value)
     {
         long unsigned int  count;
        return_status = docsis_GetNumOfActiveTxChannels(&count);
-        printf("Count of Active Tx channels is %d\n",count);
+        printf("Count of Active Tx channels is %lu\n",count);
         if (return_status == 0)
         {
             pUsFreq = (PCMMGMT_CM_US_CHANNEL) malloc(sizeof(CMMGMT_CM_US_CHANNEL)*count);
@@ -508,7 +511,7 @@ int ssp_CMHAL_GetParamCharValue(char* paramName, char* value)
     {
         long unsigned int  count;
         return_status = docsis_GetNumOfActiveRxChannels(&count);
-        printf("Count of Active Rx channels is %d\n",count);
+        printf("Count of Active Rx channels is %lu\n",count);
         if (return_status == 0)
         {
             pDsFreq = (PCMMGMT_CM_DS_CHANNEL) malloc(sizeof(CMMGMT_CM_DS_CHANNEL)*count);
@@ -524,11 +527,11 @@ int ssp_CMHAL_GetParamCharValue(char* paramName, char* value)
                 temp_DsFreq=pDsFreq;
                 for(i=0;i<count;i++)
                 {
-                    printf("ssp_CMHAL_GetParamCharValue: DS Channel ID retreived :%d\n",temp_DsFreq->ChannelID);
+                    printf("ssp_CMHAL_GetParamCharValue: DS Channel ID retreived :%lu\n",temp_DsFreq->ChannelID);
                     printf("ssp_CMHAL_GetParamCharValue: DS Frequency retreived :%s\n",temp_DsFreq->Frequency);
                     char FreqString[64];
                     char Channelid[16];
-                    sprintf(Channelid,"%d",temp_DsFreq->ChannelID);
+                    sprintf(Channelid,"%lu",temp_DsFreq->ChannelID);
                     strcpy(FreqString,temp_DsFreq->Frequency);
                     strcat(value, Channelid);
                     strcat(value, ":");
@@ -550,13 +553,13 @@ int ssp_CMHAL_GetParamCharValue(char* paramName, char* value)
             strcpy(value, docsisinfo.DOCSISDownstreamScanning);
         }
         else
-            return_status = docsis_GetDOCSISInfo(value);
+            return_status = docsis_GetDOCSISInfo((PCMMGMT_CM_DOCSIS_INFO)value);
     }
     else if( !(strcmp(paramName, "DSLockStatusAndFrequency")) )
     {
         long unsigned int  count;
         return_status = docsis_GetNumOfActiveRxChannels(&count);
-        printf("Count of Active Rx channels is %d\n",count);
+        printf("Count of Active Rx channels is %lu\n",count);
         if (return_status == 0)
         {
             pDsFreq = (PCMMGMT_CM_DS_CHANNEL) malloc(sizeof(CMMGMT_CM_DS_CHANNEL)*count);
@@ -597,7 +600,7 @@ int ssp_CMHAL_GetParamCharValue(char* paramName, char* value)
             strcpy(value, docsisinfo.DOCSISUpstreamRanging);
         }
         else
-            return_status = docsis_GetDOCSISInfo(value);
+            return_status = docsis_GetDOCSISInfo((PCMMGMT_CM_DOCSIS_INFO)value);
     }
     else if( !(strcmp(paramName, "ToDStatus")) )
     {
@@ -609,7 +612,7 @@ int ssp_CMHAL_GetParamCharValue(char* paramName, char* value)
             strcpy(value, docsisinfo.ToDStatus);
         }
         else
-            return_status = docsis_GetDOCSISInfo(value);
+            return_status = docsis_GetDOCSISInfo((PCMMGMT_CM_DOCSIS_INFO)value);
     }
     else if( !(strcmp(paramName, "Ipv6DhcpPrefix")) )
     {
@@ -621,13 +624,13 @@ int ssp_CMHAL_GetParamCharValue(char* paramName, char* value)
             strcpy(value, v6dhcpinfo.IPv6Prefix);
         }
         else
-            return_status = cm_hal_GetIPv6DHCPInfo(value);
+            return_status = cm_hal_GetIPv6DHCPInfo((PCMMGMT_CM_IPV6DHCP_INFO)value);
     }
      else if( !(strcmp(paramName, "USLockStatusAndModulation")) )
     {
         long unsigned int  count;
         return_status = docsis_GetNumOfActiveTxChannels(&count);
-        printf("Count of Active Tx channels is %d\n",count);
+        printf("Count of Active Tx channels is %lu\n",count);
         if (return_status == 0)
         {
             pUsFreq = (PCMMGMT_CM_US_CHANNEL) malloc(sizeof(CMMGMT_CM_US_CHANNEL)*count);
@@ -660,7 +663,7 @@ int ssp_CMHAL_GetParamCharValue(char* paramName, char* value)
     {
         long unsigned int  count;
         return_status = docsis_GetNumOfActiveRxChannels(&count);
-        printf("Count of Active Rx channels is %d\n",count);
+        printf("Count of Active Rx channels is %lu\n",count);
         if (return_status == 0)
         {
             pDsFreq = (PCMMGMT_CM_DS_CHANNEL) malloc(sizeof(CMMGMT_CM_DS_CHANNEL)*count);
@@ -692,7 +695,7 @@ int ssp_CMHAL_GetParamCharValue(char* paramName, char* value)
     {
         long unsigned int  count;
         return_status = docsis_GetNumOfActiveTxChannels(&count);
-        printf("Count of Active Tx channels is %d\n",count);
+        printf("Count of Active Tx channels is %lu\n",count);
         if (return_status == 0)
         {
             pUsFreq = (PCMMGMT_CM_US_CHANNEL) malloc(sizeof(CMMGMT_CM_US_CHANNEL)*count);
@@ -708,11 +711,11 @@ int ssp_CMHAL_GetParamCharValue(char* paramName, char* value)
                 temp_UsFreq=pUsFreq;
                 for(i=0;i<count;i++)
                 {
-                    printf("ssp_CMHAL_GetParamCharValue: US Channel ID retreived :%d\n",temp_UsFreq->ChannelID);
+                    printf("ssp_CMHAL_GetParamCharValue: US Channel ID retreived :%lu\n",temp_UsFreq->ChannelID);
                     printf("ssp_CMHAL_GetParamCharValue: US Frequency retreived :%s\n",temp_UsFreq->ChannelType);
                     char FreqString[64];
                     char Channelid[16];
-                    sprintf(Channelid,"%d",temp_UsFreq->ChannelID);
+                    sprintf(Channelid,"%lu",temp_UsFreq->ChannelID);
                     strcpy(FreqString,temp_UsFreq->ChannelType);
                     strcat(value, Channelid);
                     strcat(value, ":");
@@ -728,7 +731,7 @@ int ssp_CMHAL_GetParamCharValue(char* paramName, char* value)
     {
         long unsigned int  count;
         return_status = docsis_GetNumOfActiveRxChannels(&count);
-        printf("Count of Active Rx channels is %d\n",count);
+        printf("Count of Active Rx channels is %lu\n",count);
         if (return_status == 0)
         {
             pDsFreq = (PCMMGMT_CM_DS_CHANNEL) malloc(sizeof(CMMGMT_CM_DS_CHANNEL)*count);
@@ -744,11 +747,11 @@ int ssp_CMHAL_GetParamCharValue(char* paramName, char* value)
                 temp_DsFreq=pDsFreq;
                 for(i=0;i<count;i++)
                 {
-                    printf("ssp_CMHAL_GetParamCharValue: DS Channel ID retreived :%d\n",temp_DsFreq->ChannelID);
+                    printf("ssp_CMHAL_GetParamCharValue: DS Channel ID retreived :%lu\n",temp_DsFreq->ChannelID);
                     printf("ssp_CMHAL_GetParamCharValue: DS Power retreived :%s\n",temp_DsFreq->PowerLevel);
                     char PowerString[64];
                     char Channelid[16];
-                    sprintf(Channelid,"%d",temp_DsFreq->ChannelID);
+                    sprintf(Channelid,"%lu",temp_DsFreq->ChannelID);
                     strcpy(PowerString,temp_DsFreq->PowerLevel);
                     strcat(value, Channelid);
                     strcat(value, ":");
@@ -764,7 +767,7 @@ int ssp_CMHAL_GetParamCharValue(char* paramName, char* value)
     {
         long unsigned int  count;
         return_status = docsis_GetNumOfActiveTxChannels(&count);
-        printf("Count of Active Tx channels is %d\n",count);
+        printf("Count of Active Tx channels is %lu\n",count);
         if (return_status == 0)
         {
             pUsFreq = (PCMMGMT_CM_US_CHANNEL) malloc(sizeof(CMMGMT_CM_US_CHANNEL)*count);
@@ -780,11 +783,11 @@ int ssp_CMHAL_GetParamCharValue(char* paramName, char* value)
                 temp_UsFreq=pUsFreq;
                 for(i=0;i<count;i++)
                 {
-                    printf("ssp_CMHAL_GetParamCharValue: US Channel ID retreived :%d\n",temp_UsFreq->ChannelID);
+                    printf("ssp_CMHAL_GetParamCharValue: US Channel ID retreived :%lu\n",temp_UsFreq->ChannelID);
                     printf("ssp_CMHAL_GetParamCharValue: US Power retreived :%s\n",temp_UsFreq->PowerLevel);
                     char PowerString[64];
                     char Channelid[16];
-                    sprintf(Channelid,"%d",temp_UsFreq->ChannelID);
+                    sprintf(Channelid,"%lu",temp_UsFreq->ChannelID);
                     strcpy(PowerString,temp_UsFreq->PowerLevel);
                     strcat(value, Channelid);
                     strcat(value, ":");
@@ -806,7 +809,7 @@ int ssp_CMHAL_GetParamCharValue(char* paramName, char* value)
             strcpy(value, docsisinfo.DOCSISDataRegComplete);
         }
         else
-            return_status = docsis_GetDOCSISInfo(value);
+            return_status = docsis_GetDOCSISInfo((PCMMGMT_CM_DOCSIS_INFO)value);
     }
     else if( !(strcmp(paramName, "DownstreamRanging")) )
     {
@@ -818,7 +821,7 @@ int ssp_CMHAL_GetParamCharValue(char* paramName, char* value)
             strcpy(value, docsisinfo.DOCSISDownstreamRanging);
         }
         else
-            return_status = docsis_GetDOCSISInfo(value);
+            return_status = docsis_GetDOCSISInfo((PCMMGMT_CM_DOCSIS_INFO)value);
     }
     else if( !(strcmp(paramName, "Cert")) )
     {
@@ -860,7 +863,7 @@ int ssp_CMHAL_GetParamUlongValue(char* paramName, unsigned long* value)
     if( !(strcmp(paramName, "DownFreq")) )
     {
         *value = docsis_GetDownFreq();
-        printf("ssp_CMHAL_GetParamUlongValue:DownFreq is %d", *value);
+        printf("ssp_CMHAL_GetParamUlongValue:DownFreq is %lu", *value);
 
         if ( *value == 0)
         {
@@ -893,11 +896,11 @@ int ssp_CMHAL_GetParamUlongValue(char* paramName, unsigned long* value)
         if(value)
         {
             return_status = cm_hal_GetDHCPInfo(&v4dhcpinfo);
-	     printf("ssp_CMHal_GetParamUlongValue: IPAddress retreived :%lu\n",v4dhcpinfo.IPAddress);
+	    printf("ssp_CMHal_GetParamUlongValue: IPAddress retreived :%lu\n",v4dhcpinfo.IPAddress.Value);
             *value = v4dhcpinfo.IPAddress.Value;
         }
         else
-            return_status = cm_hal_GetDHCPInfo(value);
+            return_status = cm_hal_GetDHCPInfo((PCMMGMT_CM_DHCP_INFO)value);
         
     }
     else if( !(strcmp(paramName, "LeaseTimeRemaining")) )
@@ -906,10 +909,10 @@ int ssp_CMHAL_GetParamUlongValue(char* paramName, unsigned long* value)
         {
             return_status = cm_hal_GetDHCPInfo(&v4dhcpinfo);
             printf("ssp_CMHal_GetParamUlongValue: LeaseTimeRemaining retreived :%lu\n",v4dhcpinfo.LeaseTimeRemaining);
-            value = v4dhcpinfo.LeaseTimeRemaining;
+            *value = v4dhcpinfo.LeaseTimeRemaining;
         }
         else
-            return_status = cm_hal_GetDHCPInfo(value);
+            return_status = cm_hal_GetDHCPInfo((PCMMGMT_CM_DHCP_INFO)value);
     }
     else if( !(strcmp(paramName, "IPv6LeaseTimeRemaining")) )
     {
@@ -917,10 +920,10 @@ int ssp_CMHAL_GetParamUlongValue(char* paramName, unsigned long* value)
         {
             return_status = cm_hal_GetIPv6DHCPInfo(&v6dhcpinfo);
             printf("ssp_CMHAL_GetParamCharValue: IPv6LeaseTimeRemaining retreived :%lu\n",v6dhcpinfo.IPv6LeaseTimeRemaining);
-            value = v6dhcpinfo.IPv6LeaseTimeRemaining;
+            *value = v6dhcpinfo.IPv6LeaseTimeRemaining;
         }
         else
-            return_status = cm_hal_GetIPv6DHCPInfo(value);
+            return_status = cm_hal_GetIPv6DHCPInfo((PCMMGMT_CM_IPV6DHCP_INFO)value);
     }
 
     else if( !(strcmp(paramName, "IPv6RebindTimeRemaining")) )
@@ -929,10 +932,10 @@ int ssp_CMHAL_GetParamUlongValue(char* paramName, unsigned long* value)
         {
             return_status = cm_hal_GetIPv6DHCPInfo(&v6dhcpinfo);
             printf("ssp_CMHAL_GetParamCharValue: IPv6RebindTimeRemaining retreived :%lu\n",v6dhcpinfo.IPv6RebindTimeRemaining);
-            value = v6dhcpinfo.IPv6RebindTimeRemaining;
+            *value = v6dhcpinfo.IPv6RebindTimeRemaining;
         }
         else
-            return_status = cm_hal_GetIPv6DHCPInfo(value);
+            return_status = cm_hal_GetIPv6DHCPInfo((PCMMGMT_CM_IPV6DHCP_INFO)value);
     }
       else if( !(strcmp(paramName, "IPv6RenewTimeRemaining")) )
     {
@@ -940,10 +943,10 @@ int ssp_CMHAL_GetParamUlongValue(char* paramName, unsigned long* value)
         {
             return_status = cm_hal_GetIPv6DHCPInfo(&v6dhcpinfo);
             printf("ssp_CMHAL_GetParamCharValue: IPv6RenewTimeRemaining retreived :%lu\n",v6dhcpinfo.IPv6RenewTimeRemaining);
-            value = v6dhcpinfo.IPv6RenewTimeRemaining;
+            *value = v6dhcpinfo.IPv6RenewTimeRemaining;
         }
         else
-            return_status = cm_hal_GetIPv6DHCPInfo(value);
+            return_status = cm_hal_GetIPv6DHCPInfo((PCMMGMT_CM_IPV6DHCP_INFO)value);
     }
     else if( !(strcmp(paramName, "CertStatus")) )
     {
@@ -959,7 +962,7 @@ int ssp_CMHAL_GetParamUlongValue(char* paramName, unsigned long* value)
     {
 	*value = -1;
         *value = docsis_GetUSChannelId();
-        printf("ssp_CMHAL_GetParamUlongValue:US Channel id is %d", *value);
+        printf("ssp_CMHAL_GetParamUlongValue:US Channel id is %lu", *value);
 
         if ( *value == -1)
         {
@@ -969,7 +972,7 @@ int ssp_CMHAL_GetParamUlongValue(char* paramName, unsigned long* value)
     }
     else if( !(strcmp(paramName, "DownloadInterface")) )
     {
-        return_status = cm_hal_Get_HTTP_Download_Interface(value);
+        return_status = cm_hal_Get_HTTP_Download_Interface((unsigned int*)value);
         printf("Return status of cm_hal_Get_HTTP_Download_Interface %d", return_status);
         if ( return_status != SSP_SUCCESS)
         {
@@ -983,7 +986,7 @@ int ssp_CMHAL_GetParamUlongValue(char* paramName, unsigned long* value)
        *value = docsis_GetDocsisEventLogItems(entryArray,50);
        if(value)
        {
-           printf("ssp_CMHal_GetParamUlongValue: Number of Docsis Event log items:%d\n",value);
+           printf("ssp_CMHal_GetParamUlongValue: Number of Docsis Event log items:%lu\n",*value);
            return_status = SSP_SUCCESS;
        }
        else
@@ -1044,7 +1047,7 @@ int ssp_CMHAL_GetParamUlongValue(char* paramName, unsigned long* value)
     else if(!(strcmp(paramName, "HTTP_Download_Status")))
     {
        *value = cm_hal_Get_HTTP_Download_Status();
-        printf("ssp_CMHAL_GetParamUlongValue:Download status is %d", *value);
+        printf("ssp_CMHAL_GetParamUlongValue:Download status is %lu", *value);
     }
     else
     {
@@ -1083,7 +1086,7 @@ int ssp_CMHAL_GetErrorCodeWords(char *value, int isNegativeScenario)
         printf("Executing positive scenario\n");
 
         return_status = docsis_GetNumOfActiveRxChannels(&count);
-        printf("Count of Active Rx channels is %d\n",count);
+        printf("Count of Active Rx channels is %lu\n",count);
         if (return_status == 0)
         {
             perrorcodes = (PCMMGMT_CM_ERROR_CODEWORDS) malloc(sizeof(CMMGMT_CM_ERROR_CODEWORDS)*count);
@@ -1102,7 +1105,7 @@ int ssp_CMHAL_GetErrorCodeWords(char *value, int isNegativeScenario)
                 {
                     printf("UnerroredCodewords :%lu, CorrectableCodewords :%lu, UncorrectableCodewords :%lu\n",perrorcodes[i].UnerroredCodewords,perrorcodes[i].CorrectableCodewords,perrorcodes[i].UncorrectableCodewords);
                     char str[64]= {0};
-                    sprintf(str,"%d,%d,%d",perrorcodes[i].UnerroredCodewords,perrorcodes[i].CorrectableCodewords,perrorcodes[i].UncorrectableCodewords);
+                    sprintf(str,"%lu,%lu,%lu",perrorcodes[i].UnerroredCodewords,perrorcodes[i].CorrectableCodewords,perrorcodes[i].UncorrectableCodewords);
                     strcat(value,str);
                     strcat(value," ");
                 }
@@ -1176,7 +1179,7 @@ int ssp_CMHAL_GetDocsisEventLogItems(CMMGMT_CM_EventLogEntry_t *entryArray,int l
 
        if(isNegativeScenario)
        {
-           result = docsis_GetDocsisEventLogItems(NULL, NULL);
+           result = docsis_GetDocsisEventLogItems(NULL, 0);
        }
        else
        {
@@ -1185,7 +1188,7 @@ int ssp_CMHAL_GetDocsisEventLogItems(CMMGMT_CM_EventLogEntry_t *entryArray,int l
           printf("Count is %d\n",count);
               for (i=0;i<count;i++)
               {
-		 printf("Time: %s,EventID: %lu,EventLevel : %lu, Description:%s",ctime(&(entryArray[i].docsDevEvFirstTime.tv_sec)), entryArray[i].docsDevEvId, entryArray[i].docsDevEvLevel, entryArray[i].docsDevEvText);
+		 printf("Time: %s,EventID: %d,EventLevel : %d, Description:%s",ctime(&(entryArray[i].docsDevEvFirstTime.tv_sec)), entryArray[i].docsDevEvId, entryArray[i].docsDevEvLevel, entryArray[i].docsDevEvText);
                  result = RETURN_OK;
               }
         }
@@ -1274,7 +1277,7 @@ int ssp_CMHAL_GetCPEList(unsigned long int *InstanceNum, char *cpeList, char *la
        {
           printf("Executing positive scenarios\n");
           result = cm_hal_GetCPEList(&pInfo,InstanceNum,lanMode);
-          printf("Result is %d, InstanceNum is :%d, LanMode is :%s\n",result,*InstanceNum,lanMode);
+          printf("Result is %d, InstanceNum is :%lu, LanMode is :%s\n",result,*InstanceNum,lanMode);
           if (result == RETURN_OK)
           {
               printf("cm_hal_GetCPEList returns success\n");
@@ -1357,7 +1360,6 @@ int ssp_CMHAL_SetMddIpModeOverride(char* Value)
  ********************************************************************************************/
  int ssp_CMHAL_SetUSChannelId(int Value)
 {
-    unsigned long int usChannelId =0;
     printf(" Entering ssp_CMHAL_SetUSChannelId function\n");
     //Since the api is a void function, validation of this function is done inside the python scripts
     docsis_SetUSChannelId(Value);
@@ -1648,8 +1650,8 @@ int ssp_CMHAL_GetDsOfdmChanTable(char* paramName, char* value, int *numberofEntr
             {
                  for(i=0;i<*numberofEntries;i++)
                  {
-                    printf("ssp_CMHAL_GetParamCharValue:  OFDM PlcTotalCodewords retrieved :%d\n",pDsOfdmDetails[i].PlcTotalCodewords);
-                    sprintf(value,"%d",pDsOfdmDetails[i].PlcTotalCodewords);
+                    printf("ssp_CMHAL_GetParamCharValue:  OFDM PlcTotalCodewords retrieved :%llu\n",pDsOfdmDetails[i].PlcTotalCodewords);
+                    sprintf(value,"%llu",pDsOfdmDetails[i].PlcTotalCodewords);
                     strcat(value, ",");
                  }
             }
@@ -1657,8 +1659,8 @@ int ssp_CMHAL_GetDsOfdmChanTable(char* paramName, char* value, int *numberofEntr
             {
                  for(i=0;i<*numberofEntries;i++)
                  {
-                     printf("ssp_CMHAL_GetParamCharValue:  OFDM PlcUnreliableCodewords retrieved :%d\n",pDsOfdmDetails[i].PlcUnreliableCodewords);
-                     sprintf(value,"%d",pDsOfdmDetails[i].PlcUnreliableCodewords);
+                     printf("ssp_CMHAL_GetParamCharValue:  OFDM PlcUnreliableCodewords retrieved :%llu\n",pDsOfdmDetails[i].PlcUnreliableCodewords);
+                     sprintf(value,"%llu",pDsOfdmDetails[i].PlcUnreliableCodewords);
                      strcat(value, ",");
                  }
             }
@@ -1666,8 +1668,8 @@ int ssp_CMHAL_GetDsOfdmChanTable(char* paramName, char* value, int *numberofEntr
             {
                  for(i=0;i<*numberofEntries;i++)
                  {
-                    printf("ssp_CMHAL_GetParamCharValue:  OFDM NcpTotalFields retrieved :%d\n",pDsOfdmDetails[i].NcpTotalFields);
-                    sprintf(value,"%d",pDsOfdmDetails[i].NcpTotalFields);
+                    printf("ssp_CMHAL_GetParamCharValue:  OFDM NcpTotalFields retrieved :%llu\n",pDsOfdmDetails[i].NcpTotalFields);
+                    sprintf(value,"%llu",pDsOfdmDetails[i].NcpTotalFields);
                     strcat(value, ",");
                  }
             }
@@ -1675,8 +1677,8 @@ int ssp_CMHAL_GetDsOfdmChanTable(char* paramName, char* value, int *numberofEntr
             {
                  for(i=0;i<*numberofEntries;i++)
                  {
-                    printf("ssp_CMHAL_GetParamCharValue:  OFDM NcpFieldCrcFailures retrieved :%d\n",pDsOfdmDetails[i].NcpFieldCrcFailures);
-                    sprintf(value,"%d",pDsOfdmDetails[i].NcpFieldCrcFailures);
+                    printf("ssp_CMHAL_GetParamCharValue:  OFDM NcpFieldCrcFailures retrieved :%llu\n",pDsOfdmDetails[i].NcpFieldCrcFailures);
+                    sprintf(value,"%llu",pDsOfdmDetails[i].NcpFieldCrcFailures);
                     strcat(value, ",");
                  }
             }
@@ -1688,7 +1690,7 @@ int ssp_CMHAL_GetDsOfdmChanTable(char* paramName, char* value, int *numberofEntr
             }
        }
        else
-           pintf("\ndocsis_GetDsOfdmChanTable returns failure\n\n");
+           printf("\ndocsis_GetDsOfdmChanTable returns failure\n\n");
    }
    else
    {
@@ -1947,15 +1949,20 @@ int ssp_CMHAL_GetStatusOfdmaUsTable(char* paramName, char* value, int *numberofE
  ********************************************************************************************/
 int ssp_CMHAL_IsEnergyDetected(char* energyDetected)
 {
-    print("ssp_CMHAL_IsEnergyDetected Function Entry \n");
+    printf("ssp_CMHAL_IsEnergyDetected Function Entry \n");
     int return_status = 0;
     return_status = docsis_IsEnergyDetected(energyDetected);
     if(SSP_SUCCESS == return_status)
     {
         if(energyDetected != NULL)
         {
-            printf("energyDetected = %d\n",energyDetected);
+            printf("energyDetected = %s\n",energyDetected);
             return SSP_SUCCESS;
+        }
+        else
+        {
+            printf("energyDEtected is NULL");
+            return SSP_FAILURE;
         }
     }
     else
