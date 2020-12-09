@@ -127,7 +127,7 @@ if "SUCCESS" in loadmodulestatus.upper() and "SUCCESS" in loadmodulestatus1.uppe
     #Get the IP Address
     ipaddress = snmplib.getIPAddress(obj1);
     ########## Script to Execute the snmp command ###########
-    actResponse =snmplib.SnmpExecuteCmd("snmpset", communityString, "-v 2c", "1.3.6.1.4.1.17270.50.2.1.1.1002.0 i 1", ipaddress);
+    actResponse =snmplib.SnmpExecuteCmd("snmpset", communityString, "-t 15 -v 2c", "1.3.6.1.4.1.17270.50.2.1.1.1002.0 i 1", ipaddress);
     if "INTEGER" in actResponse:
         print "Factory reset : SUCCESS";
         #Restore the device state saved before reboot
