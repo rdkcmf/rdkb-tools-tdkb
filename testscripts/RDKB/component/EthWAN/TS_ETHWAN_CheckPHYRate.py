@@ -25,7 +25,7 @@
   <primitive_test_name>EthWAN_DoNothing</primitive_test_name>
   <primitive_test_version>1</primitive_test_version>
   <status>FREE</status>
-  <synopsis>Physical Rate must be reported after boot in ETHWAN Mode in GWPROVETHWANLog.txt.0 log file</synopsis>
+  <synopsis>Physical Rate must be reported after boot in ETHWAN Mode in GWPROVGPONWANLog.txt.0 log file</synopsis>
   <groups_id/>
   <execution_time>5</execution_time>
   <long_duration>false</long_duration>
@@ -40,7 +40,7 @@
   </rdk_versions>
   <test_cases>
     <test_case_id>TC_ETHWAN_08</test_case_id>
-    <test_objective>Physical Rate must be reported after boot in ETHWAN Mode in GWPROVETHWANLog.txt.0 log file</test_objective>
+    <test_objective>Physical Rate must be reported after boot in ETHWAN Mode in GWPROVGPONWANLog.txt.0 log file</test_objective>
     <test_type>Positive</test_type>
     <test_setup>Broadband</test_setup>
     <pre_requisite>1. The broadband device should be in ETHWAN setup
@@ -50,7 +50,7 @@
     <input_parameters>Device.Ethernet.X_RDKCENTRAL-COM_WAN.Enabled</input_parameters>
     <automation_approch>1. Load module
 2. Get the ethwan mode and check if it is true or not
-3. If ethwan is enabled, check if the log is updated in GWPROVETHWANLog,txt.0
+3. If ethwan is enabled, check if the log is updated in GWPROVGPONWANLog.txt.0
 4. Unload module</automation_approch>
     <except_output>The PHY Rate should be updated in the log file.</except_output>
     <priority>High</priority>
@@ -109,7 +109,7 @@ if "SUCCESS" in loadmodulestatus.upper() and "SUCCESS" in loadmodulestatus1.uppe
 	    print "The device is in ethwan mode."
 
 	    tdkTestObj = obj1.createTestStep('ExecuteCmd');
-    	    tdkTestObj.addParameter("command", "cat /rdklogs/logs/GWPROVETHWANLog.txt.0 | grep 'WAN_MODE: Ethernet 100'  && echo \"SUCCESS\" || echo \"FAILURE\"");
+    	    tdkTestObj.addParameter("command", "cat /rdklogs/logs/GWPROVGPONWANLog.txt.0 | grep 'WAN_MODE: Ethernet 100'  && echo \"SUCCESS\" || echo \"FAILURE\"");
     	    expectedresult="SUCCESS";
 
     	    #Execute the test case in STB
