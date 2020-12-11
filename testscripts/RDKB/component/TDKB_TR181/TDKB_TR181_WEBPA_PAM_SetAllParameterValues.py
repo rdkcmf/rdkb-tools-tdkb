@@ -27,7 +27,7 @@
   <status>FREE</status>
   <synopsis>To set all tr181 parameters in WEBPA module</synopsis>
   <groups_id/>
-  <execution_time>30</execution_time>
+  <execution_time>60</execution_time>
   <long_duration>false</long_duration>
   <advanced_script>false</advanced_script>
   <remarks/>
