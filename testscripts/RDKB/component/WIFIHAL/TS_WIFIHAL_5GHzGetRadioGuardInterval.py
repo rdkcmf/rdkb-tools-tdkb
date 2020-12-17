@@ -103,7 +103,7 @@ if "SUCCESS" in loadmodulestatus.upper():
 	    if expectedresult in actualresult :
 		interval = details.split(":")[1].strip("nsec")
 
-		if interval == "Auto" or 100 <= int(interval) <= 800 :
+		if interval == "Auto" or (interval.isdigit() and (100 <= int(interval) <= 800)):
 		    print "RadioGuardInterval is from the valid range";
 		    tdkTestObj.setResultStatus("SUCCESS");
 		else:
