@@ -114,7 +114,7 @@ if "SUCCESS" in loadmodulestatus.upper():
 	    defaultSupportedModes = ['None', 'WPA-Personal', 'WPA2-Personal', 'WPA-WPA2-Personal', 'WPA-Enterprise', 'WPA2-Enterprise', 'WPA-WPA2-Enterprise', 'WEP-64', 'WEP-128']
 
 	    if expectedresult in actualresult:
-		actualSupportedModes = list(details.split(":")[1].strip().split(","))
+		actualSupportedModes = list(details.split(":")[1].replace(" ", "").split(","))
 		for item in actualSupportedModes:
 		    if item in defaultSupportedModes:
 			print "wifi_getApSecurityModesSupported function successful: %s"%details
