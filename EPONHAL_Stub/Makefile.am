@@ -20,7 +20,7 @@ AM_CPPFLAGS = -fPIC ${COPTS}
 AM_CXXFLAGS = -I${PKG_CONFIG_SYSROOT_DIR}$(includedir) \
               -I${PKG_CONFIG_SYSROOT_DIR}$(includedir)/ccsp \
               -I${top_srcdir}/EPONHAL_Stub/include -I${top_srcdir}/agent/include -I${top_srcdir}/tdkb_lib/include \
-              -Wall -Werror
+              -Wall
 
 lib_LTLIBRARIES = libeponhalstub.la
 libeponhalstub_la_SOURCES = src/EPONHAL.cpp
