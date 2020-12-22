@@ -31,6 +31,12 @@
 #define DEFAULT_BUFFERSIZE 128
 
 static rbusHandle_t bus_handle;
+static rbusProperty_t prop1;
+static rbusProperty_t prop2;
+static rbusProperty_t prop3;
+static rbusValue_t value;
+static rbusObject_t obj1, obj2;
+static rbusObject_t obj_ch1, obj_ch2;
 
 /*****************************************************************************************************************
  * Function Name : ssp_rbus_checkStatus
@@ -696,3 +702,627 @@ int ssp_rbus_registerOperation(char* operation, char* object_name,char* method_n
 
     return result;
 }
+
+/*****************************************************************************************************************
+* Function Name : ssp_rbus_property_apis
+* Description   : This function will invoke the different RBUS Property APIs
+* @param [in]   : Operation     : Operation to be Performed
+                : prop_count    : Property count
+                : property_name : Name of the Property
+                : name_value    : Name to be returned
+                : output        : integer value to be returned
+* @param [out]  : return status an integer value 0-success and 1-Failure
+******************************************************************************************************************/
+int ssp_rbus_property_apis(char* operation, int prop_count, char *property_name, char* name_value, int* output)
+{
+    DEBUG_PRINT(DEBUG_ERROR, "Entering the ssp_rbus_property_apis wrapper\n");
+    DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_property_apis - Operation is %s prop_count is %d and property_name is %s \n",operation,prop_count,property_name);
+
+    char const* name;
+    int result = RETURN_ERR;
+    int ret = RBUS_ERROR_SUCCESS;
+    int return_Value = 0;
+    int len = 0;
+
+    if (strcmp(operation,"rbusProperty_Init") == 0)
+    {
+        if(prop_count == 1)
+        {
+            DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_property_apis - Calling rbusProperty_Init function with prop1 ");
+            rbusProperty_Init (&prop1, property_name, NULL);
+        }
+        else if(prop_count == 2)
+        {
+            DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_property_apis - Calling rbusProperty_Init function with prop2 ");
+            rbusProperty_Init (&prop2, property_name, NULL);
+        }
+        else if(prop_count == 3)
+        {
+            DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_property_apis - Calling rbusProperty_Init function with prop2 ");
+            rbusProperty_Init (&prop3, property_name, NULL);
+        }
+        DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_property_apis - rbusProperty_Init function completed successfully ");
+        result = RETURN_OK;
+    }
+    else if (strcmp(operation,"rbusValue_Init") == 0)
+    {
+        DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_property_apis - Calling rbusValue_Init function with value ");
+        rbusValue_Init(&value);
+        DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_property_apis - rbusValue_Init function completed successfully ");
+        result = RETURN_OK;
+    }
+    else if (strcmp(operation,"rbusProperty_GetName") == 0)
+    {
+        if(prop_count == 1)
+        {
+            DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_property_apis - Calling rbusProperty_GetName function with prop1 ");
+            name = rbusProperty_GetName(prop1);
+        }
+        else if(prop_count == 2)
+        {
+            DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_property_apis - Calling rbusProperty_GetName function with prop2 ");
+            name = rbusProperty_GetName(prop2);
+        }
+        else if(prop_count == 3)
+        {
+            DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_property_apis - Calling rbusProperty_GetName function with prop3 ");
+            name = rbusProperty_GetName(prop3);
+        }
+
+        if (name != "")
+        {
+            strcpy(name_value,name);
+            DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_property_apis - rbusProperty_GetName function completed successfully name is %s",name);
+            result = RETURN_OK;
+        }
+        else
+        {
+            DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_property_apis - rbusProperty_GetName function failed to get name");
+            result = RETURN_ERR;
+        }
+    }
+    else if (strcmp(operation,"rbusProperty_Compare") == 0)
+    {
+        DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_property_apis - Calling rbusProperty_Compare function with prop1 and prop2");
+        ret = rbusProperty_Compare(prop1,prop2);
+        *output	= ret;
+        if(ret >= 0)
+        {
+            DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_property_apis - rbusProperty_Compare function completed successfully, ret value is %d",ret);
+            result = RETURN_OK;
+        }
+        else
+        {
+            DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_property_apis - rbusProperty_Compare function was failed, ret value is %d",ret);
+            result = RETURN_ERR;
+        }
+    }
+    else if (strcmp(operation,"rbusProperty_SetName") == 0)
+    {
+        if(prop_count == 1)
+        {
+            DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_property_apis - Calling rbusProperty_SetName function with prop1");
+            rbusProperty_SetName(prop1, property_name);
+        }
+        else if(prop_count == 2)
+        {
+            DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_property_apis - Calling rbusProperty_SetName function with prop2");
+            rbusProperty_SetName(prop2, property_name);
+        }
+        else if(prop_count == 3)
+        {
+            DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_property_apis - Calling rbusProperty_SetName function with prop3");
+            rbusProperty_SetName(prop3, property_name);
+        }
+        DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_property_apis - rbusProperty_SetName function completed successfully");
+        result = RETURN_OK;
+    }
+    else if (strcmp(operation,"rbusProperty_GetValue") == 0)
+    {
+        if(prop_count == 1)
+        {
+            DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_property_apis - Calling rbusProperty_GetValue function with prop1");
+            value = rbusProperty_GetValue(prop1);
+        }
+        else if(prop_count == 2)
+        {
+            DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_property_apis - Calling rbusProperty_GetValue function with prop2");
+            value = rbusProperty_GetValue(prop2);
+        }
+        else if(prop_count == 3)
+        {
+            DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_property_apis - Calling rbusProperty_GetValue function with prop3");
+            value = rbusProperty_GetValue(prop3);
+        }
+        name = rbusValue_GetString(value, &len);
+        if (name != "")
+        {
+            strcpy(name_value,name);
+            DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_property_apis - rbusProperty_GetValue function completed successfully");
+            result = RETURN_OK;
+        }
+        else
+        {
+            DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_property_apis - rbusProperty_GetValue function was Failed");
+            result = RETURN_ERR;
+        }
+    }
+    else if (strcmp(operation,"rbusValue_SetString") == 0)
+    {
+        DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_property_apis - Calling rbusValue_SetString function");
+        rbusValue_SetString(value, property_name);
+        DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_property_apis - rbusValue_SetString function completed successfully");
+        result = RETURN_OK;
+    }
+    else if (strcmp(operation,"rbusProperty_Init_WithRBUSValue") == 0)
+    {
+        if (prop_count == 1)
+        {
+            DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_property_apis - Calling rbusProperty_Init_WithRBUSValue function with prop1");
+            rbusProperty_Init (&prop1, property_name, value);
+        }
+        else if (prop_count == 2)
+        {
+            DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_property_apis - Calling rbusProperty_Init_WithRBUSValue function with prop2");
+            rbusProperty_Init (&prop2, property_name, value);
+        }
+        else if (prop_count == 3)
+        {
+            DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_property_apis - Calling rbusProperty_Init_WithRBUSValue function with prop3");
+            rbusProperty_Init (&prop3, property_name, value);
+        }
+        DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_property_apis - rbusProperty_Init_WithRBUSValue completed successfully");
+        result = RETURN_OK;
+    }
+    else if (strcmp(operation,"rbusValue_Release") == 0)
+    {
+        DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_property_apis - Calling rbusValue_Release function ");
+        rbusValue_Release(value);
+        DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_property_apis - rbusValue_Release completed successfully");
+        result = RETURN_OK;
+    }
+    else if (strcmp(operation,"rbusProperty_GetNext") == 0)
+    {
+        DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_property_apis - Calling rbusProperty_GetNext function with prop1");
+        prop1 = rbusProperty_GetNext(prop1);
+        DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_property_apis - rbusProperty_GetNext completed successfully");
+        result = RETURN_OK;
+    }
+    else if (strcmp(operation,"rbusProperty_SetNext") == 0)
+    {
+        if (prop_count == 1)
+        {
+            DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_property_apis - Calling rbusProperty_SetNext function with prop1 and prop2");
+            rbusProperty_SetNext(prop1, prop2);
+        }
+        else if (prop_count == 2)
+        {
+            DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_property_apis - Calling rbusProperty_SetNext function with prop2 and prop3");
+            rbusProperty_SetNext(prop2, prop3);
+        }
+        DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_property_apis - rbusProperty_GetNext completed successfully");
+        result = RETURN_OK;
+    }
+    else if (strcmp(operation,"rbusProperty_PushBack") == 0)
+    {
+        if (prop_count == 1)
+        {
+            DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_property_apis - Calling rbusProperty_PushBack function with prop1 and prop2");
+            rbusProperty_PushBack(prop1, prop2);
+        }
+        if (prop_count == 2)
+        {
+            DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_property_apis - Calling rbusProperty_PushBack function with prop2 and prop3");
+            rbusProperty_PushBack(prop2, prop3);
+        }
+        DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_property_apis - rbusProperty_PushBack completed successfully");
+        result = RETURN_OK;
+    }
+    else if (strcmp(operation,"rbusProperty_Count") == 0)
+    {
+        if (prop_count == 1)
+        {
+            DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_property_apis - Calling rbusProperty_Count function with prop1");
+            ret = rbusProperty_Count(prop1);
+        }
+        else if (prop_count == 2)
+        {
+            DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_property_apis - Calling rbusProperty_Count function with prop2");
+            ret = rbusProperty_Count(prop2);
+        }
+        else if (prop_count == 3)
+        {
+            DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_property_apis - Calling rbusProperty_Count function with prop1");
+            ret = rbusProperty_Count(prop3);
+        }
+        if (ret >= 0 )
+        {
+            *output	= ret;
+            DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_property_apis - rbusProperty_Count function completed successfully");
+            result = RETURN_OK;
+        }
+        else
+        {
+            DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_property_apis - rbusProperty_Count function was failed");
+            result = RETURN_ERR;
+        }
+    }
+    else if (strcmp(operation,"rbusProperty_fwrite") == 0)
+    {
+        DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_property_apis - Calling rbusProperty_fwrite function");
+        FILE *stream;
+        char *pRet = NULL;
+        char *stream_buf;
+        size_t len;
+        char type_buf[32]  = {0};
+        char val_buf[1024] = {0};
+
+        stream = open_memstream(&stream_buf, &len);
+
+        if (prop_count == 1)
+        {
+            DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_property_apis - Calling rbusProperty_fwrite function with prop1");
+            rbusProperty_fwrite(prop1, 0, stream);
+        }
+        else if (prop_count == 2)
+        {
+            DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_property_apis - Calling rbusProperty_fwrite function with prop2");
+            rbusProperty_fwrite(prop2, 0, stream);
+        }
+        else if (prop_count == 3)
+        {
+            DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_property_apis - Calling rbusProperty_fwrite function with prop3");
+            rbusProperty_fwrite(prop3, 0, stream);
+        }
+
+        fflush(stream);
+        fclose(stream);
+
+        pRet = strstr(stream_buf,"name=");
+        pRet += strlen("name=");
+        pRet = strstr(stream_buf,"value:");
+        pRet += strlen("value:");
+
+        strcpy(name_value,pRet);
+        DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_property_apis - rbusProperty_fwrite function completed successfully");
+        result = RETURN_OK;
+    }
+    else if (strcmp(operation,"rbusProperty_Release") == 0)
+    {
+        DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_property_apis - Calling rbusProperty_Release function");
+        if (prop_count == 1)
+        {
+            DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_property_apis - Calling rbusProperty_Release function with prop1");
+            rbusProperty_Release(prop1);
+        }
+        else if (prop_count == 2)
+        {
+            DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_property_apis - Calling rbusProperty_Release function with prop2");
+            rbusProperty_Release(prop2);
+        }
+        else if (prop_count == 3)
+        {
+            DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_property_apis - Calling rbusProperty_Release function with prop3");
+            rbusProperty_Release(prop3);
+        }
+        DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_property_apis - rbusProperty_Release function completed successfully");
+        result = RETURN_OK;
+    }
+
+    DEBUG_PRINT(DEBUG_ERROR, "Exit from ssp_rbus_property_apis wrapper\n");
+    return result;
+}
+
+
+/*****************************************************************************************************************
+* Function Name : ssp_rbus_object_apis
+* Description   : This function will invoke the different RBUS Object APIs
+* @param [in]   : Operation     : Operation to be Performed
+                : obj_count     : Object count
+                : object_name   : Name of the Object
+                : name_value    : Name to be returned
+                : output        : integer value to be returned
+* @param [out]  : return status an integer value 0-success and 1-Failure
+******************************************************************************************************************/
+int ssp_rbus_object_apis(char* operation, int obj_count, char *object_name, char* name_value, int* output)
+{
+    DEBUG_PRINT(DEBUG_ERROR, "Entering the ssp_rbus_object_apis wrapper\n");
+    DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_object_apis - Operation is %s obj_count is %d and object_name is %s \n",operation,obj_count,object_name);
+
+    char const* name;
+    int result = RETURN_ERR;
+    int ret = RBUS_ERROR_SUCCESS;
+
+    if (strcmp(operation,"rbusObject_Init") == 0)
+    {
+        if(obj_count == 1)
+        {
+            DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_object_apis - Calling rbusObject_Init function with obj1 ");
+            rbusObject_Init (&obj1, object_name);
+        }
+        else if(obj_count == 2)
+        {
+            DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_object_apis - Calling rbusObject_Init function with obj2 ");
+            rbusObject_Init (&obj2, object_name);
+        }
+        else if(obj_count == 3)
+        {
+            DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_object_apis - Calling rbusObject_Init function with obj_ch1 ");
+            rbusObject_Init (&obj_ch1, object_name);
+        }
+        else if(obj_count == 4)
+        {
+            DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_object_apis - Calling rbusObject_Init function with obj_ch2 ");
+            rbusObject_Init (&obj_ch2, object_name);
+        }
+        DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_object_apis - rbusObject_Init function completed successfully ");
+        result = RETURN_OK;
+    }
+    else if (strcmp(operation,"rbusObject_GetName") == 0)
+    {
+        if(obj_count == 1)
+        {
+            DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_property_apis - Calling rbusObject_GetName function with obj1 ");
+            name = rbusObject_GetName(obj1);
+        }
+        else if(obj_count == 2)
+        {
+            DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_property_apis - Calling rbusObject_GetName function with obj2 ");
+            name = rbusObject_GetName(obj2);
+        }
+        else if(obj_count == 3)
+        {
+            DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_property_apis - Calling rbusObject_GetName function with obj_ch1 ");
+            name = rbusObject_GetName(obj_ch1);
+        }
+        else if(obj_count == 4)
+        {
+            DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_property_apis - Calling rbusObject_GetName function with obj_ch2 ");
+            name = rbusObject_GetName(obj_ch2);
+        }
+        if (name != "")
+        {
+            strcpy(name_value,name);
+            DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_property_apis - rbusObject_GetName function completed successfully name is %s",name);
+            result = RETURN_OK;
+        }
+        else
+        {
+            DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_property_apis - rbusObject_GetName function failed to get name");
+            result = RETURN_ERR;
+        }
+    }
+    else if (strcmp(operation,"rbusObject_SetName") == 0)
+    {
+        if(obj_count == 1)
+        {
+            DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_property_apis - Calling rbusObject_SetName function with prop1");
+            rbusObject_SetName(obj1, object_name);
+        }
+        else if(obj_count == 2)
+        {
+            DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_property_apis - Calling rbusObject_SetName function with prop1");
+            rbusObject_SetName(obj2, object_name);
+        }
+        else if(obj_count == 3)
+        {
+            DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_property_apis - Calling rbusObject_SetName function with prop1");
+            rbusObject_SetName(obj_ch1, object_name);
+        }
+        else if(obj_count == 4)
+        {
+            DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_property_apis - Calling rbusObject_SetName function with prop1");
+            rbusObject_SetName(obj_ch2, object_name);
+        }
+        DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_property_apis - rbusObject_SetName function completed successfully");
+        result = RETURN_OK;
+    }
+    else if (strcmp(operation,"rbusObject_GetValue") == 0)
+    {
+        if(obj_count == 1)
+        {
+            DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_property_apis - Calling rbusObject_GetValue function with prop1");
+            value = rbusObject_GetValue(obj1, object_name);
+        }
+        else if(obj_count == 2)
+        {
+            DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_property_apis - Calling rbusObject_GetValue function with prop1");
+            value = rbusObject_GetValue(obj2, object_name);
+        }
+        else if(obj_count == 3)
+        {
+            DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_property_apis - Calling rbusObject_GetValue function with prop1");
+            value = rbusObject_GetValue(obj_ch1, object_name);
+        }
+        else if(obj_count == 4)
+        {
+            DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_property_apis - Calling rbusObject_GetValue function with prop1");
+            value = rbusObject_GetValue(obj_ch2, object_name);
+        }
+        name = rbusValue_ToString(value, NULL, 0);
+        if (name != "")
+        {
+            strcpy(name_value,name);
+            DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_property_apis - rbusProperty_GetValue function completed successfully");
+            result = RETURN_OK;
+        }
+        else
+        {
+            DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_property_apis - rbusProperty_GetValue function was Failed");
+            result = RETURN_ERR;
+        }
+    }
+    else if (strcmp(operation,"rbusObject_SetValue") == 0)
+    {
+        if(obj_count == 1)
+        {
+            DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_property_apis - Calling rbusObject_SetValue function with obj1");
+            rbusObject_SetValue(obj1, object_name,value);
+        }
+        else if(obj_count == 2)
+        {
+            DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_property_apis - Calling rbusObject_SetValue function with obj2");
+            rbusObject_SetValue(obj2, object_name,value);
+        }
+        else if(obj_count == 3)
+        {
+            DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_property_apis - Calling rbusObject_SetValue function with obj_ch1");
+            rbusObject_SetValue(obj_ch1, object_name,value);
+        }
+        else if(obj_count == 4)
+        {
+            DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_property_apis - Calling rbusObject_SetValue function with obj_ch2");
+            rbusObject_SetValue(obj_ch2, object_name,value);
+        }
+
+        DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_property_apis - rbusObject_SetValue function completed successfully");
+        result = RETURN_OK;
+    }
+    else if (strcmp(operation,"rbusObject_SetProperty") == 0)
+    {
+        if(obj_count == 1)
+        {
+            DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_property_apis - Calling rbusObject_SetProperty function with obj1 and prop1");
+            rbusObject_SetProperty(obj1, prop1);
+        }
+        else if(obj_count == 2)
+        {
+            DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_property_apis - Calling rbusObject_SetProperty function with obj2 and prop2");
+            rbusObject_SetProperty(obj2, prop2);
+        }
+        else if(obj_count == 3)
+        {
+            DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_property_apis - Calling rbusObject_SetProperty function with obj_ch1 and prop1");
+            rbusObject_SetProperty(obj_ch1, prop1);
+        }
+        else if(obj_count == 4)
+        {
+            DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_property_apis - Calling rbusObject_SetProperty function with obj_ch2 and prop2");
+            rbusObject_SetProperty(obj_ch2, prop2);
+        }
+        DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_property_apis - rbusObject_SetProperty function completed successfully");
+        result = RETURN_OK;
+    }
+    else if (strcmp(operation,"rbusObject_SetChildren") == 0)
+    {
+        if(obj_count == 1)
+        {
+            DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_property_apis - Calling rbusObject_SetChildren function with obj1,obj_ch1");
+            rbusObject_SetChildren(obj1,obj_ch1);
+        }
+        else if(obj_count == 2)
+        {
+            DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_property_apis - Calling rbusObject_SetChildren function with obj2,obj_ch2");
+            rbusObject_SetChildren(obj2,obj_ch2);
+        }
+        DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_property_apis - rbusObject_SetChildren function completed successfully");
+        result = RETURN_OK;
+    }
+    else if (strcmp(operation,"rbusObject_Compare") == 0)
+    {
+        if(obj_count == 1)
+        {
+            DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_property_apis - Calling rbusObject_Compare function with obj1, obj2");
+            ret = rbusObject_Compare(obj1, obj2, true);
+        }
+        *output	= ret;
+        if(ret >= 0)
+        {
+            DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_property_apis - rbusProperty_Compare function completed successfully, ret value is %d",ret);
+            result = RETURN_OK;
+        }
+        else
+        {
+            DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_property_apis - rbusProperty_Compare function was failed, ret value is %d",ret);
+            result = RETURN_ERR;
+        }
+        DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_property_apis - rbusObject_Compare function completed successfully");
+        result = RETURN_OK;
+    }
+    else if (strcmp(operation,"rbusValue_SetFromString") == 0)
+    {
+        DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_object_apis - Calling rbusValue_SetFromString function with obj1 ");
+        rbusValue_SetFromString(value,RBUS_STRING,object_name);
+        DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_object_apis - rbusValue_SetFromString function completed successfully ");
+        result = RETURN_OK;
+    }
+    else if (strcmp(operation,"rbusObject_Release") == 0)
+    {
+        if(obj_count == 1)
+        {
+            DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_object_apis - Calling rbusObject_Release function with obj1 ");
+            rbusObject_Release(obj1);
+        }
+        else if(obj_count == 2)
+        {
+            DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_object_apis - Calling rbusObject_Release function with obj2 ");
+            rbusObject_Release(obj2);
+        }
+        else if(obj_count == 3)
+        {
+            DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_object_apis - Calling rbusObject_Release function with obj_ch1 ");
+            rbusObject_Release(obj_ch1);
+        }
+        else if(obj_count == 4)
+        {
+            DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_object_apis - Calling rbusObject_Release function with obj_ch2 ");
+            rbusObject_Release(obj_ch2);
+        }
+        DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_object_apis - rbusObject_Release function completed successfully ");
+        result = RETURN_OK;
+    }
+    DEBUG_PRINT(DEBUG_ERROR, "Exit from ssp_rbus_object_apis wrapper\n");
+    return result;
+}
+
+
+/*****************************************************************************************************************
+* Function Name : ssp_rbus_table_row_apis
+* Description   : This function will invoke the different RBUS Table APIs
+* @param [in]   : Operation     : Operation to be Performed
+                : table_row     : Table Row to be added or removed
+                : ins_num       : Instance Number
+* @param [out]  : return status an integer value 0-success and 1-Failure
+******************************************************************************************************************/
+int ssp_rbus_table_row_apis(char* operation, char *table_row, int* ins_num)
+{
+    DEBUG_PRINT(DEBUG_ERROR, "Entering the ssp_rbus_table_row_apis wrapper, with operation is %s and table_row is %s\n",operation,table_row);
+
+    int result = RETURN_ERR;
+    int ret = 0;
+    int instanceNum = 0;
+
+    if (strcmp(operation,"rbusTable_addRow") == 0)
+    {
+        ret = rbusTable_addRow(bus_handle, table_row, NULL, &instanceNum);
+        if (ret == 100)
+        {
+            *ins_num = instanceNum;
+            DEBUG_PRINT(DEBUG_ERROR, "%s success with error [%d]\n", operation, ret);
+            result = RETURN_OK;
+        }
+        else
+        {
+            DEBUG_PRINT(DEBUG_ERROR, "%s failed with error [%d]\n", operation, ret);
+            result = RETURN_ERR;
+        }
+    }
+    if (strcmp(operation,"rbusTable_removeRow") == 0)
+    {
+        ret= rbusTable_removeRow(bus_handle, table_row);
+        if (ret == 100)
+        {
+            DEBUG_PRINT(DEBUG_ERROR, "%s success with error [%d]\n", operation, ret);
+            result = RETURN_OK;
+        }
+        else
+        {
+            DEBUG_PRINT(DEBUG_ERROR, "%s failed with error [%d]\n", operation, ret);
+            result = RETURN_ERR;
+        }
+    }
+
+    DEBUG_PRINT(DEBUG_ERROR, "Exit from ssp_rbus_table_row_apis wrapper\n");
+    return result;
+}
+

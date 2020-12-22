@@ -38,7 +38,9 @@ extern "C"
         int ssp_rbus_setValue(char* parameter_type,char* param_name, char* set_value);
         static int event_callback(const char * object_name,  const char * event_name);
         int ssp_rbus_registerOperation(char* operation, char* object_name,char* method_name);
-
+        int ssp_rbus_property_apis(char* operation, int prop_count, char *property_name, char* name_value, int* output);
+        int ssp_rbus_object_apis(char* operation, int obj_count, char *object_name, char* name_value, int* output);
+        int ssp_rbus_table_row_apis(char* operation, char *table_row, int* output);
 #ifdef __cplusplus
 }
 #endif
