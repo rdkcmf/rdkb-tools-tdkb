@@ -482,6 +482,162 @@ void RBUS::RBUS_RegisterOperation(IN const Json::Value& req, OUT Json::Value& re
     return;
 }
 
+/*****************************************************************************************************************
+ * Function Name : RBUS_PropertyCommands
+ * Description   : This function will invokes the wrapper function ssp_rbus_property_apis
+ * @param [in]   : operation     - operation to be performed
+                 : property_name - Property Name
+                 : prop_count    - Property Count
+ * @param [out]  : Filled with SUCCESS or FAILURE based on the output status of operation
+ **************************************************************************************************************/
+void RBUS::RBUS_PropertyCommands(IN const Json::Value& req, OUT Json::Value& response)
+{
+    DEBUG_PRINT(DEBUG_TRACE,"\n RBUS_PropertyCommands  --->Entry \n");
+
+    int returnValue = RETURN_FAILURE;
+    char operation[MAX_PARAM_SIZE] = {'\0'};
+    char property_name[MAX_PARAM_SIZE] = {'\0'};
+    int  prop_count = 0;
+    char name[MAX_PARAM_SIZE] = {'\0'};
+    int  output = 0;
+    char details[MAX_BUFFER_SIZE_TO_SEND] = {'\0'};
+
+    if((&req["operation"]==NULL) || (&req["property_name"]==NULL) || (&req["prop_count"]==NULL))
+    {
+        response["result"]="FAILURE";
+        response["details"]="NULL parameter as input argument";
+        return;
+    }
+
+    strcpy(operation, req["operation"].asCString());
+    prop_count = req["prop_count"].asInt();
+    strcpy(property_name, req["property_name"].asCString());
+
+    returnValue = ssp_rbus_property_apis(operation, prop_count, property_name, name, &output);
+
+    if(returnValue == RETURN_SUCCESS)
+    {
+        if ((strcmp(operation,"rbusProperty_GetName") == 0) || (strcmp(operation,"rbusProperty_GetValue") == 0) || (strcmp(operation,"rbusProperty_fwrite") == 0))
+            sprintf(details, "%s", name);
+        else if ((strcmp(operation,"rbusProperty_Compare") == 0)|| (strcmp(operation,"rbusProperty_Count") == 0))
+            sprintf(details, "%d", output);
+        else
+            sprintf(details, "%s", "RBUS_PropertyCommands function was Successful");
+
+        response["result"]="SUCCESS";
+        response["details"]=details;
+    }
+    else
+    {
+        response["result"]="FAILURE";
+        response["details"]="RBUS_PropertyCommands function has failed.Please check logs";
+    }
+    DEBUG_PRINT(DEBUG_TRACE,"\n RBUS_PropertyCommands --->Exit\n");
+    return;
+}
+
+/*****************************************************************************************************************
+ * Function Name : RBUS_ObjectCommands
+ * Description   : This function will invokes the wrapper function ssp_rbus_object_apis
+ * @param [in]   : operation     - operation to be performed
+                 : object_name   - Object Name
+                 : obj_count     - Object Count
+ * @param [out]  : Filled with SUCCESS or FAILURE based on the output status of operation
+ **************************************************************************************************************/
+void RBUS::RBUS_ObjectCommands(IN const Json::Value& req, OUT Json::Value& response)
+{
+    DEBUG_PRINT(DEBUG_TRACE,"\n RBUS_ObjectCommands  --->Entry \n");
+
+    int returnValue = RETURN_FAILURE;
+    char operation[MAX_PARAM_SIZE] = {'\0'};
+    char object_name[MAX_PARAM_SIZE] = {'\0'};
+    int  obj_count = 0;
+    char name[MAX_PARAM_SIZE] = {'\0'};
+    int  output = 0;
+    char details[MAX_BUFFER_SIZE_TO_SEND] = {'\0'};
+
+    if((&req["operation"]==NULL) || (&req["object_name"]==NULL) || (&req["obj_count"]==NULL))
+    {
+        response["result"]="FAILURE";
+        response["details"]="NULL parameter as input argument";
+        return;
+    }
+
+    strcpy(operation, req["operation"].asCString());
+    obj_count = req["obj_count"].asInt();
+    strcpy(object_name, req["object_name"].asCString());
+
+    returnValue = ssp_rbus_object_apis(operation, obj_count, object_name, name, &output);
+
+    if(returnValue == RETURN_SUCCESS)
+    {
+        if ((strcmp(operation,"rbusObject_GetName") == 0) || (strcmp(operation,"rbusObject_GetValue") == 0) || (strcmp(operation,"rbusObject_fwrite") == 0))
+            sprintf(details, "%s", name);
+        else if ((strcmp(operation,"rbusObject_Compare") == 0))
+            sprintf(details, "%d", output);
+        else
+            sprintf(details, "%s", "RBUS_ObjectCommands function was Successful");
+
+        response["result"]="SUCCESS";
+        response["details"]=details;
+    }
+    else
+    {
+        response["result"]="FAILURE";
+        response["details"]="RBUS_ObjectCommands function has failed.Please check logs";
+    }
+    DEBUG_PRINT(DEBUG_TRACE,"\n RBUS_ObjectCommands --->Exit\n");
+    return;
+}
+
+/*****************************************************************************************************************
+ * Function Name : RBUS_TableRowCommands
+ * Description   : This function will invokes the wrapper function ssp_rbus_table_row_apis
+ * @param [in]   : operation     - operation to be performed
+                 : table_row     - Table Row to be added (DML Parameter value)
+ * @param [out]  : Filled with SUCCESS or FAILURE based on the output status of operation
+ **************************************************************************************************************/
+void RBUS::RBUS_TableRowCommands(IN const Json::Value& req, OUT Json::Value& response)
+{
+    DEBUG_PRINT(DEBUG_TRACE,"\n RBUS_TableRowCommands  --->Entry \n");
+
+    int  returnValue = RETURN_FAILURE;
+    char operation[MAX_PARAM_SIZE] = {'\0'};
+    char table_row[MAX_PARAM_SIZE] = {'\0'};
+    int  ins_num = 0;
+    char details[MAX_BUFFER_SIZE_TO_SEND] = {'\0'};
+
+    if((&req["operation"]==NULL) || (&req["table_row"]==NULL))
+    {
+        response["result"]="FAILURE";
+        response["details"]="NULL parameter as input argument";
+        return;
+    }
+
+    strcpy(operation, req["operation"].asCString());
+    strcpy(table_row, req["table_row"].asCString());
+
+    returnValue = ssp_rbus_table_row_apis(operation, table_row,&ins_num);
+
+    if(returnValue == RETURN_SUCCESS)
+    {
+        if ((strcmp(operation,"rbusTable_addRow") == 0))
+            sprintf(details, "%d", ins_num);
+        else
+            sprintf(details, "%s", "RBUS_TableRowCommands function was success");
+
+        response["result"]="SUCCESS";
+        response["details"]=details;
+    }
+    else
+    {
+        response["result"]="FAILURE";
+        response["details"]="RBUS_TableRowCommands function has failed.Please check logs";
+    }
+    DEBUG_PRINT(DEBUG_TRACE,"\n RBUS_TableRowCommands --->Exit\n");
+    return;
+}
+
 /***************************************************************************************************
  *Function Name   : CreateObject
  *Description     : This function is used to create a new object of the class "RBUS".
@@ -514,3 +670,4 @@ extern "C" void DestroyObject(RBUS *stubobj)
         DEBUG_PRINT(DEBUG_TRACE, "Destroying RBUS object\n");
         delete stubobj;
 }
+
