@@ -76,3 +76,6 @@ int ssp_WIFIHALSteeringClientDisconnect(unsigned int steeringgroupIndex, int apI
 int ssp_WIFIHALSteeringClientSet(unsigned int steeringgroupIndex, int apIndex, mac_address_t client_mac, wifi_steering_clientConfig_t *cli_cfg);
 int ssp_WIFIHALSteeringClientRemove(unsigned int steeringgroupIndex, int apIndex, mac_address_t client_mac);
 int ssp_WIFIHALGetBTMClientCapabilityList(int apIndex, wifi_BTMCapabilities_t* btm_caps);
+int ssp_WIFIHALGetApRoamingConsortiumElement(int apIndex, wifi_roamingConsortiumElement_t* roam);
+int ssp_WIFIHALPushApRoamingConsortiumElement(int apIndex, wifi_roamingConsortiumElement_t* roam);
+

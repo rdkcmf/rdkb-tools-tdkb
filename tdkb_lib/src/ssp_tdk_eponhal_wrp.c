@@ -36,7 +36,6 @@ int ssp_EPONHAL_GetParamUlongValue(char* paramName, unsigned long* value)
     unsigned short llidEntry = 0;
 
     DEBUG_PRINT(DEBUG_TRACE,"\n ssp_EPONHAL_GetParamUlongValue ----> Entry\n");
-    CHECK_PARAM_AND_RET(value);
 
     if( !(strcmp(paramName, "NumberOfNetworkPorts")) )
     {
@@ -127,10 +126,13 @@ int ssp_EPONHAL_GetParamUlongValue(char* paramName, unsigned long* value)
     else if( !(strcmp(paramName, "hal_Reboot_Ready")) )
     {
         return_status = dpoe_hal_Reboot_Ready(value);
-        DEBUG_PRINT(DEBUG_TRACE,"Return status of dpoe_hal_Reboot_Ready  %d,value : %lu", return_status,value);
+        if (value)
+             DEBUG_PRINT(DEBUG_TRACE,"Return status of dpoe_hal_Reboot_Ready  %d,value : %lu\n", return_status,value);
+        else
+             DEBUG_PRINT(DEBUG_TRACE,"Return status of dpoe_hal_Reboot_Ready  %d\n", return_status);
         if ( return_status != RETURN_OK)
         {
-            DEBUG_PRINT(DEBUG_ERROR,"ssp_EPONHAL_GetParamUlongValue : Failed to get the count of  Frame Rate Entry\n");
+            DEBUG_PRINT(DEBUG_ERROR,"ssp_EPONHAL_GetParamUlongValue : Failed to get the hal_Reboot_Ready status\n");
         }
     }
     else if( !(strcmp(paramName, "DynamicMacAddressAgeLimit")) )

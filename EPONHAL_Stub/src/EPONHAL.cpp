@@ -93,6 +93,7 @@ void EPONHAL::EPONHAL_GetParamUlongValue(IN const Json::Value& req, OUT Json::Va
     }
     else
     {
+        DEBUG_PRINT(DEBUG_TRACE,"\n EPONHAL_GetParamUlongValue() %s NULL buffer validation\n", paramName);
         returnValue = ssp_EPONHAL_GetParamUlongValue(paramName,NULL);
     }
 
@@ -106,7 +107,7 @@ void EPONHAL::EPONHAL_GetParamUlongValue(IN const Json::Value& req, OUT Json::Va
     {
         response["result"]="FAILURE";
         response["details"]="Failed to get the value";
-        DEBUG_PRINT(DEBUG_TRACE,"\n EPONHAL_GetParamUlongValue ---> Exit\n");
+        DEBUG_PRINT(DEBUG_TRACE,"\n EPONHAL_GetParamUlongValue Failed\n");
         return;
     }
 
