@@ -2218,3 +2218,61 @@ int ssp_WIFIHALGetBTMClientCapabilityList(int apIndex, wifi_BTMCapabilities_t* b
     printf("\n ssp_WIFIHALGetBTMClientCapabilityList ---> Exit\n");
 }
 
+
+/*******************************************************************************************
+ *
+ * Function Name        : ssp_WIFIHALGetApRoamingConsortiumElement
+ * Description          : This function invokes WiFi hal api wifi_getApRoamingConsortiumElement()
+ * @param [in]          : apIndex   - accesspoint index
+                          roam  - buffer to returm ApRoamingConsortiumElement
+ * @param [out]         : return status an integer value 0-success and 1-Failure
+ *
+ ********************************************************************************************/
+int ssp_WIFIHALGetApRoamingConsortiumElement(int apIndex, wifi_roamingConsortiumElement_t* roam)
+{
+    printf("\n ssp_WIFIHALGetApRoamingConsortiumElement ----> Entry\n");
+    printf("ap index:%d \n",apIndex);
+
+    int return_status = 1;
+    return_status = wifi_getApRoamingConsortiumElement(apIndex, roam);
+    if(return_status != SSP_SUCCESS)
+    {
+        printf("\nssp_WIFIHALGetApRoamingConsortiumElement::Failed. Ret:status %d\n", return_status);
+        return return_status;
+    }
+    else
+    {
+        printf("\n ssp_WIFIHALGetApRoamingConsortiumElement::Success. Ret:status %d\n", return_status);
+        return return_status;
+    }
+}
+
+
+/*******************************************************************************************
+ *
+ * Function Name        : ssp_WIFIHALPushApRoamingConsortiumElement
+ * Description          : This function invokes WiFi hal api wifi_pushApRoamingConsortiumElement()
+ * @param [in]          : apIndex   - accesspoint index
+                          roam  - ApRoamingConsortiumElement values to be pushed
+ * @param [out]         : return status an integer value 0-success and 1-Failure
+ *
+ ********************************************************************************************/
+int ssp_WIFIHALPushApRoamingConsortiumElement(int apIndex, wifi_roamingConsortiumElement_t* roam)
+{
+    printf("\n ssp_WIFIHALPushApRoamingConsortiumElement ----> Entry\n");
+    printf("ap index:%d \n",apIndex);
+
+    int return_status = 1;
+    return_status = wifi_pushApRoamingConsortiumElement(apIndex, roam);
+    if(return_status != SSP_SUCCESS)
+    {
+        printf("\nssp_WIFIHALPushApRoamingConsortiumElement::Failed. Ret:status %d\n", return_status);
+        return return_status;
+    }
+    else
+    {
+        printf("\n ssp_WIFIHALPushApRoamingConsortiumElement::Success. Ret:status %d\n", return_status);
+        return return_status;
+    }
+}
+
