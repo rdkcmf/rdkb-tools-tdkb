@@ -18,7 +18,7 @@
 ##########################################################################
 [Unit]
 Description=TDK Test Agent Start
-After=dbus.service apps-rdm.service
+After=dbus.service
 Wants=dbus.service
 
 [Service]
