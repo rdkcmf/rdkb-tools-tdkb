@@ -431,6 +431,21 @@
           <parameter name="devIndex" value=""/>
         </parameters>
       </primitiveTest>
+      <primitiveTest name="WIFIHAL_GetApRoamingConsortiumElement" id=" " version="1">
+        <function>WIFIHAL_GetApRoamingConsortiumElement</function>
+        <parameters>
+          <parameter name="apIndex" value=""/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest name="WIFIHAL_PushApRoamingConsortiumElement" id=" " version="1">
+        <function>WIFIHAL_PushApRoamingConsortiumElement</function>
+        <parameters>
+          <parameter name="apIndex" value=""/>
+          <parameter name="ouiCount" value=""/>
+          <parameter name="ouiLen" value=""/>
+          <parameter name="ouiList" value=""/>
+        </parameters>
+      </primitiveTest>
     </primitiveTests>
   </module>
 </xml>
