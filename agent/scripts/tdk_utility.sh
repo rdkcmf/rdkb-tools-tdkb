@@ -18,7 +18,12 @@
 # limitations under the License.
 ##########################################################################
 
-source /etc/tdk_platform.properties
+if [ -f "/tmp/TDK/usr/ccsp/tdk/StartTDK.sh" ]
+then
+    source /tmp/TDK/etc/tdk_platform.properties
+else
+    source /etc/tdk_platform.properties
+fi
 
 # Parse the variables inside tdk_platform.properties
 parseConfigFile()
