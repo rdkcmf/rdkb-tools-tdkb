@@ -49,9 +49,9 @@
     <input_parameters>NullBuffer</input_parameters>
     <automation_approch>1.Load halplatform module
 2. Invoke the HAL api platform_hal_GetBootloaderVersion() by passing a null buffer
-3. HAL API is expected to return failure status and the value should not be retrieved because null buffer was passed as an argument
+3. HAL API is expected to return failure status and the value should not be retrieved because null buffer was passed as an argument or return a blank value with api call success
 4. UnLoad halplatform module</automation_approch>
-    <expected_output>Call to platform_hal_GetBootloaderVersion() should fail</expected_output>
+    <expected_output>Call to platform_hal_GetBootloaderVersion() should fail or return api call is success with a blank value</expected_output>
     <priority>High</priority>
     <test_stub_interface>halplatform</test_stub_interface>
     <test_script>TS_platform_stub_hal_GetBootLoaderVersion_NullBuffer</test_script>
@@ -86,23 +86,41 @@ if "SUCCESS" in loadmodulestatus.upper():
         expectedresult="FAILURE";
         tdkTestObj.executeTestCase(expectedresult);
         actualresult = tdkTestObj.getResult();
-        details = tdkTestObj.getResultDetails();
-
+        details = tdkTestObj.getResultDetails().strip().replace("\\n", "").strip();
+        print "details:",details;
         if expectedresult in actualresult :
-           tdkTestObj.setResultStatus("SUCCESS");
-           print "TEST STEP 1: Retrieve the Platform_GetBootLoaderVersion with NULL buffer";
-           print "EXPECTED RESULT 1: Should not retrieve the Platform_GetBootLoaderVersion  with NULL buffer";
-           print "ACTUAL RESULT 1: Platform_GetBootLoaderVersion api call failed";
-           #Get the result of execution
-           print "[TEST EXECUTION RESULT] : SUCCESS";
+           if  details != "":
+               tdkTestObj.setResultStatus("SUCCESS");
+               print "TEST STEP 1: Retrieve the Platform_GetBootLoaderVersion with NULL buffer";
+               print "EXPECTED RESULT 1: Should not retrieve the Platform_GetBootLoaderVersion  with NULL buffer";
+               print "ACTUAL RESULT 1: Platform_GetBootLoaderVersion api call failed";
+               #Get the result of execution
+               print "[TEST EXECUTION RESULT] : SUCCESS";
+           else:
+               #Set the result status of execution
+               tdkTestObj.setResultStatus("FAILURE");
+               print "TEST STEP 1: Retrieve the Platform_GetBootLoaderVersion with NULL buffer";
+               print "EXPECTED RESULT 1: Should not retrieve the Platform_GetBootLoaderVersion  with NULL buffer";
+               print "ACTUAL RESULT 1: Platform_GetBootLoaderVersion  api call sucess";
+               #Get the result of execution
+               print "[TEST EXECUTION RESULT] :FAILURE";
         else:
-           #Set the result status of execution
-           tdkTestObj.setResultStatus("FAILURE");
-           print "TEST STEP 1: Retrieve the Platform_GetBootLoaderVersion with NULL buffer";
-           print "EXPECTED RESULT 1: Should not retrieve the Platform_GetBootLoaderVersion  with NULL buffer";
-           print "ACTUAL RESULT 1: Platform_GetBootLoaderVersion  api call sucess";
-           #Get the result of execution
-           print "[TEST EXECUTION RESULT] :FAILURE";
+            #In some platforms, this API is expected to return success for a NULL buffer and returns empty value
+            if details == "":
+               tdkTestObj.setResultStatus("SUCCESS");
+               print "TEST STEP 1: Retrieve the Platform_GetBootLoaderVersion with NULL buffer";
+               print "EXPECTED RESULT 1: Should  retrieve a blank value when Platform_GetBootLoaderVersion called with NULL buffer";
+               print "ACTUAL RESULT 1: Platform_GetBootLoaderVersion retreived a blank value with NULL buffer";
+               #Get the result of execution
+               print "[TEST EXECUTION RESULT] : SUCCESS";
+            else:
+                tdkTestObj.setResultStatus("FAILURE");
+                print "TEST STEP 1: Retrieve the Platform_GetBootLoaderVersion with NULL buffer";
+                print "EXPECTED RESULT 1: Should  retrieve a blank value when Platform_GetBootLoaderVersion called with NULL buffer";
+                print "ACTUAL RESULT 1: Platform_GetBootLoaderVersion didnot retreived a blank value with NULL buffer";
+                #Get the result of execution
+                print "[TEST EXECUTION RESULT] : FAILURE";
+
         obj.unloadModule("halplatform");
 else:
         print "Failed to load the module";
