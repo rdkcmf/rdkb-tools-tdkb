@@ -33,7 +33,7 @@
   <!--  -->
   <status>FREE</status>
   <!--  -->
-  <synopsis>To check  if any significant  Log Messages are seen in /rdklogs/logs</synopsis>
+  <synopsis>To check if any significant Log Messages are seen in /rdklogs/logs</synopsis>
   <!--  -->
   <groups_id />
   <!--  -->
@@ -61,7 +61,7 @@
   </rdk_versions>
   <test_cases>
     <test_case_id>TC_SYSUTIL_36</test_case_id>
-    <test_objective>This test case is to check  if any significant  Log Messages are seen in /rdklogs/logs</test_objective>
+    <test_objective>This test case is to check if any significant Log Messages are seen in /rdklogs/logs</test_objective>
     <test_type>Positive</test_type>
     <test_setup>Broadband ,RPI,EMU</test_setup>
     <pre_requisite>1.Ccsp Components  should be in a running state of DUT
@@ -108,7 +108,7 @@ if "SUCCESS" in loadmodulestatus.upper():
     sleep(300);
 
     logFile = "/rdklogs/logs/";
-    logMsg = ["command not found" ,"No such file or directory","syscfg_get failed" ,"404 Not Found" ,"syntax error","System Not Ready","Unknown Msg" ,"Invalid argument" ,"unary operator expected","nonexistent directory" ,"not found","Failed to get parameter value"];
+    logMsg = ["command not found" ,"No such file or directory","syscfg_get failed" ,"404 Not Found" ,"syntax error","System Not Ready","Unknown Msg" ,"Invalid argument" ,"unary operator expected","nonexistent directory" ,"not found","Failed to get parameter value","received message error","Event length more than expected","violation","integer expression expected","No Matching Profiles"];
 
     print "***************************************************";
     print "TEST STEP 1: Checking if the following Log Messages are present in /rdklogs/logs/";
