@@ -86,6 +86,29 @@
           <parameter name="methodName" value=""/>
         </parameters>
       </primitiveTest>
+      <primitiveTest name="RBUS_PropertyCommands" id=" " version="1">
+        <function>RBUS_PropertyCommands</function>
+        <parameters>
+          <parameter name="operation" value=""/>
+          <parameter name="property_name" value=""/>
+          <parameter name="prop_count" value=""/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest name="RBUS_ObjectCommands" id=" " version="1">
+        <function>RBUS_ObjectCommands</function>
+        <parameters>
+          <parameter name="object_name" value=""/>
+          <parameter name="obj_count" value=""/>
+          <parameter name="operation" value=""/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest name="RBUS_TableRowCommands" id=" " version="1">
+        <function>RBUS_TableRowCommands</function>
+        <parameters>
+          <parameter name="operation" value=""/>
+          <parameter name="table_row" value=""/>
+        </parameters>
+      </primitiveTest>
     </primitiveTests>
   </module>
 </xml>
