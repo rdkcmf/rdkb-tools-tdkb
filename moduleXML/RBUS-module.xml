@@ -45,6 +45,9 @@
       <function name='RBUS_Open' />
       <function name='RBUS_Close' />
       <function name='RBUS_RegisterOperation' />
+      <function name='RBUS_PropertyCommands' />
+      <function name='RBUS_ObjectCommands' />
+      <function name='RBUS_TableRowCommands' />
     </functions>
   <!-- Total parameters corresponding module  -->
     <parameters>
@@ -63,6 +66,14 @@
       <parameter funName='RBUS_RegisterOperation' parameterName='operation' parameterType='STRING' range='a-z' />
       <parameter funName='RBUS_RegisterOperation' parameterName='objectName' parameterType='STRING' range='a-z' />
       <parameter funName='RBUS_RegisterOperation' parameterName='methodName' parameterType='STRING' range='a-z' />
+      <parameter funName='RBUS_PropertyCommands' parameterName='operation' parameterType='STRING' range='a-z' />
+      <parameter funName='RBUS_PropertyCommands' parameterName='prop_count' parameterType='INTEGER' range='0-9' />
+      <parameter funName='RBUS_PropertyCommands' parameterName='property_name' parameterType='STRING' range='a-z' />
+      <parameter funName='RBUS_ObjectCommands' parameterName='operation' parameterType='STRING' range='a-z' />
+      <parameter funName='RBUS_ObjectCommands' parameterName='obj_count' parameterType='INTEGER' range='0-9' />
+      <parameter funName='RBUS_ObjectCommands' parameterName='object_name' parameterType='STRING' range='a-z' />
+      <parameter funName='RBUS_TableRowCommands' parameterName='operation' parameterType='STRING' range='a-z' />
+      <parameter funName='RBUS_TableRowCommands' parameterName='table_row' parameterType='STRING' range='a-z' />
     </parameters>
   </module>
 </xml>
