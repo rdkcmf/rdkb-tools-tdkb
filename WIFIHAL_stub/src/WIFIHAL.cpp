@@ -3013,3 +3013,143 @@ void WIFIHAL::WIFIHAL_GetBTMClientCapabilityList(IN const Json::Value& req, OUT 
     }
 }
 
+
+/*******************************************************************************************
+ * Function Name        : WIFIHAL_GetApRoamingConsortiumElement
+ * Description          : This function invokes WiFi hal api wifi_getApRoamingConsortiumElement
+ * @param [in] req-     : apIndex - access point index
+ * @param [out] response - filled with SUCCESS or FAILURE based on the output status of operation
+ *
+ ********************************************************************************************/
+void WIFIHAL::WIFIHAL_GetApRoamingConsortiumElement(IN const Json::Value& req, OUT Json::Value& response)
+{
+    DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_GetApRoamingConsortiumElement ----->Entry\n");
+
+    wifi_roamingConsortiumElement_t roam = {0};
+    int apIndex = 0;
+    int returnValue = 1;
+    char details[2000] = {'\0'};
+    char tempstr[33] = {'\0'};
+    int elemCount = 0;
+    int index = 0;
+    int len= 0;
+
+    if(&req["apIndex"]==NULL)
+    {
+        response["result"]="FAILURE";
+        response["details"]="NULL parameter as input argument";
+        return;
+    }
+
+    apIndex = req["apIndex"].asInt();
+
+    returnValue = ssp_WIFIHALGetApRoamingConsortiumElement(apIndex, &roam);
+    if(0 == returnValue)
+    {
+        elemCount = (int)roam.wifiRoamingConsortiumCount;
+        sprintf(details, "wifi_getApRoamingConsortiumElement output is: EntryCount %d", elemCount);
+        for(index=0; index<elemCount; ++index)
+        {
+                tempstr[0] = '\0';
+                for(len=0; len<roam.wifiRoamingConsortiumLen[index] && len<16; ++len) {
+                        sprintf(&tempstr[len*2], "%02x", roam.wifiRoamingConsortiumOui[index][len]);
+                }
+                sprintf(details + strlen(details), ", OUI[%d] %s, LenOfOUI[%d] %u", index, tempstr, index, roam.wifiRoamingConsortiumLen[index]);
+        }
+        DEBUG_PRINT(DEBUG_TRACE,"\n %s", details);
+        response["result"]="SUCCESS";
+        response["details"]=details;
+        return;
+    }
+    else
+    {
+        sprintf(details, "wifi_getApRoamingConsortiumElement operation failed");
+        response["result"]="FAILURE";
+        response["details"]=details;
+        DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_GetApRoamingConsortiumElement ---->Error in execution\n");
+        return;
+    }
+}
+
+
+/*******************************************************************************************
+ * Function Name        : WIFIHAL_PushApRoamingConsortiumElement
+ * Description          : This function invokes WiFi hal api wifi_pushApRoamingConsortiumElement
+ * @param [in] req-     : apIndex - access point index
+                        : ouiCount - no: of OUIs to be set
+                        : ouiList - OUI values to be est
+                        : ouiLen - length of each OUI value
+ * @param [out] response - filled with SUCCESS or FAILURE based on the output status of operation
+ *
+ ********************************************************************************************/
+void WIFIHAL::WIFIHAL_PushApRoamingConsortiumElement(IN const Json::Value& req, OUT Json::Value& response)
+{
+    DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_PushApRoamingConsortiumElement ----->Entry\n");
+
+    wifi_roamingConsortiumElement_t roam = {0};
+    int apIndex = 0;
+    int returnValue = 1;
+    char details[2000] = {'\0'};
+    char tempOui[110] = {'\0'};
+    char tempOuiLen[10] = {'\0'};
+    char *token = NULL;
+    int index = 0;
+    int len = 0;
+    unsigned int ouiInt = 0;
+
+    if(&req["apIndex"]==NULL || &req["ouiList"]==NULL || &req["ouiCount"]==NULL || &req["ouiLen"]==NULL)
+    {
+        response["result"]="FAILURE";
+        response["details"]="NULL parameter as input argument";
+        return;
+    }
+    apIndex = req["apIndex"].asInt();
+    strcpy(tempOui, req["ouiList"].asCString());
+    roam.wifiRoamingConsortiumCount = req["ouiCount"].asInt();
+    strcpy(tempOuiLen, req["ouiLen"].asCString());
+    DEBUG_PRINT(DEBUG_TRACE,"\n tempOui = %s, ouiCount = %u, tempOuiLen = %s\n",tempOui, roam.wifiRoamingConsortiumCount, tempOuiLen);
+
+    //split and save the input oui lengths' list
+    token = strtok(tempOuiLen, ",");
+    while (token != NULL && index < 3)
+    {
+        roam.wifiRoamingConsortiumLen[index]=atoi(token);
+        DEBUG_PRINT(DEBUG_TRACE,"\n wifiRoamingConsortiumOuiLen[%d] = %u\n", index, roam.wifiRoamingConsortiumLen[index]);
+        index++;
+        token = strtok(NULL, ",");
+    }
+
+    //split and save the input oui list
+    token = strtok(tempOui, ",");
+    index = 0;
+    while (token != NULL && index < 3)
+    {
+        len=0;
+        while (sscanf(&token[len*2], "%2x", &ouiInt) != EOF and len<15)
+        {
+            roam.wifiRoamingConsortiumOui[index][len] = (unsigned char)ouiInt;
+            DEBUG_PRINT(DEBUG_TRACE,"\n roam.wifiRoamingConsortiumOui[%d][%d] = %u\n", index, len, ouiInt);
+            len++;
+        }
+        index++;
+        token = strtok(NULL, ",");
+    }
+
+    returnValue = ssp_WIFIHALPushApRoamingConsortiumElement(apIndex, &roam);
+    if(0 == returnValue)
+    {
+        sprintf(details, "wifi_pushApRoamingConsortiumElement operation is success");
+        response["result"]="SUCCESS";
+        response["details"]=details;
+        return;
+    }
+    else
+    {
+        sprintf(details, "wifi_pushApRoamingConsortiumElement operation failed");
+        response["result"]="FAILURE";
+        response["details"]=details;
+        DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_PushApRoamingConsortiumElement ---->Error in execution\n");
+        return;
+    }
+}
+

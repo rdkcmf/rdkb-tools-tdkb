@@ -454,6 +454,12 @@ typedef struct {
     unsigned char       capability[MAX_BTM_DEVICES];    // Array of bool indicating peer BSS transition capability.
 } wifi_BTMCapabilities_t;
 
+typedef struct {
+    unsigned char    wifiRoamingConsortiumCount;
+    unsigned char    wifiRoamingConsortiumOui[3][15+1];//only 3 OIS is allowed in beacon and probe responses OIS length is variable between 3-15
+    unsigned char    wifiRoamingConsortiumLen[3];
+}wifi_roamingConsortiumElement_t;
+
 /* To provide external linkage to C Functions defined in TDKB Component folder */
 extern "C"
 {
@@ -513,6 +519,8 @@ extern "C"
     int ssp_WIFIHALSteeringClientSet(unsigned int steeringgroupIndex, int apIndex, mac_address_t client_mac, wifi_steering_clientConfig_t *cli_cfg);
     int ssp_WIFIHALSteeringClientRemove(unsigned int steeringgroupIndex, int apIndex, mac_address_t client_mac);
     int ssp_WIFIHALGetBTMClientCapabilityList(int apIndex, wifi_BTMCapabilities_t* btm_caps);
+    int ssp_WIFIHALGetApRoamingConsortiumElement(int apIndex, wifi_roamingConsortiumElement_t* roam);
+    int ssp_WIFIHALPushApRoamingConsortiumElement(int apIndex, wifi_roamingConsortiumElement_t* roam);
 };
 
 class RDKTestAgent;
@@ -579,6 +587,8 @@ class WIFIHAL : public RDKTestStubInterface, public AbstractServer<WIFIHAL>
                   this->bindAndAddMethod(Procedure("WIFIHAL_SteeringClientSet", PARAMS_BY_NAME, JSON_STRING, "steeringgroupIndex", JSON_INTEGER, "apIndex", JSON_INTEGER, "clientMAC", JSON_STRING, "rssiProbeHWM", JSON_INTEGER, "rssiProbeLWM", JSON_INTEGER, "rssiAuthHWM", JSON_INTEGER, "rssiAuthLWM", JSON_INTEGER, "rssiInactXing", JSON_INTEGER, "rssiHighXing", JSON_INTEGER, "rssiLowXing", JSON_INTEGER, "authRejectReason", JSON_INTEGER, NULL), &WIFIHAL::WIFIHAL_SteeringClientSet);
                   this->bindAndAddMethod(Procedure("WIFIHAL_SteeringClientRemove", PARAMS_BY_NAME, JSON_STRING, "steeringgroupIndex", JSON_INTEGER, "apIndex", JSON_INTEGER, "clientMAC", JSON_STRING, NULL), &WIFIHAL::WIFIHAL_SteeringClientRemove);
                   this->bindAndAddMethod(Procedure("WIFIHAL_GetBTMClientCapabilityList", PARAMS_BY_NAME, JSON_STRING, "count", JSON_INTEGER, "apIndex", JSON_INTEGER, "clientMAC", JSON_STRING, NULL), &WIFIHAL::WIFIHAL_GetBTMClientCapabilityList);
+                  this->bindAndAddMethod(Procedure("WIFIHAL_GetApRoamingConsortiumElement", PARAMS_BY_NAME, JSON_STRING, "apIndex", JSON_INTEGER, NULL), &WIFIHAL::WIFIHAL_GetApRoamingConsortiumElement);
+                  this->bindAndAddMethod(Procedure("WIFIHAL_PushApRoamingConsortiumElement", PARAMS_BY_NAME, JSON_STRING, "apIndex", JSON_INTEGER, "ouiCount", JSON_INTEGER, "ouiList", JSON_STRING, "ouiLen", JSON_STRING, NULL), &WIFIHAL::WIFIHAL_PushApRoamingConsortiumElement);
                 }
         /*inherited functions*/
         bool initialize(IN const char* szVersion);
@@ -642,6 +652,8 @@ class WIFIHAL : public RDKTestStubInterface, public AbstractServer<WIFIHAL>
         void WIFIHAL_SteeringClientSet(IN const Json::Value& req, OUT Json::Value& response);
         void WIFIHAL_SteeringClientRemove(IN const Json::Value& req, OUT Json::Value& response);
         void WIFIHAL_GetBTMClientCapabilityList(IN const Json::Value& req, OUT Json::Value& response);
+        void WIFIHAL_GetApRoamingConsortiumElement(IN const Json::Value& req, OUT Json::Value& response);
+        void WIFIHAL_PushApRoamingConsortiumElement(IN const Json::Value& req, OUT Json::Value& response);
 };
 #endif //__WIFIHAL_STUB_H__
 
