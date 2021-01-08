@@ -33,7 +33,7 @@
 #define IN
 #define OUT
 
-#define BUFF_LENGTH 512
+#define BUFF_LENGTH 1024
 
 #define TEST_SUCCESS true
 #define TEST_FAILURE false
