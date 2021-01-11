@@ -258,6 +258,6 @@ if  "SUCCESS" in pamloadmodulestatus.upper() and "SUCCESS" in sysloadmodulestatu
     sysobj.unloadModule("sysutil");
 else:
     print "Failed to load pam/sysutil module";
-    obj.setLoadModuleStatus("FAILURE");
+    pamobj.setLoadModuleStatus("FAILURE");
     sysobj.setLoadModuleStatus("FAILURE");
     print "Module loading failed";
