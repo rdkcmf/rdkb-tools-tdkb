@@ -129,8 +129,8 @@ if "SUCCESS" in loadmodulestatus.upper():
 
            #revert in caseof invalid set
            tdkTestObj = obj.createTestStep('TDKB_TR181Stub_Set');
-           tdkTestObj.addParameter("ParamName","Device.SelfHeal.ResourceMonitor.X_RDKCENTRAL-COM_UsageComputeWindow")
-           tdkTestObj.addParameter("ParamValue",defCompuWindow);
+           tdkTestObj.addParameter("ParamName","Device.DeviceInfo.X_RDKCENTRAL-COM_RFC.Feature.SoftwareProcessManager.SelfHeal.AggressiveInterval")
+           tdkTestObj.addParameter("ParamValue",defAggInt);
            tdkTestObj.addParameter("Type","unsignedint");
            expectedresult= "SUCCESS";
            #Execute testcase on DUT
