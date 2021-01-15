@@ -156,3 +156,4 @@ this->bindAndAddMethod(Procedure("saveCurrentState", PARAMS_BY_NAME, JSON_STRING
 
 #endif /* End of RPC_METHODS_H */
 
+
