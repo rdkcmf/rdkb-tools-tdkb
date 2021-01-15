@@ -46,6 +46,7 @@
 #define DEVICE_INFO_SUCCESS 0
 #define DEVICE_INFO_FAILURE 1
 
+
 #define ANY_ADDR "::"
 #define RDK_TEST_AGENT_PORT 8087
 #define RDK_DEVICE_INFO_PORT 8089
@@ -75,7 +76,7 @@ pthread_t deviceStatusThreadId;
 pthread_t deviceDetailsThreadId;
 pthread_t crashDetailsThreadId;
 pthread_t agentExecuterThreadId;
-TcpSocketServer go_Server(ANY_ADDR, RDK_TEST_AGENT_PORT);
+std::string BoxIP;
 extern RDKTestAgent *m_pAgent;
 /* Structure to hold process details */
 struct sProcessInfo
@@ -105,6 +106,7 @@ int RpcMethods::sm_nStatusQueryFlag = FLAG_NOT_SET;
 string RpcMethods::sm_strBoxIP = "";
 const char* RpcMethods::sm_szBoxName = NULL;
 const char* RpcMethods::sm_szManagerIP = NULL;
+const char* RpcMethods::sm_szDeviceIP = NULL;
 const char* RpcMethods::sm_szBoxInterface = NULL;
 FILE* RpcMethods::sm_pLogStream = NULL;
 std::string RpcMethods::sm_strLogFolderPath = "";
@@ -758,6 +760,7 @@ int Agent()
     int nReturnValue = RETURN_SUCCESS;
     int nCrashReportStatus = RETURN_SUCCESS;
 
+    TcpSocketServer go_Server(ANY_ADDR, RDK_TEST_AGENT_PORT);
     RpcMethods o_Agent(go_Server);
     if (!o_Agent.StartListening())
     {
