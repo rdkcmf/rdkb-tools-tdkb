@@ -17,6 +17,7 @@
  * limitations under the License.
 */
 
+#include <stdint.h>
 #include "wifi_hal.h"
 #define SSP_SUCCESS       0
 #define SSP_FAILURE       1
