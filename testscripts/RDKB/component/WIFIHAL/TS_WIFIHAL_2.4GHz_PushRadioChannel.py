@@ -68,7 +68,8 @@ radioIndex = 0</input_parameters>
 # use tdklib library,which provides a wrapper for tdk testcase script
 import tdklib;
 import time;
-
+from wifiUtility import *;
+radio2 = "2.4G"
 #Test component to be tested
 obj = tdklib.TDKScriptingLibrary("wifihal","1");
 
@@ -84,112 +85,120 @@ print "[LIB LOAD STATUS]  :  %s" %loadmodulestatus ;
 
 if "SUCCESS" in loadmodulestatus.upper():
     obj.setLoadModuleStatus("SUCCESS");
-    #Script to load the configuration file of the component
-    tdkTestObj = obj.createTestStep("WIFIHAL_GetOrSetParamULongValue");
-    tdkTestObj.addParameter("methodName","getRadioChannel");
-    tdkTestObj.addParameter("radioIndex",0);
-    expectedresult="SUCCESS";
-    tdkTestObj.executeTestCase(expectedresult);
-    actualresult = tdkTestObj.getResult();
-    details = tdkTestObj.getResultDetails();
-    if expectedresult in actualresult:
-        #Set the result status of execution
-        tdkTestObj.setResultStatus("SUCCESS");
-        print "TEST STEP 1: Get the current radio channel for 2.4GHz";
-        print "EXPECTED RESULT 1: Should get the current channel for 2.4GHz";
-        print "ACTUAL RESULT 1: %s" %details;
-        #Get the result of execution
-        print "[TEST EXECUTION RESULT] : SUCCESS";
-
-        currChannel = details.split(":")[1].strip()
-        if int(currChannel) == 1:
-            newChannel = 6;
-        else:
-            newChannel = 1;
-
-        tdkTestObj = obj.createTestStep("WIFIHAL_GetOrSetParamIntValue");
-        tdkTestObj.addParameter("param",newChannel);
-        tdkTestObj.addParameter("radioIndex",0);
-        tdkTestObj.addParameter("methodName","pushRadioChannel");
+    #Validate wifi_getApAssociatedDeviceDiagnosticResult2() for 2.4GHZ
+    tdkTestObjTemp, idx = getIndex(obj, radio2);
+    ## Check if a invalid index is returned
+    if idx == -1:
+        print "Failed to get radio index for radio %s\n" %radio2;
+        tdkTestObjTemp.setResultStatus("FAILURE");
+    else:
+        #Script to load the configuration file of the component
+        tdkTestObj = obj.createTestStep("WIFIHAL_GetOrSetParamULongValue");
+        tdkTestObj.addParameter("methodName","getRadioChannel");
+        tdkTestObj.addParameter("radioIndex",idx);
         expectedresult="SUCCESS";
         tdkTestObj.executeTestCase(expectedresult);
         actualresult = tdkTestObj.getResult();
         details = tdkTestObj.getResultDetails();
         if expectedresult in actualresult:
-            #Set the result status of execution
-            tdkTestObj.setResultStatus("SUCCESS");
-            print "TEST STEP 2: Set the radio channel using wifi_pushRadioChannel";
-            print "EXPECTED RESULT 2: Should set the radio channel using wifi_pushRadioChannel";
-            print "ACTUAL RESULT 2: %s" %details;
-            #Get the result of execution
-            print "[TEST EXECUTION RESULT] : SUCCESS";
-            time.sleep(10);
+           #Set the result status of execution
+           tdkTestObj.setResultStatus("SUCCESS");
+           print "TEST STEP 1: Get the current radio channel for 2.4GHz";
+           print "EXPECTED RESULT 1: Should get the current channel for 2.4GHz";
+           print "ACTUAL RESULT 1: %s" %details;
+           #Get the result of execution
+           print "[TEST EXECUTION RESULT] : SUCCESS";
 
-            tdkTestObj = obj.createTestStep("WIFIHAL_GetOrSetParamULongValue");
-            tdkTestObj.addParameter("methodName","getRadioChannel");
-            tdkTestObj.addParameter("radioIndex",0);
-            expectedresult="SUCCESS";
-            tdkTestObj.executeTestCase(expectedresult);
-            actualresult = tdkTestObj.getResult();
-            details = tdkTestObj.getResultDetails();
-            if expectedresult in actualresult:
-                newValue = details.split(":")[1].strip()
-                if int(newValue) == int(newChannel):
-                    #Set the result status of execution
-                    tdkTestObj.setResultStatus("SUCCESS");
-                    print "TEST STEP 3: Verify the set function using get function";
-                    print "EXPECTED RESULT 3: Should get the current channel for 2.4GHz";
-                    print "ACTUAL RESULT 3: %s" %details;
-                    #Get the result of execution
-                    print "[TEST EXECUTION RESULT] : SUCCESS";
-                else:
-                    #Set the result status of execution
-                    tdkTestObj.setResultStatus("FAILURE");
-                    print "TEST STEP 3: Verify the set function using get function";
-                    print "EXPECTED RESULT 3: Should get the current channel for 2.4GHz";
-                    print "ACTUAL RESULT 3: %s" %details;
-                    #Get the result of execution
-                    print "[TEST EXECUTION RESULT] : FAILURE";
-            #Revert the channel value
-            tdkTestObj = obj.createTestStep("WIFIHAL_GetOrSetParamIntValue");
-            tdkTestObj.addParameter("param",int(currChannel));
-            tdkTestObj.addParameter("radioIndex",0);
-            tdkTestObj.addParameter("methodName","pushRadioChannel");
-            expectedresult="SUCCESS";
-            tdkTestObj.executeTestCase(expectedresult);
-            actualresult = tdkTestObj.getResult();
-            details = tdkTestObj.getResultDetails();
-            if expectedresult in actualresult:
-                #Set the result status of execution
-                tdkTestObj.setResultStatus("SUCCESS");
-                print "TEST STEP : Revert the radio channel using wifi_pushRadioChannel";
-                print "EXPECTED RESULT : Should revert the radio channel using wifi_pushRadioChannel";
-                print "ACTUAL RESULT : %s" %details;
-                #Get the result of execution
-                print "[TEST EXECUTION RESULT] : SUCCESS";
-            else:
-                #Set the result status of execution
-                tdkTestObj.setResultStatus("FAILURE");
-                print "TEST STEP : Revert the radio channel using wifi_pushRadioChannel";
-                print "EXPECTED RESULT : Should revert the radio channel using wifi_pushRadioChannel";
-                print "ACTUAL RESULT : %s" %details;
-                #Get the result of execution
-                print "[TEST EXECUTION RESULT] : FAILURE";
+           currChannel = details.split(":")[1].strip()
+           if int(currChannel) == 1:
+              newChannel = 6;
+           else:
+               newChannel = 1;
+
+           tdkTestObj = obj.createTestStep("WIFIHAL_GetOrSetParamIntValue");
+           tdkTestObj.addParameter("param",newChannel);
+           tdkTestObj.addParameter("radioIndex",idx);
+           tdkTestObj.addParameter("methodName","pushRadioChannel");
+           expectedresult="SUCCESS";
+           tdkTestObj.executeTestCase(expectedresult);
+           actualresult = tdkTestObj.getResult();
+           details = tdkTestObj.getResultDetails();
+           if expectedresult in actualresult:
+               #Set the result status of execution
+               tdkTestObj.setResultStatus("SUCCESS");
+               print "TEST STEP 2: Set the radio channel using wifi_pushRadioChannel";
+               print "EXPECTED RESULT 2: Should set the radio channel using wifi_pushRadioChannel";
+               print "ACTUAL RESULT 2: %s" %details;
+               #Get the result of execution
+               print "[TEST EXECUTION RESULT] : SUCCESS";
+               time.sleep(10);
+
+               tdkTestObj = obj.createTestStep("WIFIHAL_GetOrSetParamULongValue");
+               tdkTestObj.addParameter("methodName","getRadioChannel");
+               tdkTestObj.addParameter("radioIndex",idx);
+               expectedresult="SUCCESS";
+               tdkTestObj.executeTestCase(expectedresult);
+               actualresult = tdkTestObj.getResult();
+               details = tdkTestObj.getResultDetails();
+               if expectedresult in actualresult:
+                   newValue = details.split(":")[1].strip()
+                   if int(newValue) == int(newChannel):
+                       #Set the result status of execution
+                       tdkTestObj.setResultStatus("SUCCESS");
+                       print "TEST STEP 3: Verify the set function using get function";
+                       print "EXPECTED RESULT 3: Should get the current channel for 2.4GHz";
+                       print "ACTUAL RESULT 3: %s" %details;
+                       #Get the result of execution
+                       print "[TEST EXECUTION RESULT] : SUCCESS";
+                   else:
+                       #Set the result status of execution
+                       tdkTestObj.setResultStatus("FAILURE");
+                       print "TEST STEP 3: Verify the set function using get function";
+                       print "EXPECTED RESULT 3: Should get the current channel for 2.4GHz";
+                       print "ACTUAL RESULT 3: %s" %details;
+                       #Get the result of execution
+                       print "[TEST EXECUTION RESULT] : FAILURE";
+
+               #Revert the channel value
+               tdkTestObj = obj.createTestStep("WIFIHAL_GetOrSetParamIntValue");
+               tdkTestObj.addParameter("param",int(currChannel));
+               tdkTestObj.addParameter("radioIndex",idx);
+               tdkTestObj.addParameter("methodName","pushRadioChannel");
+               expectedresult="SUCCESS";
+               tdkTestObj.executeTestCase(expectedresult);
+               actualresult = tdkTestObj.getResult();
+               details = tdkTestObj.getResultDetails();
+               if expectedresult in actualresult:
+                   #Set the result status of execution
+                   tdkTestObj.setResultStatus("SUCCESS");
+                   print "TEST STEP : Revert the radio channel using wifi_pushRadioChannel";
+                   print "EXPECTED RESULT : Should revert the radio channel using wifi_pushRadioChannel";
+                   print "ACTUAL RESULT : %s" %details;
+                   #Get the result of execution
+                   print "[TEST EXECUTION RESULT] : SUCCESS";
+               else:
+                   #Set the result status of execution
+                   tdkTestObj.setResultStatus("FAILURE");
+                   print "TEST STEP : Revert the radio channel using wifi_pushRadioChannel";
+                   print "EXPECTED RESULT : Should revert the radio channel using wifi_pushRadioChannel";
+                   print "ACTUAL RESULT : %s" %details;
+                   #Get the result of execution
+                   print "[TEST EXECUTION RESULT] : FAILURE";
+           else:
+               tdkTestObj.setResultStatus("FAILURE");
+               print "TEST STEP 2: Set the radio channel using wifi_pushRadioChannel";
+               print "EXPECTED RESULT 2: Should the radio channel using wifi_pushRadioChannel";
+               print "ACTUAL RESULT 2: %s" %details;
+               #Get the result of execution
+               print "[TEST EXECUTION RESULT] : FAILURE";
         else:
+            #Set the result status of execution
             tdkTestObj.setResultStatus("FAILURE");
-            print "TEST STEP 2: Set the radio channel using wifi_pushRadioChannel";
-            print "EXPECTED RESULT 2: Should the radio channel using wifi_pushRadioChannel";
-            print "ACTUAL RESULT 2: %s" %details;
+            print "TEST STEP 1: Get the radio channel for 2.4GHz";
+            print "EXPECTED RESULT 1: Should get the radio channel for 2.4GHz";
+            print "ACTUAL RESULT 1: %s" %details;
             #Get the result of execution
             print "[TEST EXECUTION RESULT] : FAILURE";
-    else:
-        #Set the result status of execution
-        tdkTestObj.setResultStatus("FAILURE");
-        print "TEST STEP 1: Get the radio channel for 2.4GHz";
-        print "EXPECTED RESULT 1: Should get the radio channel for 2.4GHz";
-        print "ACTUAL RESULT 1: %s" %details;
-        #Get the result of execution
-        print "[TEST EXECUTION RESULT] : FAILURE";
     obj.unloadModule("wifihal");
 else:
         print "Failed to load the module";

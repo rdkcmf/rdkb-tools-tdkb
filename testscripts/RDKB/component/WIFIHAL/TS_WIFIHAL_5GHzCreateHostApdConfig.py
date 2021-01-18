@@ -86,8 +86,10 @@ radioIndex : 1</input_parameters>
 '''
 # use tdklib library,which provides a wrapper for tdk testcase script
 import tdklib;
-from wifiUtility import *;
 from tdkbVariables import *;
+from wifiUtility import *;
+
+radio = "5G"
 
 #Test component to be tested
 obj = tdklib.TDKScriptingLibrary("wifihal","1");
@@ -100,101 +102,106 @@ port = <port>
 obj.configureTestCase(ip,port,'TS_WIFIHAL_5GHzCreateHostApdConfig');
 sysobj.configureTestCase(ip,port,'TS_WIFIHAL_5GHzCreateHostApdConfig');
 def createHostApdConfig():
-    print "Entered to the Function"
-    #calling the wifi api wifi_createHostApdConfig to create /tmp/secath1
-    tdkTestObj = obj.createTestStep('WIFIHAL_GetOrSetParamBoolValue');
-    tdkTestObj.addParameter("radioIndex", 1);
-    tdkTestObj.addParameter("methodName","createHostApdConfig");
-    tdkTestObj.addParameter("param", 0);
-    expectedresult="SUCCESS";
-    #Execute the test case in DUT
-    tdkTestObj.executeTestCase(expectedresult);
-    actualresult = tdkTestObj.getResult();
-    details = tdkTestObj.getResultDetails();
-    if expectedresult in actualresult and "Invalid Argument passed" not in details:
-        tdkTestObj.setResultStatus("SUCCESS");
-        print "TEST STEP 2: Call the wifi_createHostApdConfig api to create hostapd config file /tmp/secath0 file for 5GHz";
-        print "EXPECTED RESULT 2: Should create the hostapd config file for the radio 5GHz";
-        print "ACTUAL RESULT 2: Created the files and execution returns SUCCESS";
-        print "Details is ",details;
-        print "[TEST EXECUTION RESULT] : SUCCESS";
-
-        #calling the wifi api wifi_createHostApdConfig to create /nvram/etc/wpa2/WSC_ath1.conf
-        tdkTestObj = obj.createTestStep('WIFIHAL_GetOrSetParamBoolValue');
-        tdkTestObj.addParameter("radioIndex", 1);
-        tdkTestObj.addParameter("methodName","createHostApdConfig");
-        tdkTestObj.addParameter("param", 1);
-        expectedresult="SUCCESS";
-        #Execute the test case in DUT
-        tdkTestObj.executeTestCase(expectedresult);
-        actualresult = tdkTestObj.getResult();
-        details = tdkTestObj.getResultDetails();
-        if expectedresult in actualresult and "Invalid Argument passed" not in details:
-            tdkTestObj.setResultStatus("SUCCESS");
-            print "TEST STEP 3: Call the wifi_createHostApdConfig api to create hostapd config file /nvram/etc/wpa2/WSC_ath1.conf for 5GHz";
-            print "EXPECTED RESULT 3: Should create the hostapd config file for the radio 5GHz";
-            print "ACTUAL RESULT 3: Created the files and execution returns SUCCESS";
-            print "[TEST EXECUTION RESULT] : SUCCESS";
-
-            #Calling the Function checkHostApdConfig1 to check whether the file creation
-            tdkTestObj = sysobj.createTestStep('ExecuteCmd');
-            query = "sh %s/tdk_platform_utility.sh checkHostApdConfig1 | tr \"\n\" \" \"" %TDK_PATH
-            tdkTestObj.addParameter("command", query);
-            expectedresult="SUCCESS";
-            tdkTestObj.executeTestCase(expectedresult);
-            actualresult = tdkTestObj.getResult();
-            details = tdkTestObj.getResultDetails();
-            if expectedresult in actualresult and "Invalid Argument passed" not in details:
-                tdkTestObj.setResultStatus("SUCCESS");
-                print "TEST STEP 4: Get the created files for the radio 5GHz";
-                print "EXPECTED RESULT 4: Should get the files created hostapd config files for the radio 5GHz";
-                print "ACTUAL RESULT 4: Operation returned SUCCESS";
-                print "Created Files are:",details;
-                print "[TEST EXECUTION RESULT] : SUCCESS";
-                
-                #Revert back the changes
-                tdkTestObj = sysobj.createTestStep('ExecuteCmd');
-                query = "sh %s/tdk_platform_utility.sh removeHostApdConfig" %TDK_PATH
-                tdkTestObj.addParameter("command", query);
-                expectedresult="SUCCESS";
-                tdkTestObj.executeTestCase(expectedresult);
-                actualresult = tdkTestObj.getResult();
-                details = tdkTestObj.getResultDetails();
-                if expectedresult in actualresult and "Invalid Argument passed" not in details:
-                    tdkTestObj.setResultStatus("SUCCESS");
-                    print "TEST STEP 5: Remove the created hostapd config files for the radio for 5GHz";
-                    print "EXPECTED RESULT 5: Should remove the hostapd config files for the radio 5GHz";
-                    print "ACTUAL RESULT 5: Successfully removed the hostapd config files";
-                    print "details is :",details
-                    print "[TEST EXECUTION RESULT] : SUCCESS";
-                else:
-                    tdkTestObj.setResultStatus("FAILURE");
-                    print "TEST STEP 5: Remove the created hostapd config files for the radio for 5GHz";
-                    print "EXPECTED RESULT 5: Should remove the hostapd config files for the radio 5GHz";
-                    print "ACTUAL RESULT 5: Failed to remove the files and execution returns FAILURE";
-                    print "details is :",details
-                    print "[TEST EXECUTION RESULT] : FAILURE";
-
-            else:
-                tdkTestObj.setResultStatus("FAILURE");
-                print "TEST STEP 4: Get the created files for the radio 5GHz";
-                print "EXPECTED RESULT 4: Should get the files created for the radio 5GHz";
-                print "ACTUAL RESULT 4: Failed to get the result",actualresult;
-                print "Details is :",details;
-                print "[TEST EXECUTION RESULT] : FAILURE";
-        else:
-            tdkTestObj.setResultStatus("FAILURE");
-            print "TEST STEP 3: Call the function wifi_createHostApdConfig to create hostapd config file /nvram/etc/wpa2/WSC_ath1.conf for 5GHz";
-            print "EXPECTED RESULT 3: Should create the hostapd config file for the radio 5GHz";
-            print "ACTUAL RESULT 3: Failed to create the file and api returns failure";
-            print "Details is :",details;
-            print "[TEST EXECUTION RESULT] : FAILURE";
+    tdkTestObjTemp, idx = getIndex(obj, radio);
+    ## Check if a invalid index is returned
+    if idx == -1:
+        print "Failed to get radio index for radio %s\n" %radio;
+        tdkTestObjTemp.setResultStatus("FAILURE");
     else:
-        tdkTestObj.setResultStatus("FAILURE");
-        print "TEST STEP 2: Call the function wifi_createHostApdConfig to create /tmp/secath1 for 5GHz";
-        print "EXPECTED RESULT 2: Should create the file for the radio 5GHz";
-        print "ACTUAL RESULT 2: Failed to create the file and api returns failure";
-        print "[TEST EXECUTION RESULT] : FAILURE";
+         print "Entered to the Function"
+         #calling the wifi api wifi_createHostApdConfig to create /tmp/secath1
+         tdkTestObj = obj.createTestStep('WIFIHAL_GetOrSetParamBoolValue');
+         tdkTestObj.addParameter("radioIndex", idx);
+         tdkTestObj.addParameter("methodName","createHostApdConfig");
+         tdkTestObj.addParameter("param", 0);
+         expectedresult="SUCCESS";
+         #Execute the test case in DUT
+         tdkTestObj.executeTestCase(expectedresult);
+         actualresult = tdkTestObj.getResult();
+         details = tdkTestObj.getResultDetails();
+         if expectedresult in actualresult and "Invalid Argument passed" not in details:
+             tdkTestObj.setResultStatus("SUCCESS");
+             print "TEST STEP 2: Call the wifi_createHostApdConfig api to create hostapd config file /tmp/secath0 file for 5GHz";
+             print "EXPECTED RESULT 2: Should create the hostapd config file for the radio 5GHz";
+             print "ACTUAL RESULT 2: Created the files and execution returns SUCCESS";
+             print "Details is ",details;
+             print "[TEST EXECUTION RESULT] : SUCCESS";
+
+             #calling the wifi api wifi_createHostApdConfig to create /nvram/etc/wpa2/WSC_ath1.conf
+             tdkTestObj = obj.createTestStep('WIFIHAL_GetOrSetParamBoolValue');
+             tdkTestObj.addParameter("radioIndex", 1);
+             tdkTestObj.addParameter("methodName","createHostApdConfig");
+             tdkTestObj.addParameter("param", 1);
+             expectedresult="SUCCESS";
+             #Execute the test case in DUT
+             tdkTestObj.executeTestCase(expectedresult);
+             actualresult = tdkTestObj.getResult();
+             details = tdkTestObj.getResultDetails();
+             if expectedresult in actualresult and "Invalid Argument passed" not in details:
+                 tdkTestObj.setResultStatus("SUCCESS");
+                 print "TEST STEP 3: Call the wifi_createHostApdConfig api to create hostapd config file /nvram/etc/wpa2/WSC_ath1.conf for 5GHz";
+                 print "EXPECTED RESULT 3: Should create the hostapd config file for the radio 5GHz";
+                 print "ACTUAL RESULT 3: Created the files and execution returns SUCCESS";
+                 print "[TEST EXECUTION RESULT] : SUCCESS";
+
+                 #Calling the Function checkHostApdConfig1 to check whether the file creation
+                 tdkTestObj = sysobj.createTestStep('ExecuteCmd');
+                 query = "sh %s/tdk_platform_utility.sh checkHostApdConfig1 | tr \"\n\" \" \"" %TDK_PATH
+                 tdkTestObj.addParameter("command", query);
+                 expectedresult="SUCCESS";
+                 tdkTestObj.executeTestCase(expectedresult);
+                 actualresult = tdkTestObj.getResult();
+                 details = tdkTestObj.getResultDetails();
+                 if expectedresult in actualresult and "Invalid Argument passed" not in details:
+                     tdkTestObj.setResultStatus("SUCCESS");
+                     print "TEST STEP 4: Get the created files for the radio 5GHz";
+                     print "EXPECTED RESULT 4: Should get the files created hostapd config files for the radio 5GHz";
+                     print "ACTUAL RESULT 4: Operation returned SUCCESS";
+                     print "Created Files are:",details;
+                     print "[TEST EXECUTION RESULT] : SUCCESS";
+
+                     #Revert back the changes
+                     tdkTestObj = sysobj.createTestStep('ExecuteCmd');
+                     query = "sh %s/tdk_platform_utility.sh removeHostApdConfig" %TDK_PATH
+                     tdkTestObj.addParameter("command", query);
+                     expectedresult="SUCCESS";
+                     tdkTestObj.executeTestCase(expectedresult);
+                     actualresult = tdkTestObj.getResult();
+                     details = tdkTestObj.getResultDetails();
+                     if expectedresult in actualresult and "Invalid Argument passed" not in details:
+                         tdkTestObj.setResultStatus("SUCCESS");
+                         print "TEST STEP 5: Remove the created hostapd config files for the radio for 5GHz";
+                         print "EXPECTED RESULT 5: Should remove the hostapd config files for the radio 5GHz";
+                         print "ACTUAL RESULT 5: Successfully removed the hostapd config files";
+                         print "details is :",details
+                         print "[TEST EXECUTION RESULT] : SUCCESS";
+                     else:
+                         tdkTestObj.setResultStatus("FAILURE");
+                         print "TEST STEP 5: Remove the created hostapd config files for the radio for 5GHz";
+                         print "EXPECTED RESULT 5: Should remove the hostapd config files for the radio 5GHz";
+                         print "ACTUAL RESULT 5: Failed to remove the files and execution returns FAILURE";
+                         print "details is :",details
+                         print "[TEST EXECUTION RESULT] : FAILURE";
+                 else:
+                     tdkTestObj.setResultStatus("FAILURE");
+                     print "TEST STEP 4: Get the created files for the radio 5GHz";
+                     print "EXPECTED RESULT 4: Should get the files created for the radio 5GHz";
+                     print "ACTUAL RESULT 4: Failed to get the result",actualresult;
+                     print "Details is :",details;
+                     print "[TEST EXECUTION RESULT] : FAILURE";
+             else:
+                 tdkTestObj.setResultStatus("FAILURE");
+                 print "TEST STEP 3: Call the function wifi_createHostApdConfig to create hostapd config file /nvram/etc/wpa2/WSC_ath1.conf for 5GHz";
+                 print "EXPECTED RESULT 3: Should create the hostapd config file for the radio 5GHz";
+                 print "ACTUAL RESULT 3: Failed to create the file and api returns failure";
+                 print "Details is :",details;
+                 print "[TEST EXECUTION RESULT] : FAILURE";
+         else:
+             tdkTestObj.setResultStatus("FAILURE");
+             print "TEST STEP 2: Call the function wifi_createHostApdConfig to create /tmp/secath1 for 5GHz";
+             print "EXPECTED RESULT 2: Should create the file for the radio 5GHz";
+             print "ACTUAL RESULT 2: Failed to create the file and api returns failure";
+             print "[TEST EXECUTION RESULT] : FAILURE";
 
 #Get the result of connection with test component and DUT
 loadmodulestatus = obj.getLoadModuleResult();
@@ -232,5 +239,3 @@ if "SUCCESS" in loadmodulestatus.upper() and "SUCCESS" in sysloadmodulestatus.up
 else:
     print "Failed to load wifi module";
     obj.setLoadModuleStatus("FAILURE");
-
-

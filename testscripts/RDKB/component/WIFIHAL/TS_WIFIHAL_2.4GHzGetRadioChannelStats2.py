@@ -80,6 +80,9 @@
 '''
 # use tdklib library,which provides a wrapper for tdk testcase script
 import tdklib;
+from wifiUtility import *;
+
+radio2 = "2.4G"
 
 #Test component to be tested
 obj = tdklib.TDKScriptingLibrary("wifihal","1");
@@ -96,33 +99,38 @@ print "[LIB LOAD STATUS]  :  %s" %loadmodulestatus
 
 if "SUCCESS" in loadmodulestatus.upper():
     obj.setLoadModuleStatus("SUCCESS");
-
-    #Prmitive test case which is associated to this Script
-    tdkTestObj = obj.createTestStep('WIFIHAL_GetRadioChannelStats2');
-    tdkTestObj.addParameter("radioIndex",0);
-    expectedresult="SUCCESS";
-    tdkTestObj.executeTestCase(expectedresult);
-    actualresult = tdkTestObj.getResult();
-    details = tdkTestObj.getResultDetails();
-
-    if expectedresult in actualresult :
-        tdkTestObj.setResultStatus("SUCCESS");
-        print "TEST STEP : Get the RadioChannelStats2 info"
-        print "EXPECTED RESULT : Should successfully get the RadioChannelStats2 info"
-        print "ACTUAL RESULT : Successfully got the RadioChannelStats2 info"
-        detailList = details.split(",")
-	for i in detailList:
-	    print i;
-        #Get the result of execution
-        print "[TEST EXECUTION RESULT] : SUCCESS";
+    #Validate wifi_getApAssociatedDeviceDiagnosticResult2() for 2.4GHZ
+    tdkTestObjTemp, idx = getIndex(obj, radio2);
+    ## Check if a invalid index is returned
+    if idx == -1:
+        print "Failed to get radio index for radio %s\n" %radio2;
+        tdkTestObjTemp.setResultStatus("FAILURE");
     else:
-        tdkTestObj.setResultStatus("FAILURE");
-        print "TEST STEP : Get the RadioChannelStats2 info"
-        print "EXPECTED RESULT : Should successfully get the RadioChannelStats2 info"
-        print "ACTUAL RESULT : Failed to get the RadioChannelStats2 info"
-        print "Details: %s"%details
-        #Get the result of execution
-        print "[TEST EXECUTION RESULT] : FAILURE";
+        #Prmitive test case which is associated to this Script
+        tdkTestObj = obj.createTestStep('WIFIHAL_GetRadioChannelStats2');
+        tdkTestObj.addParameter("radioIndex",idx);
+        expectedresult="SUCCESS";
+        tdkTestObj.executeTestCase(expectedresult);
+        actualresult = tdkTestObj.getResult();
+        details = tdkTestObj.getResultDetails();
+        if expectedresult in actualresult :
+           tdkTestObj.setResultStatus("SUCCESS");
+           print "TEST STEP : Get the RadioChannelStats2 info"
+           print "EXPECTED RESULT : Should successfully get the RadioChannelStats2 info"
+           print "ACTUAL RESULT : Successfully got the RadioChannelStats2 info"
+           detailList = details.split(",")
+           for i in detailList:
+               print i;
+           #Get the result of execution
+           print "[TEST EXECUTION RESULT] : SUCCESS";
+        else:
+            tdkTestObj.setResultStatus("FAILURE");
+            print "TEST STEP : Get the RadioChannelStats2 info"
+            print "EXPECTED RESULT : Should successfully get the RadioChannelStats2 info"
+            print "ACTUAL RESULT : Failed to get the RadioChannelStats2 info"
+            print "Details: %s"%details
+            #Get the result of execution
+            print "[TEST EXECUTION RESULT] : FAILURE";
 
     obj.unloadModule("wifihal");
 else:

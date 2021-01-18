@@ -49,7 +49,7 @@
 2.TDK Agent should be in running state or invoke it through StartTdk.sh script</pre_requisite>
     <api_or_interface_used>wifi_getApRadioIndex()</api_or_interface_used>
     <input_parameters>methodName: getApRadioIndex
-apIndex   : 0</input_parameters>
+idx   : 0</input_parameters>
     <automation_approch>1.Configure the Function info in Test Manager GUI  which needs to be tested (WIFIHAL_GetOrSetParamIntValue  - func name - "If not exists already" WIFIHAL - module name Necessary I/P args as Mentioned in Input)
 2.Python Script will be generated/overrided automatically by Test Manager with provided arguments in configure page (TS_WIFIHAL_2.4GHzGetApRadioIndex.py)
 3.Execute the generated Script(TS_WIFIHAL_2.4GHzGetApRadioIndex.py) using execution page of  Test Manager GUI
@@ -79,6 +79,8 @@ from wifiUtility import *;
 
 #Test component to be tested
 obj = tdklib.TDKScriptingLibrary("wifihal","1");
+from wifiUtility import *;
+radio2 = "2.4G"
 
 #IP and Port of box, No need to change,
 #This will be replaced with correspoing Box Ip and port while executing script
@@ -93,37 +95,41 @@ if "SUCCESS" in loadmodulestatus.upper():
     obj.setLoadModuleStatus("SUCCESS");
 
     expectedresult="SUCCESS";
-
-    #Checking for apIndex 0, Similary can be check for other APs 0,2,4,6,8,10,12,14
-    apIndex = 0
-    getMethod = "getApRadioIndex"
-    primitive = 'WIFIHAL_GetOrSetParamIntValue'
-
-    #Calling the method from wifiUtility to execute test case and set result status for the test.
-    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, 0, getMethod)
-
-    expectedRadioIndexValue = 0;
-    if expectedresult in actualresult:
-        radioIndexValue = details.split(":")[1].strip()
-        if expectedRadioIndexValue == int(radioIndexValue):
-            print "getApRadioIndex function successful, %s"%details
-            tdkTestObj.setResultStatus("SUCCESS");
-            print "TEST STEP 1: Get the getApRadioIndex API";
-            print "EXPECTED RESULT 1: Function Should return a Radio Index value(int) value";
-            print "ACTUAL RESULT 1: Radio Index value associated with AP received Successfully: %s"%radioIndexValue;
-            print "[TEST EXECUTION RESULT] : SUCCESS";
-        else:
-            print "getApRadioIndex failed, %s"%details
-            tdkTestObj.setResultStatus("FAILURE");
-            print "TEST STEP 1: Get the getApRadioIndex API";
-            print "EXPECTED RESULT 1: Function Should return a Radio Index value(int) value";
-            print "ACTUAL RESULT 1:Failed to receive a Radio Index value: %s"%radioIndexValue;
-            print "[TEST EXECUTION RESULT] : FAILURE";
+    #Validate wifi_getApAssociatedDeviceDiagnosticResult2() for 2.4GHZ
+    tdkTestObjTemp, idx = getIndex(obj, radio2);
+    ## Check if a invalid index is returned
+    if idx == -1:
+        print "Failed to get radio index for radio %s\n" %radio2;
+        tdkTestObjTemp.setResultStatus("FAILURE");
     else:
-        print "getApRadioIndex failed"
-        tdkTestObj.setResultStatus("FAILURE");
-    obj.unloadModule("wifihal");
+        #Checking for idx 0, Similary can be check for other APs 0,2,4,6,8,10,12,14
+        getMethod = "getApRadioIndex"
+        primitive = 'WIFIHAL_GetOrSetParamIntValue'
 
+        #Calling the method from wifiUtility to execute test case and set result status for the test.
+        tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, idx, 0, getMethod)
+
+        expectedRadioIndexValue = 0;
+        if expectedresult in actualresult:
+           radioIndexValue = details.split(":")[1].strip()
+           if expectedRadioIndexValue == int(radioIndexValue):
+              print "getApRadioIndex function successful, %s"%details
+              tdkTestObj.setResultStatus("SUCCESS");
+              print "TEST STEP 1: Get the getApRadioIndex API";
+              print "EXPECTED RESULT 1: Function Should return a Radio Index value(int) value";
+              print "ACTUAL RESULT 1: Radio Index value associated with AP received Successfully: %s"%radioIndexValue;
+              print "[TEST EXECUTION RESULT] : SUCCESS";
+           else:
+               print "getApRadioIndex failed, %s"%details
+               tdkTestObj.setResultStatus("FAILURE");
+               print "TEST STEP 1: Get the getApRadioIndex API";
+               print "EXPECTED RESULT 1: Function Should return a Radio Index value(int) value";
+               print "ACTUAL RESULT 1:Failed to receive a Radio Index value: %s"%radioIndexValue;
+               print "[TEST EXECUTION RESULT] : FAILURE";
+        else:
+            print "getApRadioIndex failed"
+            tdkTestObj.setResultStatus("FAILURE");
+    obj.unloadModule("wifihal");
 else:
     print "Failed to load wifi module";
     obj.setLoadModuleStatus("FAILURE");
