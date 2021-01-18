@@ -65,6 +65,8 @@ radioIndex : 0</input_parameters>
 '''
 # use tdklib library,which provides a wrapper for tdk testcase script
 import tdklib;
+from wifiUtility import *;
+radio2 = "2.4G"
 
 #Test component to be tested
 obj = tdklib.TDKScriptingLibrary("wifihal","1");
@@ -81,36 +83,39 @@ print "[LIB LOAD STATUS]  :  %s" %loadmodulestatus
 
 if "SUCCESS" in loadmodulestatus.upper():
     obj.setLoadModuleStatus("SUCCESS");
-
-    #Prmitive test case which associated to this Script
-    tdkTestObj = obj.createTestStep('WIFIHAL_GetOrSetParamBoolValue');
-    tdkTestObj.addParameter("radioIndex", 0);
-    tdkTestObj.addParameter("methodName", "pushSsidAdvertisementEnable");
-    tdkTestObj.addParameter("param", 1);
-    expectedresult="SUCCESS";
-
-    #Execute the test case in DUT
-    tdkTestObj.executeTestCase(expectedresult);
-    actualresult = tdkTestObj.getResult();
-    details = tdkTestObj.getResultDetails();
-
-    if expectedresult in actualresult :
-	tdkTestObj.setResultStatus("SUCCESS");
-        print "TEST STEP : Call the function wifi_pushSsidAdvertisementEnable()"
-        print "EXPECTED RESULT : Should return SUCCESS"
-        print "ACTUAL RESULT : %s " %details
-        #Get the result of execution
-        print "[TEST EXECUTION RESULT] : SUCCESS";
+    #Validate wifi_getApAssociatedDeviceDiagnosticResult2() for 2.4GHZ
+    tdkTestObjTemp, idx = getIndex(obj, radio2);
+    ## Check if a invalid index is returned
+    if idx == -1:
+        print "Failed to get radio index for radio %s\n" %radio2;
+        tdkTestObjTemp.setResultStatus("FAILURE");
     else:
-	tdkTestObj.setResultStatus("FAILURE");
-        print "TEST STEP : Call the function wifi_pushSsidAdvertisementEnable()"
-        print "EXPECTED RESULT : Should return SUCCESS"
-        print "ACTUAL RESULT 1: %s " %details
-        #Get the result of execution
-        print "[TEST EXECUTION RESULT] : FAILURE";
+        #Prmitive test case which associated to this Script
+        tdkTestObj = obj.createTestStep('WIFIHAL_GetOrSetParamBoolValue');
+        tdkTestObj.addParameter("radioIndex", idx);
+        tdkTestObj.addParameter("methodName", "pushSsidAdvertisementEnable");
+        tdkTestObj.addParameter("param", 1);
+        expectedresult="SUCCESS";
+        #Execute the test case in DUT
+        tdkTestObj.executeTestCase(expectedresult);
+        actualresult = tdkTestObj.getResult();
+        details = tdkTestObj.getResultDetails();
+        if expectedresult in actualresult :
+           tdkTestObj.setResultStatus("SUCCESS");
+           print "TEST STEP : Call the function wifi_pushSsidAdvertisementEnable()"
+           print "EXPECTED RESULT : Should return SUCCESS"
+           print "ACTUAL RESULT : %s " %details
+           #Get the result of execution
+           print "[TEST EXECUTION RESULT] : SUCCESS";
+        else:
+            tdkTestObj.setResultStatus("FAILURE");
+            print "TEST STEP : Call the function wifi_pushSsidAdvertisementEnable()"
+            print "EXPECTED RESULT : Should return SUCCESS"
+            print "ACTUAL RESULT 1: %s " %details
+            #Get the result of execution
+            print "[TEST EXECUTION RESULT] : FAILURE";
     obj.unloadModule("wifihal");
 else:
     print "Failed to load the module";
     obj.setLoadModuleStatus("FAILURE");
     print "Module loading failed";
-
