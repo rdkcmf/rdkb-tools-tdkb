@@ -80,13 +80,13 @@ apIndex : 0</input_parameters>
   <script_tags />
 </xml>
 '''
-# use tdklib library,which provides a wrapper for tdk testcase script 
-import tdklib; 
+# use tdklib library,which provides a wrapper for tdk testcase script
+import tdklib;
 from wifiUtility import *;
 
 #Test component to be tested
 obj = tdklib.TDKScriptingLibrary("wifihal","1");
-
+radio5 = "5G"
 #IP and Port of box, No need to change,
 #This will be replaced with correspoing Box Ip and port while executing script
 ip = <ipaddress>
@@ -99,31 +99,38 @@ print "[LIB LOAD STATUS]  :  %s" %loadmodulestatus
 if "SUCCESS" in loadmodulestatus.upper():
     #Calling the method to execute wifi_getApAclDevices()
     obj.setLoadModuleStatus("SUCCESS");
-    tdkTestObj = obj.createTestStep('WIFIHAL_GetApAclDevices');
-    tdkTestObj.addParameter("apIndex",1);
-    expectedresult="SUCCESS";
-    tdkTestObj.executeTestCase(expectedresult);
-    actualresult = tdkTestObj.getResult();
-    details = tdkTestObj.getResultDetails();
-    print "Execution Details: ",details;
-    if expectedresult in actualresult:
-        macAddress= [];
-        macAddress = details.split(";")[1].split("n")
-        for i in range(len(macAddress)):
-            macAddress[i] =  macAddress[i].replace("\\", '')
-        if '' in macAddress:
-            macAddress.remove('')
-        print "TEST STEP: Get the Acl Devices"
-        print "EXPECTED RESULT: Should get the list of acl devices"
-        print "List of Acl Devices MAC Address:",macAddress
-        print "TEST EXECUTION RESULT :SUCCESS"
-        tdkTestObj.setResultStatus("SUCCESS");
+    #Validate wifi_getApAssociatedDeviceDiagnosticResult2() for 5GHZ
+    tdkTestObjTemp, idx = getIndex(obj, radio5);
+    ## Check if a invalid index is returned
+    if idx == -1:
+        print "Failed to get radio index for radio %s\n" %radio5;
+        tdkTestObjTemp.setResultStatus("FAILURE");
     else:
-        print "TEST STEP: Get the Acl Devices List"
-        print "EXPECTED RESULT: Should get the total list of associated devices"
-        print "ACTUAL RESULT : wifi_getApAclDevices call failed"
-        print "TEST EXECUTION RESULT :FAILURE"
-        tdkTestObj.setResultStatus("FAILURE");
+        tdkTestObj = obj.createTestStep('WIFIHAL_GetApAclDevices');
+        tdkTestObj.addParameter("apIndex",idx);
+        expectedresult="SUCCESS";
+        tdkTestObj.executeTestCase(expectedresult);
+        actualresult = tdkTestObj.getResult();
+        details = tdkTestObj.getResultDetails();
+        print "Execution Details: ",details;
+        if expectedresult in actualresult:
+           macAddress= [];
+           macAddress = details.split(";")[1].split("n")
+           for i in range(len(macAddress)):
+               macAddress[i] =  macAddress[i].replace("\\", '')
+           if '' in macAddress:
+              macAddress.remove('')
+           print "TEST STEP: Get the Acl Devices"
+           print "EXPECTED RESULT: Should get the list of acl devices"
+           print "List of Acl Devices MAC Address:",macAddress
+           print "TEST EXECUTION RESULT :SUCCESS"
+           tdkTestObj.setResultStatus("SUCCESS");
+        else:
+            print "TEST STEP: Get the Acl Devices List"
+            print "EXPECTED RESULT: Should get the total list of associated devices"
+            print "ACTUAL RESULT : wifi_getApAclDevices call failed"
+            print "TEST EXECUTION RESULT :FAILURE"
+            tdkTestObj.setResultStatus("FAILURE");
     obj.unloadModule("wifihal");
 
 else:

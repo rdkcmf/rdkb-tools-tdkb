@@ -66,12 +66,10 @@ radioIndex : 1</input_parameters>
     <remarks/>
   </test_cases>
 </xml>
-
 '''
 # use tdklib library,which provides a wrapper for tdk testcase script
 import tdklib;
 from wifiUtility import *;
-
 #Test component to be tested
 obj = tdklib.TDKScriptingLibrary("wifihal","1");
 #IP and Port of box, No need to change,
@@ -79,70 +77,76 @@ obj = tdklib.TDKScriptingLibrary("wifihal","1");
 ip = <ipaddress>
 port = <port>
 obj.configureTestCase(ip,port,'TS_WIFIHAL_5GHzSet4DigitApWpsDevicePIN');
-
 loadmodulestatus =obj.getLoadModuleResult();
-print "[LIB LOAD STATUS]  :  %s" %loadmodulestatus
 
+radio = "5G";
+
+print "[LIB LOAD STATUS]  :  %s" %loadmodulestatus
 if "SUCCESS" in loadmodulestatus.upper():
     obj.setLoadModuleStatus("SUCCESS");
 
-    #get the ApWpsDevicePIN
-    expectedresult="SUCCESS";
-    radioIndex = 1
-    getMethod = "getApWpsDevicePIN"
-    primitive = 'WIFIHAL_GetOrSetParamULongValue'
-    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, 0, getMethod)
-
-    if expectedresult in actualresult :
-        initPIN = int(details.split(":")[1].strip())
-        #set the ApWpsDevicePIN
-        expectedresult="FAILURE";
-        radioIndex = 1
-        setMethod = "setApWpsDevicePIN"
-        setPIN = 9876
-        primitive = 'WIFIHAL_GetOrSetParamULongValue'
-        tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, setPIN, setMethod)
-        if expectedresult in actualresult :
-            print "TEST STEP 1: Set the DevicePIN to a 4 Digit Value "
-            print "SET VALUE IS :",setPIN
-            print "EXPECTED RESULT : DevicePIN set operation should not happen"
-            print "ACTUAL RESULT :Set operation returns FAILURE"
-            print "TEST EXECUTION RESULT: SUCCESS"
-            tdkTestObj.setResultStatus("SUCCESS");
-
-        else:
-            print "TEST STEP 2: Set the DevicePIN to a 4 DigitValue"
-            print "EXPECTED RESULT : DevicePIN set operation should not happen"
-            print "ACTUAL RESULT :Set operation returns SUCCESS"
-            print "TEST EXECUTION RESULT: FAILURE"
-            tdkTestObj.setResultStatus("FAILURE");
-
-            #check whether "setApWpsDevicePIN" not returns false success
+    tdkTestObjTemp, idx = getIndex(obj, radio);
+    ## Check if a invalid index is returned
+    if idx == -1:
+        print "Failed to get radio index for radio %s\n" %radio;
+        tdkTestObjTemp.setResultStatus("FAILURE");
+    else:
+            #get the ApWpsDevicePIN
+            expectedresult="SUCCESS";
+            radioIndex = idx;
+            getMethod = "getApWpsDevicePIN"
+            primitive = 'WIFIHAL_GetOrSetParamULongValue'
             tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, 0, getMethod)
-            getPIN = int(details.split(":")[1].strip())
 
-            if getPIN == setPIN:
-                #Revert the pin to initial value
-                expectedresult = "SUCCESS";
-                tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, initPIN, setMethod)
+            if expectedresult in actualresult :
+                initPIN = int(details.split(":")[1].strip())
+                #set the ApWpsDevicePIN
+                expectedresult="FAILURE";
+                radioIndex = idx;
+                setMethod = "setApWpsDevicePIN"
+                setPIN = 1234
+                primitive = 'WIFIHAL_GetOrSetParamULongValue'
+                tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, setPIN, setMethod)
                 if expectedresult in actualresult :
-                    print "Successfully reverted to initial pin"
+                    print "TEST STEP 1: Set the DevicePIN to a 4 digit Value"
+                    print "SET VALUE IS :",setPIN
+                    print "EXPECTED RESULT : DevicePIN set operation should not happen"
+                    print "ACTUAL RESULT :Set operation returns FAILURE"
+                    print "TEST EXECUTION RESULT: SUCCESS"
                     tdkTestObj.setResultStatus("SUCCESS");
 
                 else:
-                    print "Unable to revert to initial value"
+                    print "TEST STEP 2: Set the DevicePIN to a 4 Digit value"
+                    print "SET VALUE IS :",setPIN
+                    print "EXPECTED RESULT : DevicePIN set operation should not happen"
+                    print "ACTUAL RESULT :Set operation returns SUCCESS"
+                    print "TEST EXECUTION RESULT: FAILURE"
                     tdkTestObj.setResultStatus("FAILURE");
 
-            else:
-                print "HAL API setApWpsDevicePIN() returns false success"
-                tdkTestObj.setResultStatus("FAILURE");
+                    #check whether "setApWpsDevicePIN" not returns false success
+                    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, 0, getMethod)
+                    getPIN = int(details.split(":")[1].strip())
 
-    else:
-        print "getApWpsDevicePIN() call failed"
-        tdkTestObj.setResultStatus("FAILURE");
+                    if getPIN == setPIN:
+                        #Revert the pin to initial value
+                        expectedresult = "SUCCESS";
+                        tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, initPIN, setMethod)
+                        if expectedresult in actualresult :
+                            print "Successfully reverted to initial pin"
+                            tdkTestObj.setResultStatus("SUCCESS");
+
+                        else:
+                            print "Unable to revert to initial value"
+                            tdkTestObj.setResultStatus("FAILURE");
+
+                    else:
+                        print "HAL API setApWpsDevicePIN() returns false success"
+                        tdkTestObj.setResultStatus("FAILURE");
+            else:
+                print "getApWpsDevicePIN() call failed"
+                tdkTestObj.setResultStatus("FAILURE");
     obj.unloadModule("wifihal");
 
 else:
     print "Failed to load wifi module";
     obj.setLoadModuleStatus("FAILURE");
-

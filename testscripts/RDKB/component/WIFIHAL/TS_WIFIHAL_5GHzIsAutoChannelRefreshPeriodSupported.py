@@ -51,9 +51,9 @@
 wifi_getRadioAutoChannelRefreshPeriod()</api_or_interface_used>
     <input_parameters>methodName : getAutoChannelRefreshPeriodSupported
 methodName : getAutoChannelRefreshPeriod
-radioIndex     :    1</input_parameters>
+idx     :    1</input_parameters>
     <automation_approch>1. Load wifihal module
-2. Invoke wifi_getRadioAutoChannelRefreshPeriodSupported()  to to check if AutoChannelRefreshPeriod is supported or not 
+2. Invoke wifi_getRadioAutoChannelRefreshPeriodSupported()  to to check if AutoChannelRefreshPeriod is supported or not
 3.If supported, get the refresh period using wifi_getRadioAutoChannelRefreshPeriod()
 4. If not supported also return success
 5. Unload wifihal module</automation_approch>
@@ -69,10 +69,10 @@ radioIndex     :    1</input_parameters>
 </xml>
 
 '''
-# use tdklib library,which provides a wrapper for tdk testcase script 
-import tdklib; 
+# use tdklib library,which provides a wrapper for tdk testcase script
+import tdklib;
 from wifiUtility import *
-
+radio5 = "5G";
 #Test component to be tested
 obj = tdklib.TDKScriptingLibrary("wifihal","1");
 
@@ -87,37 +87,41 @@ print "[LIB LOAD STATUS]  :  %s" %loadmodulestatus
 
 if "SUCCESS" in loadmodulestatus.upper():
     obj.setLoadModuleStatus("SUCCESS");
-
-    expectedresult="SUCCESS";
-    radioIndex = 1
-    getMethod = "getAutoChannelRefreshPeriodSupported"
-    primitive = 'WIFIHAL_GetOrSetParamBoolValue'
-    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, 0, getMethod)
-
-    if expectedresult in actualresult :
-        enable = details.split(":")[1].strip()
-        if "Enabled" in enable:
-            print "AutoChannelRefreshPeriod is Supported"
-            tdkTestObj.setResultStatus("SUCCESS");
-
-            getMethod = "getAutoChannelRefreshPeriod"
-            primitive = 'WIFIHAL_GetOrSetParamULongValue'
-            tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, 0, getMethod)
-
-            if expectedresult in actualresult :
-                period = int(details.split(":")[1].strip())
-                print "Refresh period retreived as %d" %period
-            else:
-                print "getAutoChannelRefreshPeriod() failed"
-        else:
-            print "AutoChannelRefreshPeriod is not Supported"
-            tdkTestObj.setResultStatus("SUCCESS");
+    #Validate wifi_getApAssociatedDeviceDiagnosticResult2() for 5GHZ
+    tdkTestObjTemp, idx = getIndex(obj, radio5);
+    ## Check if a invalid index is returned
+    if idx == -1:
+        print "Failed to get radio index for radio %s\n" %radio5;
+        tdkTestObjTemp.setResultStatus("FAILURE");
     else:
-        print "AutoChannelRefreshPeriod() failed"
+        expectedresult="SUCCESS";
+        getMethod = "getAutoChannelRefreshPeriodSupported"
+        primitive = 'WIFIHAL_GetOrSetParamBoolValue'
+        tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, idx, 0, getMethod)
+
+        if expectedresult in actualresult :
+            enable = details.split(":")[1].strip()
+            if "Enabled" in enable:
+                print "AutoChannelRefreshPeriod is Supported"
+                tdkTestObj.setResultStatus("SUCCESS");
+
+                getMethod = "getAutoChannelRefreshPeriod"
+                primitive = 'WIFIHAL_GetOrSetParamULongValue'
+                tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, idx, 0, getMethod)
+
+                if expectedresult in actualresult :
+                    period = int(details.split(":")[1].strip())
+                    print "Refresh period retreived as %d" %period
+                else:
+                    print "getAutoChannelRefreshPeriod() failed"
+            else:
+                print "AutoChannelRefreshPeriod is not Supported"
+                tdkTestObj.setResultStatus("SUCCESS");
+        else:
+            print "AutoChannelRefreshPeriod() failed"
 
     obj.unloadModule("wifihal");
 
 else:
     print "Failed to load wifi module";
     obj.setLoadModuleStatus("FAILURE");
-

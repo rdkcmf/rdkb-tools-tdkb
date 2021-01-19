@@ -103,7 +103,7 @@ ip = <ipaddress>
 port = <port>
 obj.configureTestCase(ip,port,'TS_WIFIHAL_5GHzGetApBasicAuthenticationMode');
 sysobj.configureTestCase(ip,port,'TS_WIFIHAL_5GHzGetApBasicAuthenticationMode');
-
+radio5 = "5G"
 loadmodulestatus =obj.getLoadModuleResult();
 sysloadmodulestatus =sysobj.getLoadModuleResult();
 print "[LIB LOAD STATUS]  :  %s" %loadmodulestatus
@@ -111,76 +111,82 @@ print "[LIB LOAD STATUS]  :  %s" %sysloadmodulestatus ;
 
 if "SUCCESS" in loadmodulestatus.upper() and "SUCCESS" in sysloadmodulestatus.upper():
     obj.setLoadModuleStatus("SUCCESS");
-    sysobj.setLoadModuleStatus("SUCCESS");
-
-    tdkTestObj = sysobj.createTestStep('ExecuteCmd');
-    expectedresult="SUCCESS";
-    supportedAuthModes = "sh %s/tdk_utility.sh parseConfigFile SUPPORTED_AUTH_MODES" %TDK_PATH;
-    tdkTestObj.addParameter("command", supportedAuthModes);
-    tdkTestObj.executeTestCase(expectedresult);
-    actualresult = tdkTestObj.getResult();
-    supportedAuthModes = tdkTestObj.getResultDetails().strip();
-    supportedAuthModes = supportedAuthModes.replace("\\n", "");
-    if supportedAuthModes and expectedresult in actualresult:
-        tdkTestObj.setResultStatus("SUCCESS");
-        supportedModes = supportedAuthModes.split(",");
-        print "**************************************************";
-        print "TEST STEP 1: Get the list of supported Authentication Modes from /etc/tdk_platform.properties file";
-        print "EXPECTED RESULT 1: Should get the list of supported Authentication Modes";
-        print "ACTUAL RESULT 1: Got the list of supported Authentication Modes as %s" %supportedModes;
-        #Get the result of execution
-        print "[TEST EXECUTION RESULT] : SUCCESS";
-        print "**************************************************";
-
-        expectedresult="SUCCESS";
-        getMethod = "getApBasicAuthenticationMode"
-        primitive = 'WIFIHAL_GetOrSetParamStringValue'
-
-        #Calling the method from wifiUtility to execute test case and set result status for the test.
-        tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, 1, "0", getMethod)
-
-        if expectedresult in actualresult :
-            receivedMode = details.split(":")[1].strip()
+    #Validate wifi_getApAssociatedDeviceDiagnosticResult2() for 5GHZ
+    tdkTestObjTemp, idx = getIndex(obj, radio5);
+    ## Check if a invalid index is returned
+    if idx == -1:
+        print "Failed to get radio index for radio %s\n" %radio5;
+        tdkTestObjTemp.setResultStatus("FAILURE");
+    else:
+         sysobj.setLoadModuleStatus("SUCCESS");
+         tdkTestObj = sysobj.createTestStep('ExecuteCmd');
+         expectedresult="SUCCESS";
+         supportedAuthModes = "sh %s/tdk_utility.sh parseConfigFile SUPPORTED_AUTH_MODES" %TDK_PATH;
+         tdkTestObj.addParameter("command", supportedAuthModes);
+         tdkTestObj.executeTestCase(expectedresult);
+         actualresult = tdkTestObj.getResult();
+         supportedAuthModes = tdkTestObj.getResultDetails().strip();
+         supportedAuthModes = supportedAuthModes.replace("\\n", "");
+         if supportedAuthModes and expectedresult in actualresult:
+            tdkTestObj.setResultStatus("SUCCESS");
+            supportedModes = supportedAuthModes.split(",");
             print "**************************************************";
-            print "TEST STEP 2: Get the Ap Basic Authentication mode for 5GHz";
-            print "EXPECTED RESULT 2: Should successfully get the Ap Basic Authentication mode for 5GHz";
-            print "ACTUAL RESULT 2: Successfully got the Ap Basic Authentication mode as %s for 5GHz"%receivedMode;
+            print "TEST STEP 1: Get the list of supported Authentication Modes from /etc/tdk_platform.properties file";
+            print "EXPECTED RESULT 1: Should get the list of supported Authentication Modes";
+            print "ACTUAL RESULT 1: Got the list of supported Authentication Modes as %s" %supportedModes;
             #Get the result of execution
             print "[TEST EXECUTION RESULT] : SUCCESS";
             print "**************************************************";
-	    if receivedMode in supportedModes:
-	        tdkTestObj.setResultStatus("SUCCESS");
+
+            expectedresult="SUCCESS";
+            getMethod = "getApBasicAuthenticationMode"
+            primitive = 'WIFIHAL_GetOrSetParamStringValue'
+
+            #Calling the method from wifiUtility to execute test case and set result status for the test.
+            tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, idx, "0", getMethod)
+
+            if expectedresult in actualresult :
+               receivedMode = details.split(":")[1].strip()
+               print "**************************************************";
+               print "TEST STEP 2: Get the Ap Basic Authentication mode for 5GHz";
+               print "EXPECTED RESULT 2: Should successfully get the Ap Basic Authentication mode for 5GHz";
+               print "ACTUAL RESULT 2: Successfully got the Ap Basic Authentication mode as %s for 5GHz"%receivedMode;
+               #Get the result of execution
+               print "[TEST EXECUTION RESULT] : SUCCESS";
+               print "**************************************************";
+               if receivedMode in supportedModes:
+                  tdkTestObj.setResultStatus("SUCCESS");
+                  print "**************************************************";
+                  print "TEST STEP 3: To check whether the received Ap Basic Authentication mode is from the list of supported Authentication Modes";
+                  print "EXPECTED RESULT 3: The received Ap Basic Authentication mode should be from the list of supported Authentication Modes";
+                  print "ACTUAL RESULT 3: The received Ap Basic Authentication mode is from the list of supported Authentication Modes";
+                  print "[TEST EXECUTION RESULT] : SUCCESS";
+                  print "**************************************************";
+               else:
+                   tdkTestObj.setResultStatus("FAILURE");
+                   print "**************************************************";
+                   print "TEST STEP 3: To check whether the received Ap Basic Authentication mode is from the list of supported Authentication Modes";
+                   print "EXPECTED RESULT 3: The received Ap Basic Authentication mode should be from the list of supported Authentication Modes";
+                   print "ACTUAL RESULT 3: The received Ap Basic Authentication mode is NOT from the list of supported Authentication Modes";
+                   print "[TEST EXECUTION RESULT] : FAILURE";
+                   print "**************************************************";
+            else:
                 print "**************************************************";
-	        print "TEST STEP 3: To check whether the received Ap Basic Authentication mode is from the list of supported Authentication Modes";
-	        print "EXPECTED RESULT 3: The received Ap Basic Authentication mode should be from the list of supported Authentication Modes";
-	        print "ACTUAL RESULT 3: The received Ap Basic Authentication mode is from the list of supported Authentication Modes";
-	        print "[TEST EXECUTION RESULT] : SUCCESS";
-                print "**************************************************";
-	    else:
-	        tdkTestObj.setResultStatus("FAILURE");
-                print "**************************************************";
-                print "TEST STEP 3: To check whether the received Ap Basic Authentication mode is from the list of supported Authentication Modes";
-                print "EXPECTED RESULT 3: The received Ap Basic Authentication mode should be from the list of supported Authentication Modes";
-                print "ACTUAL RESULT 3: The received Ap Basic Authentication mode is NOT from the list of supported Authentication Modes";
+                print "TEST STEP 2: Get the Ap Basic Authentication mode for 5GHz";
+                print "EXPECTED RESULT 2: Should successfully get the Ap Basic Authentication mode for 5GHz";
+                print "ACTUAL RESULT 2: Failed to get the Ap Basic Authentication mode for 5GHz";
+                print details;
+                #Get the result of execution
                 print "[TEST EXECUTION RESULT] : FAILURE";
                 print "**************************************************";
-        else:
-            print "**************************************************";
-            print "TEST STEP 2: Get the Ap Basic Authentication mode for 5GHz";
-            print "EXPECTED RESULT 2: Should successfully get the Ap Basic Authentication mode for 5GHz";
-            print "ACTUAL RESULT 2: Failed to get the Ap Basic Authentication mode for 5GHz";
-            print details;
-            #Get the result of execution
-            print "[TEST EXECUTION RESULT] : FAILURE";
-            print "**************************************************";
-    else:
-        print "**************************************************";
-        print "TEST STEP 1: Get the list of supported Authentication Modes from /etc/tdk_platform.properties file";
-        print "EXPECTED RESULT 1: Should get the list of supported Authentication Modes";
-        print "ACTUAL RESULT 1: Failed to get the list of supported Authentication Modes from /etc/tdk_platform.properties file";
-        #Get the result of execution
-        print "[TEST EXECUTION RESULT] : FAILURE";
-        print "**************************************************";
+         else:
+             print "**************************************************";
+             print "TEST STEP 1: Get the list of supported Authentication Modes from /etc/tdk_platform.properties file";
+             print "EXPECTED RESULT 1: Should get the list of supported Authentication Modes";
+             print "ACTUAL RESULT 1: Failed to get the list of supported Authentication Modes from /etc/tdk_platform.properties file";
+             #Get the result of execution
+             print "[TEST EXECUTION RESULT] : FAILURE";
+             print "**************************************************";
     obj.unloadModule("wifihal");
     sysobj.unloadModule("sysutil");
 else:
