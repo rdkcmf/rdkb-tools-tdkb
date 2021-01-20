@@ -32,7 +32,7 @@ extern "C"
     int ssp_CMHAL_GetDocsisEventLogItems(CMMGMT_CM_EventLogEntry_t *entryArray,int len,int isNegativeScenario);
     int ssp_CMHAL_SetLEDFlashStatus(BOOLEAN LEDFlash);
     int ssp_CMHAL_ClearDocsisEventLog(void);
-    int ssp_CMHAL_GetCPEList(unsigned long int *InstanceNum, char *cpeList,int isNegativeScenario);
+    int ssp_CMHAL_GetCPEList(unsigned long int *InstanceNum, char *cpeList,char *lanMode,int isNegativeScenario);
     int ssp_CMHAL_SetMddIpModeOverride(char* Value);
     int ssp_CMHAL_SetStartFreq(unsigned long int Value);
     int ssp_CMHAL_SetUSChannelId(int Value);

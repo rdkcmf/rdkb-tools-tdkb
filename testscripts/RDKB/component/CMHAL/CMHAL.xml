@@ -65,6 +65,7 @@
         <function>CMHAL_GetCPEList</function>
         <parameters>
           <parameter name="flag" value="0"/>
+          <parameter name="lanMode" value=" "/>
         </parameters>
       </primitiveTest>
       <primitiveTest id=" " name="CMHAL_SetMddIpModeOverride" version="1">
@@ -146,3 +147,4 @@
     </primitiveTests>
   </module>
 </xml>
+

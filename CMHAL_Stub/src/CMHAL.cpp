@@ -361,7 +361,7 @@ void CMHAL::CMHAL_ClearDocsisEventLog(IN const Json::Value& req, OUT Json::Value
  *
  * @param [in] req-     : flag- to execute negative scenarios
  * @param [out] response - filled with SUCCESS or FAILURE based on the output staus of operation
- *
+ * @param [in] req-     : lanMode - to know lan operational mode of device 
  ********************************************************************************************/
 void CMHAL::CMHAL_GetCPEList(IN const Json::Value& req, OUT Json::Value& response)
 {
@@ -370,11 +370,13 @@ void CMHAL::CMHAL_GetCPEList(IN const Json::Value& req, OUT Json::Value& respons
     char details[120] = {'\0'};
     unsigned long int InstanceNum =0;
     char cpeList[120] = {'\0'};
+    char lanMode[60]  = {'\0'};
+    strcpy(lanMode,req["lanMode"].asCString());
     if(&req["flag"])
     {
         isNegativeScenario = req["flag"].asInt();
     }
-    if(ssp_CMHAL_GetCPEList(&InstanceNum,cpeList,isNegativeScenario) == 0)
+    if(ssp_CMHAL_GetCPEList(&InstanceNum,cpeList,lanMode,isNegativeScenario) == 0)
     {
         sprintf(details, "%s InstNum :%d ", cpeList, InstanceNum);
         DEBUG_PRINT(DEBUG_TRACE, "Successfully retrieved cpe list\n");
