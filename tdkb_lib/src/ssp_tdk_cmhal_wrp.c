@@ -1256,14 +1256,14 @@ int ssp_CMHAL_ClearDocsisEventLog(void)
  * @param [in]          : InstanceNum : To save the instance number
  *			  cpeList : To save the cpeList
  *			  isNegativeScenario : To execute the negative scenario
+                          lanMode :  The lan mode in which device is currently operational
  * @param [out]         : return status an integer value 0-success and 1-Failure
  ********************************************************************************************************************************/
-int ssp_CMHAL_GetCPEList(unsigned long int *InstanceNum, char *cpeList,int isNegativeScenario)
+int ssp_CMHAL_GetCPEList(unsigned long int *InstanceNum, char *cpeList, char *lanMode,int isNegativeScenario)
 {
        int result = RETURN_ERR;
        int return_status = RETURN_ERR;
        PCMMGMT_DML_CPE_LIST pInfo = NULL;
-       char LanMode[60] = {'\0'};
        int i =0;
        printf("Entering the ssp_CMHAL_GetCPEList wrapper\n");
        if(isNegativeScenario)
@@ -1273,8 +1273,8 @@ int ssp_CMHAL_GetCPEList(unsigned long int *InstanceNum, char *cpeList,int isNeg
        else
        {
           printf("Executing positive scenarios\n");
-          result = cm_hal_GetCPEList(&pInfo,InstanceNum,&LanMode);
-          printf("Result is %d, InstanceNum is :%d, LanMode is :%s\n",result,*InstanceNum,LanMode);
+          result = cm_hal_GetCPEList(&pInfo,InstanceNum,lanMode);
+          printf("Result is %d, InstanceNum is :%d, LanMode is :%s\n",result,*InstanceNum,lanMode);
           if (result == RETURN_OK)
           {
               printf("cm_hal_GetCPEList returns success\n");

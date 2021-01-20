@@ -46,7 +46,8 @@
     <pre_requisite>1.Ccsp Components  should be in a running state of DUT that includes component under test Cable Modem
 2.TDK Agent should be in running state or invoke it through StartTdk.sh script</pre_requisite>
     <api_or_interface_used>CMHAL_GetCPEList</api_or_interface_used>
-    <input_parameters>paramType -NULL</input_parameters>
+    <input_parameters>paramType -NULL
+lan mode of Device- lanMode</input_parameters>
     <automation_approch>1. Load  cmhal module
 2. Call the cm_hal_GetCPEList api  with NULL buffer
 3. The test should return FAILURE on passing NULL buffer.
@@ -83,6 +84,7 @@ if "SUCCESS" in loadmodulestatus.upper():
     #Script to load the configuration file of the component
     tdkTestObj = obj.createTestStep("CMHAL_GetCPEList");
     tdkTestObj.addParameter("flag",1);
+    tdkTestObj.addParameter("lanMode","router");
     expectedresult="FAILURE";
     tdkTestObj.executeTestCase(expectedresult);
     actualresult = tdkTestObj.getResult();

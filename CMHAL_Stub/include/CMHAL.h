@@ -54,7 +54,7 @@ class CMHAL : public RDKTestStubInterface,  public AbstractServer<CMHAL>
 		  this->bindAndAddMethod(Procedure("CMHAL_GetDocsisEventLogItems", PARAMS_BY_NAME, JSON_STRING,"flag", JSON_INTEGER,NULL), &CMHAL::CMHAL_GetDocsisEventLogItems);
 		  this->bindAndAddMethod(Procedure("CMHAL_SetLEDFlashStatus", PARAMS_BY_NAME, JSON_STRING,"LEDFlash", JSON_STRING,NULL), &CMHAL::CMHAL_SetLEDFlashStatus);
 		  this->bindAndAddMethod(Procedure("CMHAL_ClearDocsisEventLog", PARAMS_BY_NAME, JSON_STRING,NULL), &CMHAL::CMHAL_ClearDocsisEventLog);
-                  this->bindAndAddMethod(Procedure("CMHAL_GetCPEList", PARAMS_BY_NAME, JSON_STRING,"flag", JSON_INTEGER,NULL), &CMHAL::CMHAL_GetCPEList);
+                  this->bindAndAddMethod(Procedure("CMHAL_GetCPEList", PARAMS_BY_NAME, JSON_STRING,"flag", JSON_INTEGER,"lanMode",JSON_STRING,NULL), &CMHAL::CMHAL_GetCPEList);
                   this->bindAndAddMethod(Procedure("CMHAL_SetMddIpModeOverride", PARAMS_BY_NAME, JSON_STRING,"value", JSON_STRING,NULL), &CMHAL::CMHAL_SetMddIpModeOverride);
                   this->bindAndAddMethod(Procedure("CMHAL_SetStartFreq", PARAMS_BY_NAME, JSON_STRING,"Value", JSON_INTEGER,NULL), &CMHAL::CMHAL_SetStartFreq);
                   this->bindAndAddMethod(Procedure("CMHAL_SetUSChannelId", PARAMS_BY_NAME, JSON_STRING,"Value", JSON_INTEGER,NULL), &CMHAL::CMHAL_SetUSChannelId);
