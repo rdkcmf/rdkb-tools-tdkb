@@ -75,7 +75,7 @@ pthread_t deviceStatusThreadId;
 pthread_t deviceDetailsThreadId;
 pthread_t crashDetailsThreadId;
 pthread_t agentExecuterThreadId;
-TcpSocketServer go_Server(ANY_ADDR, RDK_TEST_AGENT_PORT);
+std::string BoxIP;
 extern RDKTestAgent *m_pAgent;
 /* Structure to hold process details */
 struct sProcessInfo
@@ -758,6 +758,7 @@ int Agent()
     int nReturnValue = RETURN_SUCCESS;
     int nCrashReportStatus = RETURN_SUCCESS;
 
+    TcpSocketServer go_Server(ANY_ADDR, RDK_TEST_AGENT_PORT);
     RpcMethods o_Agent(go_Server);
     if (!o_Agent.StartListening())
     {
@@ -766,6 +767,9 @@ int Agent()
         return RETURN_FAILURE;   // Returns failure if Listen failed
 
     }
+
+    /* Get STB IP */
+    BoxIP=go_Server.GetIP();
 
     /* To set route to client devices. For gateway boxes only */
     #ifdef PORT_FORWARD
