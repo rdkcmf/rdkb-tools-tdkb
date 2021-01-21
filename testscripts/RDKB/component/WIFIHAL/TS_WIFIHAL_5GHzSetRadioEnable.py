@@ -2,7 +2,7 @@
 # If not stated otherwise in this file or this component's Licenses.txt
 # file the following copyright and licenses apply:
 #
-# Copyright 2017 RDK Management
+# Copyright 2020 RDK Management
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,28 +17,47 @@
 # limitations under the License.
 ##########################################################################
 '''
-<?xml version="1.0" encoding="UTF-8"?><xml>
-  <id/>
-  <version>3</version>
+<?xml version='1.0' encoding='utf-8'?>
+<xml>
+  <id></id>
+  <!-- Do not edit id. This will be auto filled while exporting. If you are adding a new script keep the id empty -->
+  <version>4</version>
+  <!-- Do not edit version. This will be auto incremented while updating. If you are adding a new script you can keep the vresion as 1 -->
   <name>TS_WIFIHAL_5GHzSetRadioEnable</name>
-  <primitive_test_id/>
+  <!-- If you are adding a new script you can specify the script name. Script Name should be unique same as this file name with out .py extension -->
+  <primitive_test_id> </primitive_test_id>
+  <!-- Do not change primitive_test_id if you are editing an existing script. -->
   <primitive_test_name>WIFIHAL_GetOrSetParamBoolValue</primitive_test_name>
-  <primitive_test_version>1</primitive_test_version>
+  <!--  -->
+  <primitive_test_version>3</primitive_test_version>
+  <!--  -->
   <status>FREE</status>
+  <!--  -->
   <synopsis>Test to enable/disable radio enable status using wifi_setRadioEnable() api and verify using wifi_getRadioEnable() api</synopsis>
-  <groups_id/>
+  <!--  -->
+  <groups_id />
+  <!--  -->
   <execution_time>10</execution_time>
+  <!--  -->
   <long_duration>false</long_duration>
+  <!--  -->
   <advanced_script>false</advanced_script>
-  <remarks/>
+  <!-- execution_time is the time out time for test execution -->
+  <remarks></remarks>
+  <!-- Reason for skipping the tests if marked to skip -->
   <skip>false</skip>
+  <!--  -->
   <box_types>
     <box_type>Broadband</box_type>
+    <!--  -->
     <box_type>Emulator</box_type>
+    <!--  -->
     <box_type>RPI</box_type>
+    <!--  -->
   </box_types>
   <rdk_versions>
     <rdk_version>RDKB</rdk_version>
+    <!--  -->
   </rdk_versions>
   <test_cases>
     <test_case_id>TC_WIFIHAL_01</test_case_id>
@@ -58,24 +77,24 @@ radioIndex : 1</input_parameters>
 4. Using wifi_getRadioEnable, verify the set operation
 5. Restore the saved radio enable status
 6. Unload wifihal module</automation_approch>
-    <except_output>set operation using wifi_setRadioEnable() should be success</except_output>
+    <expected_output>set operation using wifi_setRadioEnable() should be success</expected_output>
     <priority>High</priority>
     <test_stub_interface>wifihal</test_stub_interface>
     <test_script>TS_WIFIHAL_5GHzSetRadioEnable</test_script>
     <skipped>No</skipped>
-    <release_version/>
-    <remarks/>
+    <release_version></release_version>
+    <remarks></remarks>
   </test_cases>
-  <script_tags/>
+  <script_tags />
 </xml>
-
 '''
-# use tdklib library,which provides a wrapper for tdk testcase script 
-import tdklib; 
+# use tdklib library,which provides a wrapper for tdk testcase script
+import tdklib;
 from wifiUtility import *;
 
 #Test component to be tested
 obj = tdklib.TDKScriptingLibrary("wifihal","1");
+radio = "5G"
 
 #IP and Port of box, No need to change,
 #This will be replaced with correspoing Box Ip and port while executing script
@@ -88,44 +107,48 @@ print "[LIB LOAD STATUS]  :  %s" %loadmodulestatus
 
 if "SUCCESS" in loadmodulestatus.upper():
     obj.setLoadModuleStatus("SUCCESS");
-
-    expectedresult="SUCCESS";
-    radioIndex = 1
-    getMethod = "getRadioEnable"
-    primitive = 'WIFIHAL_GetOrSetParamBoolValue'
-    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, 0, getMethod)
-
-    if expectedresult in actualresult :
-        enable = details.split(":")[1].strip()
-        if "Enabled" in enable:
-	    oldEnable = 1
-            newEnable = 0
-        else:
-	    oldEnable = 0
-            newEnable = 1
-
-        setMethod = "setRadioEnable"
-        tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, newEnable, setMethod)
+    tdkTestObjTemp, idx = getIndex(obj, radio);
+    ## Check if a invalid index is returned
+    if idx == -1:
+        print "Failed to get radio index for radio %s\n" %radio;
+        tdkTestObjTemp.setResultStatus("FAILURE");
+    else:
+        expectedresult="SUCCESS";
+        radioIndex = idx
+        getMethod = "getRadioEnable"
+        primitive = 'WIFIHAL_GetOrSetParamBoolValue'
+        tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, 0, getMethod)
 
         if expectedresult in actualresult :
-            print "Enable state toggled using set"
-            tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, 0, getMethod)
-
-            if expectedresult in actualresult and enable not in details.split(":")[1].strip():
-                print "SetEnable Success, verified with getEnable() api"
-                tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, oldEnable, setMethod)
-
-                if expectedresult in actualresult :
-                    print "Enable status reverted back";
-                else:
-                    print "Couldn't revert enable status"
+            enable = details.split(":")[1].strip()
+            if "Enabled" in enable:
+	        oldEnable = 1
+                newEnable = 0
             else:
-                print "Set validation with get api failed"
-		tdkTestObj.setResultStatus("FAILURE");
+	        oldEnable = 0
+                newEnable = 1
+
+            setMethod = "setRadioEnable"
+            tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, newEnable, setMethod)
+
+            if expectedresult in actualresult :
+                print "Enable state toggled using set"
+                tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, 0, getMethod)
+
+                if expectedresult in actualresult and enable not in details.split(":")[1].strip():
+                    print "SetEnable Success, verified with getEnable() api"
+                    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, oldEnable, setMethod)
+
+                    if expectedresult in actualresult :
+                        print "Enable status reverted back";
+                    else:
+                        print "Couldn't revert enable status"
+                else:
+                    print "Set validation with get api failed"
+		    tdkTestObj.setResultStatus("FAILURE");
 
     obj.unloadModule("wifihal");
 
 else:
     print "Failed to load wifi module";
     obj.setLoadModuleStatus("FAILURE");
-

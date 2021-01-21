@@ -2,7 +2,7 @@
 # If not stated otherwise in this file or this component's Licenses.txt
 # file the following copyright and licenses apply:
 #
-# Copyright 2017 RDK Management
+# Copyright 2020 RDK Management
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,28 +17,47 @@
 # limitations under the License.
 ##########################################################################
 '''
-<?xml version="1.0" encoding="UTF-8"?><xml>
-  <id/>
-  <version>1</version>
+<?xml version='1.0' encoding='utf-8'?>
+<xml>
+  <id></id>
+  <!-- Do not edit id. This will be auto filled while exporting. If you are adding a new script keep the id empty -->
+  <version>5</version>
+  <!-- Do not edit version. This will be auto incremented while updating. If you are adding a new script you can keep the vresion as 1 -->
   <name>TS_WIFIHAL_GetRadioNumberOfEntries_NULLBuffer</name>
-  <primitive_test_id/>
+  <!-- If you are adding a new script you can specify the script name. Script Name should be unique same as this file name with out .py extension -->
+  <primitive_test_id> </primitive_test_id>
+  <!-- Do not change primitive_test_id if you are editing an existing script. -->
   <primitive_test_name>WIFIHAL_GetOrSetParamULongValue</primitive_test_name>
-  <primitive_test_version>1</primitive_test_version>
+  <!--  -->
+  <primitive_test_version>2</primitive_test_version>
+  <!--  -->
   <status>FREE</status>
+  <!--  -->
   <synopsis>To check whether the null pointer handling is done for the api wifi_getRadioNumberOfEntries()</synopsis>
-  <groups_id/>
+  <!--  -->
+  <groups_id />
+  <!--  -->
   <execution_time>10</execution_time>
+  <!--  -->
   <long_duration>false</long_duration>
+  <!--  -->
   <advanced_script>false</advanced_script>
-  <remarks/>
+  <!-- execution_time is the time out time for test execution -->
+  <remarks></remarks>
+  <!-- Reason for skipping the tests if marked to skip -->
   <skip>false</skip>
+  <!--  -->
   <box_types>
     <box_type>Broadband</box_type>
+    <!--  -->
     <box_type>Emulator</box_type>
+    <!--  -->
     <box_type>RPI</box_type>
+    <!--  -->
   </box_types>
   <rdk_versions>
     <rdk_version>RDKB</rdk_version>
+    <!--  -->
   </rdk_versions>
   <test_cases>
     <test_case_id>TC_WIFIHAL_20</test_case_id>
@@ -54,22 +73,24 @@
 3.Check if the execution is failed or not
 4. If not, return failure
 5.Unload wifihal module</automation_approch>
-    <except_output>The execution must fail since we are passing a NULL buffer to get the value</except_output>
+    <expected_output>The execution must fail since we are passing a NULL buffer to get the value</expected_output>
     <priority>High</priority>
     <test_stub_interface>WIFIHAL</test_stub_interface>
     <test_script>TS_WIFIHAL_GetRadioNumberOfEntries_NULLBuffer</test_script>
     <skipped>No</skipped>
-    <release_version/>
-    <remarks/>
+    <release_version></release_version>
+    <remarks></remarks>
   </test_cases>
+  <script_tags />
 </xml>
-
 '''
-# use tdklib library,which provides a wrapper for tdk testcase script 
-import tdklib; 
+# use tdklib library,which provides a wrapper for tdk testcase script
+import tdklib;
+from wifiUtility import *;
 
 #Test component to be tested
 obj = tdklib.TDKScriptingLibrary("wifihal","1");
+radio = "5G"
 
 #IP and Port of box, No need to change,
 #This will be replaced with correspoing Box Ip and port while executing script
@@ -82,36 +103,41 @@ print "[LIB LOAD STATUS]  :  %s" %loadmodulestatus ;
 
 if "SUCCESS" in loadmodulestatus.upper():
     obj.setLoadModuleStatus("SUCCESS");
-
-    #Script to load the configuration file of the component
-    tdkTestObj = obj.createTestStep("WIFIHAL_GetOrSetParamULongValue");
-    #Giving the method name to invoke the api wifi_getRadioNumberOfEntries()
-    tdkTestObj.addParameter("methodName","getRadioNumberOfEntries")
-    #Radio index is 0 for 2.4GHz and 1 for 5GHz
-    tdkTestObj.addParameter("radioIndex",1);
-    tdkTestObj.addParameter("paramType","NULL");
-    expectedresult="FAILURE";
-    tdkTestObj.executeTestCase(expectedresult);
-    actualresult = tdkTestObj.getResult();
-    details = tdkTestObj.getResultDetails();
-    if expectedresult in actualresult:
-        #Set the result status of execution
-        tdkTestObj.setResultStatus("SUCCESS");
-        print "TEST STEP 1: Get the Radio number of entries";
-        print "EXPECTED RESULT 1: Should not get the number of entries with a null buffer";
-        print "ACTUAL RESULT 1: %s" %details;
-        #Get the result of execution
-        print "[TEST EXECUTION RESULT] : SUCCESS";
+    tdkTestObjTemp, idx = getIndex(obj, radio);
+    ## Check if a invalid index is returned
+    if idx == -1:
+        print "Failed to get radio index for radio %s\n" %radio;
+        tdkTestObjTemp.setResultStatus("FAILURE");
     else:
-        #Set the result status of execution
-        tdkTestObj.setResultStatus("FAILURE");
-        print "TEST STEP 1: Get the Radio number of entries";
-        print "EXPECTED RESULT 1: Should not get the number of entries with a null buffer";
-        print "ACTUAL RESULT 1: %s" %details;
-        #Get the result of execution
-        print "[TEST EXECUTION RESULT] : FAILURE";
+        #Script to load the configuration file of the component
+        tdkTestObj = obj.createTestStep("WIFIHAL_GetOrSetParamULongValue");
+        #Giving the method name to invoke the api wifi_getRadioNumberOfEntries()
+        tdkTestObj.addParameter("methodName","getRadioNumberOfEntries")
+        #Radio index is 0 for 2.4GHz and 1 for 5GHz
+        tdkTestObj.addParameter("radioIndex",idx);
+        tdkTestObj.addParameter("paramType","NULL");
+        expectedresult="FAILURE";
+        tdkTestObj.executeTestCase(expectedresult);
+        actualresult = tdkTestObj.getResult();
+        details = tdkTestObj.getResultDetails();
+        if expectedresult in actualresult:
+            #Set the result status of execution
+            tdkTestObj.setResultStatus("SUCCESS");
+            print "TEST STEP 1: Get the Radio number of entries";
+            print "EXPECTED RESULT 1: Should not get the number of entries with a null buffer";
+            print "ACTUAL RESULT 1: %s" %details;
+            #Get the result of execution
+            print "[TEST EXECUTION RESULT] : SUCCESS";
+        else:
+            #Set the result status of execution
+            tdkTestObj.setResultStatus("FAILURE");
+            print "TEST STEP 1: Get the Radio number of entries";
+            print "EXPECTED RESULT 1: Should not get the number of entries with a null buffer";
+            print "ACTUAL RESULT 1: %s" %details;
+            #Get the result of execution
+            print "[TEST EXECUTION RESULT] : FAILURE";
     obj.unloadModule("wifihal");
 else:
-        print "Failed to load the module";
-        obj.setLoadModuleStatus("FAILURE");
-        print "Module loading failed";
+    print "Failed to load the module";
+    obj.setLoadModuleStatus("FAILURE");
+    print "Module loading failed";

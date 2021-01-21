@@ -2,7 +2,7 @@
 # If not stated otherwise in this file or this component's Licenses.txt
 # file the following copyright and licenses apply:
 #
-# Copyright 2019 RDK Management
+# Copyright 2020 RDK Management
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@
 <xml>
   <id></id>
   <!-- Do not edit id. This will be auto filled while exporting. If you are adding a new script keep the id empty -->
-  <version>2</version>
+  <version>3</version>
   <!-- Do not edit version. This will be auto incremented while updating. If you are adding a new script you can keep the vresion as 1 -->
   <name>TS_WIFIHAL_GetDefaultApSecurityMFPConfig</name>
   <!-- If you are adding a new script you can specify the script name. Script Name should be unique same as this file name with out .py extension -->
@@ -85,7 +85,8 @@ from wifiUtility import *;
 #Test component to be tested
 obj = tdklib.TDKScriptingLibrary("wifihal","1");
 pamobj = tdklib.TDKScriptingLibrary("pam","1");
-
+radio0 = "2.4G"
+radio1 = "5G"
 
 #IP and Port of box, No need to change,
 #This will be replaced with correspoing Box Ip and port while executing script
@@ -104,68 +105,78 @@ print "[LIB LOAD STATUS]  :  %s" %loadmodulestatus2
 
 if "SUCCESS" in loadmodulestatus1.upper() and loadmodulestatus2.upper():
     obj.setLoadModuleStatus("SUCCESS");
-    #save device's current state before it goes for reboot
-    pamobj.saveCurrentState();
-    #Initiate Factory reset before checking the default value
-    tdkTestObj = pamobj.createTestStep('pam_Setparams');
-    tdkTestObj.addParameter("ParamName","Device.X_CISCO_COM_DeviceControl.FactoryReset");
-    tdkTestObj.addParameter("ParamValue","Router,Wifi,VoIP,Dect,MoCA");
-    tdkTestObj.addParameter("Type","string");
-    expectedresult="SUCCESS";
-    tdkTestObj.executeTestCase(expectedresult);
-    actualresult = tdkTestObj.getResult();
-    details = tdkTestObj.getResultDetails();
+    tdkTestObjTemp, idx0 = getIndex(obj, radio0);
+    tdkTestObjTemp, idx1 = getIndex(obj, radio1);
+    ## Check if a invalid index is returned
+    if idx0 == -1 or idx1 == -1:
+        if idx0 == -1 :
+            print "Failed to get radio index for radio %s\n" %radio0;
+        if idx1 == -1:
+	    print "Failed to get radio index for radio %s\n" %radio1;
+        tdkTestObjTemp.setResultStatus("FAILURE");
+    else:
+        #save device's current state before it goes for reboot
+        pamobj.saveCurrentState();
+        #Initiate Factory reset before checking the default value
+        tdkTestObj = pamobj.createTestStep('pam_Setparams');
+        tdkTestObj.addParameter("ParamName","Device.X_CISCO_COM_DeviceControl.FactoryReset");
+        tdkTestObj.addParameter("ParamValue","Router,Wifi,VoIP,Dect,MoCA");
+        tdkTestObj.addParameter("Type","string");
+        expectedresult="SUCCESS";
+        tdkTestObj.executeTestCase(expectedresult);
+        actualresult = tdkTestObj.getResult();
+        details = tdkTestObj.getResultDetails();
 
-    if expectedresult in actualresult:
-        #Set the result status of execution
-        tdkTestObj.setResultStatus("SUCCESS");
-        print "TEST STEP 1: Initiate factory reset ";
-        print "EXPECTED RESULT 1: Should inititate factory reset";
-        print "ACTUAL RESULT 1: %s" %details;
-        #Get the result of execution
-        print "[TEST EXECUTION RESULT] : SUCCESS";
-        #Restore the device state saved before reboot
-        pamobj.restorePreviousStateAfterReboot();
-
-        apIndex = 0
-        getMethod = "getApSecurityMFPConfig"
-        primitive = 'WIFIHAL_GetOrSetParamStringValue'
-
-        #Calling the method from wifiUtility to execute test case and set result status for the test.
-        tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, "0", getMethod)
-        ConfigValue1 = details.split(":")[1].strip()
-
-        if expectedresult in actualresult and "Disabled" in ConfigValue1:
+        if expectedresult in actualresult:
+            #Set the result status of execution
             tdkTestObj.setResultStatus("SUCCESS");
-            print "TEST STEP 2:Should get default 2.4GHZ ApSecurityMFPConfig as disabled";
-            print "ACTUAL RESULT 2:Default 2.4GHZ ApSecurityMFPConfig: %s" %ConfigValue1;
+            print "TEST STEP 1: Initiate factory reset ";
+            print "EXPECTED RESULT 1: Should inititate factory reset";
+            print "ACTUAL RESULT 1: %s" %details;
+            #Get the result of execution
+            print "[TEST EXECUTION RESULT] : SUCCESS";
+            #Restore the device state saved before reboot
+            pamobj.restorePreviousStateAfterReboot();
 
-            apIndex = 1
+            apIndex = idx0
             getMethod = "getApSecurityMFPConfig"
             primitive = 'WIFIHAL_GetOrSetParamStringValue'
 
             #Calling the method from wifiUtility to execute test case and set result status for the test.
             tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, "0", getMethod)
+            ConfigValue1 = details.split(":")[1].strip()
 
-            ConfigValue2 = details.split(":")[1].strip()
-
-            if expectedresult in actualresult and "Disabled" in ConfigValue2:
+            if expectedresult in actualresult and "Disabled" in ConfigValue1:
                 tdkTestObj.setResultStatus("SUCCESS");
-                print "TEST STEP 3:Should get default 5GHZ ApSecurityMFPConfig as disabled";
-                print "ACTUAL RESULT 3:Default 5GHZ ApSecurityMFPConfig: %s" %ConfigValue2;
+                print "TEST STEP 2:Should get default 2.4GHZ ApSecurityMFPConfig as disabled";
+                print "ACTUAL RESULT 2:Default 2.4GHZ ApSecurityMFPConfig: %s" %ConfigValue1;
+
+                apIndex = idx1
+                getMethod = "getApSecurityMFPConfig"
+                primitive = 'WIFIHAL_GetOrSetParamStringValue'
+
+                #Calling the method from wifiUtility to execute test case and set result status for the test.
+                tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, "0", getMethod)
+
+                ConfigValue2 = details.split(":")[1].strip()
+
+                if expectedresult in actualresult and "Disabled" in ConfigValue2:
+                    tdkTestObj.setResultStatus("SUCCESS");
+                    print "TEST STEP 3:Should get default 5GHZ ApSecurityMFPConfig as disabled";
+                    print "ACTUAL RESULT 3:Default 5GHZ ApSecurityMFPConfig: %s" %ConfigValue2;
+                else:
+                    tdkTestObj.setResultStatus("FAILURE");
+                    print "TEST STEP 3:Failed to get 5GHZ ApSecurityMFPConfig as disabled";
             else:
                 tdkTestObj.setResultStatus("FAILURE");
-                print "TEST STEP 3:Failed to get 5GHZ ApSecurityMFPConfig as disabled";
+                print "TEST STEP 2:Failed to get 2.4GHZ ApSecurityMFPConfig as disabled";
         else:
+            #Set the result status of execution
             tdkTestObj.setResultStatus("FAILURE");
-            print "TEST STEP 2:Failed to get 2.4GHZ ApSecurityMFPConfig as disabled";
-    else:
-        #Set the result status of execution
-        tdkTestObj.setResultStatus("FAILURE");
-        print "TEST STEP 1: Initiate factory reset ";
-        print "ACTUAL RESULT 1: %s" %details;
-        #Get the result of execution
-        print "[TEST EXECUTION RESULT] : FAILURE";
+            print "TEST STEP 1: Initiate factory reset ";
+            print "ACTUAL RESULT 1: %s" %details;
+            #Get the result of execution
+            print "[TEST EXECUTION RESULT] : FAILURE";
 
     obj.unloadModule("wifihal");
     pamobj.unloadModule("pam");
@@ -173,4 +184,3 @@ if "SUCCESS" in loadmodulestatus1.upper() and loadmodulestatus2.upper():
 else:
     print "Failed to load wifi module";
     obj.setLoadModuleStatus("FAILURE");
-
