@@ -2,7 +2,7 @@
 # If not stated otherwise in this file or this component's Licenses.txt
 # file the following copyright and licenses apply:
 #
-# Copyright 2018 RDK Management
+# Copyright 2020 RDK Management
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,26 +17,43 @@
 # limitations under the License.
 ##########################################################################
 '''
-<?xml version="1.0" encoding="UTF-8"?><xml>
-  <id/>
-  <version>1</version>
+<?xml version='1.0' encoding='utf-8'?>
+<xml>
+  <id></id>
+  <!-- Do not edit id. This will be auto filled while exporting. If you are adding a new script keep the id empty -->
+  <version>3</version>
+  <!-- Do not edit version. This will be auto incremented while updating. If you are adding a new script you can keep the vresion as 1 -->
   <name>TS_WIFIHAL_5GHzSetApManagementFramePowerControl</name>
-  <primitive_test_id/>
+  <!-- If you are adding a new script you can specify the script name. Script Name should be unique same as this file name with out .py extension -->
+  <primitive_test_id> </primitive_test_id>
+  <!-- Do not change primitive_test_id if you are editing an existing script. -->
   <primitive_test_name>WIFIHAL_GetOrSetParamIntValue</primitive_test_name>
-  <primitive_test_version>3</primitive_test_version>
+  <!--  -->
+  <primitive_test_version>5</primitive_test_version>
+  <!--  -->
   <status>FREE</status>
+  <!--  -->
   <synopsis>To set and get the ApManagementFramePowerControl for 5GHz</synopsis>
-  <groups_id/>
+  <!--  -->
+  <groups_id />
+  <!--  -->
   <execution_time>1</execution_time>
+  <!--  -->
   <long_duration>false</long_duration>
+  <!--  -->
   <advanced_script>false</advanced_script>
-  <remarks/>
+  <!-- execution_time is the time out time for test execution -->
+  <remarks></remarks>
+  <!-- Reason for skipping the tests if marked to skip -->
   <skip>false</skip>
+  <!--  -->
   <box_types>
     <box_type>Broadband</box_type>
+    <!--  -->
   </box_types>
   <rdk_versions>
     <rdk_version>RDKB</rdk_version>
+    <!--  -->
   </rdk_versions>
   <test_cases>
     <test_case_id>TC_WIFIHAL_166</test_case_id>
@@ -53,28 +70,29 @@ ApIndex : 1</input_parameters>
     <automation_approch>1. Load wifihal module
 2. Using WIFIHAL_GetOrSetParamIntValue invoke wifi_getApManagementFramePowerControl() and save the get value
 3. Choose a Power within -20 dBm and 20 dBm and using  WIFIHAL_GetOrSetParamIntValue invoke wifi_setApManagementFramePowerControl()
-4. Invoke wifi_getApManagementFramePowerControl() to get the previously set value. 
+4. Invoke wifi_getApManagementFramePowerControl() to get the previously set value.
 5. Compare the above two results. If the two values  are same return SUCCESS else return FAILURE
 6. Revert the Power back to initial value
 7. Unload wifihal module</automation_approch>
-    <except_output>Set and get values of Power should be the same</except_output>
+    <expected_output>Set and get values of Power should be the same</expected_output>
     <priority>High</priority>
     <test_stub_interface>WIFIHAL</test_stub_interface>
     <test_script>TS_WIFIHAL_5GHzSetApManagementFramePowerControl</test_script>
     <skipped>No</skipped>
-    <release_version/>
-    <remarks/>
+    <release_version></release_version>
+    <remarks></remarks>
   </test_cases>
+  <script_tags />
 </xml>
-
 '''
-# use tdklib library,which provides a wrapper for tdk testcase script 
-import tdklib; 
+# use tdklib library,which provides a wrapper for tdk testcase script
+import tdklib;
 from wifiUtility import *;
 import random;
 
 #Test component to be tested
 obj = tdklib.TDKScriptingLibrary("wifihal","1");
+radio = "5G"
 
 #IP and Port of box, No need to change,
 #This will be replaced with correspoing Box Ip and port while executing script
@@ -87,83 +105,84 @@ print "[LIB LOAD STATUS]  :  %s" %loadmodulestatus
 
 if "SUCCESS" in loadmodulestatus.upper():
     obj.setLoadModuleStatus("SUCCESS");
-
-    expectedresult="SUCCESS";
-    apIndex = 1
-    getMethod = "getApManagementFramePowerControl"
-    primitive = 'WIFIHAL_GetOrSetParamIntValue'
-
-    #Calling the method to execute wifi_getApManagementFramePowerControl()
-    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, 0, getMethod)
-
-    if expectedresult in actualresult:
-        initFPC = details.split(":")[1].strip()
-
-        #ApManagementFramePowerControl varies in the range -20dBm to 0dBm
-        r = range(-20,0)
-        setFPC = random.choice(r)
-
+    tdkTestObjTemp, idx = getIndex(obj, radio);
+    ## Check if a invalid index is returned
+    if idx == -1:
+        print "Failed to get radio index for radio %s\n" %radio;
+        tdkTestObjTemp.setResultStatus("FAILURE");
+    else:
         expectedresult="SUCCESS";
-        apIndex = 1
-        setMethod = "setApManagementFramePowerControl"
+        apIndex = idx
+        getMethod = "getApManagementFramePowerControl"
         primitive = 'WIFIHAL_GetOrSetParamIntValue'
 
-        #Calling the method to execute wifi_setApManagementFramePowerControl()
-        tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, setFPC, setMethod)
+        #Calling the method to execute wifi_getApManagementFramePowerControl()
+        tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, 0, getMethod)
 
         if expectedresult in actualresult:
+            initFPC = details.split(":")[1].strip()
+
+            #ApManagementFramePowerControl varies in the range -20dBm to 0dBm
+            r = range(-20,0)
+            setFPC = random.choice(r)
+
             expectedresult="SUCCESS";
-            apIndex = 1
-            getMethod = "getApManagementFramePowerControl"
+            setMethod = "setApManagementFramePowerControl"
             primitive = 'WIFIHAL_GetOrSetParamIntValue'
 
-            #Calling the method to execute wifi_getApManagementFramePowerControl()
-            tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, 0, getMethod)
+            #Calling the method to execute wifi_setApManagementFramePowerControl()
+            tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, setFPC, setMethod)
 
             if expectedresult in actualresult:
-                finalFPC = details.split(":")[1].strip()
-                if int(finalFPC) == setFPC:
-                    print "TEST STEP: Comparing set and get values of ApManagementFramePowerControl"
-                    print "EXPECTED RESULT: Set and get values should be the same"
-                    print "ACTUAL RESULT : Set and get values are the same"
-                    print "Set value: %s"%setFPC
-                    print "Get value: %s"%finalFPC
-                    print "TEST EXECUTION RESULT :SUCCESS"
-                    tdkTestObj.setResultStatus("SUCCESS");
-                else:
-                    print "TEST STEP: Comparing set and get values of ApManagementFramePowerControl"
-                    print "EXPECTED RESULT: Set and get values should be the same"
-                    print "ACTUAL RESULT : Set and get values are NOT the same"
-                    print "Set value: %s"%setFPC
-                    print "Get value: %s"%finalFPC
-                    print "TEST EXECUTION RESULT :FAILURE"
-                    tdkTestObj.setResultStatus("FAILURE");
-
-                #Revert back to initial value
-                setMethod = "setApManagementFramePowerControl"
+                expectedresult="SUCCESS";
+                getMethod = "getApManagementFramePowerControl"
                 primitive = 'WIFIHAL_GetOrSetParamIntValue'
-                setFPC = int(initFPC)
-                tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, setFPC, setMethod)
+
+                #Calling the method to execute wifi_getApManagementFramePowerControl()
+                tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, 0, getMethod)
 
                 if expectedresult in actualresult:
-                    tdkTestObj.setResultStatus("SUCCESS");
-                    print "Successfully reverted back to inital value"
+                    finalFPC = details.split(":")[1].strip()
+                    if int(finalFPC) == setFPC:
+                        print "TEST STEP: Comparing set and get values of ApManagementFramePowerControl"
+                        print "EXPECTED RESULT: Set and get values should be the same"
+                        print "ACTUAL RESULT : Set and get values are the same"
+                        print "Set value: %s"%setFPC
+                        print "Get value: %s"%finalFPC
+                        print "TEST EXECUTION RESULT :SUCCESS"
+                        tdkTestObj.setResultStatus("SUCCESS");
+                    else:
+                        print "TEST STEP: Comparing set and get values of ApManagementFramePowerControl"
+                        print "EXPECTED RESULT: Set and get values should be the same"
+                        print "ACTUAL RESULT : Set and get values are NOT the same"
+                        print "Set value: %s"%setFPC
+                        print "Get value: %s"%finalFPC
+                        print "TEST EXECUTION RESULT :FAILURE"
+                        tdkTestObj.setResultStatus("FAILURE");
+
+                    #Revert back to initial value
+                    setMethod = "setApManagementFramePowerControl"
+                    primitive = 'WIFIHAL_GetOrSetParamIntValue'
+                    setFPC = int(initFPC)
+                    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, setFPC, setMethod)
+
+                    if expectedresult in actualresult:
+                        tdkTestObj.setResultStatus("SUCCESS");
+                        print "Successfully reverted back to inital value"
+                    else:
+                        tdkTestObj.setResultStatus("FAILURE");
+                        print "Unable to revert to initial value"
                 else:
                     tdkTestObj.setResultStatus("FAILURE");
-                    print "Unable to revert to initial value"
+                    print "getApManagementFramePowerControl() function call failed after set operation"
             else:
                 tdkTestObj.setResultStatus("FAILURE");
-                print "getApManagementFramePowerControl() function call failed after set operation"
+                print "setApManagementFramePowerControl() function call failed"
         else:
             tdkTestObj.setResultStatus("FAILURE");
-            print "setApManagementFramePowerControl() function call failed"
-    else:
-        tdkTestObj.setResultStatus("FAILURE");
-        print "getApManagementFramePowerControl() function call failed"
+            print "getApManagementFramePowerControl() function call failed"
     obj.unloadModule("wifihal");
 
 else:
     print "Failed to load wifi module";
     obj.setLoadModuleStatus("FAILURE");
-
-

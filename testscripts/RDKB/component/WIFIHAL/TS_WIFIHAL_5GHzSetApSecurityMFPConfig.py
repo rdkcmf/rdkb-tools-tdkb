@@ -2,7 +2,7 @@
 # If not stated otherwise in this file or this component's Licenses.txt
 # file the following copyright and licenses apply:
 #
-# Copyright 2019 RDK Management
+# Copyright 2020 RDK Management
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,26 +17,43 @@
 # limitations under the License.
 ##########################################################################
 '''
-<?xml version="1.0" encoding="UTF-8"?><xml>
-  <id/>
-  <version>9</version>
+<?xml version='1.0' encoding='utf-8'?>
+<xml>
+  <id></id>
+  <!-- Do not edit id. This will be auto filled while exporting. If you are adding a new script keep the id empty -->
+  <version>11</version>
+  <!-- Do not edit version. This will be auto incremented while updating. If you are adding a new script you can keep the vresion as 1 -->
   <name>TS_WIFIHAL_5GHzSetApSecurityMFPConfig</name>
-  <primitive_test_id/>
+  <!-- If you are adding a new script you can specify the script name. Script Name should be unique same as this file name with out .py extension -->
+  <primitive_test_id> </primitive_test_id>
+  <!-- Do not change primitive_test_id if you are editing an existing script. -->
   <primitive_test_name>WIFIHAL_GetOrSetParamStringValue</primitive_test_name>
-  <primitive_test_version>9</primitive_test_version>
+  <!--  -->
+  <primitive_test_version>8</primitive_test_version>
+  <!--  -->
   <status>FREE</status>
+  <!--  -->
   <synopsis>To check whether setApSecurityMFPConfig() is working or not</synopsis>
-  <groups_id/>
+  <!--  -->
+  <groups_id />
+  <!--  -->
   <execution_time>1</execution_time>
+  <!--  -->
   <long_duration>false</long_duration>
+  <!--  -->
   <advanced_script>false</advanced_script>
-  <remarks/>
+  <!-- execution_time is the time out time for test execution -->
+  <remarks></remarks>
+  <!-- Reason for skipping the tests if marked to skip -->
   <skip>false</skip>
+  <!--  -->
   <box_types>
     <box_type>Broadband</box_type>
+    <!--  -->
   </box_types>
   <rdk_versions>
     <rdk_version>RDKB</rdk_version>
+    <!--  -->
   </rdk_versions>
   <test_cases>
     <test_case_id>TC_WIFIHAL_359</test_case_id>
@@ -56,7 +73,7 @@ radioIndex : 1</input_parameters>
 4.  Invoke "WIFIHAL_GetOrSetParamStringValue" to get the current MFP config value  for 5GHz and store in the variable finalConfigValue to verify with setConfigValue
 5. Reverted the MFP config value to initialConfigValue
 6.Unload wifihal module</automation_approch>
-    <except_output>Return Success when the setConfigValue and finalConfigValue are same</except_output>
+    <expected_output>Return Success when the setConfigValue and finalConfigValue are same</expected_output>
     <priority>High</priority>
     <test_stub_interface>WIFIHAL</test_stub_interface>
     <test_script>TS_WIFIHAL_5GHzSetApSecurityMFPConfig</test_script>
@@ -64,15 +81,15 @@ radioIndex : 1</input_parameters>
     <release_version>Nil</release_version>
     <remarks>Nil</remarks>
   </test_cases>
-  <script_tags/>
+  <script_tags />
 </xml>
-
 '''
-import tdklib; 
+import tdklib;
 from wifiUtility import *;
 
 #Test component to be tested
 obj = tdklib.TDKScriptingLibrary("wifihal","1");
+radio = "5G"
 
 #IP and Port of box, No need to change,
 #This will be replaced with correspoing Box Ip and port while executing script
@@ -85,88 +102,90 @@ print "[LIB LOAD STATUS]  :  %s" %loadmodulestatus
 
 if "SUCCESS" in loadmodulestatus.upper():
     obj.setLoadModuleStatus("SUCCESS");
+    tdkTestObjTemp, idx = getIndex(obj, radio);
+    ## Check if a invalid index is returned
+    if idx == -1:
+        print "Failed to get radio index for radio %s\n" %radio;
+        tdkTestObjTemp.setResultStatus("FAILURE");
+    else:
+        expectedresult="SUCCESS";
 
-    expectedresult="SUCCESS";
+        #Checking for AP Index 1, Similar way we can check for other APs
+        apIndex = idx
+        getMethod = "getApSecurityMFPConfig"
+        primitive = 'WIFIHAL_GetOrSetParamStringValue'
 
-    #Checking for AP Index 1, Similar way we can check for other APs
-    apIndex = 1
-    getMethod = "getApSecurityMFPConfig"
-    primitive = 'WIFIHAL_GetOrSetParamStringValue'
+        #Calling the method from wifiUtility to execute test case and set result status for the test.
+        tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, "0", getMethod)
+        mfpConfigValues = ["Disabled", "Optional", "Required"]
 
-    #Calling the method from wifiUtility to execute test case and set result status for the test.
-    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, "0", getMethod)
-    mfpConfigValues = ["Disabled", "Optional", "Required"]
-
-    if expectedresult in actualresult:
-        initialConfigValue = details.split(":")[1].strip()
-        print "initialConfigValue : ", initialConfigValue
-        if initialConfigValue in mfpConfigValues:
-            mfpConfigValues.remove(str(initialConfigValue))
-            print "mfpConfigValues : ", mfpConfigValues
-            for i,word in enumerate(mfpConfigValues):
-                expectedresult="SUCCESS";
-                apIndex = 1
-                setMethod = "setApSecurityMFPConfig"
-                setConfigValue = mfpConfigValues[i]
-                primitive = 'WIFIHAL_GetOrSetParamStringValue'
-                print "setConfigValue : ", setConfigValue
-
-                #Calling the method from wifiUtility to execute test case and set result status for the test.
-                tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, setConfigValue, setMethod)
-
-                if expectedresult in actualresult:
-                    apIndex = 1
-                    getMethod = "getApSecurityMFPConfig"
+        if expectedresult in actualresult:
+            initialConfigValue = details.split(":")[1].strip()
+            print "initialConfigValue : ", initialConfigValue
+            if initialConfigValue in mfpConfigValues:
+                mfpConfigValues.remove(str(initialConfigValue))
+                print "mfpConfigValues : ", mfpConfigValues
+                for i,word in enumerate(mfpConfigValues):
+                    expectedresult="SUCCESS";
+                    setMethod = "setApSecurityMFPConfig"
+                    setConfigValue = mfpConfigValues[i]
                     primitive = 'WIFIHAL_GetOrSetParamStringValue'
+                    print "setConfigValue : ", setConfigValue
 
                     #Calling the method from wifiUtility to execute test case and set result status for the test.
-                    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, "0", getMethod)
-                    finalConfigValue = details.split(":")[1].strip()
-                    print "finalConfigValue : ", finalConfigValue
+                    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, setConfigValue, setMethod)
 
                     if expectedresult in actualresult:
-                        if finalConfigValue == setConfigValue:
-                            tdkTestObj.setResultStatus("SUCCESS");
-                            print "TEST STEP : Compare set and get values of ApSecurityMFPConfig"
-                            print "EXPECTED RESULT : Set and get values of ApSecurityMFPConfig should be the same"
-                            print "ACTUAl RESULT : Set and get values of ApSecurityMFPConfig are the same"
-                            print "setApSecurityMFPConfig = ",setConfigValue
-                            print "getApSecurityMFPConfig = ",finalConfigValue
-                            print "TEST EXECUTION RESULT :SUCCESS"
+                        getMethod = "getApSecurityMFPConfig"
+                        primitive = 'WIFIHAL_GetOrSetParamStringValue'
+
+                        #Calling the method from wifiUtility to execute test case and set result status for the test.
+                        tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, "0", getMethod)
+                        finalConfigValue = details.split(":")[1].strip()
+                        print "finalConfigValue : ", finalConfigValue
+
+                        if expectedresult in actualresult:
+                            if finalConfigValue == setConfigValue:
+                                tdkTestObj.setResultStatus("SUCCESS");
+                                print "TEST STEP : Compare set and get values of ApSecurityMFPConfig"
+                                print "EXPECTED RESULT : Set and get values of ApSecurityMFPConfig should be the same"
+                                print "ACTUAl RESULT : Set and get values of ApSecurityMFPConfig are the same"
+                                print "setApSecurityMFPConfig = ",setConfigValue
+                                print "getApSecurityMFPConfig = ",finalConfigValue
+                                print "TEST EXECUTION RESULT :SUCCESS"
+                            else:
+                                tdkTestObj.setResultStatus("FAILURE");
+                                print "TEST STEP : Compare set and get values of ApSecurityMFPConfig"
+                                print "EXPECTED RESULT : Set and get values of ApSecurityMFPConfig should be the same"
+                                print "ACTUAl RESULT : Set and get values of ApSecurityMFPConfig are NOT the same"
+                                print "setApSecurityMFPConfig = ",setConfigValue
+                                print "getApSecurityMFPConfig = ",finalConfigValue
+                                print "TEST EXECUTION RESULT :FAILURE"
                         else:
-                            tdkTestObj.setResultStatus("FAILURE");
-                            print "TEST STEP : Compare set and get values of ApSecurityMFPConfig"
-                            print "EXPECTED RESULT : Set and get values of ApSecurityMFPConfig should be the same"
-                            print "ACTUAl RESULT : Set and get values of ApSecurityMFPConfig are NOT the same"
-                            print "setApSecurityMFPConfig = ",setConfigValue
-                            print "getApSecurityMFPConfig = ",finalConfigValue
-                            print "TEST EXECUTION RESULT :FAILURE"
+                            tdkTestObj.setResultStatus("FAILURE")
+                            print "wifi_getApSecurityMFPConfig() function failed"
+
                     else:
                         tdkTestObj.setResultStatus("FAILURE")
-                        print "wifi_getApSecurityMFPConfig() function failed"
-                        
+                        print "wifi_setApSecurityMFPConfig() function failed";
+                #Revert the ApSecurityMFPConfig value back o initial value
+                print "Reverting Back to initial value"
+                setMethod = "setApSecurityMFPConfig"
+                primitive = 'WIFIHAL_GetOrSetParamStringValue'
+                #Calling the method from wifiUtility to execute test case and set result status for the test.
+                tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, initialConfigValue, setMethod)
+
+                if expectedresult in actualresult:
+                    tdkTestObj.setResultStatus("SUCCESS")
+                    print "Successfully reverted back to initial value"
                 else:
                     tdkTestObj.setResultStatus("FAILURE")
-                    print "wifi_setApSecurityMFPConfig() function failed";
-            #Revert the ApSecurityMFPConfig value back o initial value
-            print "Reverting Back to initial value"
-            apIndex = 1
-            setMethod = "setApSecurityMFPConfig"
-            primitive = 'WIFIHAL_GetOrSetParamStringValue'
-            #Calling the method from wifiUtility to execute test case and set result status for the test.
-            tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, initialConfigValue, setMethod)
-
-            if expectedresult in actualresult:
-                tdkTestObj.setResultStatus("SUCCESS")
-                print "Successfully reverted back to initial value"
+                    print "Unable to revert to initial value"
             else:
-                tdkTestObj.setResultStatus("FAILURE")
-                print "Unable to revert to initial value"
+                print "initialConfigValue not in mfpConfigValues list"
         else:
-            print "initialConfigValue not in mfpConfigValues list"
-    else:
-        tdkTestObj.setResultStatus("FAILURE");
-        print "wifi_getApSecurityMFPConfig function failed";
+            tdkTestObj.setResultStatus("FAILURE");
+            print "wifi_getApSecurityMFPConfig function failed";
 
     obj.unloadModule("wifihal");
 
