@@ -63,7 +63,6 @@ class RpcMethods : public AbstractServer<RpcMethods>
         static const char* sm_szManagerIP;
         static const char* sm_szBoxName;
         static const char* sm_szBoxInterface;
-        static const char* sm_szDeviceIP;
 
         static std::string sm_strBoxIP;
         static std::string sm_strResultId;
@@ -79,7 +78,7 @@ class RpcMethods : public AbstractServer<RpcMethods>
          this->bindAndAddMethod(Procedure("enableReboot", PARAMS_BY_NAME, JSON_STRING,NULL), &RpcMethods::RPCEnableReboot);
 this->bindAndAddMethod(Procedure("saveCurrentState", PARAMS_BY_NAME, JSON_STRING,NULL), &RpcMethods::RPCSaveCurrentState);
          this->bindAndAddMethod(Procedure("restorePreviousState", PARAMS_BY_NAME, JSON_STRING,"execID",JSON_STRING,"deviceID",JSON_STRING,"testcaseID",JSON_STRING,"execDevID",JSON_STRING,"resultID",JSON_STRING,NULL), &RpcMethods::RPCRestorePreviousState);
-         this->bindAndAddMethod(Procedure("getHostStatus", PARAMS_BY_NAME, JSON_STRING,"managerIP",JSON_STRING,"boxName",JSON_STRING,"deviceIP",JSON_STRING,NULL), &RpcMethods::RPCGetHostStatus);
+         this->bindAndAddMethod(Procedure("getHostStatus", PARAMS_BY_NAME, JSON_STRING,"managerIP",JSON_STRING,"boxName",JSON_STRING,NULL), &RpcMethods::RPCGetHostStatus);
          this->bindAndAddMethod(Procedure("callEnableTDK", PARAMS_BY_NAME, JSON_STRING,NULL), &RpcMethods::RPCCallEnableTDK);
          this->bindAndAddMethod(Procedure("callDisableTDK", PARAMS_BY_NAME, JSON_STRING,NULL), &RpcMethods::RPCCallDisableTDK);
          this->bindAndAddMethod(Procedure("resetAgent", PARAMS_BY_NAME, JSON_STRING,"enableReset",JSON_STRING,NULL), &RpcMethods::RPCResetAgent);
