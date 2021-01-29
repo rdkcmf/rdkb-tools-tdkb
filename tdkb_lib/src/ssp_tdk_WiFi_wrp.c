@@ -324,6 +324,15 @@ int ssp_WIFIHALGetOrSetParamBoolValue(int radioIndex, unsigned char *enable, cha
         else
             return_status = wifi_getP2PCrossConnect(radioIndex, NULL);
     }
+    else if(!strcmp(method, "getBSSColorEnabled"))
+    {
+        if(enable)
+            return_status = wifi_getBSSColorEnabled(radioIndex, enable);
+        else
+            return_status = wifi_getBSSColorEnabled(radioIndex, NULL);
+    }
+    else if(!strcmp(method, "setBSSColorEnabled"))
+        return_status = wifi_setBSSColorEnabled(radioIndex, *enable);
     else
     {
         return_status = SSP_FAILURE;
@@ -418,7 +427,10 @@ int ssp_WIFIHALGetOrSetParamStringValue(int radioIndex, char* output, char* meth
 {
     printf("\n ssp_WIFIHALGetOrSetParamStringValue----> Entry\n");
     printf("Radio index:%d\n",radioIndex);
-    printf("GetorSetParam: %s\n" , output);
+    if(output)
+        printf("GetorSetParam: %s\n" , output);
+    else
+        printf("Validation with NULL buffer\n");
     printf("MethodName: %s\n", method);
     int return_status = 0;
     wifi_device_t dev = {0};
@@ -557,13 +569,22 @@ int ssp_WIFIHALGetOrSetParamStringValue(int radioIndex, char* output, char* meth
         }
         return_status = wifi_kickAssociatedDevice(radioIndex, &dev);
     }
+    else if(!strcmp(method, "getBSSColor"))
+    {
+        if(output)
+            return_status = wifi_getBSSColor(radioIndex, output);
+        else
+            return_status = wifi_getBSSColor(radioIndex, NULL);
+    }
     else
     {
         return_status = SSP_FAILURE;
         printf("\n ssp_WiFiHalCallMethodForString: Invalid methodName\n");
     }
 
-    printf("ssp_WiFiHalCallMethodForString: return value is %s, ret:status %d\n", output,return_status);
+    if(output)
+        printf("ssp_WiFiHalCallMethodForString: return value is %s\n", output);
+    printf("ssp_WiFiHalCallMethodForString: ret:status %d\n", return_status);
     printf("\n ssp_WiFiHalCallMethodForString--> Exit\n");
     return return_status;
 }
@@ -621,7 +642,10 @@ int ssp_WIFIHALGetOrSetParamIntValue(int radioIndex, int* output, char* method)
 {
     printf("\n ssp_WIFIHALGetOrSetParamIntValue----> Entry\n");
     printf("Radio index:%d\n",radioIndex);
-    printf("GetorSetParam: %d\n" , *output);
+    if(output)
+        printf("GetorSetParam: %d\n" , *output);
+    else
+        print("NULL buffer validation\n");
     printf("MethodName: %s\n", method);
     int return_status = 0;
 
@@ -702,13 +726,42 @@ int ssp_WIFIHALGetOrSetParamIntValue(int radioIndex, int* output, char* method)
         return_status = wifi_setBSSTransitionActivation(radioIndex, *output);
     else if(!strcmp(method, "setApDTIMInterval"))
           return_status = wifi_setApDTIMInterval(radioIndex, *output);
+    else if(!strcmp(method, "getDownlinkMuType"))
+    {
+        if(output)
+            return_status = wifi_getDownlinkMuType(radioIndex, output);
+        else
+            return_status = wifi_getDownlinkMuType(radioIndex, NULL);
+    }
+    else if(!strcmp(method, "getUplinkMuType"))
+    {
+        if(output)
+            return_status = wifi_getUplinkMuType(radioIndex, output);
+        else
+            return_status = wifi_getUplinkMuType(radioIndex, NULL);
+    }
+    else if(!strcmp(method, "getGuardInterval"))
+    {
+        if(output)
+            return_status = wifi_getGuardInterval(radioIndex, output);
+        else
+            return_status = wifi_getGuardInterval(radioIndex, NULL);
+    }
+    else if(!strcmp(method, "setDownlinkMuType"))
+          return_status = wifi_setDownlinkMuType(radioIndex, *output);
+    else if(!strcmp(method, "setUplinkMuType"))
+          return_status = wifi_setUplinkMuType(radioIndex, *output);
+    else if(!strcmp(method, "setGuardInterval"))
+          return_status = wifi_setGuardInterval(radioIndex, *output);
     else
     {
         return_status = SSP_FAILURE;
         printf("\n ssp_WiFiHalCallMethodForInt: Invalid methodName\n");
     }
 
-    printf("ssp_WiFiHalCallMethodForInt: return value is %d, ret:status %d\n", *output, return_status);
+    if(output)
+        printf("ssp_WiFiHalCallMethodForInt: return value is %d\n", *output);
+    printf("ssp_WiFiHalCallMethodForInt: ret:status %d\n", return_status);
     printf("\n ssp_WiFiHalCallMethodForInt--> Exit\n");
     return return_status;
 }
