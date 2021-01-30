@@ -33,7 +33,7 @@ int ssp_wifi_init()
     printf("\n ssp_wifi_init-----> Entry\n");
 
     int return_status=0;
-#if defined(_COSA_BCM_MIPS_) || defined(_XB7_PRODUCT_REQ_)
+#if defined(_COSA_BCM_MIPS_)
     printf("Invoking wifi_init HAL API\n");
 
     return_status = wifi_init();
