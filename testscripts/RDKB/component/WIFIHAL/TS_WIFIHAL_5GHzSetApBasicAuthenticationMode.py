@@ -89,7 +89,7 @@ ApIndex : 1</input_parameters>
 import tdklib;
 from wifiUtility import *;
 from tdkbVariables import *;
-
+radio = "5G";
 #Test component to be tested
 obj = tdklib.TDKScriptingLibrary("wifihal","1");
 sysobj = tdklib.TDKScriptingLibrary("sysutil","1");
@@ -106,11 +106,9 @@ loadmodulestatus =obj.getLoadModuleResult();
 sysloadmodulestatus =sysobj.getLoadModuleResult();
 print "[LIB LOAD STATUS]  :  %s" %loadmodulestatus ;
 print "[LIB LOAD STATUS]  :  %s" %sysloadmodulestatus ;
-
-def setApBeaconType(obj):
+def setApBeaconType(obj,apIndex):
 
     expectedresult="SUCCESS";
-    apIndex = 1
     getMethod = "getApBeaconType"
     primitive = 'WIFIHAL_GetOrSetParamStringValue'
 
@@ -121,7 +119,6 @@ def setApBeaconType(obj):
             initialBeaconType = details.split(":")[1].strip()
             tdkTestObj.setResultStatus("SUCCESS");
             expectedresult = "SUCCESS";
-            apIndex = 1
             setMethod = "setApBeaconType"
             setBeaconType = 'None'
             primitive = 'WIFIHAL_GetOrSetParamStringValue'
@@ -131,7 +128,6 @@ def setApBeaconType(obj):
 
             if expectedresult in actualresult:
                 expectedresult="SUCCESS";
-                apIndex = 1
                 getMethod = "getApBeaconType"
                 primitive = 'WIFIHAL_GetOrSetParamStringValue'
 
@@ -172,124 +168,131 @@ if "SUCCESS" in loadmodulestatus.upper()and "SUCCESS" in sysloadmodulestatus.upp
     obj.setLoadModuleStatus("SUCCESS");
     sysobj.setLoadModuleStatus("SUCCESS");
 
-    tdkTestObj = sysobj.createTestStep('ExecuteCmd');
-    expectedresult="SUCCESS";
-    supportedAuthModes = "sh %s/tdk_utility.sh parseConfigFile SUPPORTED_AUTH_MODES" %TDK_PATH;
-    tdkTestObj.addParameter("command", supportedAuthModes);
-    tdkTestObj.executeTestCase(expectedresult);
-    actualresult = tdkTestObj.getResult();
-    supportedAuthModes = tdkTestObj.getResultDetails().strip();
-    supportedAuthModes = supportedAuthModes.replace("\\n", "");
+    tdkTestObjTemp, idx = getIndex(obj, radio);
+    ## Check if a invalid index is returned
+    if idx == -1:
+        print "Failed to get radio index for radio %s\n" %radio;
+        tdkTestObjTemp.setResultStatus("FAILURE");
+    else:
 
-    if supportedAuthModes and expectedresult in actualresult:
-        tdkTestObj.setResultStatus("SUCCESS");
-        supportedModes = supportedAuthModes.split(",");
-        print "TEST STEP : Get the list of supported Authentication Modes from /etc/tdk_platform.properties file";
-        print "EXPECTED RESULT : Should get the list of supported Authentication Modes";
-        print "ACTUAL RESULT : Got the list of supported Authentication Modes as %s" %supportedModes;
-        #Get the result of execution
-        print "[TEST EXECUTION RESULT] : SUCCESS";
+            tdkTestObj = sysobj.createTestStep('ExecuteCmd');
+            expectedresult="SUCCESS";
+            supportedAuthModes = "sh %s/tdk_utility.sh parseConfigFile SUPPORTED_AUTH_MODES" %TDK_PATH;
+            tdkTestObj.addParameter("command", supportedAuthModes);
+            tdkTestObj.executeTestCase(expectedresult);
+            actualresult = tdkTestObj.getResult();
+            supportedAuthModes = tdkTestObj.getResultDetails().strip();
+            supportedAuthModes = supportedAuthModes.replace("\\n", "");
 
-        expectedresult="SUCCESS";
-        apIndex = 1
-        getMethod = "getApBasicAuthenticationMode"
-        primitive = 'WIFIHAL_GetOrSetParamStringValue'
+            if supportedAuthModes and expectedresult in actualresult:
+                tdkTestObj.setResultStatus("SUCCESS");
+                supportedModes = supportedAuthModes.split(",");
+                print "TEST STEP : Get the list of supported Authentication Modes from /etc/tdk_platform.properties file";
+                print "EXPECTED RESULT : Should get the list of supported Authentication Modes";
+                print "ACTUAL RESULT : Got the list of supported Authentication Modes as %s" %supportedModes;
+                #Get the result of execution
+                print "[TEST EXECUTION RESULT] : SUCCESS";
 
-        #Calling the method to execute wifi_getApBasicAuthenticationMode()
-        tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, "0", getMethod)
-        initialMode = details.split(":")[1].strip()
+                expectedresult="SUCCESS";
+                apIndex = idx;
+                getMethod = "getApBasicAuthenticationMode"
+                primitive = 'WIFIHAL_GetOrSetParamStringValue'
 
-        if expectedresult in actualresult and initialMode in supportedModes:
-            tdkTestObj.setResultStatus("SUCCESS");
+                #Calling the method to execute wifi_getApBasicAuthenticationMode()
+                tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, "0", getMethod)
+                initialMode = details.split(":")[1].strip()
 
-            for setMode in supportedModes:
-                if initialMode == setMode:
-                    continue;
-                else:
-                    if (setMode == 'None'):
-                        #Calling the function to perform the settings and getting and verification of becon type to be none.
-                        initialBeaconType = setApBeaconType(obj);
+                if expectedresult in actualresult and initialMode in supportedModes:
+                    tdkTestObj.setResultStatus("SUCCESS");
 
-
-                    expectedresult = "SUCCESS";
-                    apIndex = 1
-                    setMethod = "setApBasicAuthenticationMode"
-                    primitive = 'WIFIHAL_GetOrSetParamStringValue'
+                    for setMode in supportedModes:
+                        if initialMode == setMode:
+                            continue;
+                        else:
+                            if (setMode == 'None'):
+                                #Calling the function to perform the settings and getting and verification of becon type to be none.
+                                initialBeaconType = setApBeaconType(obj,idx);
 
 
-                    #Calling the method to execute wifi_setApBasicAuthenticationMode()
-                    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, setMode, setMethod)
+                            expectedresult = "SUCCESS";
+                            apIndex = idx;
+                            setMethod = "setApBasicAuthenticationMode"
+                            primitive = 'WIFIHAL_GetOrSetParamStringValue'
 
-                    if expectedresult in actualresult:
-                        expectedresult="SUCCESS";
-                        apIndex = 1
-                        getMethod = "getApBasicAuthenticationMode"
-                        primitive = 'WIFIHAL_GetOrSetParamStringValue'
 
-                        #Calling the method to execute wifi_getApBasicAuthenticationMode()
-                        tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, "0", getMethod)
-                        finalMode = details.split(":")[1].strip()
+                            #Calling the method to execute wifi_setApBasicAuthenticationMode()
+                            tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, setMode, setMethod)
 
-                        if expectedresult in actualresult:
-                            if finalMode == setMode:
-                                tdkTestObj.setResultStatus("SUCCESS");
-                                print "TEST STEP: Compare the set and get values of ApBasicAuthenticationMode"
-                                print "EXPECTED RESULT: Set and get values of ApBasicAuthenticationMode should be same"
-                                print "ACTUAL RESULT: Set and get values of ApBasicAuthenticationMode are the same"
-                                print "setBasicAuthenticationMode = ",setMode
-                                print "getBasicAuthenticationMode = ",finalMode
-                                print "TEST EXECUTION RESULT : SUCCESS"
-                            else:
-                                tdkTestObj.setResultStatus("FAILURE");
-                                print "TEST STEP: Compare the set and get values of ApBasicAuthenticationMode"
-                                print "EXPECTED RESULT: Set and get values of ApBasicAuthenticationMode should be same"
-                                print "ACTUAL RESULT: Set and get values of ApBasicAuthenticationMode are NOT the same"
-                                print "setBasicAuthenticationMode = ",setMode
-                                print "getBasicAuthenticationMode = ",finalMode
-                                print "TEST EXECUTION RESULT : FAILURE"
-
-                            #Revert the BasicAuthenticationMode back to initial value
-			    setMethod = "setApBasicAuthenticationMode"
-			    primitive = 'WIFIHAL_GetOrSetParamStringValue'
-                            tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, initialMode, setMethod)
                             if expectedresult in actualresult:
-                                print "Successfully reverted the BasicAuthenticationMode to initial value"
-			        tdkTestObj.setResultStatus("SUCCESS");
+                                expectedresult="SUCCESS";
+                                apIndex = idx;
+                                getMethod = "getApBasicAuthenticationMode"
+                                primitive = 'WIFIHAL_GetOrSetParamStringValue'
+
+                                #Calling the method to execute wifi_getApBasicAuthenticationMode()
+                                tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, "0", getMethod)
+                                finalMode = details.split(":")[1].strip()
+
+                                if expectedresult in actualresult:
+                                    if finalMode == setMode:
+                                        tdkTestObj.setResultStatus("SUCCESS");
+                                        print "TEST STEP: Compare the set and get values of ApBasicAuthenticationMode"
+                                        print "EXPECTED RESULT: Set and get values of ApBasicAuthenticationMode should be same"
+                                        print "ACTUAL RESULT: Set and get values of ApBasicAuthenticationMode are the same"
+                                        print "setBasicAuthenticationMode = ",setMode
+                                        print "getBasicAuthenticationMode = ",finalMode
+                                        print "TEST EXECUTION RESULT : SUCCESS"
+                                    else:
+                                        tdkTestObj.setResultStatus("FAILURE");
+                                        print "TEST STEP: Compare the set and get values of ApBasicAuthenticationMode"
+                                        print "EXPECTED RESULT: Set and get values of ApBasicAuthenticationMode should be same"
+                                        print "ACTUAL RESULT: Set and get values of ApBasicAuthenticationMode are NOT the same"
+                                        print "setBasicAuthenticationMode = ",setMode
+                                        print "getBasicAuthenticationMode = ",finalMode
+                                        print "TEST EXECUTION RESULT : FAILURE"
+
+                                    #Revert the BasicAuthenticationMode back to initial value
+                                    setMethod = "setApBasicAuthenticationMode"
+                                    primitive = 'WIFIHAL_GetOrSetParamStringValue'
+                                    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, initialMode, setMethod)
+                                    if expectedresult in actualresult:
+                                        print "Successfully reverted the BasicAuthenticationMode to initial value"
+                                        tdkTestObj.setResultStatus("SUCCESS");
+                                    else:
+                                        print "Unable to revert the BasicAuthenticationMode"
+                                        tdkTestObj.setResultStatus("FAILURE");
+                                else:
+                                    print "wifi_getApBasicAuthenticationMode() call failed"
+                                    tdkTestObj.setResultStatus("FAILURE");
                             else:
-                                print "Unable to revert the BasicAuthenticationMode"
-			        tdkTestObj.setResultStatus("FAILURE");
-                        else:
-                            print "wifi_getApBasicAuthenticationMode() call failed"
-			    tdkTestObj.setResultStatus("FAILURE");
-                    else:
-                        print "wifi_setApBasicAuthenticationMode() call failed"
-		        tdkTestObj.setResultStatus("FAILURE");
+                                print "wifi_setApBasicAuthenticationMode() call failed"
+                                tdkTestObj.setResultStatus("FAILURE");
 
-                    if (setMode == 'None'):
-                        expectedresult="SUCCESS";
-                        apIndex = 1
-                        setMethod = "setApBeaconType"
-                        primitive = 'WIFIHAL_GetOrSetParamStringValue'
+                            if (setMode == 'None'):
+                                expectedresult="SUCCESS";
+                                apIndex = idx;
+                                setMethod = "setApBeaconType"
+                                primitive = 'WIFIHAL_GetOrSetParamStringValue'
 
-                        #Revert the BeaconType back to initial value
-                        tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, initialBeaconType, setMethod)
-                        if expectedresult in actualresult:
-                            print "Successfully reverted the BeaconType to initial value"
-                            tdkTestObj.setResultStatus("SUCCESS");
-                        else:
-                            print "Unable to revert the BeaconType"
-                            tdkTestObj.setResultStatus("FAILURE");
-                    break;
+                                #Revert the BeaconType back to initial value
+                                tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, initialBeaconType, setMethod)
+                                if expectedresult in actualresult:
+                                    print "Successfully reverted the BeaconType to initial value"
+                                    tdkTestObj.setResultStatus("SUCCESS");
+                                else:
+                                    print "Unable to revert the BeaconType"
+                                    tdkTestObj.setResultStatus("FAILURE");
+                            break;
 
-        else:
-            tdkTestObj.setResultStatus("FAILURE");
-    else :
-         tdkTestObj.setResultStatus("FAILURE");
-         print "TEST STEP : Get the list of supported Authentication Modes from /etc/tdk_platform.properties file";
-         print "EXPECTED RESULT : Should get the list of supported Authentication Modes";
-         print "ACTUAL RESULT : Failed to get the list of supported AuthenticationModes from /etc/tdk_platform.properties file"
-         #Get the result of execution
-         print "[TEST EXECUTION RESULT] : FAILURE";
+                else:
+                    tdkTestObj.setResultStatus("FAILURE");
+            else :
+                 tdkTestObj.setResultStatus("FAILURE");
+                 print "TEST STEP : Get the list of supported Authentication Modes from /etc/tdk_platform.properties file";
+                 print "EXPECTED RESULT : Should get the list of supported Authentication Modes";
+                 print "ACTUAL RESULT : Failed to get the list of supported AuthenticationModes from /etc/tdk_platform.properties file";
+                 #Get the result of execution
+                 print "[TEST EXECUTION RESULT] : FAILURE";
 
     obj.unloadModule("wifihal");
     sysobj.unloadModule("sysutil");

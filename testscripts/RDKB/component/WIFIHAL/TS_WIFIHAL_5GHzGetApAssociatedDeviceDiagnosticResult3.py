@@ -79,9 +79,10 @@ At least one device should be connected to get details.</input_parameters>
   <script_tags />
 </xml>
 '''
-# use tdklib library,which provides a wrapper for tdk testcase script 
-import tdklib; 
-
+# use tdklib library,which provides a wrapper for tdk testcase script
+import tdklib;
+from wifiUtility import *;
+radio5 = "5G"
 #Test component to be tested
 obj = tdklib.TDKScriptingLibrary("wifihal","1");
 
@@ -97,42 +98,47 @@ loadmodulestatus =obj.getLoadModuleResult();
 print "[LIB LOAD STATUS]  :  %s" %loadmodulestatus
 
 if "SUCCESS" in loadmodulestatus.upper():
-    obj.setLoadModuleStatus("SUCCESS");
 
-    #Prmitive test case which is associated to this Script
-    tdkTestObj = obj.createTestStep('WIFIHAL_GetApAssociatedDeviceDiagnosticResult3');
-    tdkTestObj.addParameter("apIndex", 1);
-    expectedresult="SUCCESS";
-    tdkTestObj.executeTestCase(expectedresult);
-    actualresult = tdkTestObj.getResult();
-    details = tdkTestObj.getResultDetails();
-    print "Details: %s"%details
+    #Validate wifi_getApAssociatedDeviceDiagnosticResult2() for 5GHZ
+    tdkTestObjTemp, idx = getIndex(obj, radio5);
+    ## Check if a invalid index is returned
+    if idx == -1:
+        print "Failed to get radio index for radio %s\n" %radio5;
+        tdkTestObjTemp.setResultStatus("FAILURE");
+    else:
+        #Prmitive test case which is associated to this Script
+        tdkTestObj = obj.createTestStep('WIFIHAL_GetApAssociatedDeviceDiagnosticResult3');
+        tdkTestObj.addParameter("apIndex", idx);
+        expectedresult="SUCCESS";
+        tdkTestObj.executeTestCase(expectedresult);
+        actualresult = tdkTestObj.getResult();
+        details = tdkTestObj.getResultDetails();
+        print "Details: %s"%details
 
-    if expectedresult in actualresult :
-        details = details.split(":")[1].strip();
-        output_array_size = details.split("=")[1].split(",")[0].strip();
-        if int(output_array_size) > 0:
-            tdkTestObj.setResultStatus("SUCCESS");
-            print "TEST STEP : Get the ApAssociatedDeviceDiagnosticResult3"
-            print "EXPECTED RESULT : Should successfully get the ApAssociatedDeviceDiagnosticResult3"
-            print "ACTUAL RESULT : Successfully gets the ApAssociatedDeviceDiagnosticResult3"
-            print "output_array_size=",output_array_size
-            #print "Identified %s neighboring access points"%output_array_size
-            #Get the result of execution
-            print "[TEST EXECUTION RESULT] : SUCCESS";
+        if expectedresult in actualresult :
+           details = details.split(":")[1].strip();
+           output_array_size = details.split("=")[1].split(",")[0].strip();
+           if int(output_array_size) > 0:
+              tdkTestObj.setResultStatus("SUCCESS");
+              print "TEST STEP : Get the ApAssociatedDeviceDiagnosticResult3"
+              print "EXPECTED RESULT : Should successfully get the ApAssociatedDeviceDiagnosticResult3"
+              print "ACTUAL RESULT : Successfully gets the ApAssociatedDeviceDiagnosticResult3"
+              print "output_array_size=",output_array_size
+              #print "Identified %s neighboring access points"%output_array_size
+              #Get the result of execution
+              print "[TEST EXECUTION RESULT] : SUCCESS";
+           else:
+               tdkTestObj.setResultStatus("FAILURE");
+               print "EXPECTED RESULT : Should successfully get the ApAssociatedDeviceDiagnosticResult3"
+               print "ACTUAL RESULT : No associated device found";
+               print "[TEST EXECUTION RESULT] : FAILURE";
         else:
             tdkTestObj.setResultStatus("FAILURE");
+            print "TEST STEP : Get the ApAssociatedDeviceDiagnosticResult3"
             print "EXPECTED RESULT : Should successfully get the ApAssociatedDeviceDiagnosticResult3"
-            print "ACTUAL RESULT : No associated device found";
+            print "ACTUAL RESULT : Failed to get the ApAssociatedDeviceDiagnosticResult3"
+            #Get the result of execution
             print "[TEST EXECUTION RESULT] : FAILURE";
-    else:
-        tdkTestObj.setResultStatus("FAILURE");
-        print "TEST STEP : Get the ApAssociatedDeviceDiagnosticResult3"
-        print "EXPECTED RESULT : Should successfully get the ApAssociatedDeviceDiagnosticResult3"
-        print "ACTUAL RESULT : Failed to get the ApAssociatedDeviceDiagnosticResult3"        
-        #Get the result of execution
-        print "[TEST EXECUTION RESULT] : FAILURE";
-
     obj.unloadModule("wifihal");
 else:
     print "Failed to load the module";

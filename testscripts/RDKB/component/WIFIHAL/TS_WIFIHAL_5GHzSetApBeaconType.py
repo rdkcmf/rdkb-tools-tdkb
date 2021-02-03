@@ -98,7 +98,7 @@ ApIndex : 1</input_parameters>
 import tdklib;
 from wifiUtility import *;
 import time;
-
+radio = "5G"
 #Test component to be tested
 obj = tdklib.TDKScriptingLibrary("wifihal","1");
 
@@ -112,8 +112,7 @@ obj.configureTestCase(ip,port,'TS_WIFIHAL_5GHzSetApBeaconType');
 loadmodulestatus =obj.getLoadModuleResult();
 print "[LIB LOAD STATUS]  :  %s" %loadmodulestatus ;
 
-def GetSetFunction(obj,param,Method) :
-    apIndex = 1;
+def GetSetFunction(obj,param,Method,apIndex) :
     primitive = 'WIFIHAL_GetOrSetParamStringValue';
     tdkTestObj = obj.createTestStep(primitive);
     tdkTestObj.addParameter("radioIndex", apIndex);
@@ -128,10 +127,10 @@ def GetSetFunction(obj,param,Method) :
     details = tdkTestObj.getResultDetails();
     return (tdkTestObj,actualresult,details);
 
-def RevertFunction():
+def RevertFunction(idx):
      #Revert the ApSecurityModeEnabled and ApBeaconType back to initial value
-     tdkTestObj, actualresultn1, details = GetSetFunction(obj,initMode,"setApSecurityModeEnabled");
-     tdkTestObj, actualresultn2, details = GetSetFunction(obj,initialBeaconType,"setApBeaconType");
+     tdkTestObj, actualresultn1, details = GetSetFunction(obj,initMode,"setApSecurityModeEnabled",idx);
+     tdkTestObj, actualresultn2, details = GetSetFunction(obj,initialBeaconType,"setApBeaconType",idx);
      if expectedresult in actualresultn1 and actualresultn2 :
          tdkTestObj.setResultStatus("SUCCESS");
          print "Successfully reverted ApSecurityModeEnabled and ApBeaconType back to initial values";
@@ -142,149 +141,156 @@ def RevertFunction():
 
 if "SUCCESS" in loadmodulestatus.upper():
     obj.setLoadModuleStatus("SUCCESS");
-    expectedresult="SUCCESS";
-    tdkTestObj, actualresult, details = GetSetFunction(obj,"0","getApSecurityModesSupported");
-    if expectedresult in actualresult :
-        tdkTestObj.setResultStatus("SUCCESS");
-	supportedModes = details.split(":")[1].strip();
-        print "**************************************************";
-        print "TEST STEP 1: Get list of Ap Security Modes Supported"
-        print "EXPECTED RESULT 1: Should get the list of Ap Security Modes Supported successfully";
-	print "ACTUAL RESULT 1: Successfully got the Ap Security Modes Supported as %s" %supportedModes;
-        #Get the result of execution
-        print "[TEST EXECUTION RESULT] : SUCCESS";
-        print "**************************************************";
-        tdkTestObj, actualresult, details = GetSetFunction(obj,"0","getApSecurityModeEnabled");
-        if expectedresult in actualresult :
-            tdkTestObj.setResultStatus("SUCCESS");
-            initMode = details.split(":")[1].strip();
-            print "**************************************************";
-            print "TEST STEP 2: Get the initial Ap Security Mode Enabled value";
-            print "EXPECTED RESULT 2: Should get the initial Ap Security Mode Enabled value successfully";
-            print "ACTUAL RESULT 2: Successfully got the Ap Security Mode Enabled value as %s" %initMode;
-            #Get the result of execution
-            print "[TEST EXECUTION RESULT] : SUCCESS";
-            print "**************************************************";
-            tdkTestObj, actualresult, details = GetSetFunction(obj,"0","getApBeaconType");
+
+    tdkTestObjTemp, idx = getIndex(obj, radio);
+    ## Check if a invalid index is returned
+    if idx == -1:
+        print "Failed to get radio index for radio %s\n" %radio;
+        tdkTestObjTemp.setResultStatus("FAILURE");
+    else:
+            expectedresult="SUCCESS";
+            tdkTestObj, actualresult, details = GetSetFunction(obj,"0","getApSecurityModesSupported",idx);
             if expectedresult in actualresult :
                 tdkTestObj.setResultStatus("SUCCESS");
-                initialBeaconType = details.split(":")[1].strip();
+                supportedModes = details.split(":")[1].strip();
                 print "**************************************************";
-                print "TEST STEP 3: Get the initial Ap BeaconType";
-                print "EXPECTED RESULT 3: Should get the initial Ap BeaconType value successfully";
-                print "ACTUAL RESULT 3: Successfully got the Ap BeaconType value as %s" %initialBeaconType;
+                print "TEST STEP 1: Get list of Ap Security Modes Supported"
+                print "EXPECTED RESULT 1: Should get the list of Ap Security Modes Supported successfully";
+                print "ACTUAL RESULT 1: Successfully got the Ap Security Modes Supported as %s" %supportedModes;
                 #Get the result of execution
                 print "[TEST EXECUTION RESULT] : SUCCESS";
                 print "**************************************************";
-                dict_valid = {'None':'None','WPA-Personal':'WPA','WPA-WPA2-Personal':'WPAand11i','WPA2-Personal':'11i'}
+                tdkTestObj, actualresult, details = GetSetFunction(obj,"0","getApSecurityModeEnabled",idx);
+                if expectedresult in actualresult :
+                    tdkTestObj.setResultStatus("SUCCESS");
+                    initMode = details.split(":")[1].strip();
+                    print "**************************************************";
+                    print "TEST STEP 2: Get the initial Ap Security Mode Enabled value";
+                    print "EXPECTED RESULT 2: Should get the initial Ap Security Mode Enabled value successfully";
+                    print "ACTUAL RESULT 2: Successfully got the Ap Security Mode Enabled value as %s" %initMode;
+                    #Get the result of execution
+                    print "[TEST EXECUTION RESULT] : SUCCESS";
+                    print "**************************************************";
+                    tdkTestObj, actualresult, details = GetSetFunction(obj,"0","getApBeaconType",idx);
+                    if expectedresult in actualresult :
+                        tdkTestObj.setResultStatus("SUCCESS");
+                        initialBeaconType = details.split(":")[1].strip();
+                        print "**************************************************";
+                        print "TEST STEP 3: Get the initial Ap BeaconType";
+                        print "EXPECTED RESULT 3: Should get the initial Ap BeaconType value successfully";
+                        print "ACTUAL RESULT 3: Successfully got the Ap BeaconType value as %s" %initialBeaconType;
+                        #Get the result of execution
+                        print "[TEST EXECUTION RESULT] : SUCCESS";
+                        print "**************************************************";
+                        dict_valid = {'None':'None','WPA-Personal':'WPA','WPA-WPA2-Personal':'WPAand11i','WPA2-Personal':'11i'}
 
-                for setMode in supportedModes.split(','):
-                    if setMode == initMode :
-                        continue;
-                    else :
-                        print "Ap Security Mode Enabled value to be set is %s" %setMode;
-                        if setMode in dict_valid :
-                            print "Ap Security Mode Enabled value to be set is within the valid securityMode:beaconType mapping list";
-                            setBeaconType = dict_valid.get(setMode);
-                            print "Ap BeaconType to be set is %s for the corresponding Ap Security Mode Enabled value : %s"%(setBeaconType,setMode);
-                            tdkTestObj, actualresult1, details1 = GetSetFunction(obj,setMode,"setApSecurityModeEnabled");
-                            tdkTestObj, actualresult2, details2 = GetSetFunction(obj,setBeaconType,"setApBeaconType");
-                            if expectedresult in actualresult1 and actualresult2 :
-                                tdkTestObj.setResultStatus("SUCCESS");
-                                print "**************************************************";
-                                print "TEST STEP 4: To set Ap Security Mode Enabled and Ap BeaconType to other values";
-                                print "EXPECTED RESULT 4: To successfully set the Ap Security Mode Enabled and Ap BeaconType to other values";
-                                print "ACTUAL RESULT 4: Successfully set the Ap Security Mode Enabled and Ap BeaconType to other values";
-                                #Get the result of execution
-                                print "[TEST EXECUTION RESULT] : SUCCESS";
-                                print "**************************************************";
-                                time.sleep(10);
-                                tdkTestObj, actualresult3, details3 = GetSetFunction(obj,"0","getApSecurityModeEnabled");
-                                tdkTestObj, actualresult4, details4 = GetSetFunction(obj,"0","getApBeaconType");
-                                if expectedresult in actualresult3 and actualresult4 :
-                                    finalMode = details3.split(":")[1].strip();
-                                    finalBeaconType = details4.split(":")[1].strip();
-                                    tdkTestObj.setResultStatus("SUCCESS");
-                                    print "**************************************************";
-                                    print "TEST STEP 5: To get Ap Security Mode Enabled and Ap BeaconType values after the set operation";
-                                    print "EXPECTED RESULT 5: To successfully get the Ap Security Mode Enabled and Ap BeaconType values";
-                                    print "ACTUAL RESULT 5: Successfully got the Ap Security Mode Enabled and Ap BeaconType values as %s and %s"%(finalMode,finalBeaconType);
-                                    #Get the result of execution
-                                    print "[TEST EXECUTION RESULT] : SUCCESS";
-                                    print "**************************************************";
-                                    print "setMode : ",setMode;
-                                    print "getMode : ",finalMode;
-                                    print "setBeaconType : ",setBeaconType;
-                                    print "getBeaconType : ",finalBeaconType;
-                                    if setMode == finalMode and setBeaconType == finalBeaconType :
+                        for setMode in supportedModes.split(','):
+                            if setMode == initMode :
+                                continue;
+                            else :
+                                print "Ap Security Mode Enabled value to be set is %s" %setMode;
+                                if setMode in dict_valid :
+                                    print "Ap Security Mode Enabled value to be set is within the valid securityMode:beaconType mapping list";
+                                    setBeaconType = dict_valid.get(setMode);
+                                    print "Ap BeaconType to be set is %s for the corresponding Ap Security Mode Enabled value : %s"%(setBeaconType,setMode);
+                                    tdkTestObj, actualresult1, details1 = GetSetFunction(obj,setMode,"setApSecurityModeEnabled",idx);
+                                    tdkTestObj, actualresult2, details2 = GetSetFunction(obj,setBeaconType,"setApBeaconType",idx);
+                                    if expectedresult in actualresult1 and actualresult2 :
                                         tdkTestObj.setResultStatus("SUCCESS");
                                         print "**************************************************";
-                                        print "TEST STEP 6: Compare the set and get values of Ap Security Mode Enabled and Ap BeaconType";
-                                        print "EXPECTED RESULT 6: Set and get values of Ap Security Mode Enabled and Ap BeaconType should be same";
-                                        print "ACTUAL RESULT 6:  Set and get values of Ap Security Mode Enabled and Ap BeaconType are equal";
+                                        print "TEST STEP 4: To set Ap Security Mode Enabled and Ap BeaconType to other values";
+                                        print "EXPECTED RESULT 4: To successfully set the Ap Security Mode Enabled and Ap BeaconType to other values";
+                                        print "ACTUAL RESULT 4: Successfully set the Ap Security Mode Enabled and Ap BeaconType to other values";
                                         #Get the result of execution
                                         print "[TEST EXECUTION RESULT] : SUCCESS";
                                         print "**************************************************";
+                                        time.sleep(10);
+                                        tdkTestObj, actualresult3, details3 = GetSetFunction(obj,"0","getApSecurityModeEnabled",idx);
+                                        tdkTestObj, actualresult4, details4 = GetSetFunction(obj,"0","getApBeaconType",idx);
+                                        if expectedresult in actualresult3 and actualresult4 :
+                                            finalMode = details3.split(":")[1].strip();
+                                            finalBeaconType = details4.split(":")[1].strip();
+                                            tdkTestObj.setResultStatus("SUCCESS");
+                                            print "**************************************************";
+                                            print "TEST STEP 5: To get Ap Security Mode Enabled and Ap BeaconType values after the set operation";
+                                            print "EXPECTED RESULT 5: To successfully get the Ap Security Mode Enabled and Ap BeaconType values";
+                                            print "ACTUAL RESULT 5: Successfully got the Ap Security Mode Enabled and Ap BeaconType values as %s and %s"%(finalMode,finalBeaconType);
+                                            #Get the result of execution
+                                            print "[TEST EXECUTION RESULT] : SUCCESS";
+                                            print "**************************************************";
+                                            print "setMode : ",setMode;
+                                            print "getMode : ",finalMode;
+                                            print "setBeaconType : ",setBeaconType;
+                                            print "getBeaconType : ",finalBeaconType;
+                                            if setMode == finalMode and setBeaconType == finalBeaconType :
+                                                tdkTestObj.setResultStatus("SUCCESS");
+                                                print "**************************************************";
+                                                print "TEST STEP 6: Compare the set and get values of Ap Security Mode Enabled and Ap BeaconType";
+                                                print "EXPECTED RESULT 6: Set and get values of Ap Security Mode Enabled and Ap BeaconType should be same";
+                                                print "ACTUAL RESULT 6:  Set and get values of Ap Security Mode Enabled and Ap BeaconType are equal";
+                                                #Get the result of execution
+                                                print "[TEST EXECUTION RESULT] : SUCCESS";
+                                                print "**************************************************";
+                                            else :
+                                                tdkTestObj.setResultStatus("FAILURE");
+                                                print "**************************************************";
+                                                print "TEST STEP 6: Compare the set and get values of Ap Security Mode Enabled and Ap BeaconType";
+                                                print "EXPECTED RESULT 6: Set and get values of Ap Security Mode Enabled and Ap BeaconType should be same";
+                                                print "ACTUAL RESULT 6:  Set and get values of Ap Security Mode Enabled and Ap BeaconType are NOT equal";
+                                                #Get the result of execution
+                                                print "[TEST EXECUTION RESULT] : FAILURE";
+                                                print "**************************************************";
+                                            #Revert the ApSecurityModeEnabled and ApBeaconType back to initial value
+                                            RevertFunction(idx);
+                                        else :
+                                            tdkTestObj.setResultStatus("FAILURE");
+                                            print "**************************************************";
+                                            print "TEST STEP 5: To get Ap Security Mode Enabled and Ap BeaconType values after the set operation";
+                                            print "EXPECTED RESULT 5: To successfully get the Ap Security Mode Enabled and Ap BeaconType values";
+                                            print "ACTUAL RESULT 5: Failed to get the Ap Security Mode Enabled and Ap BeaconType values after set operation";
+                                            #Get the result of execution
+                                            print "[TEST EXECUTION RESULT] : FAILURE";
+                                            print "**************************************************";
+                                            RevertFunction(idx);
                                     else :
                                         tdkTestObj.setResultStatus("FAILURE");
                                         print "**************************************************";
-                                        print "TEST STEP 6: Compare the set and get values of Ap Security Mode Enabled and Ap BeaconType";
-                                        print "EXPECTED RESULT 6: Set and get values of Ap Security Mode Enabled and Ap BeaconType should be same";
-                                        print "ACTUAL RESULT 6:  Set and get values of Ap Security Mode Enabled and Ap BeaconType are NOT equal";
+                                        print "TEST STEP 4: To set Ap Security Mode Enabled and Ap BeaconType to other values";
+                                        print "EXPECTED RESULT 4: To successfully set the Ap Security Mode Enabled and Ap BeaconType to other values";
+                                        print "ACTUAL RESULT 4: Failed to set the Ap Security Mode Enabled and Ap BeaconType to other values";
                                         #Get the result of execution
                                         print "[TEST EXECUTION RESULT] : FAILURE";
                                         print "**************************************************";
-                                    #Revert the ApSecurityModeEnabled and ApBeaconType back to initial value
-                                    RevertFunction();
                                 else :
                                     tdkTestObj.setResultStatus("FAILURE");
-                                    print "**************************************************";
-                                    print "TEST STEP 5: To get Ap Security Mode Enabled and Ap BeaconType values after the set operation";
-                                    print "EXPECTED RESULT 5: To successfully get the Ap Security Mode Enabled and Ap BeaconType values";
-                                    print "ACTUAL RESULT 5: Failed to get the Ap Security Mode Enabled and Ap BeaconType values after set operation";
-                                    #Get the result of execution
-                                    print "[TEST EXECUTION RESULT] : FAILURE";
-                                    print "**************************************************";
-                                    RevertFunction();
-                            else :
-                                tdkTestObj.setResultStatus("FAILURE");
-                                print "**************************************************";
-                                print "TEST STEP 4: To set Ap Security Mode Enabled and Ap BeaconType to other values";
-                                print "EXPECTED RESULT 4: To successfully set the Ap Security Mode Enabled and Ap BeaconType to other values";
-                                print "ACTUAL RESULT 4: Failed to set the Ap Security Mode Enabled and Ap BeaconType to other values";
-                                #Get the result of execution
-                                print "[TEST EXECUTION RESULT] : FAILURE";
-                                print "**************************************************";
-                        else :
-                            tdkTestObj.setResultStatus("FAILURE");
-                            print "Ap Security Mode Enabled value to be set is not within the valid securityMode:beaconType mapping list";
-                    break;
+                                    print "Ap Security Mode Enabled value to be set is not within the valid securityMode:beaconType mapping list";
+                            break;
+                    else :
+                        tdkTestObj.setResultStatus("FAILURE");
+                        print "**************************************************";
+                        print "TEST STEP 3: Get the initial Ap BeaconType";
+                        print "EXPECTED RESULT 3: Should get the initial Ap BeaconType value successfully";
+                        print "ACTUAL RESULT 3: Failed to get the Ap BeaconType value";
+                        #Get the result of execution
+                        print "[TEST EXECUTION RESULT] : FAILURE";
+                        print "**************************************************";
+                else :
+                    tdkTestObj.setResultStatus("FAILURE");
+                    print "**************************************************";
+                    print "TEST STEP 2: Get the initial Ap Security Mode Enabled value";
+                    print "EXPECTED RESULT 2: Should get the initial Ap Security Mode Enabled value successfully";
+                    print "ACTUAL RESULT 2: Failed to get the Ap Security Mode Enabled value";
+                    #Get the result of execution
+                    print "[TEST EXECUTION RESULT] : FAILURE";
+                    print "**************************************************";
             else :
                 tdkTestObj.setResultStatus("FAILURE");
-                print "**************************************************";
-                print "TEST STEP 3: Get the initial Ap BeaconType";
-                print "EXPECTED RESULT 3: Should get the initial Ap BeaconType value successfully";
-                print "ACTUAL RESULT 3: Failed to get the Ap BeaconType value";
+                print "TEST STEP 1: Get list of Ap Security Modes Supported"
+                print "EXPECTED RESULT 1: Should get the list of Ap Security Modes Supported successfully";
+                print "ACTUAL RESULT 1: Failed to get the Ap Security Modes Supported";
                 #Get the result of execution
                 print "[TEST EXECUTION RESULT] : FAILURE";
                 print "**************************************************";
-        else :
-            tdkTestObj.setResultStatus("FAILURE");
-            print "**************************************************";
-            print "TEST STEP 2: Get the initial Ap Security Mode Enabled value";
-            print "EXPECTED RESULT 2: Should get the initial Ap Security Mode Enabled value successfully";
-            print "ACTUAL RESULT 2: Failed to get the Ap Security Mode Enabled value";
-            #Get the result of execution
-            print "[TEST EXECUTION RESULT] : FAILURE";
-            print "**************************************************";
-    else :
-        tdkTestObj.setResultStatus("FAILURE");
-        print "TEST STEP 1: Get list of Ap Security Modes Supported"
-        print "EXPECTED RESULT 1: Should get the list of Ap Security Modes Supported successfully";
-        print "ACTUAL RESULT 1: Failed to get the Ap Security Modes Supported";
-        #Get the result of execution
-        print "[TEST EXECUTION RESULT] : FAILURE";
-        print "**************************************************";
     obj.unloadModule("wifihal");
 else:
     print "Failed to load the module";

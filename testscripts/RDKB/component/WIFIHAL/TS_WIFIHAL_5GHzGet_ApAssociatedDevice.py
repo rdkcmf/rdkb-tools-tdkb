@@ -63,11 +63,11 @@ methodName = getApAssociatedDevice</input_parameters>
 </xml>
 
 '''
-# use tdklib library,which provides a wrapper for tdk testcase script 
-import tdklib; 
+# use tdklib library,which provides a wrapper for tdk testcase script
+import tdklib;
 from wifiUtility import *;
 import re;
-
+radio5 = "5G";
 #Test component to be tested
 obj = tdklib.TDKScriptingLibrary("wifihal","1");
 
@@ -83,49 +83,54 @@ print "[LIB LOAD STATUS]  :  %s" %loadmodulestatus
 if "SUCCESS" in loadmodulestatus.upper():
     #calling own primitive function
     obj.setLoadModuleStatus("SUCCESS");
-    tdkTestObj = obj.createTestStep('WIFIHAL_GetApAssociatedDevice');
-    tdkTestObj.addParameter("apIndex",1);
-    expectedresult="SUCCESS";
-    tdkTestObj.executeTestCase(expectedresult);
-    actualresult = tdkTestObj.getResult();
-    details = tdkTestObj.getResultDetails();
-    print "Details: ",details    
-    if expectedresult in actualresult:
-        print "TEST STEP 1: Get the AssociatedDevices"
-        print "EXPECTED RESULT 1: Should get the total number of associated devices"
-        print "ACTUAL RESULT 1: wifi_getApAssociatedDevices call success"
-        print "TEST EXECUTION RESULT :SUCCESS"
 
-        tdkTestObj.setResultStatus("SUCCESS");
-        outputList = details.split("=")[1].strip()
-        if "," in outputList:
-            outputValue = outputList.split(",")[0].strip()
+    #Validate wifi_getApAssociatedDeviceDiagnosticResult2() for 5GHZ
+    tdkTestObjTemp, idx = getIndex(obj, radio5);
+    ## Check if a invalid index is returned
+    if idx == -1:
+        print "Failed to get radio index for radio %s\n" %radio5;
+        tdkTestObjTemp.setResultStatus("FAILURE");
+    else:
+        tdkTestObj = obj.createTestStep('WIFIHAL_GetApAssociatedDevice');
+        tdkTestObj.addParameter("apIndex",idx);
+        expectedresult="SUCCESS";
+        tdkTestObj.executeTestCase(expectedresult);
+        actualresult = tdkTestObj.getResult();
+        details = tdkTestObj.getResultDetails();
+        print "Details: ",details
+        if expectedresult in actualresult:
+           print "TEST STEP 1: Get the AssociatedDevices"
+           print "EXPECTED RESULT 1: Should get the total number of associated devices"
+           print "ACTUAL RESULT 1: wifi_getApAssociatedDevices call success"
+           print "TEST EXECUTION RESULT :SUCCESS"
+
+           tdkTestObj.setResultStatus("SUCCESS");
+           outputList = details.split("=")[1].strip()
+           if "," in outputList:
+               outputValue = outputList.split(",")[0].strip()
+           else:
+               outputValue = outputList.split(":Value")[0].strip()
+
+           if re.match("[0-9a-f]{2}([-:])[0-9a-f]{2}(\\1[0-9a-f]{2}){4}$", outputValue.lower()):
+               print "TEST STEP 2: Check associated devices MAC"
+               print "EXPECTED RESULT 2: Should get the list of associated devices MAC"
+               print "ACTUAL RESULT 2: List of Associated Devices MAC:",outputList.split(":Value")[0].strip()
+               print "TEST EXECUTION RESULT :SUCCESS"
+               tdkTestObj.setResultStatus("SUCCESS");
+           else:
+               print "TEST STEP 2: Check associated devices MAC"
+               print "EXPECTED RESULT 2: Should get the list of associated devices MAC"
+               print "ACTUAL RESULT 2: List of Associated Devices:",outputList
+               print "No Device Connected or Invalid Format"
+               print "TEST EXECUTION RESULT :FAILURE"
+               tdkTestObj.setResultStatus("FAILURE");
         else:
-            outputValue = outputList.split(":Value")[0].strip()
-
-        if re.match("[0-9a-f]{2}([-:])[0-9a-f]{2}(\\1[0-9a-f]{2}){4}$", outputValue.lower()):
-
-            print "TEST STEP 2: Check associated devices MAC"
-            print "EXPECTED RESULT 2: Should get the list of associated devices MAC"
-            print "ACTUAL RESULT 2: List of Associated Devices MAC:",outputList.split(":Value")[0].strip()
-            print "TEST EXECUTION RESULT :SUCCESS"
-            tdkTestObj.setResultStatus("SUCCESS");
-        else:           
-            print "TEST STEP 2: Check associated devices MAC"
-            print "EXPECTED RESULT 2: Should get the list of associated devices MAC"
-            print "ACTUAL RESULT 2: List of Associated Devices:",outputList
-            print "No Device Connected or Invalid Format"
+            print "TEST STEP 1: Get the AssociatedDevices"
+            print "EXPECTED RESULT 1: Should get the total number of associated devices"
+            print "ACTUAL RESULT 1: wifi_getApAssociatedDevices call failed"
             print "TEST EXECUTION RESULT :FAILURE"
             tdkTestObj.setResultStatus("FAILURE");
-
-    else:
-        print "TEST STEP 1: Get the AssociatedDevices"
-        print "EXPECTED RESULT 1: Should get the total number of associated devices"
-        print "ACTUAL RESULT 1: wifi_getApAssociatedDevices call failed"
-        print "TEST EXECUTION RESULT :FAILURE"
-        tdkTestObj.setResultStatus("FAILURE");
     obj.unloadModule("wifihal");
-
 else:
     print "Failed to load wifi module";
     obj.setLoadModuleStatus("FAILURE");

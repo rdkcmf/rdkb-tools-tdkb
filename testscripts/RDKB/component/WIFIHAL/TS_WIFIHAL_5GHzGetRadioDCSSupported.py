@@ -85,7 +85,7 @@ radioIndex : 1</input_parameters>
 # use tdklib library,which provides a wrapper for tdk testcase script
 import tdklib;
 from wifiUtility import *
-
+radio5 = "5G";
 #Test component to be tested
 obj = tdklib.TDKScriptingLibrary("wifihal","1");
 
@@ -101,27 +101,30 @@ print "[LIB LOAD STATUS]  :  %s" %loadmodulestatus;
 
 if "SUCCESS" in loadmodulestatus.upper():
     obj.setLoadModuleStatus("SUCCESS");
-
-    expectedresult="SUCCESS";
-    radioIndex = 1
-    getMethod = "getRadioDCSSupported"
-    primitive = 'WIFIHAL_GetOrSetParamBoolValue'
-
-    #Calling the method from wifiUtility to check whether DCS is Supported or not
-    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, 0, getMethod)
-    if expectedresult in actualresult :
-        tdkTestObj.setResultStatus("SUCCESS");
-        enable = details.split(":")[1].strip()
-        if "Enabled" in enable:
-            print "DCS is Enabled for Radio 5GHZ"
-        else:
-            print "DCS is Disabled for Radio 5GHZ"
+    #Validate wifi_getApAssociatedDeviceDiagnosticResult2() for 5GHZ
+    tdkTestObjTemp, idx = getIndex(obj, radio5);
+    ## Check if a invalid index is returned
+    if idx == -1:
+        print "Failed to get radio index for radio %s\n" %radio5;
+        tdkTestObjTemp.setResultStatus("FAILURE");
     else:
-        print "getRadioDCSSupported() failed"
-        tdkTestObj.setResultStatus("FAILURE");
+        expectedresult="SUCCESS";
+        getMethod = "getRadioDCSSupported"
+        primitive = 'WIFIHAL_GetOrSetParamBoolValue'
 
+        #Calling the method from wifiUtility to check whether DCS is Supported or not
+        tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, idx, 0, getMethod)
+        if expectedresult in actualresult :
+           tdkTestObj.setResultStatus("SUCCESS");
+           enable = details.split(":")[1].strip()
+           if "Enabled" in enable:
+               print "DCS is Enabled in 5GHz"
+           else:
+               print "DCS is Disabled in 5GHz"
+        else:
+            print "getRadioDCSSupported() failed"
+            tdkTestObj.setResultStatus("FAILURE");
     obj.unloadModule("wifihal");
-
 else:
     print "Failed to load wifi module";
     obj.setLoadModuleStatus("FAILURE");
