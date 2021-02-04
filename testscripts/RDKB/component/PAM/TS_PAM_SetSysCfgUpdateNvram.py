@@ -48,7 +48,7 @@
   <skip>false</skip>
   <!--  -->
   <box_types>
-    <box_type>Broadband</box_type>
+    <box_type></box_type>
     <!--  -->
   </box_types>
   <rdk_versions>
@@ -59,7 +59,7 @@
     <test_case_id>TC_PAM_197</test_case_id>
     <test_objective>To validate the Syscfg.UpdateNvram parameter set using syscfg files availablity </test_objective>
     <test_type>Positive</test_type>
-    <test_setup>Broadband</test_setup>
+    <test_setup></test_setup>
     <pre_requisite>1.Ccsp Components  should be in a running state of DUT that includes component under test Cable Modem
 2.TDK Agent should be in running state or invoke it through StartTdk.sh script</pre_requisite>
     <api_or_interface_used>N/A</api_or_interface_used>
