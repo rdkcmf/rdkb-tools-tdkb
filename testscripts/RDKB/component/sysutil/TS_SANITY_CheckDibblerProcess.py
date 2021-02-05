@@ -237,7 +237,7 @@ if "SUCCESS" in loadmodulestatus.upper():
                  #Get the result of execution
                  print "[TEST EXECUTION RESULT] : FAILURE";
           else:
-              tdkTestObj.setResultStatu("FAILURE");
+              tdkTestObj.setResultStatus("FAILURE");
               print "TEST STEP 3: Check for server.pid file presence";
               print "EXPECTED RESULT 3:server.pid file should be present";
               print "ACTUAL RESULT 3:server.pid file is not present";
