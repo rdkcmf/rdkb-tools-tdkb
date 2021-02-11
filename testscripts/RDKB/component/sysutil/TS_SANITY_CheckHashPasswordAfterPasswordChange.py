@@ -138,7 +138,7 @@ if "SUCCESS" in sysloadmodulestatus.upper() and "SUCCESS" in pamloadmodulestatus
         hash_password=(hash_password_3_bkup_details.split('='))
         hash_password_3_bkup = hash_password[1]
         #Change the admin password
-        password = "test_password1"
+        password = "testPassword1"
         tdkutility.changeAdminPassword(pamobj,password)
         
         print "Invoking function to get hash password"
@@ -179,7 +179,7 @@ if "SUCCESS" in sysloadmodulestatus.upper() and "SUCCESS" in pamloadmodulestatus
         print "[TEST EXECUTION RESULT] : SUCCESS"
 
         #Change the admin password
-        password = "test_password1"
+        password = "testPassword1"
         tdkutility.changeAdminPassword(pamobj,password);
         
         print "Invoking function to get hash password"
@@ -199,7 +199,7 @@ if "SUCCESS" in sysloadmodulestatus.upper() and "SUCCESS" in pamloadmodulestatus
             hash_password=(hash_password_3_bkup_details.split('='))
             hash_password_3_bkup = hash_password[1]
             #Change the admin password
-            password = "test_password2"
+            password = "testPassword2"
             tdkutility.changeAdminPassword(pamobj,password);
             
             print "Invoking function to get hash password"

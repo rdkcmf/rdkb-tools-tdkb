@@ -154,7 +154,7 @@ if "SUCCESS" in sysloadmodulestatus.upper() and "SUCCESS" in pamloadmodulestatus
         print "[TEST EXECUTION RESULT] : SUCCESS"
 
         #Change the admin password
-        password = "test_password"
+        password = "testPassword"
         tdkutility.changeAdminPassword(pamobj,password);
         print "Invoking function to get hash password"
         cmd= "cat /tmp/syscfg.db  | grep -i hash_password_3";
