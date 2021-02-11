@@ -122,7 +122,7 @@ if "SUCCESS" in loadmodulestatus1.upper() and loadmodulestatus2.upper:
         #Get the result of execution
         print "[TEST EXECUTION RESULT] : SUCCESS"
         #Change the admin password
-        password = "test_password"
+        password = "testPassword"
         tdkutility.changeAdminPassword(obj,password)
         print "Invoking function to get user_password_3 via syscfg get"
         cmd= "syscfg get user_password_3";
