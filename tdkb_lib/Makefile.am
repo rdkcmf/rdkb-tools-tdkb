@@ -22,9 +22,6 @@ AM_CFLAGS += -D_ANSC_USER
 AM_CFLAGS += -D_ANSC_LITTLE_ENDIAN_
 AM_LDFLAGS = -lccsp_common
 if PLATFORM_ENABLED
-AM_LDFLAGS += -lmta_tr181
-AM_LDFLAGS += -lcm_tr181
-AM_LDFLAGS += -lcm_mgnt
 AM_LDFLAGS += -ltr181
 endif
 AM_CFLAGS += -DeRT=$(ERT_VALUE)
@@ -44,7 +41,7 @@ else
 libtdkagentssp_la_SOURCES = src/ssp_messagebus_interface.c src/ssp_tdk_mbus_wrp.c src/ssp_tdk_mbus_lib.c src/ssp_action.c src/ssp_main.c src/ssp_tdk_CosaCM_wrp.c src/ssp_tdk_wrp.c src/ssp_tdk_CosaMTA_wrp.c src/ssp_tdk_WiFi_wrp.c src/ssp_tdk_cmhal_wrp.c src/ssp_tdk_Ethsw_wrp.c src/ssp_tdk_dhcp_hal_wrp.c src/ssp_tdk_platform_hal_wrp.c src/ssp_tdk_mocahal_wrp.c src/ssp_tdk_mtahal_wrp.c src/ssp_tdk_eponhal_wrp.c src/ssp_tdk_mso_mgmt_hal_wrp.c src/ssp_tdk_blehal_wrp.c src/ssp_tdk_rbus_wrp.c
 endif
 if PLATFORM_ENABLED
-libtdkagentssp_la_LDFLAGS =  -lccsp_common -lcm_mgnt -lcm_tr181 -lmta_tr181 -ltr181 -ldmltad -lhal_wifi -lhal_moca -lhal_mta -lrbus
+libtdkagentssp_la_LDFLAGS =  -lccsp_common -ltr181 -ldmltad -lhal_wifi -lrbus
 else
 libtdkagentssp_la_LDFLAGS =  -lccsp_common -lhal_wifi -lrbus
 endif
