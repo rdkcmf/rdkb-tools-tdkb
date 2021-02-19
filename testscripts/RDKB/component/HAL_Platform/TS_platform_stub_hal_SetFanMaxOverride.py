@@ -141,6 +141,7 @@ if "SUCCESS" in (loadmodulestatus.upper() and  sysyutilmodulestatus.upper()):
           #toggling the value
           tdkTestObj = obj.createTestStep("platform_stub_hal_setFanMaxOverride");
           tdkTestObj.addParameter("flag",setValue);
+          tdkTestObj.addParameter("fanIndex", 0);
           expectedresult="SUCCESS";
           tdkTestObj.executeTestCase(expectedresult);
           actualresult = tdkTestObj.getResult();
@@ -253,6 +254,7 @@ if "SUCCESS" in (loadmodulestatus.upper() and  sysyutilmodulestatus.upper()):
              #Reverting the value
              tdkTestObj = obj.createTestStep("platform_stub_hal_setFanMaxOverride");
              tdkTestObj.addParameter("flag",revertValue);
+             tdkTestObj.addParameter("fanIndex", 0);
              expectedresult="SUCCESS";
              tdkTestObj.executeTestCase(expectedresult);
              actualresult = tdkTestObj.getResult();
