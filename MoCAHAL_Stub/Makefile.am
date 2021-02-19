@@ -20,6 +20,7 @@ AM_CPPFLAGS = ${COPTS} -fPIC -DDEBUG_LEVEL_TRACE
 AM_CXXFLAGS = -I${PKG_CONFIG_SYSROOT_DIR}$(includedir) -I${PKG_CONFIG_SYSROOT_DIR}$(includedir)/ccsp -I${top_srcdir}/MoCAHAL_Stub/include -I${top_srcdir}/agent/include -I${top_srcdir}/tdkb_lib/include
 lib_LTLIBRARIES = libmocahalstub.la
 libmocahalstub_la_SOURCES = src/MoCAHAL.cpp
+libmocahalstub_la_LIBADD = -lhal_moca
 libmocahalstub_la_DEPENDENCIES= ${top_builddir}/tdkb_lib/.libs/libtdkagentssp.la
 libmocahalstub_la_LIBADD =  $(libmocahalstub_la_DEPENDENCIES)
 libmocahalstub_la_includedir = ${includedir}
