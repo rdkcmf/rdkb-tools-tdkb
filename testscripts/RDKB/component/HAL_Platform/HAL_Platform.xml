@@ -239,6 +239,7 @@
         <function>platform_stub_hal_setFanMaxOverride</function>
         <parameters>
           <parameter name="flag" value="0"/>
+          <parameter name="fanIndex" value=""/>
         </parameters>
       </primitiveTest>
       <primitiveTest name="platform_stub_hal_getFactoryCmVariant" id="" version="1">
