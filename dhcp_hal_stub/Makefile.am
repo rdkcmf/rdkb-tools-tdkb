@@ -25,6 +25,6 @@ lib_LTLIBRARIES = libdhcpstub.la
 libdhcpstub_la_SOURCES = src/dhcp_stub_hal.cpp
 libdhcpstub_la_LIBADD = -lapi_dhcpv4c
 libdhcpstub_la_DEPENDENCIES= ${top_builddir}/tdkb_lib/.libs/libtdkagentssp.la
-libdhcpstub_la_LIBADD =  $(libdhcpstub_la_DEPENDENCIES)
+libdhcpstub_la_LIBADD +=  $(libdhcpstub_la_DEPENDENCIES)
 libdhcpstub_la_includedir = ${includedir}
 libdhcpstub_la_include_HEADERS = ${top_srcdir}/dhcp_hal_stub/include/dhcp_stub_hal.h
