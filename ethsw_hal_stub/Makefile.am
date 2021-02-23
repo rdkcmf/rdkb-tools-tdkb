@@ -25,6 +25,6 @@ lib_LTLIBRARIES = libhalethswstub.la
 libhalethswstub_la_SOURCES = src/ethsw_stub_hal.cpp
 libhalethswstub_la_LIBADD = -lhal_ethsw
 libhalethswstub_la_DEPENDENCIES= ${top_builddir}/tdkb_lib/.libs/libtdkagentssp.la
-libhalethswstub_la_LIBADD =  $(libhalethswstub_la_DEPENDENCIES)
+libhalethswstub_la_LIBADD +=  $(libhalethswstub_la_DEPENDENCIES)
 libhalethswstub_la_includedir = ${includedir}
 libhalethswstub_la_include_HEADERS = ${top_srcdir}/ethsw_hal_stub/include/ethsw_stub_hal.h

@@ -25,6 +25,6 @@ lib_LTLIBRARIES = libhalplatformstub.la
 libhalplatformstub_la_SOURCES = src/platform_stub_hal.cpp
 libhalplatformstub_la_LIBADD = -lhal_platform
 libhalplatformstub_la_DEPENDENCIES= ${top_builddir}/tdkb_lib/.libs/libtdkagentssp.la
-libhalplatformstub_la_LIBADD =  $(libhalplatformstub_la_DEPENDENCIES)
+libhalplatformstub_la_LIBADD +=  $(libhalplatformstub_la_DEPENDENCIES)
 libhalplatformstub_la_includedir = ${includedir}
 libhalplatformstub_la_include_HEADERS = ${top_srcdir}/platform_hal_stub/include/platform_stub_hal.h

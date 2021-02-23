@@ -22,7 +22,7 @@ lib_LTLIBRARIES = libmocahalstub.la
 libmocahalstub_la_SOURCES = src/MoCAHAL.cpp
 libmocahalstub_la_LIBADD = -lhal_moca
 libmocahalstub_la_DEPENDENCIES= ${top_builddir}/tdkb_lib/.libs/libtdkagentssp.la
-libmocahalstub_la_LIBADD =  $(libmocahalstub_la_DEPENDENCIES)
+libmocahalstub_la_LIBADD +=  $(libmocahalstub_la_DEPENDENCIES)
 libmocahalstub_la_includedir = ${includedir}
 libmocahalstub_la_include_HEADERS = ${top_srcdir}/MoCAHAL_Stub/include/MoCAHAL.h
 

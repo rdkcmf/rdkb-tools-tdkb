@@ -24,9 +24,9 @@ AM_CXXFLAGS = -I${PKG_CONFIG_SYSROOT_DIR}$(includedir) \
 
 lib_LTLIBRARIES = libmso_mgmt_halstub.la
 libmso_mgmt_halstub_la_SOURCES = src/mso_mgmt_hal_stub.cpp
-libmso_mgmt_halstub_la_LIBADD = -lhal_mso_mgmt
+libmso_mgmt_halstub_la_LIBADD = -lhal_msomgmt
 libmso_mgmt_halstub_la_DEPENDENCIES= ${top_builddir}/tdkb_lib/.libs/libtdkagentssp.la
-libmso_mgmt_halstub_la_LIBADD =  $(libmsomgmthalstub_la_DEPENDENCIES)
+libmso_mgmt_halstub_la_LIBADD +=  $(libmsomgmthalstub_la_DEPENDENCIES)
 libmso_mgmt_halstub_la_includedir = ${includedir}
 libmso_mgmt_halstub_la_include_HEADERS = ${top_srcdir}/mso_mgmt_hal_stub/include/mso_mgmt_hal_stub.h
 
