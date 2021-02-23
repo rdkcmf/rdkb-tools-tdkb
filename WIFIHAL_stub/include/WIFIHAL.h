@@ -336,6 +336,15 @@ typedef struct {
     wifi_ru_allocation_t    cli_UplinkRuAllocations[MAX_RU_ALLOCATIONS];
 } wifi_ul_mu_stats_t;
 
+typedef struct _wifi_GASConfiguration_t{   // Values correspond to the dot11GASAdvertisementEntry field definitions; see 802.11-2016 Annex C.3.
+    unsigned int AdvertisementID;
+    bool PauseForServerResponse;
+    unsigned int ResponseTimeout;
+    unsigned int ComeBackDelay;
+    unsigned int ResponseBufferingTime;
+    unsigned int QueryResponseLengthLimit;
+} wifi_GASConfiguration_t;
+
 typedef struct _wifi_associated_dev3
 {
         mac_address_t cli_MACAddress;
@@ -521,6 +530,8 @@ extern "C"
     int ssp_WIFIHALGetBTMClientCapabilityList(int apIndex, wifi_BTMCapabilities_t* btm_caps);
     int ssp_WIFIHALGetApRoamingConsortiumElement(int apIndex, wifi_roamingConsortiumElement_t* roam);
     int ssp_WIFIHALPushApRoamingConsortiumElement(int apIndex, wifi_roamingConsortiumElement_t* roam);
+    int ssp_WIFIHALGetBSSColorValue(int radioIndex, unsigned char *color);
+    int ssp_WIFIHALApplyGASConfiguration(wifi_GASConfiguration_t *GASConfiguration);
 };
 
 class RDKTestAgent;
@@ -589,6 +600,8 @@ class WIFIHAL : public RDKTestStubInterface, public AbstractServer<WIFIHAL>
                   this->bindAndAddMethod(Procedure("WIFIHAL_GetBTMClientCapabilityList", PARAMS_BY_NAME, JSON_STRING, "count", JSON_INTEGER, "apIndex", JSON_INTEGER, "clientMAC", JSON_STRING, NULL), &WIFIHAL::WIFIHAL_GetBTMClientCapabilityList);
                   this->bindAndAddMethod(Procedure("WIFIHAL_GetApRoamingConsortiumElement", PARAMS_BY_NAME, JSON_STRING, "apIndex", JSON_INTEGER, NULL), &WIFIHAL::WIFIHAL_GetApRoamingConsortiumElement);
                   this->bindAndAddMethod(Procedure("WIFIHAL_PushApRoamingConsortiumElement", PARAMS_BY_NAME, JSON_STRING, "apIndex", JSON_INTEGER, "ouiCount", JSON_INTEGER, "ouiList", JSON_STRING, "ouiLen", JSON_STRING, NULL), &WIFIHAL::WIFIHAL_PushApRoamingConsortiumElement);
+                  this->bindAndAddMethod(Procedure("WIFIHAL_GetBSSColorValue", PARAMS_BY_NAME, JSON_STRING,"radioIndex", JSON_INTEGER, "paramType",  JSON_STRING,NULL), &WIFIHAL::WIFIHAL_GetBSSColorValue);
+                  this->bindAndAddMethod(Procedure("WIFIHAL_ApplyGASConfiguration",PARAMS_BY_NAME, JSON_STRING, "advertisementID", JSON_INTEGER, "pauseForServerResponse", JSON_INTEGER, "responseTimeout", JSON_INTEGER, "comeBackDelay", JSON_INTEGER, "responseBufferingTime", JSON_INTEGER, "queryResponseLengthLimit", JSON_INTEGER, NULL), &WIFIHAL::WIFIHAL_ApplyGASConfiguration);
                 }
         /*inherited functions*/
         bool initialize(IN const char* szVersion);
@@ -654,6 +667,8 @@ class WIFIHAL : public RDKTestStubInterface, public AbstractServer<WIFIHAL>
         void WIFIHAL_GetBTMClientCapabilityList(IN const Json::Value& req, OUT Json::Value& response);
         void WIFIHAL_GetApRoamingConsortiumElement(IN const Json::Value& req, OUT Json::Value& response);
         void WIFIHAL_PushApRoamingConsortiumElement(IN const Json::Value& req, OUT Json::Value& response);
+        void WIFIHAL_GetBSSColorValue(IN const Json::Value& req, OUT Json::Value& response);
+        void WIFIHAL_ApplyGASConfiguration(IN const Json::Value& req, OUT Json::Value& response);
 };
 #endif //__WIFIHAL_STUB_H__
 
