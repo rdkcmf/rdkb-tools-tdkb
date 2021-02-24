@@ -446,6 +446,24 @@
           <parameter name="ouiList" value=""/>
         </parameters>
       </primitiveTest>
+      <primitiveTest name="WIFIHAL_GetBSSColorValue" id=" " version="3">
+        <function>WIFIHAL_GetBSSColorValue</function>
+        <parameters>
+          <parameter name="radioIndex" value="0"/>
+          <parameter name="paramType" value="0"/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest name="WIFIHAL_ApplyGASConfiguration" id=" " version="2">
+        <function>WIFIHAL_ApplyGASConfiguration</function>
+        <parameters>
+          <parameter name="advertisementID" value="0"/>
+          <parameter name="pauseForServerResponse" value="0"/>
+          <parameter name="responseTimeout" value="0"/>
+          <parameter name="comeBackDelay" value="0"/>
+          <parameter name="responseBufferingTime" value="0"/>
+          <parameter name="queryResponseLengthLimit" value="0"/>
+        </parameters>
+      </primitiveTest>
     </primitiveTests>
   </module>
 </xml>
