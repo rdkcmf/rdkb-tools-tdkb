@@ -2,7 +2,7 @@
 # If not stated otherwise in this file or this component's Licenses.txt
 # file the following copyright and licenses apply:
 #
-# Copyright 2020 RDK Management
+# Copyright 2021 RDK Management
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -21,23 +21,23 @@
 <xml>
   <id></id>
   <!-- Do not edit id. This will be auto filled while exporting. If you are adding a new script keep the id empty -->
-  <version>3</version>
+  <version>2</version>
   <!-- Do not edit version. This will be auto incremented while updating. If you are adding a new script you can keep the vresion as 1 -->
-  <name>TS_WIFIHAL_GetBSSColor_WithNullBuffer</name>
+  <name>TS_WIFIHAL_WifiInit</name>
   <!-- If you are adding a new script you can specify the script name. Script Name should be unique same as this file name with out .py extension -->
-  <primitive_test_id> </primitive_test_id>
+  <primitive_test_id></primitive_test_id>
   <!-- Do not change primitive_test_id if you are editing an existing script. -->
-  <primitive_test_name>WIFIHAL_GetBSSColorValue</primitive_test_name>
+  <primitive_test_name>WIFIHAL_Init</primitive_test_name>
   <!--  -->
-  <primitive_test_version>8</primitive_test_version>
+  <primitive_test_version>1</primitive_test_version>
   <!--  -->
   <status>FREE</status>
   <!--  -->
-  <synopsis>Validate wifi_getBSSColor() with NULL buffer</synopsis>
+  <synopsis>To initialize the wifi subsystem by invoking wifi_init() HAL api and check the return status.</synopsis>
   <!--  -->
   <groups_id />
   <!--  -->
-  <execution_time>1</execution_time>
+  <execution_time>5</execution_time>
   <!--  -->
   <long_duration>false</long_duration>
   <!--  -->
@@ -50,30 +50,34 @@
   <box_types>
     <box_type>Broadband</box_type>
     <!--  -->
+    <box_type>Emulator</box_type>
+    <!--  -->
+    <box_type>RPI</box_type>
+    <!--  -->
   </box_types>
   <rdk_versions>
     <rdk_version>RDKB</rdk_version>
     <!--  -->
   </rdk_versions>
   <test_cases>
-    <test_case_id>TC_WIFIHAL_474</test_case_id>
-    <test_objective>Validate wifi_getBSSColor() with NULL buffer</test_objective>
-    <test_type>Negative</test_type>
+    <test_case_id>TC_WIFIHAL_510</test_case_id>
+    <test_objective>To initialize the wifi subsystem by invoking wifi_init() HAL api and check the return status.</test_objective>
+    <test_type>Positive</test_type>
     <test_setup>Broadband</test_setup>
-    <pre_requisite>1.Ccsp Components  should be in a running state of DUT
+    <pre_requisite>1.Ccsp Components  should be in a running state else invoke cosa_start.sh manually that includes all the ccsp components and TDK Component
 2.TDK Agent should be in running state or invoke it through StartTdk.sh script</pre_requisite>
-    <api_or_interface_used>wifi_getBSSColor</api_or_interface_used>
-    <input_parameters>NULL buffer</input_parameters>
+    <api_or_interface_used>wifi_init</api_or_interface_used>
+    <input_parameters>None</input_parameters>
     <automation_approch>1. Load wifihal module
-2. Invoke wifi_getBSSColor() with NULL buffer
-3. Check if api returns failure and exits gracefully
-4. Unload wifihal module</automation_approch>
-    <expected_output>wifi_getBSSColor() should return failure when invoked with a NULL buffer</expected_output>
+2. Initialize the wifi subsystem by invoking wifi_init() HAL api
+3. Set operation should return SUCCESS
+4. Unload the module</automation_approch>
+    <expected_output>Initialize the wifi subsystem by invoking wifi_init() HAL api successfully</expected_output>
     <priority>High</priority>
     <test_stub_interface>wifihal</test_stub_interface>
-    <test_script>TS_WIFIHAL_GetBSSColor_WithNullBuffer</test_script>
+    <test_script>TS_WIFIHAL_WifiInit</test_script>
     <skipped>No</skipped>
-    <release_version>M85</release_version>
+    <release_version>M86</release_version>
     <remarks>None</remarks>
   </test_cases>
   <script_tags />
@@ -89,7 +93,7 @@ obj = tdklib.TDKScriptingLibrary("wifihal","1");
 #This will be replaced with corresponding DUT Ip and port while executing script
 ip = <ipaddress>
 port = <port>
-obj.configureTestCase(ip,port,'TS_WIFIHAL_GetBSSColor_WithNullBuffer');
+obj.configureTestCase(ip,port,'TS_WIFIHAL_WifiInit');
 
 loadmodulestatus =obj.getLoadModuleResult();
 print "[LIB LOAD STATUS]  :  %s" %loadmodulestatus
@@ -98,26 +102,25 @@ if "SUCCESS" in loadmodulestatus.upper():
     obj.setLoadModuleStatus("SUCCESS");
 
     #Script to load the configuration file of the component
-    tdkTestObj = obj.createTestStep("WIFIHAL_GetBSSColorValue");
-    tdkTestObj.addParameter("paramType","NULL");
-    expectedresult="FAILURE";
+    tdkTestObj = obj.createTestStep("WIFIHAL_Init");
+    expectedresult="SUCCESS";
     tdkTestObj.executeTestCase(expectedresult);
     actualresult = tdkTestObj.getResult();
     details = tdkTestObj.getResultDetails();
     if expectedresult in actualresult:
         #Set the result status of execution
         tdkTestObj.setResultStatus("SUCCESS");
-        print "TEST STEP 1: Query the wifi_getBSSColor api with Null Buffer";
-        print "EXPECTED RESULT 1: API call should fail with Null Buffer";
+        print "TEST STEP 1: Initialize the wifi subsystem by invoking wifi_init() HAL api";
+        print "EXPECTED RESULT 1: Should initialize the wifi subsystem by invoking wifi_init() HAL api successfully";
         print "ACTUAL RESULT 1: %s" %details;
         #Get the result of execution
         print "[TEST EXECUTION RESULT] : SUCCESS";
     else:
         #Set the result status of execution
         tdkTestObj.setResultStatus("FAILURE");
-        print "TEST STEP 1:  Query the wifi_getBSSColor api with Null Buffer";
-        print "EXPECTED RESULT 1: API call should fail with Null Buffer";
-        print "ACTUAL RESULT 1: API returned Success status. %s" %details;
+        print "TEST STEP 1:  Initialize the wifi subsystem by invoking wifi_init() HAL api";
+        print "EXPECTED RESULT 1: SShould initialize the wifi subsystem by invoking wifi_init() HAL api successfully";
+        print "ACTUAL RESULT 1: API returned Failure status. %s" %details;
         #Get the result of execution
         print "[TEST EXECUTION RESULT] : FAILURE";
     obj.unloadModule("wifihal");
