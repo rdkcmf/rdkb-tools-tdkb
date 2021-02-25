@@ -66,6 +66,7 @@ CONFIG_PREFIX="/etc/"
 RDK_VERSION="RDKB"
 SUBDIR_HYBRID=" "
 SUBDIR_CLIENT=" "
+SUBDIR_WANMANAGER= " "
 
 ERT_VALUE=0
 
@@ -108,6 +109,20 @@ AC_ARG_ENABLE([redirect],
 
 AC_SUBST(REDIRECT_FLAG)
 
+AC_ARG_ENABLE([rdkb_wan_manager],
+        AS_HELP_STRING([--enable-rdkb_wan_manager],[enable rdkb_wan_manager]),
+        [
+          case "${enableval}" in
+             yes) rdkb_wan_manager=true
+                  SUBDIR_WANMANAGER+=" jsonhal_lib DSLHAL_Stub "
+                  echo WAN Manager is enabled;;
+             no) rdkb_wan_manager=false ;;
+          *) AC_MSG_ERROR([bad value ${enableval} for --enable-rdkb_wan_manager ]) ;;
+           esac
+           ],
+         [echo "WAN Manager is not enabled"])
+
+AM_CONDITIONAL([RDKB_WAN_MANAGER], [test x$rdkb_wan_manager = xtrue])
 
 AC_SUBST(COPTS)
 AC_SUBST(AGENT_FLAGS)
@@ -115,9 +130,11 @@ AC_SUBST(CONFIG_PREFIX)
 AC_SUBST(RDK_VERSION)
 AC_SUBST(SUBDIR_HYBRID)
 AC_SUBST(SUBDIR_CLIENT)
+AC_SUBST(SUBDIR_WANMANAGER)
 AC_CONFIG_FILES([Makefile
 	 agent/Makefile
          tdkb_lib/Makefile
+         jsonhal_lib/Makefile
          CMAgent_stub/Makefile
 	 WIFIAgent_stub/Makefile
 	 MBUS_Stub/Makefile

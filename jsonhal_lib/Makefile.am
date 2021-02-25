@@ -2,7 +2,7 @@
 # If not stated otherwise in this file or this component's Licenses.txt
 # file the following copyright and licenses apply:
 #
-# Copyright 2016 RDK Management
+# Copyright 2021 RDK Management
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,8 +17,18 @@
 # limitations under the License.
 ##########################################################################
 
-SUBDIRS = agent tdkb_lib RDKLogger_stub CMAgent_stub WIFIAgent_stub MBUS_Stub WECB_Stub CosaCM_Stub SNMP_PA_Stub TR069Pa_Stub Mta_agent_Stub AdvancedConfig_stub CosaMTA_Stub pam_stub SysUtil_stub TAD_stub Moca_Stub LMLite_Stub WIFIHAL_stub CMHAL_Stub ethsw_hal_stub dhcp_hal_stub tdkb_e2e_stub platform_hal_stub tdkb_tr181_stub MoCAHAL_Stub MTAHAL_Stub XUPNP_Stub EPONHAL_Stub mso_mgmt_hal_stub BLEHAL_Stub RBUS_Stub  $(SUBDIR_WANMANAGER)
+AM_CFLAGS = -D_ANSC_LINUX
+AM_CFLAGS += -D_ANSC_USER
+AM_CFLAGS += -D_ANSC_LITTLE_ENDIAN_
 
-DIST_SUBDIRS = @SUBDIRS@
+AM_CPPFLAGS = -Wall
+ACLOCAL_AMFLAGS = -I m4
 
-distcleancheck_listfiles = *-libtool
+lib_LTLIBRARIES = libjsonhallib.la
+
+libjsonhallib_la_CPPFLAGS = -I$(top_srcdir)/jsonhal_lib/include
+libjsonhallib_la_SOURCES = src/jsonhal_lib_wrp.c src/dslhal_lib_wrp.c
+
+libjsonhallib_la_LDFLAGS =  -ljson_hal_client  -ljson-c -ljson_schema_validator_wrapper
+
+
