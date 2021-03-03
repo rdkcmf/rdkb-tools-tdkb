@@ -569,13 +569,6 @@ int ssp_WIFIHALGetOrSetParamStringValue(int radioIndex, char* output, char* meth
         }
         return_status = wifi_kickAssociatedDevice(radioIndex, &dev);
     }
-    else if(!strcmp(method, "getBSSColor"))
-    {
-        if(output)
-            return_status = wifi_getBSSColor(radioIndex, output);
-        else
-            return_status = wifi_getBSSColor(radioIndex, NULL);
-    }
     else
     {
         return_status = SSP_FAILURE;
@@ -1399,7 +1392,63 @@ int ssp_WIFIHALGetNeighboringWiFiStatus(int radioIndex, wifi_neighbor_ap2_t **ne
     }
     printf("\n ssp_WIFIHALGetNeighboringWiFiStatus ---> Exit\n");
 }
+/********************************************************************************************
+ *
+ * Function Name        : ssp_WIFIHALGetBSSColorValue
+ * Description          : This function invokes WiFi hal's wifi_getBSSColor() api
+ * @param [in]          : radioIndex - WiFi radio index value
+ * @param [out]         : color - color value returned by the HAL api
+                          return status an integer value 0-success and 1-Failure
+ ********************************************************************************************/
+int ssp_WIFIHALGetBSSColorValue(int radioIndex, unsigned char *color)
+{
+    printf("\n ssp_WIFIHALGetBSSColorValue----> Entry\n");
+    printf("Radio index:%d\n",radioIndex);
+    int return_status = 0;
 
+    if(color)
+    {
+        return_status = wifi_getBSSColor(radioIndex, color);
+    }
+    else
+    {
+        printf("Validation with NULL buffer\n");
+        return_status = wifi_getBSSColor(radioIndex, NULL);
+    }
+    if(color)
+        printf("ssp_WIFIHALGetBSSColorValue: return value is %d\n", *color);
+    if(return_status != SSP_SUCCESS)
+        printf("\nssp_WIFIHALGetBSSColorValue::Failed\n");
+    else
+        printf("\nssp_WIFIHALGetBSSColorValue::Success\n");
+    printf("ssp_WIFIHALGetBSSColorValue: ret:status %d\n", return_status);
+    printf("\n ssp_WIFIHALGetBSSColorValue--> Exit\n");
+    return return_status;
+}
+
+/*******************************************************************************************
+ *
+ * Function Name        : ssp_WIFIHALApplyGASConfiguration
+ * Description          : This function invokes WiFi hal api wifi_applyGASConfiguration
+ * @param [in]          : wifi_GASConfiguration_t - structure with GAS configuration parameters
+ * @param [out]         : return status an integer value 0-success and 1-Failure
+ ********************************************************************************************/
+int ssp_WIFIHALApplyGASConfiguration(wifi_GASConfiguration_t *GASConfiguration)
+{
+    printf("\n ssp_WIFIHALapplyGASConfiguration ----> Entry\n");
+    int return_status = 0;
+    return_status = wifi_applyGASConfiguration(GASConfiguration);
+    if(return_status != SSP_SUCCESS)
+    {
+        printf("\nssp_WIFIHALApplyGASConfiguration::Failed\n");
+    }
+    else
+    {
+        printf("\nssp_WIFIHALApplyGASConfiguration::Success\n");
+    }
+    printf("\n ssp_WIFIHALapplyGASConfiguration ---> Exit\n");
+    return return_status;
+}
 /*******************************************************************************************
  *
  * Function Name        : ssp_WIFIHALPushRadioChannel2

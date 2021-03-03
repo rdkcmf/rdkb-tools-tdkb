@@ -2355,7 +2355,93 @@ void WIFIHAL::WIFIHAL_StartNeighborScan(IN const Json::Value& req, OUT Json::Val
                return;
        }
 }
+/*******************************************************************************************
+ *
+ * Function Name        : WIFIHAL_GetBSSColorValue
+ * Description          : This function invokes WiFi hal's wifi_getBSSColor() api
+ * @param [in] req-    :  radioIndex - radio index value of wifi
+                          paramType  - To indicate negative test scenario. it is set as NULL for negative sceanario, otherwise empty
+ * @param [out] response - filled with SUCCESS or FAILURE based on the output staus of operation
+ *
+ ********************************************************************************************/
+void WIFIHAL::WIFIHAL_GetBSSColorValue(IN const Json::Value& req, OUT Json::Value& response)
+{
+    DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_GetBSSColorValue --->Entry\n");
+    int radioIndex = 0;
+    unsigned char color = 0;
+    int returnValue = 1;
+    char details[200] = {'\0'};
+    char paramType[10] = {'\0'};
+    radioIndex = req["radioIndex"].asInt();
+    strcpy(paramType, req["paramType"].asCString());
 
+    printf("wifi_getBSSColor operation to be done\n");
+    //paramType is set as NULL for negative test scenarios, for NULL pointer checks
+    if(strcmp(paramType, "NULL"))
+        returnValue = ssp_WIFIHALGetBSSColorValue(radioIndex, &color);
+    else
+        returnValue = ssp_WIFIHALGetBSSColorValue(radioIndex, NULL);
+    if(0 == returnValue)
+    {
+        DEBUG_PRINT(DEBUG_TRACE,"\n output: %d\n",color);
+        sprintf(details, "Value returned is :%d", color);
+        response["result"]="SUCCESS";
+        response["details"]=details;
+	return;
+    }
+    else
+    {
+        sprintf(details, "WIFIHAL_GetBSSColorValue operation failed");
+        response["result"]="FAILURE";
+        response["details"]=details;
+        DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_GetBSSColorValue --->Error in execution\n");
+        return;
+    }
+}
+
+/*******************************************************************************************
+ *
+ * Function Name        : WIFIHAL_ApplyGASConfiguration
+ * Description          : This function invokes WiFi hal api wifi_applyGASConfiguration()
+ * @param [in] req-     : Values correspond to the dot11GASAdvertisementEntry field definitions
+                          AdvertisementID
+			  PauseForServerResponse
+			  ResponseTimeout
+			  ComeBackDelay
+			  ResponseBufferingTime
+			  QueryResponseLengthLimit
+ * @param [out] response - filled with SUCCESS or FAILURE based on the output status of operation
+ *
+ ********************************************************************************************/
+void WIFIHAL::WIFIHAL_ApplyGASConfiguration(IN const Json::Value& req, OUT Json::Value& response)
+{
+    DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_ApplyGASConfiguration ----->Entry\n");
+    wifi_GASConfiguration_t GASConfiguration = {0};
+    int returnValue = 1;
+    char details[500] = {'\0'};
+    GASConfiguration.AdvertisementID = req["advertisementID"].asInt();
+    GASConfiguration.PauseForServerResponse = req["pauseForServerResponse"].asInt();
+    GASConfiguration.ResponseTimeout = req["responseTimeout"].asInt();
+    GASConfiguration.ComeBackDelay = req["comeBackDelay"].asInt();
+    GASConfiguration.ResponseBufferingTime = req["responseBufferingTime"].asInt();
+    GASConfiguration.QueryResponseLengthLimit = req["queryResponseLengthLimit"].asInt();
+    returnValue = ssp_WIFIHALApplyGASConfiguration(&GASConfiguration);
+    if(0 == returnValue)
+    {
+        sprintf(details, "WIFIHAL_ApplyGASConfiguration operation success");
+        response["result"]="SUCCESS";
+        response["details"]=details;
+        return;
+    }
+    else
+    {
+        sprintf(details, "WIFIHAL_ApplyGASConfiguration operation failure");
+        response["result"]="FAILURE";
+        response["details"]=details;
+        DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_ApplyGASConfiguration ---->Error in execution\n");
+        return;
+    }
+}
 
 /**************************************************************************
  * Function Name        : CreateObject

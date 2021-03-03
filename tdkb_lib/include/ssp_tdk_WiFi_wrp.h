@@ -79,4 +79,5 @@ int ssp_WIFIHALSteeringClientRemove(unsigned int steeringgroupIndex, int apIndex
 int ssp_WIFIHALGetBTMClientCapabilityList(int apIndex, wifi_BTMCapabilities_t* btm_caps);
 int ssp_WIFIHALGetApRoamingConsortiumElement(int apIndex, wifi_roamingConsortiumElement_t* roam);
 int ssp_WIFIHALPushApRoamingConsortiumElement(int apIndex, wifi_roamingConsortiumElement_t* roam);
-
+int ssp_WIFIHALGetBSSColorValue(int radioIndex, unsigned char *color);
+int ssp_WIFIHALApplyGASConfiguration(wifi_GASConfiguration_t *GASConfiguration);
