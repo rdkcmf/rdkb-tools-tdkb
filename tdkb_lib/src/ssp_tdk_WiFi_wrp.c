@@ -275,6 +275,27 @@ int ssp_WIFIHALGetOrSetParamBoolValue(int radioIndex, unsigned char *enable, cha
         return_status = wifi_pushApHotspotElement(radioIndex, *enable);
     else if(!strcmp(method, "setP2PCrossConnect"))
         return_status = wifi_setP2PCrossConnect(radioIndex, *enable);
+    else if(!strcmp(method, "getAtmBandEnable"))
+    {
+        if(enable)
+           return_status = wifi_getAtmBandEnable(radioIndex, enable);
+        else
+            return_status = wifi_getAtmBandEnable(radioIndex, NULL);
+    }
+    else if(!strcmp(method, "getATMEnable"))
+    {
+        if(enable)
+           return_status = wifi_getATMEnable(enable);
+        else
+            return_status = wifi_getATMEnable(NULL);
+    }
+    else if(!strcmp(method, "setATMEnable"))
+    {
+        if(enable)
+           return_status = wifi_setATMEnable(*enable);
+        else
+            return_status = wifi_setATMEnable(NULL);
+    }
     else if(!strcmp(method, "getCountryIe"))
     {
         if(enable)
@@ -775,7 +796,10 @@ int ssp_WIFIHALGetOrSetParamUIntValue(int radioIndex, unsigned int* output, char
 {
     printf("\n ssp_WIFIHALGetOrSetParamUIntValue----> Entry\n");
     printf("Radio index:%d\n",radioIndex);
-    printf("GetorSetParam: %u\n" , *output);
+    if(output)
+        printf("GetorSetParam: %u\n" , *output);
+    else
+        printf("Validation with NULL buffer\n");
     printf("MethodName: %s\n", method);
     int return_status = 0;
 
@@ -807,13 +831,49 @@ int ssp_WIFIHALGetOrSetParamUIntValue(int radioIndex, unsigned int* output, char
         return_status = wifi_pushChannel(radioIndex, *output);
     else if(!strcmp(method, "setRadioFragmentationThreshold"))
         return_status = wifi_setRadioFragmentationThreshold(radioIndex, *output);
+    else if(!strcmp(method, "getAtmBandMode"))
+    {
+        if(output)
+           return_status = wifi_getAtmBandMode(radioIndex, output);
+        else
+            return_status = wifi_getAtmBandMode(radioIndex, NULL);
+    }
+    else if(!strcmp(method, "getAtmBandWeights"))
+    {
+        if(output)
+           return_status = wifi_getAtmBandWeights(radioIndex, output);
+        else
+            return_status = wifi_getAtmBandWeights(radioIndex, NULL);
+    }
+    else if(!strcmp(method, "getAtmBandDistributionType"))
+    {
+        if(output)
+          return_status = wifi_getAtmBandDistributionType(radioIndex, output);
+        else
+            return_status = wifi_getAtmBandDistributionType(radioIndex, NULL);
+    }
+    else if(!strcmp(method, "getAtmBandDirection"))
+    {
+         if(output)
+           return_status = wifi_getAtmBandDirection(radioIndex, output);
+         else
+             return_status = wifi_getAtmBandDirection(radioIndex, NULL);
+    }
+    else if(!strcmp(method, "getSoftBlockWaitingTime"))
+    {
+        if(output)
+           return_status = wifi_getSoftBlockWaitingTime(radioIndex, output);
+        else
+            return_status = wifi_getSoftBlockWaitingTime(radioIndex, NULL);
+    }
     else
     {
         return_status = SSP_FAILURE;
         printf("\n ssp_WiFiHalCallMethodForUInt: Invalid methodName\n");
     }
-
-    printf("ssp_WiFiHalCallMethodForUInt: return value is %d, ret:status %d\n", *output, return_status);
+    if(output)
+        printf("ssp_WiFiHalCallMethodForUInt: return value is %d\n", *output);
+    printf("\n ssp_WiFiHalCallMethodForUInt:, ret:status %d \n", return_status);
     printf("\n ssp_WiFiHalCallMethodForUInt--> Exit\n");
     return return_status;
 }
