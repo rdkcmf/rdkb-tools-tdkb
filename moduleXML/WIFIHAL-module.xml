@@ -85,6 +85,8 @@
       <function name='WIFIHAL_SteeringClientRemove' />
       <function name='WIFIHAL_SteeringClientDisconnect' />
       <function name='WIFIHAL_GetBTMClientCapabilityList' />
+      <function name='WIFIHAL_GetBSSColorValue' />
+      <function name='WIFIHAL_ApplyGASConfiguration' />
     </functions>
   <!-- Total parameters corresponding module  -->
     <parameters>
@@ -233,6 +235,14 @@
       <parameter funName='WIFIHAL_GetBTMClientCapabilityList' parameterName='apIndex' parameterType='INTEGER' range='0-20' />
       <parameter funName='WIFIHAL_GetBTMClientCapabilityList' parameterName='count' parameterType='INTEGER' range='0-10' />
       <parameter funName='WIFIHAL_GetBTMClientCapabilityList' parameterName='clientMAC' parameterType='STRING' range='A-Z' />
+      <parameter funName='WIFIHAL_GetBSSColorValue' parameterName='paramType' parameterType='STRING' range='A-Z' />
+      <parameter funName='WIFIHAL_GetBSSColorValue' parameterName='radioIndex' parameterType='INTEGER' range='0-50' />
+      <parameter funName='WIFIHAL_ApplyGASConfiguration' parameterName='responseBufferingTime' parameterType='INTEGER' range='0-50' />
+      <parameter funName='WIFIHAL_ApplyGASConfiguration' parameterName='queryResponseLengthLimit' parameterType='INTEGER' range='0-50' />
+      <parameter funName='WIFIHAL_ApplyGASConfiguration' parameterName='advertisementID' parameterType='INTEGER' range='0-50' />
+      <parameter funName='WIFIHAL_ApplyGASConfiguration' parameterName='comeBackDelay' parameterType='INTEGER' range='0-50' />
+      <parameter funName='WIFIHAL_ApplyGASConfiguration' parameterName='responseTimeout' parameterType='INTEGER' range='0-50' />
+      <parameter funName='WIFIHAL_ApplyGASConfiguration' parameterName='pauseForServerResponse' parameterType='INTEGER' range='0-50' />
     </parameters>
   </module>
 </xml>
