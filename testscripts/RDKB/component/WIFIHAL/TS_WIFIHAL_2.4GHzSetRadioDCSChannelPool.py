@@ -106,11 +106,11 @@ if "SUCCESS" in loadmodulestatus.upper():
 	    #Calling the method to execute wifi_getRadioPossibleChannels()
 	    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, "0", getMethod)
 	    
-	    possibleChannels = details.split(":")[1].strip().split(",")
-	    setDcsChList = random.sample(possibleChannels,3)
-	    setDcsChPool = ','.join(setDcsChList)
-
 	    if expectedresult in actualresult:
+                possibleChannels = details.split(":")[1].strip().split(",")
+                setDcsChList = random.sample(possibleChannels,3)
+                setDcsChPool = ','.join(setDcsChList)
+
 		expectedresult="SUCCESS";
 		radioIndex = idx;
 		getMethod = "getRadioDCSChannelPool"
@@ -181,4 +181,3 @@ if "SUCCESS" in loadmodulestatus.upper():
 else:
     print "Failed to load wifi module";
     obj.setLoadModuleStatus("FAILURE");
-

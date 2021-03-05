@@ -104,7 +104,7 @@ if "SUCCESS" in loadmodulestatus.upper():
 	    tdkTestObj.executeTestCase(expectedresult);
 	    actualresult = tdkTestObj.getResult();
 	    SupportedFreqBands = tdkTestObj.getResultDetails();
-	    ExpectedFreqList=['2.4GHz']
+	    ExpectedFreqList=['2.4GHz','2.4G_11AX']
 	    if expectedresult in actualresult and SupportedFreqBands.split(":")[1] in ExpectedFreqList:
 		#Set the result status of execution
 		tdkTestObj.setResultStatus("SUCCESS");

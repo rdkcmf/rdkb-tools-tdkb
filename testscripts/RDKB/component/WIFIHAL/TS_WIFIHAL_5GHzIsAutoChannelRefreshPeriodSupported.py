@@ -101,23 +101,27 @@ if "SUCCESS" in loadmodulestatus.upper():
 
         if expectedresult in actualresult :
             enable = details.split(":")[1].strip()
+            tdkTestObj.setResultStatus("SUCCESS");
             if "Enabled" in enable:
-                print "AutoChannelRefreshPeriod is Supported"
                 tdkTestObj.setResultStatus("SUCCESS");
+                print "AutoChannelRefreshPeriod is Supported"
 
                 getMethod = "getAutoChannelRefreshPeriod"
                 primitive = 'WIFIHAL_GetOrSetParamULongValue'
                 tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, idx, 0, getMethod)
 
                 if expectedresult in actualresult :
+                    tdkTestObj.setResultStatus("SUCCESS");
                     period = int(details.split(":")[1].strip())
                     print "Refresh period retreived as %d" %period
                 else:
+                    tdkTestObj.setResultStatus("FAILURE")
                     print "getAutoChannelRefreshPeriod() failed"
             else:
                 print "AutoChannelRefreshPeriod is not Supported"
                 tdkTestObj.setResultStatus("SUCCESS");
         else:
+            tdkTestObj.setResultStatus("FAILURE")
             print "AutoChannelRefreshPeriod() failed"
 
     obj.unloadModule("wifihal");
