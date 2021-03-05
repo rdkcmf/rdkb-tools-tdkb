@@ -124,8 +124,8 @@ def setandgetDfsChannelRefreshPeriod(radioIndex):
         expectedresult="SUCCESS";
         #radioIndex = 1
         tdkTestObj ,actualresult ,details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, 0, getMethod)
-        initialRefreshPeriod = details.split(":")[1];
         if expectedresult in actualresult:
+            initialRefreshPeriod = details.split(":")[1];
             print "InitialRefreshPeriod = ",initialRefreshPeriod;
             if int(initialRefreshPeriod) == 0:
                 print "Automatic channel selection is done only at boot time"
@@ -361,4 +361,3 @@ else:
     print "Failed to load the module";
     obj.setLoadModuleStatus("FAILURE");
     print "Module loading failed";
-
