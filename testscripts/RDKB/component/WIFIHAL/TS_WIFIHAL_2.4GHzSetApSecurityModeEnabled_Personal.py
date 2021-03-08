@@ -215,4 +215,4 @@ if "SUCCESS" in loadmodulestatus.upper():
 
 else:
     print "Failed to load wifi module";
-    obj.setLoadModuleStatus("FAILURE"
+    obj.setLoadModuleStatus("FAILURE");
