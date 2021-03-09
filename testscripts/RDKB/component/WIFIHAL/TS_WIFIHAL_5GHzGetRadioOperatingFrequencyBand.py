@@ -113,6 +113,11 @@ if "SUCCESS" in loadmodulestatus.upper():
 		#Get the result of execution
 		print "[TEST EXECUTION RESULT] : SUCCESS";
 
+                #Some platform get AX appended for frequency bands
+                if "AX" in SupportedFreqBands  and "5G" in SupportedFreqBands:
+                    ExpectedFreqList = "5GHz";
+                else:
+                     ExpectedFreqList= SupportedFreqBands.split(":")[1];
 		tdkTestObj = obj.createTestStep("WIFIHAL_GetOrSetParamStringValue");
 		#Giving the method name to invoke the api for getting Operating Frequency band. ie,wifi_getRadioOperatingFrequencyBands()
 		tdkTestObj.addParameter("methodName","getRadioOperatingFrequencyBand");
@@ -122,7 +127,6 @@ if "SUCCESS" in loadmodulestatus.upper():
 		tdkTestObj.executeTestCase(expectedresult);
 		actualresult = tdkTestObj.getResult();
 		OperatingFreqBands = tdkTestObj.getResultDetails();
-		ExpectedFreqList= SupportedFreqBands.split(":")[1];
 		if expectedresult in actualresult and OperatingFreqBands.split(":")[1] in ExpectedFreqList:
 		    #Set the result status of execution
 		    tdkTestObj.setResultStatus("SUCCESS");

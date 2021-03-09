@@ -116,9 +116,9 @@ if "SUCCESS" in loadmodulestatus.upper():
 		    primitive = 'WIFIHAL_GetOrSetParamIntValue'
 		    radioIndex = idx;
 		    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, 0, getMethod)
-		    initGetValue = details.split(":")[1].strip()
 
 		    if expectedresult in actualresult:
+                        initGetValue = details.split(":")[1].strip()
 			tdkTestObj.setResultStatus("SUCCESS");
 			setMethod = "setBandSteeringBandUtilizationThreshold"
 			radioIndex = idx;
@@ -181,4 +181,3 @@ if "SUCCESS" in loadmodulestatus.upper():
 		tdkTestObj.setResultStatus("FAILURE");
 		print "getBandSteeringCapability() call failed"
     obj.unloadModule("wifihal");
-
