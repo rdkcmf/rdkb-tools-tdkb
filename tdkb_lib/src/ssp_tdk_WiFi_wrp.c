@@ -354,6 +354,15 @@ int ssp_WIFIHALGetOrSetParamBoolValue(int radioIndex, unsigned char *enable, cha
     }
     else if(!strcmp(method, "setBSSColorEnabled"))
         return_status = wifi_setBSSColorEnabled(radioIndex, *enable);
+    else if(!strcmp(method, "getAutoBlockAckEnable"))
+    {
+	if(enable)
+	    return_status = wifi_getAutoBlockAckEnable(radioIndex, enable);
+	else
+	    return_status = wifi_getAutoBlockAckEnable(radioIndex, NULL);
+    }
+    else if(!strcmp(method, "setAutoBlockAckEnable"))
+        return_status = wifi_setAutoBlockAckEnable(radioIndex, *enable);
     else
     {
         return_status = SSP_FAILURE;
