@@ -77,6 +77,10 @@
       <function name='platform_stub_hal_setFactoryCmVariant' />
       <function name='platform_stub_hal_getFactoryCmVariant' />
       <function name='platform_stub_hal_SetSNMPOnboardRebootEnable' />
+      <function name='platform_stub_hal_GetMemoryPaths' />
+      <function name='platform_stub_hal_SetLowPowerModeState' />
+      <function name='platform_stub_hal_StartMACsec' />
+      <function name='platform_stub_hal_StopMACsec' />
     </functions>
   <!-- Total parameters corresponding module  -->
     <parameters>
@@ -130,6 +134,11 @@
       <parameter funName='platform_stub_hal_setFanMaxOverride' parameterName='flag' parameterType='INTEGER' range='0-100' />
       <parameter funName='platform_stub_hal_setFactoryCmVariant' parameterName='CmVarient' parameterType='STRING' range='A-Z' />
       <parameter funName='platform_stub_hal_SetSNMPOnboardRebootEnable' parameterName='SNMPonboard' parameterType='STRING' range='A-Z' />
+      <parameter funName='platform_stub_hal_GetMemoryPaths' parameterName='cpus' parameterType='INTEGER' range='0-9' />
+      <parameter funName='platform_stub_hal_SetLowPowerModeState' parameterName='state' parameterType='INTEGER' range='0-9' />
+      <parameter funName='platform_stub_hal_StartMACsec' parameterName='ethPort' parameterType='INTEGER' range='0-100' />
+      <parameter funName='platform_stub_hal_StartMACsec' parameterName='timeoutSec' parameterType='INTEGER' range='0-100' />
+      <parameter funName='platform_stub_hal_StopMACsec' parameterName='ethPort' parameterType='INTEGER' range='0-100' />
     </parameters>
   </module>
 </xml>
