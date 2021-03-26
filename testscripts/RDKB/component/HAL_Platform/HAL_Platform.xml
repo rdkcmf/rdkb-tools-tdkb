@@ -266,7 +266,39 @@
           <parameter name="flag" value=""/>
         </parameters>
       </primitiveTest>
+      <primitiveTest name="platform_stub_hal_GetWebAccessLevel" id=" " version="1">
+        <function>platform_stub_hal_GetWebAccessLevel</function>
+        <parameters>
+          <parameter name="flag" value="0"/>
+          <parameter name="ifIndex" value="0"/>
+          <parameter name="userIndex" value="0"/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest name="platform_stub_hal_GetMemoryPaths" id=" " version="1">
+        <function>platform_stub_hal_GetMemoryPaths</function>
+        <parameters>
+          <parameter name="cpus" value="0"/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest name="platform_stub_hal_SetLowPowerModeState" id=" " version="1">
+        <function>platform_stub_hal_SetLowPowerModeState</function>
+        <parameters>
+          <parameter name="state" value="1"/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest name="platform_stub_hal_StartMACsec" id=" " version="1">
+        <function>platform_stub_hal_StartMACsec</function>
+        <parameters>
+          <parameter name="ethPort" value="0"/>
+          <parameter name="timeoutSec" value="0"/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest name="platform_stub_hal_StopMACsec" id=" " version="1">
+        <function>platform_stub_hal_StopMACsec</function>
+        <parameters>
+          <parameter name="ethPort" value="0"/>
+        </parameters>
+      </primitiveTest>
     </primitiveTests>
   </module>
 </xml>
-
