@@ -67,6 +67,10 @@ extern "C"
         int ssp_setFanMaxOverride(BOOLEAN);
         int ssp_SetSNMPOnboardRebootEnable(char*);
         int ssp_GetRouterRegion(char*);
+        int ssp_GetMemoryPaths(RDK_CPUS, PPLAT_PROC_MEM_INFO*);
+        int ssp_SetLowPowerModeState(PSM_STATE);
+        int ssp_StartMACsec(int, int);
+        int ssp_StopMACsec(int);
 #ifdef __cplusplus
 }
 #endif

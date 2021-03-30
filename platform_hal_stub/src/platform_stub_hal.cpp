@@ -1932,6 +1932,215 @@ void platform_stub_hal::platform_stub_hal_GetRouterRegion(IN const Json::Value& 
         }
 }
 
+/************************************************************************************************
+ *Function name : platform_hal_GetMemoryPaths
+ *Description   : This function will invoke the SSP  HAL wrapper to get the GetMemoryPaths
+ *@param [in]   : cpus  : Holds the value of CPUS
+ *@param [out]  : response - filled with SUCCESS or FAILURE based on the return value
+ ************************************************************************************************/
+void platform_stub_hal::platform_stub_hal_GetMemoryPaths(IN const Json::Value& req, OUT Json::Value& response)
+{
+    char details[1024] = {0};
+    DEBUG_PRINT(DEBUG_TRACE,"Inside Function platform_hal_GetMemoryPaths stub\n");
+
+    RDK_CPUS cpus = HOST_CPU;
+    int cpus_1 = 0;
+
+    PLAT_PROC_MEM_INFO *PPLAT_PROC_MEM_INFO =  NULL;
+    PPLAT_PROC_MEM_INFO = (PLAT_PROC_MEM_INFO*)malloc(sizeof(PLAT_PROC_MEM_INFO));
+    if (PPLAT_PROC_MEM_INFO != NULL) {
+        memset(PPLAT_PROC_MEM_INFO, 0, sizeof(PLAT_PROC_MEM_INFO));
+    }
+
+    if(&req["cpus"] == NULL)
+    {
+        response["result"] = "FAILURE";
+        response["details"] = "NULL parameter as input argument";
+        return;
+    }
+    cpus_1 = req["cpus"].asInt();
+    cpus = (RDK_CPUS)cpus_1;
+
+    if(ssp_GetMemoryPaths(cpus,&PPLAT_PROC_MEM_INFO) == RETURN_SUCCESS)
+    {
+        response["result"] = "SUCCESS";
+        sprintf(details,"dramPath=%s emmcPath1=%s and emmcPath2=%s ",(*PPLAT_PROC_MEM_INFO).dramPath,(*PPLAT_PROC_MEM_INFO).emmcPath1,(*PPLAT_PROC_MEM_INFO).emmcPath2);
+        response["details"] = details;
+        DEBUG_PRINT(DEBUG_TRACE, "%s:: Test execution successful:: result = %s\n", __func__, details);
+        return;
+    }
+    else
+    {
+        response["result"] = "FAILURE";
+        response["details"] = "GetMemoryPaths details is not fetched successfully";
+        DEBUG_PRINT(DEBUG_TRACE, "%s:: Test execution failed\n", __func__);
+        return;
+    }
+}
+
+/************************************************************************************************
+ *Function name : platform_hal_SetLowPowerModeState
+ *Description   : This function will invoke the SSP  HAL wrapper to set the LowPowerModeState
+ *@param [in]   : state  : Holds the value of Power State
+ *@param [out]  : response - filled with SUCCESS or FAILURE based on the return value
+ ************************************************************************************************/
+void platform_stub_hal::platform_stub_hal_SetLowPowerModeState(IN const Json::Value& req, OUT Json::Value& response)
+{
+    DEBUG_PRINT(DEBUG_TRACE,"Inside Function platform_hal_SetLowPowerModeState stub\n");
+    PSM_STATE  state = PSM_AC;
+    int state1 = 1;
+    if(&req["state"] == NULL)
+    {
+        response["result"] = "FAILURE";
+        response["details"] = "NULL parameter as input argument";
+        return;
+    }
+    state1 = req["state"].asInt();
+    state = (PSM_STATE)state1;
+
+    if(ssp_SetLowPowerModeState(state) == RETURN_SUCCESS)
+    {
+        response["result"] = "SUCCESS";
+        response["details"] = "SetLowPowerModeState function was successful";
+        DEBUG_PRINT(DEBUG_TRACE, "%s:: Test execution successful", __func__);
+        return;
+    }
+    else
+    {
+        response["result"] = "FAILURE";
+        response["details"] = "SetLowPowerModeState function was NOT successful, Please check logs";
+        DEBUG_PRINT(DEBUG_TRACE, "%s:: Test execution failed\n", __func__);
+        return;
+    }
+}
+
+/************************************************************************************************
+ *Function name : platform_hal_StartMACsec
+ *Description   : This function will invoke the SSP  HAL wrapper to Start MAC security
+ *@param [in]   : state  : Holds the value of Power State
+ *@param [out]  : response - filled with SUCCESS or FAILURE based on the return value
+ ************************************************************************************************/
+void platform_stub_hal::platform_stub_hal_StartMACsec(IN const Json::Value& req, OUT Json::Value& response)
+{
+    DEBUG_PRINT(DEBUG_TRACE,"Inside Function platform_hal_StartMACsec stub\n");
+    int ethPort = 1;
+    int timeoutSec = 1;
+
+    if(&req["ethPort"] == NULL && &req["timeoutSec"] == NULL)
+    {
+        response["result"] = "FAILURE";
+        response["details"] = "NULL parameter as input argument";
+        return;
+    }
+
+    ethPort = req["ethPort"].asInt();
+    timeoutSec = req["timeoutSec"].asInt();
+
+    if(ssp_StartMACsec(ethPort,timeoutSec) == RETURN_SUCCESS)
+    {
+        response["result"] = "SUCCESS";
+        response["details"] = "StartMACsec function was successful";
+        DEBUG_PRINT(DEBUG_TRACE, "%s:: Test execution successful\n", __func__);
+        return;
+    }
+    else
+    {
+        response["result"] = "FAILURE";
+        response["details"] = "StartMACsec function was NOT successful, Please check logs";
+        DEBUG_PRINT(DEBUG_TRACE, "%s:: Test execution failed\n", __func__);
+        return;
+    }
+}
+
+/************************************************************************************************
+ *Function name : platform_hal_StopMACsec
+ *Description   : This function will invoke the SSP  HAL wrapper to set the LowPowerModeState
+ *@param [in]   : state  : Holds the value of Power State
+ *@param [out]  : response - filled with SUCCESS or FAILURE based on the return value
+ ************************************************************************************************/
+void platform_stub_hal::platform_stub_hal_StopMACsec(IN const Json::Value& req, OUT Json::Value& response)
+{
+    DEBUG_PRINT(DEBUG_TRACE,"Inside Function platform_hal_StartMACsec stub\n");
+    int ethPort = 1;
+
+    if(&req["ethPort"] == NULL)
+    {
+        response["result"] = "FAILURE";
+        response["details"] = "NULL parameter as input argument";
+        return;
+    }
+
+    ethPort = req["ethPort"].asInt();
+
+    if(ssp_StopMACsec(ethPort) == RETURN_SUCCESS)
+    {
+        response["result"] = "SUCCESS";
+        response["details"] = "StartMACsec function was successful";
+        DEBUG_PRINT(DEBUG_TRACE, "%s:: Test execution successful\n", __func__);
+        return;
+    }
+    else
+    {
+        response["result"] = "FAILURE";
+        response["details"] = "StartMACsec function was NOT successful, Please check logs";
+        DEBUG_PRINT(DEBUG_TRACE, "%s:: Test execution failed\n", __func__);
+        return;
+    }
+}	
+/*****************************************************************************************************
+ *Function name : platform_stub_hal_GetWebAccessLevel
+ *Description   : This function will invoke the HAL wrapper to get the Web Access Level value
+ *@param [in]   : req - ParamName : Holds the name of the parameter
+ *@param [out]  : response - filled with SUCCESS or FAILURE based on the return value
+ ******************************************************************************************************/
+void platform_stub_hal::platform_stub_hal_GetWebAccessLevel(IN const Json::Value& req, OUT Json::Value& response)
+{
+    unsigned long int level = 0;
+    char getResult[MAX_STRING_SIZE] = {0};
+    int isNegativeScenario = 0;
+    int user_index = 0;
+    int if_index = 0;
+    int result = RETURN_FAILURE;
+    DEBUG_PRINT(DEBUG_TRACE,"Inside Function platform_stub_hal_GetWebAccessLevel stub\n");
+    if(&req["flag"])
+    {
+        isNegativeScenario = req["flag"].asInt();
+    }
+    if(&req["userIndex"])
+    {
+        user_index = req["userIndex"].asInt();
+    }
+    if(&req["ifIndex"])
+    {
+        if_index = req["ifIndex"].asInt();
+    }
+    if(isNegativeScenario)
+    {
+        DEBUG_PRINT(DEBUG_TRACE, "Executing negative scenario\n");
+        result = ssp_GetWebAccessLevel(user_index, if_index, NULL);
+    }
+    else
+    {
+        DEBUG_PRINT(DEBUG_TRACE, "Executing positive scenario\n");
+        result = ssp_GetWebAccessLevel(user_index, if_index, &level);
+    }
+    if(result == RETURN_SUCCESS)
+    {
+        snprintf(getResult, MAX_STRING_SIZE, "%lu", level);
+        response["result"] = "SUCCESS";
+        response["details"] = getResult;
+        DEBUG_PRINT(DEBUG_TRACE, "%s:: Test execution successful:: result = %s\n", __func__, getResult);
+        return;
+    }
+    else
+    {
+        response["result"] = "FAILURE";
+        response["details"] = "Level not fetched successfully";
+        DEBUG_PRINT(DEBUG_TRACE, "%s:: Test execution failed\n", __func__);
+        return;
+    }
+}
+
 /********************************************************************************************
  *Function Name   : CreateObject
  *Description     : This function is used to create a new object of the class "TR069Agent".

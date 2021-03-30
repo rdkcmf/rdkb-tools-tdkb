@@ -875,3 +875,110 @@ int ssp_GetRouterRegion(char* pValue)
         return RETURN_OK;
 }
 
+/*******************************************************************************************
+ * * Function Name       : ssp_GetMemoryPaths
+ ** Description          : This function will invoke the HAL API to get the platform_hal_GetMemoryPaths
+ ** @param [in]          : index - Index value of RDK_CPUS
+                         : ppinfo - Structure value of PPLAT_PROC_MEM_INFO
+ ** @param [out]         : return status an integer value 0-success and 1-Failure
+ *********************************************************************************************/
+int ssp_GetMemoryPaths(RDK_CPUS index, PPLAT_PROC_MEM_INFO *ppinfo)
+{
+    DEBUG_PRINT(DEBUG_TRACE, "Entering the ssp_GetMemoryPaths wrapper\n");
+    DEBUG_PRINT(DEBUG_TRACE, "RDK_CPUS index value is %d\n",(int)index);
+
+    if(platform_hal_GetMemoryPaths(index, ppinfo) != RETURN_OK)
+    {
+        DEBUG_PRINT(DEBUG_ERROR, " platform_hal_GetMemoryPaths function failure\n");
+        return RETURN_ERR;
+    }
+    DEBUG_PRINT(DEBUG_TRACE, "Value of dramPath is %s",(*ppinfo)->dramPath);
+    DEBUG_PRINT(DEBUG_TRACE, "Value of emmcPath1 is %s",(*ppinfo)->emmcPath1);
+    DEBUG_PRINT(DEBUG_TRACE, "Value of emmcPath2 is %s",(*ppinfo)->emmcPath2);
+
+    DEBUG_PRINT(DEBUG_TRACE, "platform_hal_GetMemoryPaths call was success\n");
+    return RETURN_OK;
+}
+
+/*******************************************************************************************
+ * * Function Name       : ssp_SetLowPowerModeState
+ ** Description          : This function will invoke the HAL API to set the platform_hal_SetLowPowerModeState
+ ** @param [in]          : state - Power Mode value (AC, Battery, etc.,)
+ ** @param [out]         : return status an integer value 0-success and 1-Failure
+ *********************************************************************************************/
+int ssp_SetLowPowerModeState(PSM_STATE state)
+{
+    DEBUG_PRINT(DEBUG_TRACE, "Entering the ssp_SetLowPowerModeState wrapper\n");
+    DEBUG_PRINT(DEBUG_TRACE, "Value to be set on LowPowerModeState is %d \n",(int)state);
+
+    if(platform_hal_SetLowPowerModeState(&state) != RETURN_OK)
+    {
+        DEBUG_PRINT(DEBUG_ERROR, "Platform_hal_SetLowPowerModeState function failure\n");
+        return RETURN_ERR;
+    }
+
+    DEBUG_PRINT(DEBUG_TRACE, "platform_hal_SetLowPowerModeState call was success\n");
+    return RETURN_OK;
+}
+
+/*******************************************************************************************
+ * * Function Name       : ssp_StartMACsec
+ ** Description          : This function will invoke the HAL API platform_hal_StartMACsec
+ ** @param [in]          : state - Power Mode value (AC, Battery, etc.,)
+ ** @param [out]         : return status an integer value 0-success and 1-Failure
+ *********************************************************************************************/
+int ssp_StartMACsec(int ethPort, int timeout)
+{
+    DEBUG_PRINT(DEBUG_TRACE, "Entering the ssp_StartMACsec wrapper\n");
+    DEBUG_PRINT(DEBUG_TRACE, "ethPort value is %d and timeout value is %d \n",ethPort,timeout);
+
+    if(platform_hal_StartMACsec(ethPort,timeout) != RETURN_OK)
+    {
+        DEBUG_PRINT(DEBUG_ERROR, "platform_hal_StartMACsec function failure\n");
+        return RETURN_ERR;
+    }
+
+    DEBUG_PRINT(DEBUG_TRACE, "platform_hal_StartMACsec call was success\n");
+    return RETURN_OK;
+}
+
+/*******************************************************************************************
+ * * Function Name       : ssp_StopMACsec
+ ** Description          : This function will invoke the HAL API platform_hal_StopMACsec
+ ** @param [in]          : state - Power Mode value (AC, Battery, etc.,)
+ ** @param [out]         : return status an integer value 0-success and 1-Failure
+ *********************************************************************************************/
+int ssp_StopMACsec(int ethPort)
+{
+    DEBUG_PRINT(DEBUG_TRACE, "Entering the ssp_StopMACsec wrapper\n");
+    DEBUG_PRINT(DEBUG_TRACE, "ethPort value is %d \n",ethPort);
+
+    if(platform_hal_StopMACsec(ethPort) != RETURN_OK)
+    {
+        DEBUG_PRINT(DEBUG_ERROR, "platform_hal_StopMACsec function failure\n");
+        return RETURN_ERR;
+    }
+
+    DEBUG_PRINT(DEBUG_TRACE, "platform_hal_StopMACsec call was success\n");
+    return RETURN_OK;
+}
+
+/*******************************************************************************************
+ * * Function Name       : ssp_GetWebAccessLevel
+ ** Description          : This function will invoke the HAL API to get the WebAccessLevel
+ ** @param [in]          : String to fetch the WebAccessLevel
+ ** @param [out]         : return status an integer value 0-success and 1-Failure
+ *********************************************************************************************/
+int ssp_GetWebAccessLevel(int user, int index, unsigned long int* pulValue)
+{
+    DEBUG_PRINT(DEBUG_TRACE, "Entering the ssp_GetWebAccessLevel wrapper\n");
+    DEBUG_PRINT(DEBUG_TRACE, "User Value is :%d and Interface Index Value is :%d \n",user,index);
+    if(platform_hal_GetWebAccessLevel(user, index, pulValue) != RETURN_OK)
+    {
+        DEBUG_PRINT(DEBUG_ERROR, " platform_hal_GetWebAccessLevel function failure\n");
+        return RETURN_ERR;
+    }
+    DEBUG_PRINT(DEBUG_TRACE, "platform_hal_GetWebAccessLevel call was success\n");
+    DEBUG_PRINT(DEBUG_TRACE, "The WebAccessLevel Value is :%lu\n",*pulValue);  
+    return RETURN_OK;
+}
