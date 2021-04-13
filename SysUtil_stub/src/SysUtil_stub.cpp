@@ -126,6 +126,36 @@ void SysUtilAgent::SysUtilAgent_ExecuteCmd(IN const Json::Value& req, OUT Json::
 }
 
 /**************************************************************************
+Function name : SysUtilAgent::SysUtilAgent_ExecuteCmdReboot
+Arguments     : Input arguments are json request object and json response object
+Description   : This method queries for the parameter requested through curl and returns the value.
+***************************************************************************/
+void SysUtilAgent::SysUtilAgent_ExecuteCmdReboot(IN const Json::Value& req, OUT Json::Value& response)
+{
+    DEBUG_PRINT(DEBUG_TRACE, "SysUtilAgent_ExecuteCmdReboot -->Entry\n");
+    string fileinfo = req["command"].asCString();
+    FILE *fp = NULL;
+    /*Frame the command  */
+    string path = "";
+    path.append(fileinfo);
+    DEBUG_PRINT(DEBUG_TRACE, "Command Request Framed: %s\n",path.c_str());
+    fp = popen(path.c_str(),"r");
+    /*Check for popen failure*/
+    if(fp == NULL)
+    {
+        response["result"] = "FAILURE";
+        response["details"] = "popen() failure";
+        DEBUG_PRINT(DEBUG_ERROR, "popen() failure\n");
+        return;
+    }
+    pclose(fp);
+    response["result"] = "SUCCESS";
+    DEBUG_PRINT(DEBUG_LOG, "Execution success\n");
+    DEBUG_PRINT(DEBUG_TRACE, "SysUtilAgent_ExecuteCmdReboot -->Exit\n");
+    return;
+}
+
+/**************************************************************************
 Function Name   : CreateObject
 
 Arguments       : NULL

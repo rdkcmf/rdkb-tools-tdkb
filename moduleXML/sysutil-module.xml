@@ -34,10 +34,12 @@
   <!-- Total functions corresponding module  -->
     <functions>
       <function name='TestMgr_ExecuteCmd' />
+      <function name='TestMgr_ExecuteCmdReboot' />
     </functions>
   <!-- Total parameters corresponding module  -->
     <parameters>
-      <parameter funName='TestMgr_ExecuteCmd' parameterName='command' parameterType='STRING' range='A-Z' />
+     <parameter funName='TestMgr_ExecuteCmd' parameterName='command' parameterType='STRING' range='A-Z' />
+     <parameter funName='TestMgr_ExecuteCmdReboot' parameterName='command' parameterType='STRING' range='A-Z' />
     </parameters>
   </module>
 </xml>

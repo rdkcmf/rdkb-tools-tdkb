@@ -49,6 +49,7 @@ class SysUtilAgent : public RDKTestStubInterface, public AbstractServer<SysUtilA
 				SysUtilAgent(TcpSocketServer &ptrRpcServer) : AbstractServer <SysUtilAgent>(ptrRpcServer)
 				{
 					this->bindAndAddMethod(Procedure("TestMgr_ExecuteCmd", PARAMS_BY_NAME, JSON_STRING, "command", JSON_STRING, NULL), &SysUtilAgent::SysUtilAgent_ExecuteCmd);
+                                        this->bindAndAddMethod(Procedure("TestMgr_ExecuteCmdReboot", PARAMS_BY_NAME, JSON_STRING, "command", JSON_STRING, NULL), &SysUtilAgent::SysUtilAgent_ExecuteCmdReboot);
 				}
 
                 /*Inherited functions*/
@@ -57,6 +58,7 @@ class SysUtilAgent : public RDKTestStubInterface, public AbstractServer<SysUtilA
                 std::string testmodulepre_requisites();
                 bool testmodulepost_requisites();
                 void SysUtilAgent_ExecuteCmd(IN const Json::Value& req, OUT Json::Value& response);
+                void SysUtilAgent_ExecuteCmdReboot(IN const Json::Value& req, OUT Json::Value& response);
 };
 
 #endif

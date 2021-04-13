@@ -22,6 +22,12 @@
         <parameters>
           <parameter name='command' value='' />
         </parameters>
+       </primitiveTest>
+       <primitiveTest name="ExecuteCmdReboot" id=" " version="1">
+        <function>TestMgr_ExecuteCmdReboot</function>
+        <parameters>
+          <parameter name="command" value=""/>
+        </parameters>
       </primitiveTest>
     </primitiveTests>
   </module>
