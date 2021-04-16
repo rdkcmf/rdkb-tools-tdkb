@@ -124,7 +124,7 @@ if "SUCCESS" in loadmodulestatus.upper():
 	    actualresult = tdkTestObj.getResult();
 	    actualdetails = tdkTestObj.getResultDetails();
 	    details = (actualdetails.split(":")[1]);
-	    if expectedresult in actualresult and details.isdigit() or 'b/s' in details:
+	    if expectedresult in actualresult and details.isdigit() or 'b/s' or 'Mbps' in details:
 		#Set the result status of execution
 		tdkTestObj.setResultStatus("SUCCESS");
 		print "TEST STEP 1: Get the Radio Max Bit Rate for 2.4GHz";

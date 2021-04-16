@@ -118,7 +118,7 @@ if "SUCCESS" in loadmodulestatus.upper():
 		if "Enabled" in details:
 		    oldEnable = 1;
 		    newEnable = 0;
-		    ExpectedStatus = ["Disabled","Down"];
+		    ExpectedStatus = ["Disabled","Down","Disable"];
 		else:
 		    oldEnable = 0;
 		    newEnable = 1;
