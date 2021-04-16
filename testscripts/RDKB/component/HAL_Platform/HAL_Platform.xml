@@ -277,7 +277,8 @@
       <primitiveTest name="platform_stub_hal_GetMemoryPaths" id=" " version="1">
         <function>platform_stub_hal_GetMemoryPaths</function>
         <parameters>
-          <parameter name="cpus" value="0"/>
+	 <parameter name="cpus" value="0"/>
+	 <parameter name="flag" value="0"/>
         </parameters>
       </primitiveTest>
       <primitiveTest name="platform_stub_hal_SetLowPowerModeState" id=" " version="1">

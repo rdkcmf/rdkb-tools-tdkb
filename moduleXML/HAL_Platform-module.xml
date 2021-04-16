@@ -134,8 +134,9 @@
       <parameter funName='platform_stub_hal_setFanMaxOverride' parameterName='flag' parameterType='INTEGER' range='0-100' />
       <parameter funName='platform_stub_hal_setFactoryCmVariant' parameterName='CmVarient' parameterType='STRING' range='A-Z' />
       <parameter funName='platform_stub_hal_SetSNMPOnboardRebootEnable' parameterName='SNMPonboard' parameterType='STRING' range='A-Z' />
-      <parameter funName='platform_stub_hal_GetMemoryPaths' parameterName='cpus' parameterType='INTEGER' range='0-9' />
-      <parameter funName='platform_stub_hal_SetLowPowerModeState' parameterName='state' parameterType='INTEGER' range='0-9' />
+      <parameter funName='platform_stub_hal_GetMemoryPaths' parameterName='cpus' parameterType='INTEGER' range='0-100' />
+      <parameter funName='platform_stub_hal_GetMemoryPaths' parameterName='flag' parameterType='INTEGER' range='0-1' />
+      <parameter funName='platform_stub_hal_SetLowPowerModeState' parameterName='state' parameterType='INTEGER' range='0-100' />
       <parameter funName='platform_stub_hal_StartMACsec' parameterName='ethPort' parameterType='INTEGER' range='0-100' />
       <parameter funName='platform_stub_hal_StartMACsec' parameterName='timeoutSec' parameterType='INTEGER' range='0-100' />
       <parameter funName='platform_stub_hal_StopMACsec' parameterName='ethPort' parameterType='INTEGER' range='0-100' />
