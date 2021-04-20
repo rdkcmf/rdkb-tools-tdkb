@@ -87,6 +87,8 @@
       <function name='WIFIHAL_GetBTMClientCapabilityList' />
       <function name='WIFIHAL_GetBSSColorValue' />
       <function name='WIFIHAL_ApplyGASConfiguration' />
+      <function name='WIFIHAL_GetApInterworkingElement' />
+      <function name='WIFIHAL_PushApInterworkingElement' />
     </functions>
   <!-- Total parameters corresponding module  -->
     <parameters>
@@ -243,6 +245,19 @@
       <parameter funName='WIFIHAL_ApplyGASConfiguration' parameterName='comeBackDelay' parameterType='INTEGER' range='0-50' />
       <parameter funName='WIFIHAL_ApplyGASConfiguration' parameterName='responseTimeout' parameterType='INTEGER' range='0-50' />
       <parameter funName='WIFIHAL_ApplyGASConfiguration' parameterName='pauseForServerResponse' parameterType='INTEGER' range='0-50' />
+      <parameter funName='WIFIHAL_GetApInterworkingElement' parameterName='radioIndex' parameterType='INTEGER' range='0-1' />
+      <parameter funName='WIFIHAL_PushApInterworkingElement' parameterName='radioIndex' parameterType='INTEGER' range='0-1' />
+      <parameter funName='WIFIHAL_PushApInterworkingElement' parameterName='interworkingEnabled' parameterType='INTEGER' range='0-1' />
+      <parameter funName='WIFIHAL_PushApInterworkingElement' parameterName='accessNetworkType' parameterType='INTEGER' range='0-100' />
+      <parameter funName='WIFIHAL_PushApInterworkingElement' parameterName='internetAvailable' parameterType='INTEGER' range='0-1' />
+      <parameter funName='WIFIHAL_PushApInterworkingElement' parameterName='asra' parameterType='INTEGER' range='0-1' />
+      <parameter funName='WIFIHAL_PushApInterworkingElement' parameterName='esra' parameterType='INTEGER' range='0-1' />
+      <parameter funName='WIFIHAL_PushApInterworkingElement' parameterName='uesa' parameterType='INTEGER' range='0-1' />
+      <parameter funName='WIFIHAL_PushApInterworkingElement' parameterName='venueOptionPresent' parameterType='INTEGER' range='0-1' />
+      <parameter funName='WIFIHAL_PushApInterworkingElement' parameterName='venueType' parameterType='INTEGER' range='0-100' />
+      <parameter funName='WIFIHAL_PushApInterworkingElement' parameterName='venueGroup' parameterType='INTEGER' range='0-100' />
+      <parameter funName='WIFIHAL_PushApInterworkingElement' parameterName='hessOptionPresent' parameterType='INTEGER' range='0-1' />
+      <parameter funName='WIFIHAL_PushApInterworkingElement' parameterName='hessid' parameterType='STRING' range='A-Z' />
     </parameters>
   </module>
 </xml>

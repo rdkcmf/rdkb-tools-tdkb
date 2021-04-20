@@ -464,6 +464,29 @@
           <parameter name="queryResponseLengthLimit" value="0"/>
         </parameters>
       </primitiveTest>
+      <primitiveTest name="WIFIHAL_GetApInterworkingElement" id=" " version="1">
+        <function>WIFIHAL_GetApInterworkingElement</function>
+        <parameters>
+          <parameter name="radioIndex" value=""/>
+        </parameters>
+     </primitiveTest>
+      <primitiveTest name="WIFIHAL_PushApInterworkingElement" id=" " version="1">
+        <function>WIFIHAL_PushApInterworkingElement</function>
+        <parameters>
+          <parameter name="accessNetworkType" value=""/>
+          <parameter name="asra" value=""/>
+          <parameter name="esra" value=""/>
+          <parameter name="hessid" value=""/>
+          <parameter name="hessOptionPresent" value=""/>
+          <parameter name="internetAvailable" value=""/>
+          <parameter name="interworkingEnabled" value=""/>
+          <parameter name="radioIndex" value=""/>
+          <parameter name="uesa" value=""/>
+          <parameter name="venueGroup" value=""/>
+          <parameter name="venueOptionPresent" value=""/>
+          <parameter name="venueType" value=""/>
+        </parameters>
+      </primitiveTest>
     </primitiveTests>
   </module>
 </xml>
