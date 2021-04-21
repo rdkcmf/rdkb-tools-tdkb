@@ -1422,20 +1422,22 @@ void platform_stub_hal::platform_stub_hal_GetFanSpeed(IN const Json::Value& req,
         char getResult[MAX_STRING_SIZE] = {0};
         int isNegativeScenario = 0;
         int result = RETURN_FAILURE;
+        unsigned int fanIndex = 0;
         DEBUG_PRINT(DEBUG_TRACE,"Inside Function platform_stub_hal_GetFanSpeed stub\n");
         if(&req["flag"])
         {
                 isNegativeScenario = req["flag"].asInt();
         }
+        fanIndex = req["fanIndex"].asInt();
         if(isNegativeScenario)
         {
                 DEBUG_PRINT(DEBUG_TRACE, "Executing negative scenario\n");
-                result = ssp_GetFanSpeed(NULL);
+                result = ssp_GetFanSpeed(fanIndex,NULL);
         }
         else
         {
                 DEBUG_PRINT(DEBUG_TRACE, "Executing positive scenario\n");
-                result = ssp_GetFanSpeed(&SpeedValue);
+                result = ssp_GetFanSpeed(fanIndex,&SpeedValue);
         }
         if(result == RETURN_SUCCESS)
         {
@@ -1729,9 +1731,11 @@ void platform_stub_hal::platform_stub_hal_getRPM(IN const Json::Value& req, OUT 
 {
         unsigned int rpmValue = 0;
         char details[MAX_STRING_SIZE] = {0};
+        unsigned int fanIndex = 0;
         DEBUG_PRINT(DEBUG_TRACE,"Inside Function platform_stub_hal_getRPM stub\n");
+        fanIndex = req["fanIndex"].asInt();
 
-        if(ssp_getRPM(&rpmValue) == RETURN_SUCCESS)
+        if(ssp_getRPM(fanIndex,&rpmValue) == RETURN_SUCCESS)
         {
                 sprintf(details, "RPM value is :%u", rpmValue);
                 response["result"] = "SUCCESS";
@@ -1757,9 +1761,11 @@ void platform_stub_hal::platform_stub_hal_getRPM(IN const Json::Value& req, OUT 
 void platform_stub_hal::platform_stub_hal_getRotorLock(IN const Json::Value& req, OUT Json::Value& response)
 {
         int rotorLock = 0;
+        unsigned int fanIndex = 0;
         char details[MAX_STRING_SIZE] = {0};
         DEBUG_PRINT(DEBUG_TRACE,"Inside Function platform_stub_hal_getRotorLock stub\n");
-        if(ssp_getRotorLock(&rotorLock) == RETURN_SUCCESS)
+        fanIndex = req["fanIndex"].asInt();
+        if(ssp_getRotorLock(fanIndex,&rotorLock) == RETURN_SUCCESS)
         {
                 response["result"] = "SUCCESS";
                 sprintf(details,"Rotor Lock value is :%d",rotorLock);
@@ -1785,9 +1791,11 @@ void platform_stub_hal::platform_stub_hal_getRotorLock(IN const Json::Value& req
 void platform_stub_hal::platform_stub_hal_getFanStatus(IN const Json::Value& req, OUT Json::Value& response)
 {
         int fanstatus = 0;
+        unsigned int fanIndex = 0;
         char details[MAX_STRING_SIZE] = {0};
         DEBUG_PRINT(DEBUG_TRACE,"Inside Function platform_stub_hal_getRotorLock stub\n");
-        if(ssp_getFanStatus(&fanstatus) == RETURN_SUCCESS)
+        fanIndex = req["fanIndex"].asInt();
+        if(ssp_getFanStatus(fanIndex,&fanstatus) == RETURN_SUCCESS)
 	{
                 response["result"] = "SUCCESS";
                 sprintf(details,"Fan Status is :%d",fanstatus);
@@ -1808,11 +1816,13 @@ void platform_stub_hal::platform_stub_hal_getFanStatus(IN const Json::Value& req
  *Function name : platform_stub_hal_ssp_setFanMaxOverride
  *Description   : This function will invoke the HAL wrapper to set the Fan Max override
  *@param [in]   : req - flag : To set the Fan Max override
+ *@param [in]   : req - fanIndex : Fan index starting from 0
  *param [out]  : response - filled with SUCCESS or FAILURE based on the return value
  ******************************************************************************************************/
 void platform_stub_hal::platform_stub_hal_setFanMaxOverride(IN const Json::Value& req, OUT Json::Value& response)
 {
         int flag = 0;
+        unsigned int fanIndex = 0;
         BOOLEAN setFlag = 0;
         DEBUG_PRINT(DEBUG_TRACE,"Inside Function platform_stub_hal_SetFanMaxOverride stub\n");
         if(&req["flag"] == NULL)
@@ -1821,7 +1831,14 @@ void platform_stub_hal::platform_stub_hal_setFanMaxOverride(IN const Json::Value
                 response["details"] = "NULL parameter as input argument";
                 return;
         }
+        if(&req["fanIndex"] == NULL)
+        {
+                response["result"] = "FAILURE";
+                response["details"] = "NULL parameter as input argument";
+                return;
+        }
         flag = req["flag"].asInt();
+        fanIndex = (unsigned int)req["fanIndex"].asInt();
         if(flag == 0)
         {
                 setFlag = 0;
@@ -1837,7 +1854,7 @@ void platform_stub_hal::platform_stub_hal_setFanMaxOverride(IN const Json::Value
                 return;
         }
 
-        if(ssp_setFanMaxOverride(setFlag) == RETURN_SUCCESS)
+        if(ssp_setFanMaxOverride(setFlag, fanIndex) == RETURN_SUCCESS)
         {
                 response["result"] = "SUCCESS";
                 response["details"] = "Set FanMaxOverride fetched successfully";

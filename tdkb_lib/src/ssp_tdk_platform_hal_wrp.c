@@ -601,16 +601,22 @@ int ssp_GetChipTemperature(unsigned int chipIndex,unsigned long int* pTempValue)
  ** @param [in]          : String to fetch FanSpeed
  ** @param [out]         : return status an integer value 0-success and 1-Failure
  ********************************************************************************************/
-int ssp_GetFanSpeed(unsigned long int* pSpeedValue)
+int ssp_GetFanSpeed(unsigned int fanIndex,unsigned long int* pSpeedValue)
 {
         DEBUG_PRINT(DEBUG_TRACE, "Entering the ssp_GetFanSpeed wrapper\n");
-//      CHECK_PARAM_AND_RET(pSpeedValue);
-        if(platform_hal_getFanSpeed(pSpeedValue) != RETURN_OK)
+        unsigned int speedValue = 0;
+        speedValue = platform_hal_getFanSpeed(fanIndex);
+        *pSpeedValue = speedValue;
+        DEBUG_PRINT(DEBUG_TRACE, "Value of Fan Speed is %d\n",speedValue);
+
+        if ((signed)speedValue < 0 )
         {
-                DEBUG_PRINT(DEBUG_ERROR, "platform_hal_GetFanSpeed function failure\n");
+                DEBUG_PRINT(DEBUG_ERROR, "Platform funtion returns failure\n");
                 return RETURN_ERR;
         }
+        DEBUG_PRINT(DEBUG_TRACE, "Platform function returns success\n");
         return RETURN_OK;
+
 }
 
 /*******************************************************************************************
@@ -739,11 +745,11 @@ int ssp_setFactoryCmVariant(char *pValue)
  ** @param [in]          : boolean to fetch the RPM value
  ** @param [out]         : return status an integer value 0-success and 1-Failure
  *********************************************************************************************/
-int ssp_getRPM(unsigned int *rpmbuf)
+int ssp_getRPM(unsigned int fanIndex,unsigned int *rpmbuf)
 {
         DEBUG_PRINT(DEBUG_TRACE, "Entering the ssp_getRPM wrapper\n");
         unsigned int rpmValue = 0;
-        rpmValue = platform_hal_getRPM();
+        rpmValue = platform_hal_getRPM(fanIndex);
         *rpmbuf = rpmValue;
         DEBUG_PRINT(DEBUG_TRACE, "Value of RPM is %d\n",rpmValue);
 
@@ -764,11 +770,11 @@ int ssp_getRPM(unsigned int *rpmbuf)
  ** @param [in]          : integer to fetch the Rotot Lock Value
  ** @param [out]         : return status an integer value 0-success and 1-Failure
  *********************************************************************************************/
-int ssp_getRotorLock(int *rotorLockbuf)
+int ssp_getRotorLock(unsigned int fanIndex,int *rotorLockbuf)
 {
         DEBUG_PRINT(DEBUG_TRACE, "Entering the ssp_getRotorLock wrapper\n");
         int rotorLockValue = 0;
-        rotorLockValue = platform_hal_getRotorLock();
+        rotorLockValue = platform_hal_getRotorLock(fanIndex);
         *rotorLockbuf = rotorLockValue;
         DEBUG_PRINT(DEBUG_ERROR, "Value of RotorLock is %d\n",rotorLockValue);
 
@@ -789,11 +795,11 @@ int ssp_getRotorLock(int *rotorLockbuf)
  ** @param [in]          : String to fetch the Fan status
  ** @param [out]         : return status an integer value 0-success and 1-Failure
  *********************************************************************************************/
-int ssp_getFanStatus(int *flag)
+int ssp_getFanStatus(unsigned int fanIndex,int *flag)
 {
         DEBUG_PRINT(DEBUG_TRACE, "Entering the ssp_getFanStatus wrapper\n");
         BOOLEAN fanStatus = 0;
-        fanStatus = platform_hal_getFanStatus();
+        fanStatus = platform_hal_getFanStatus(fanIndex);
         *flag = (int)fanStatus;
         DEBUG_PRINT(DEBUG_TRACE, "Value of FanStatus is %d\n",fanStatus);
         if (fanStatus == 1)
@@ -819,12 +825,13 @@ int ssp_getFanStatus(int *flag)
  ** Description          : This function will invoke the HAL API to set the Fan Max Override
  **
  ** @param [in]          : Boolean value to enable or disable
+ ** @param fanIndex      : Fan index starting from 0
  ** @param [out]         : return status an integer value 0-success and 1-Failure
  *********************************************************************************************/
-int ssp_setFanMaxOverride(BOOLEAN flag)
+int ssp_setFanMaxOverride(BOOLEAN flag, unsigned int fanIndex)
 {
         DEBUG_PRINT(DEBUG_TRACE, "Entering the ssp_setFanMaxOverride wrapper\n");
-	if (platform_hal_setFanMaxOverride(flag) != RETURN_OK )
+	if (platform_hal_setFanMaxOverride(flag, fanIndex) != RETURN_OK )
         {
                 DEBUG_PRINT(DEBUG_ERROR, "Platform funtion returns failure\n");
                 return RETURN_ERR;
