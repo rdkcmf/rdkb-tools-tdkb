@@ -81,3 +81,5 @@ int ssp_WIFIHALGetApRoamingConsortiumElement(int apIndex, wifi_roamingConsortium
 int ssp_WIFIHALPushApRoamingConsortiumElement(int apIndex, wifi_roamingConsortiumElement_t* roam);
 int ssp_WIFIHALGetBSSColorValue(int radioIndex, unsigned char *color);
 int ssp_WIFIHALApplyGASConfiguration(wifi_GASConfiguration_t *GASConfiguration);
+int ssp_WIFIHALGetApInterworkingElement(int radioIndex, wifi_InterworkingElement_t *element);
+int ssp_WIFIHALPushApInterworkingElement(int radioIndex, wifi_InterworkingElement_t *element);

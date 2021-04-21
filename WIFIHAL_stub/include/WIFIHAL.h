@@ -469,6 +469,23 @@ typedef struct {
     unsigned char    wifiRoamingConsortiumLen[3];
 }wifi_roamingConsortiumElement_t;
 
+typedef char mac_addr_str_t[18];
+
+typedef struct _wifi_InterworkingElement_t
+{
+    bool interworkingEnabled;
+    unsigned int accessNetworkType;
+    bool internetAvailable;
+    bool asra;
+    bool esra;
+    bool uesa;
+    bool venueOptionPresent;
+    unsigned char venueType;
+    unsigned char venueGroup;
+    bool hessOptionPresent;
+    mac_addr_str_t hessid;
+}wifi_InterworkingElement_t;
+
 /* To provide external linkage to C Functions defined in TDKB Component folder */
 extern "C"
 {
@@ -532,6 +549,8 @@ extern "C"
     int ssp_WIFIHALPushApRoamingConsortiumElement(int apIndex, wifi_roamingConsortiumElement_t* roam);
     int ssp_WIFIHALGetBSSColorValue(int radioIndex, unsigned char *color);
     int ssp_WIFIHALApplyGASConfiguration(wifi_GASConfiguration_t *GASConfiguration);
+    int ssp_WIFIHALGetApInterworkingElement(int radioIndex, wifi_InterworkingElement_t *element);
+    int ssp_WIFIHALPushApInterworkingElement(int radioIndex, wifi_InterworkingElement_t *element);
 };
 
 class RDKTestAgent;
@@ -602,7 +621,9 @@ class WIFIHAL : public RDKTestStubInterface, public AbstractServer<WIFIHAL>
                   this->bindAndAddMethod(Procedure("WIFIHAL_PushApRoamingConsortiumElement", PARAMS_BY_NAME, JSON_STRING, "apIndex", JSON_INTEGER, "ouiCount", JSON_INTEGER, "ouiList", JSON_STRING, "ouiLen", JSON_STRING, NULL), &WIFIHAL::WIFIHAL_PushApRoamingConsortiumElement);
                   this->bindAndAddMethod(Procedure("WIFIHAL_GetBSSColorValue", PARAMS_BY_NAME, JSON_STRING,"radioIndex", JSON_INTEGER, "paramType",  JSON_STRING,NULL), &WIFIHAL::WIFIHAL_GetBSSColorValue);
                   this->bindAndAddMethod(Procedure("WIFIHAL_ApplyGASConfiguration",PARAMS_BY_NAME, JSON_STRING, "advertisementID", JSON_INTEGER, "pauseForServerResponse", JSON_INTEGER, "responseTimeout", JSON_INTEGER, "comeBackDelay", JSON_INTEGER, "responseBufferingTime", JSON_INTEGER, "queryResponseLengthLimit", JSON_INTEGER, NULL), &WIFIHAL::WIFIHAL_ApplyGASConfiguration);
-                }
+                  this->bindAndAddMethod(Procedure("WIFIHAL_GetApInterworkingElement", PARAMS_BY_NAME, JSON_STRING,"radioIndex", JSON_INTEGER, NULL), &WIFIHAL::WIFIHAL_GetApInterworkingElement);
+                  this->bindAndAddMethod(Procedure("WIFIHAL_PushApInterworkingElement",PARAMS_BY_NAME, JSON_STRING, "radioIndex", JSON_INTEGER, "interworkingEnabled", JSON_INTEGER, "accessNetworkType", JSON_INTEGER, "internetAvailable", JSON_INTEGER, "asra", JSON_INTEGER, "esra", JSON_INTEGER, "uesa", JSON_INTEGER, "venueOptionPresent", JSON_INTEGER, "venueType", JSON_INTEGER, "venueGroup", JSON_INTEGER, "hessOptionPresent", JSON_INTEGER, "hessid", JSON_STRING, NULL), &WIFIHAL::WIFIHAL_PushApInterworkingElement);
+		}
         /*inherited functions*/
         bool initialize(IN const char* szVersion);
         bool cleanup(IN const char* szVersion);
@@ -669,6 +690,8 @@ class WIFIHAL : public RDKTestStubInterface, public AbstractServer<WIFIHAL>
         void WIFIHAL_PushApRoamingConsortiumElement(IN const Json::Value& req, OUT Json::Value& response);
         void WIFIHAL_GetBSSColorValue(IN const Json::Value& req, OUT Json::Value& response);
         void WIFIHAL_ApplyGASConfiguration(IN const Json::Value& req, OUT Json::Value& response);
+        void WIFIHAL_GetApInterworkingElement(IN const Json::Value& req, OUT Json::Value& response);
+        void WIFIHAL_PushApInterworkingElement(IN const Json::Value& req, OUT Json::Value& response);
 };
 #endif //__WIFIHAL_STUB_H__
 

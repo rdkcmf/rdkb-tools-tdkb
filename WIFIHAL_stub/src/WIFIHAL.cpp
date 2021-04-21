@@ -3239,3 +3239,111 @@ void WIFIHAL::WIFIHAL_PushApRoamingConsortiumElement(IN const Json::Value& req, 
     }
 }
 
+/*******************************************************************************************
+*
+ * Function Name        : WIFIHAL_GetApInterworkingElement
+ * Description          : This function invokes WiFi hal get api wifi_getApInterworkingElement()
+ * @param [in] req-     : RadioIndex. 0 - 2.4GHz, 1 - 5GHz
+ * @param [out] response - filled with SUCCESS or FAILURE based on the output status of operation
+ *
+ ********************************************************************************************/
+void WIFIHAL::WIFIHAL_GetApInterworkingElement (IN const Json::Value& req, OUT Json::Value& response)
+{
+    DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_GetApInterworkingElement ----->Entry\n");
+    wifi_InterworkingElement_t element;
+    int radioIndex = 0;
+    int returnValue;
+    char details[1000] = {'\0'};
+    if(&req["radioIndex"]==NULL)
+    {
+        response["result"]="FAILURE";
+        response["details"]="NULL parameter as input argument";
+        return;
+    }
+    radioIndex = req["radioIndex"].asInt();
+    DEBUG_PRINT(DEBUG_TRACE,"\n Get operation requested\n");
+    returnValue = ssp_WIFIHALGetApInterworkingElement(radioIndex, &element);
+    if(0 == returnValue)
+    {
+        sprintf(details, "Value returned is :interworkingEnabled=%d, accessNetworkType=%d, internetAvailable=%d, asra=%d, esra=%d, uesa=%d, venueOptionPresent=%d, venueType=%d, venueGroup=%d, hessOptionPresent=%d, hessid=%s", element.interworkingEnabled, element.accessNetworkType, element.internetAvailable, element.asra, element.esra, element.uesa, element.venueOptionPresent, element.venueType, element.venueGroup, element.hessOptionPresent, element.hessid);
+        DEBUG_PRINT(DEBUG_TRACE,"\n %s", details);
+	response["result"]="SUCCESS";
+        response["details"]=details;
+        return;
+    }
+    else
+    {
+        sprintf(details, "wifi_getApInterworkingElement operation failed");
+        DEBUG_PRINT(DEBUG_TRACE,"\n %s", details);
+        response["result"]="FAILURE";
+        response["details"]=details;
+        DEBUG_PRINT(DEBUG_TRACE,"\n WiFiCallMethodForGetApInterworkingElement  --->Error in execution\n");
+        return;
+    }
+}
+
+/*******************************************************************************************
+ *
+ * Function Name        : WIFIHAL_PushApInterworkingElement
+ * Description          : This function invokes WiFi hal push api wifi_pushApInterworkingElement()
+ * @param [in] req-     : radioIndex - radio Index value of wifi
+                          interworkingEnabled - if Interworking Service is enabled or disabled(0/1)
+                          accessNetworkType - Network Type(0-15), specifies the type of network - Optional parameter
+                          internetAvailable - Internet available or not - Optional parameter
+                          asra - Optional parameter
+                          esra - Optional parameter
+                          uesa - Optional parameter
+                          venueOptionPresent - Optional parameter - True when venue information has been provided
+                          venueType - Optional parameter
+                          venueGroup - Optional parameter
+                          hessOptionPresent - Optional parameter - True when hessid is present
+                          hessid - Optional parameter - Mac Address
+ * @param [out] response - filled with SUCCESS or FAILURE based on the output status of operation
+ *
+ ********************************************************************************************/
+void WIFIHAL::WIFIHAL_PushApInterworkingElement (IN const Json::Value& req, OUT Json::Value& response)
+{
+    DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_PushApInterworkingElement ----->Entry\n");
+    wifi_InterworkingElement_t element;
+    int radioIndex = 0;
+    int returnValue;
+    char details[500] = {'\0'};
+    if(&req["radioIndex"]==NULL || &req["interworkingEnabled"]==NULL || &req["accessNetworkType"]==NULL || &req["internetAvailable"]==NULL || &req["asra"]==NULL || &req["esra"]==NULL || &req["uesa"]==NULL || &req["venueOptionPresent"]==NULL || &req["venueType"]==NULL || &req["venueGroup"]==NULL &req["hessOptionPresent"]==NULL || &req["hessid"]==NULL)
+    {
+        response["result"]="FAILURE";
+        response["details"]="NULL parameter as input argument";
+        return;
+    }
+    radioIndex = req["radioIndex"].asInt();
+    element.interworkingEnabled = req["interworkingEnabled"].asBool();
+    element.accessNetworkType = req["accessNetworkType"].asUInt();
+    element.internetAvailable = req["internetAvailable"].asBool();
+    element.asra = req["asra"].asBool();
+    element.esra = req["esra"].asBool();
+    element.uesa = req["uesa"].asBool();
+    element.venueOptionPresent = req["venueOptionPresent"].asBool();
+    element.venueType = req["venueType"].asInt();
+    element.venueGroup = req["venueGroup"].asInt();
+    element.hessOptionPresent = req["hessOptionPresent"].asBool();
+    strcpy(element.hessid, req["hessid"].asCString());
+
+    DEBUG_PRINT(DEBUG_TRACE,"\n Invoking wifi_pushApInterworkingElement\n");
+    returnValue = ssp_WIFIHALPushApInterworkingElement(radioIndex, &element);
+    if(0 == returnValue)
+    {
+        sprintf(details, "wifi_pushApInterworkingElement was invoked successfully");
+        DEBUG_PRINT(DEBUG_TRACE,"\n %s", details);
+        response["result"]="SUCCESS";
+        response["details"]=details;
+        return;
+    }
+    else
+    {
+        sprintf(details, "wifi_pushApInterworkingElement was not invoked successfully");
+        DEBUG_PRINT(DEBUG_TRACE,"\n %s", details);
+        response["result"]="FAILURE";
+        response["details"]=details;
+        DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_PushApInterworkingElement ---->Error in execution\n");
+        return;
+    }
+}

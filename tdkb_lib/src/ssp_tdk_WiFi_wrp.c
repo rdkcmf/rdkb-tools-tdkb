@@ -363,6 +363,24 @@ int ssp_WIFIHALGetOrSetParamBoolValue(int radioIndex, unsigned char *enable, cha
     }
     else if(!strcmp(method, "setAutoBlockAckEnable"))
         return_status = wifi_setAutoBlockAckEnable(radioIndex, *enable);
+    else if(!strcmp(method, "getApInterworkingServiceEnable"))
+    {
+        if(enable)
+            return_status = wifi_getApInterworkingServiceEnable(radioIndex, enable);
+        else
+            return_status = wifi_getApInterworkingServiceEnable(radioIndex, NULL);
+    }
+    else if(!strcmp(method, "setApInterworkingServiceEnable"))
+        return_status = wifi_setApInterworkingServiceEnable(radioIndex, *enable);
+    else if(!strcmp(method, "getApInterworkingServiceCapability"))
+    {
+        if(enable)
+            return_status = wifi_getApInterworkingServiceCapability(radioIndex, enable);
+        else
+            return_status = wifi_getApInterworkingServiceCapability(radioIndex, NULL);
+    }
+    else if(!strcmp(method, "enableGreylistAccessControl"))
+        return_status = wifi_enableGreylistAccessControl(*enable);
     else
     {
         return_status = SSP_FAILURE;
@@ -875,6 +893,15 @@ int ssp_WIFIHALGetOrSetParamUIntValue(int radioIndex, unsigned int* output, char
         else
             return_status = wifi_getSoftBlockWaitingTime(radioIndex, NULL);
     }
+    else if(!strcmp(method, "getInterworkingAccessNetworkType"))
+    {
+        if(output)
+           return_status = wifi_getInterworkingAccessNetworkType(radioIndex, output);
+        else
+            return_status = wifi_getInterworkingAccessNetworkType(radioIndex, NULL);
+    }
+    else if(!strcmp(method, "setInterworkingAccessNetworkType"))
+        return_status = wifi_setInterworkingAccessNetworkType(radioIndex, *output);
     else
     {
         return_status = SSP_FAILURE;
@@ -2447,3 +2474,58 @@ int ssp_WIFIHALPushApRoamingConsortiumElement(int apIndex, wifi_roamingConsortiu
     }
 }
 
+/*******************************************************************************************
+ *
+ * Function Name        : ssp_WIFIHALGetApInterworkingElement
+ * Description          : This function invokes WiFi HAL api wifi_getApInterworkingElement
+ *
+ * @param [in]          : radioIndex - WiFi radio index value
+ * @param [in]          : wifi_InterworkingElement_t- structure with element info
+ * @param [out]         : return status an integer value 0-success and 1-Failure
+ ********************************************************************************************/
+int ssp_WIFIHALGetApInterworkingElement(int radioIndex, wifi_InterworkingElement_t *element)
+{
+    printf("\n ssp_WIFIHALGetApInterworkingElement ----> Entry\n");
+    printf("Radio index:%d\n",radioIndex);
+    int return_status = 0;
+    return_status = wifi_getApInterworkingElement(radioIndex, element);
+    if(return_status != SSP_SUCCESS)
+    {
+         printf("\nssp_WIFIHALGetApInterworkingElement::Failed\n");
+         return_status = SSP_FAILURE;
+    }
+    else
+    {
+         printf("\nssp_WIFIHALGetApInterworkingElement::Success\n");
+    }
+    printf("\n ssp_WIFIHALGetApInterworkingElement ---> Exit\n");
+    return return_status;
+}
+
+/*******************************************************************************************
+ *
+ * Function Name        : ssp_WIFIHALPushApInterworkingElement
+ * Description          : This function invokes WiFi HAL api wifi_pushApInterworkingElement
+ *
+ * @param [in]          : radioIndex - WiFi radio index value
+ * @param [in]          : wifi_InterworkingElement_t- structure with element info
+ * @param [out]         : return status an integer value 0-success and 1-Failure
+ ********************************************************************************************/
+int ssp_WIFIHALPushApInterworkingElement(int radioIndex, wifi_InterworkingElement_t *element)
+{
+    printf("\n ssp_WIFIHALPushApInterworkingElement ----> Entry\n");
+    printf("Radio index:%d\n",radioIndex);
+    int return_status = 0;
+    return_status = wifi_pushApInterworkingElement(radioIndex, element);
+    if(return_status != SSP_SUCCESS)
+    {
+         printf("\nssp_WIFIHALPushApInterworkingElement::Failed\n");
+         return_status = SSP_FAILURE;
+    }
+    else
+    {
+         printf("\nssp_WIFIHALPushApInterworkingElement::Success\n");
+    }
+    printf("\n ssp_WIFIHALPushApInterworkingElement ---> Exit\n");
+    return return_status;
+}
