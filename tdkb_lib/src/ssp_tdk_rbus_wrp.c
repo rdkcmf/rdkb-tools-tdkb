@@ -651,12 +651,12 @@ int ssp_rbus_registerOperation(char* operation, char* object_name,char* method_n
         if (strcmp(method_name,"NullCallBack") == 0)
         {
             DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_registerOperation --> rbus_subscribeToEvent Invoked with NULL CallBack...! \n");
-            ret = rbus_subscribeToEvent(object_name,"method1",NULL, NULL, NULL);
+            ret = rbus_subscribeToEvent(object_name,"method1",NULL, NULL, NULL, NULL);
         }
         else
         {
             DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_registerOperation --> rbus_subscribeToEvent Invoked with callback...! \n");
-            ret = rbus_subscribeToEvent(object_name,method_name,(rbus_event_callback_t)event_callback, NULL, NULL); // method_name parameter holds value for Event Name
+            ret = rbus_subscribeToEvent(object_name,method_name,(rbus_event_callback_t)event_callback, NULL, NULL, NULL); // method_name parameter holds value for Event Name
         }
         DEBUG_PRINT(DEBUG_ERROR, "rbus_subscribeToEvent Return value is %d \n",ret);
     }
