@@ -1793,7 +1793,7 @@ void platform_stub_hal::platform_stub_hal_getFanStatus(IN const Json::Value& req
         int fanstatus = 0;
         unsigned int fanIndex = 0;
         char details[MAX_STRING_SIZE] = {0};
-        DEBUG_PRINT(DEBUG_TRACE,"Inside Function platform_stub_hal_getRotorLock stub\n");
+        DEBUG_PRINT(DEBUG_TRACE,"Inside Function platform_stub_hal_getFanStatus stub\n");
         fanIndex = req["fanIndex"].asInt();
         if(ssp_getFanStatus(fanIndex,&fanstatus) == RETURN_SUCCESS)
 	{
@@ -1962,6 +1962,8 @@ void platform_stub_hal::platform_stub_hal_GetMemoryPaths(IN const Json::Value& r
 
     RDK_CPUS cpus = HOST_CPU;
     int cpus_1 = 0;
+    int isNegativeScenario = 0;
+    int result = RETURN_FAILURE;
 
     PLAT_PROC_MEM_INFO *PPLAT_PROC_MEM_INFO =  NULL;
     PPLAT_PROC_MEM_INFO = (PLAT_PROC_MEM_INFO*)malloc(sizeof(PLAT_PROC_MEM_INFO));
@@ -1977,8 +1979,24 @@ void platform_stub_hal::platform_stub_hal_GetMemoryPaths(IN const Json::Value& r
     }
     cpus_1 = req["cpus"].asInt();
     cpus = (RDK_CPUS)cpus_1;
+    
+    if(&req["flag"])
+    {
+        isNegativeScenario = req["flag"].asInt();
+    }
 
-    if(ssp_GetMemoryPaths(cpus,&PPLAT_PROC_MEM_INFO) == RETURN_SUCCESS)
+    if(isNegativeScenario)
+    {
+        DEBUG_PRINT(DEBUG_TRACE, "Executing negative scenario\n");
+        result = ssp_GetMemoryPaths(cpus,NULL);
+    }
+    else
+    {
+        DEBUG_PRINT(DEBUG_TRACE, "Executing positive scenario\n");
+        result = ssp_GetMemoryPaths(cpus,&PPLAT_PROC_MEM_INFO);
+    }
+
+    if(result == RETURN_SUCCESS)
     {
         response["result"] = "SUCCESS";
         sprintf(details,"dramPath=%s emmcPath1=%s and emmcPath2=%s ",(*PPLAT_PROC_MEM_INFO).dramPath,(*PPLAT_PROC_MEM_INFO).emmcPath1,(*PPLAT_PROC_MEM_INFO).emmcPath2);
