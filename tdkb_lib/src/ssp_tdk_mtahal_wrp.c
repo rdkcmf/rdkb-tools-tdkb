@@ -989,3 +989,32 @@ int ssp_MTAHAL_LineRegisterStatus_callback_register(void)
 
 }
 
+/*******************************************************************************************
+ *
+ * Function Name        : ssp_MTAHAL_getMtaProvisioningStatus
+ * Description          : This function will invoke the hal api of MTA to get the Provisioning
+ *                        status for the MTA device
+ *
+ * @param [in]          : status - MTA operational status
+ *
+ * @param [out]         : return status an integer value 0-success and 1-Failure
+ ********************************************************************************************/
+int ssp_MTAHAL_getMtaProvisioningStatus(MTAMGMT_MTA_PROVISION_STATUS *status)
+{
+    int return_status = SSP_SUCCESS;
+    printf("\n ssp_MTAHAL_getMtaProvisioningStatus ----> Entry\n");
+    return_status = mta_hal_getMtaProvisioningStatus(status);
+    printf("return value from mta_hal_getMtaProvisioningStatus is %d\n",return_status);
+
+    if(return_status != SSP_SUCCESS)
+    {
+        printf("\nssp_MTAHAL_getMtaProvisioningStatus::Failed\n");
+        return SSP_FAILURE;
+    }
+    else
+    {
+        printf("\nssp_getMtaProvisioningStatus::Success\n");
+        return return_status;
+    }
+    printf("\n ssp_MTAHAL_getMtaProvisioningStatus ----> Exit\n");
+}

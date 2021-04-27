@@ -67,6 +67,7 @@ class MTAHAL : public RDKTestStubInterface,  public AbstractServer<MTAHAL>
         this->bindAndAddMethod(Procedure("MTAHAL_getMtaOperationalStatus", PARAMS_BY_NAME, JSON_STRING,"flag",JSON_INTEGER,NULL), &MTAHAL::MTAHAL_getMtaOperationalStatus);
         this->bindAndAddMethod(Procedure("MTAHAL_start_provisioning", PARAMS_BY_NAME, JSON_STRING, "mtaIPMode", JSON_INTEGER, "dhcpOption122Suboption1", JSON_STRING, "dhcpOption122Suboption2", JSON_STRING, "dhcpOption2171CccV6DssID1", JSON_STRING, "dhcpOption2171CccV6DssID2", JSON_STRING, NULL), &MTAHAL::MTAHAL_start_provisioning);
         this->bindAndAddMethod(Procedure("MTAHAL_LineRegisterStatus_callback_register", PARAMS_BY_NAME, JSON_STRING, NULL), &MTAHAL::MTAHAL_LineRegisterStatus_callback_register);
+        this->bindAndAddMethod(Procedure("MTAHAL_GetMtaProvisioningStatus", PARAMS_BY_NAME, JSON_STRING,"flag",JSON_INTEGER,NULL), &MTAHAL::MTAHAL_GetMtaProvisioningStatus);
 	}
 
     /*inherited functions*/
@@ -97,6 +98,7 @@ class MTAHAL : public RDKTestStubInterface,  public AbstractServer<MTAHAL>
     void MTAHAL_getMtaOperationalStatus(IN const Json::Value& req, OUT Json::Value& response);
     void MTAHAL_start_provisioning(IN const Json::Value& req, OUT Json::Value& response);
     void MTAHAL_LineRegisterStatus_callback_register(IN const Json::Value& req, OUT Json::Value& response);
+    void MTAHAL_GetMtaProvisioningStatus(IN const Json::Value& req, OUT Json::Value& response);
 };
 #endif //__MTAHAL_STUB_H__
 

@@ -46,6 +46,7 @@ extern "C"
     int ssp_MTAHAL_getMtaOperationalStatus(MTAMGMT_MTA_STATUS *operationalStatus);
     int ssp_MTAHAL_start_provisioning(int mtaIPMode, char* dhcpOption122Suboption1, char* dhcpOption122Suboption2, char* dhcpOption2171CccV6DssID1, char* dhcpOption2171CccV6DssID2);
     int ssp_MTAHAL_LineRegisterStatus_callback_register(void);
+    int ssp_MTAHAL_getMtaProvisioningStatus(MTAMGMT_MTA_PROVISION_STATUS *status);
 #ifdef __cplusplus
 }
 #endif

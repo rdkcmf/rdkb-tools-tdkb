@@ -1103,6 +1103,51 @@ void MTAHAL::MTAHAL_LineRegisterStatus_callback_register(IN const Json::Value& r
     return;
 }
 
+/*******************************************************************************************
+ *
+ * Function Name : MTAHAL_GetMtaProvisioningStatus
+ * Description   : This will get the MTA Provisioning status
+ * @param [in]   : flag - For negative scenario
+ * @param [out]  : response - filled with SUCCESS or FAILURE based on the return value
+ *
+ *******************************************************************************************/
+void MTAHAL::MTAHAL_GetMtaProvisioningStatus(IN const Json::Value& req, OUT Json::Value& response)
+{
+    DEBUG_PRINT(DEBUG_TRACE,"\n MTAHAL_GetMtaProvisioningStatus --->Entry \n");
+    int returnValue = 0;
+    char details[100] = {'\0'};
+    MTAMGMT_MTA_PROVISION_STATUS status;
+    char *status_string[4] = { "MTA_PROVISIONED", "MTA_NON_PROVISIONED" };
+    int isNegativeScenario = 0;
+    if(&req["flag"])
+    {
+      isNegativeScenario = req["flag"].asInt();
+    }
+    if(isNegativeScenario)
+    {
+        DEBUG_PRINT(DEBUG_TRACE, "Executing negative scenario\n");
+        returnValue = ssp_MTAHAL_getMtaProvisioningStatus(NULL);
+    }
+    else
+    {
+       returnValue = ssp_MTAHAL_getMtaProvisioningStatus(&status);
+    }
+    if(0 == returnValue)
+    {
+        sprintf(details, "MTA Provisioning status: %s", status_string[status]);
+        DEBUG_PRINT(DEBUG_TRACE, "Successfully retrieved the Provisioning Status of MTA\n");
+        response["result"] = "SUCCESS";
+        response["details"] = details;
+    }
+    else
+    {
+        response["result"] = "FAILURE";
+        response["details"] = "Failed to get the value";
+    }
+    DEBUG_PRINT(DEBUG_TRACE,"\n MTAHAL_GetMtaProvisioningStatus --->Exit\n");
+    return;
+}
+
 /**************************************************************************
  * Function Name : CreateObject
  * Description   : This function will be used to create a new object for the
