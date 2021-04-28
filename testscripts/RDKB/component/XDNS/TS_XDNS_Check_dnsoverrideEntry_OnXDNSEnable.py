@@ -189,8 +189,8 @@ if "SUCCESS" in loadmodulestatus.upper() and "SUCCESS" in loadmodulestatus1.uppe
                  print "ACTUAL RESULT 3:",details;
                  print "[TEST EXECUTION RESULT] : FAILURE";
           else:
-               print"***XDNS is Disabled ******";
-               setValue = "true";
+               print"***XDNS is Enabled ******";
+               setValue = "false";
                details,actualresult = CheckFordnsoverrideEntry(tdkTestObj_Sys_ExeCmd);
                if expectedresult in actualresult and details != "" and "dnsoverride" in details:
                   tdkTestObj_Sys_ExeCmd.setResultStatus("SUCCESS");
@@ -203,28 +203,28 @@ if "SUCCESS" in loadmodulestatus.upper() and "SUCCESS" in loadmodulestatus1.uppe
                   if expectedresult in actualresult :
                      revertflag =1;
                      tdkTestObj_Tr181_Set.setResultStatus("SUCCESS");
-                     print "TEST STEP 4:Enbaling the XDNS Status";
-                     print "EXPECTED RESULT 4 :Should Enable the XDNS Status";
+                     print "TEST STEP 4:Disabling the XDNS Status";
+                     print "EXPECTED RESULT 4 :Should Disable the XDNS Status";
                      print "ACTUAL RESULT 4:",details;
                      print "[TEST EXECUTION RESULT] : SUCCESS";
 
                      details,actualresult = CheckFordnsoverrideEntry(tdkTestObj_Sys_ExeCmd);
                      if expectedresult in actualresult and details == "" :
                         tdkTestObj_Sys_ExeCmd.setResultStatus("SUCCESS");
-                        print "TEST STEP 5:Check if dnsoverride entry is present in resolv.conf";
+                        print "TEST STEP 5:Check if dnsoverride entry is not present in resolv.conf";
                         print "EXPECTED RESULT 5 :XDNS is disabled and dnsoverride entry should not be present";
                         print "ACTUAL RESULT 5:",details;
                         print "[TEST EXECUTION RESULT] : SUCCESS";
                      else:
                          tdkTestObj_Sys_ExeCmd.setResultStatus("FAILURE");
-                         print "TEST STEP 5:Check if dnsoverride entry is present in resolv.conf";
+                         print "TEST STEP 5:Check if dnsoverride entry is not present in resolv.conf";
                          print "EXPECTED RESULT 5 :XDNS is disabled and dnsoverride entry should not be present";
                          print "ACTUAL RESULT 5:",details;
                          print "[TEST EXECUTION RESULT] : FAILURE";
                   else:
                       tdkTestObj_Tr181_Set.setResultStatus("FAILURE");
-                      print "TEST STEP 4:Enbaling the XDNS Status";
-                      print "EXPECTED RESULT 4 :Should Enable the XDNS Status";
+                      print "TEST STEP 4:Disable the XDNS Status";
+                      print "EXPECTED RESULT 4 :Should Disable the XDNS Status";
                       print "ACTUAL RESULT 4:",details;
                       print "[TEST EXECUTION RESULT] : FAILURE";
                else:
