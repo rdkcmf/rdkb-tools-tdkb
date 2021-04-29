@@ -43,6 +43,7 @@
       <function name='MTAHAL_GetDhcpStatus' />
       <function name='MTAHAL_GetConfigFileStatus' />
       <function name='MTAHAL_GetLineRegisterStatus' />
+      <function name='MTAHAL_GetMtaProvisioningStatus' />
     </functions>
   <!-- Total parameters corresponding module  -->
     <parameters>
@@ -56,6 +57,7 @@
       <parameter funName='MTAHAL_TriggerDiagnostics' parameterName='value' parameterType='INTEGER' range='0-7' />
       <parameter funName='MTAHAL_GetCalls' parameterName='value' parameterType='INTEGER' range='0-7' />
       <parameter funName='MTAHAL_GetCALLP' parameterName='value' parameterType='INTEGER' range='0-7' />
+      <parameter funName='MTAHAL_GetMtaProvisioningStatus' parameterName='flag' parameterType='INTEGER' range='0-1' />
     </parameters>
   </module>
 </xml>
