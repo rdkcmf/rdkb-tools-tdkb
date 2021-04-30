@@ -53,7 +53,7 @@ radioIndex : 0</input_parameters>
     <automation_approch>1. Load wifihal module
 2. Using  WIFIHAL_GetOrSetParamIntValue invoke wifi_getRadioRxChainMask()
 3. Using WIFIHAL_GetOrSetParamIntValue
- invoke wifi_setRadioRxChainMask and set a valid value from the range 1-32
+ invoke wifi_setRadioRxChainMask and set a valid value from the range 0-7
 4. Invoke wifi_getRadioRxChainMask() to get the previously set value.
 5. Compare the above two results. If the two values  are same return SUCCESS else return FAILURE
 6. Revert the RxChainMask back to initial value
@@ -116,7 +116,7 @@ if "SUCCESS" in loadmodulestatus.upper():
 		expectedresult="SUCCESS";
 		radioIndex = idx;
 		setMethod = "setRadioRxChainMask"
-		r = range(1,initMask) + range(initMask+1, 32)
+		r = range(0, 7)
 		setMask = random.choice(r)
 		primitive = 'WIFIHAL_GetOrSetParamIntValue'
 		print "Set RadioRxChainMask = ",setMask
