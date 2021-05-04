@@ -83,15 +83,14 @@ int ssp_WIFIHALApplySettings(int radioIndex, char* methodName)
     if(return_status != SSP_SUCCESS)
     {
         printf("\nssp_WIFIHALApplySettings::Failed\n");
-        return SSP_FAILURE;
+        return_status = SSP_FAILURE;
     }
     else
     {
         printf("\nssp_WIFIHALApplySettings::Success\n");
-        return return_status;
     }
-
     printf("\n ssp_WIFIHALApplySettings----> Exit\n");
+    return return_status;
 }
 
 
@@ -935,14 +934,14 @@ int ssp_WIFIHALGetIndexFromName(char* ssidName, int *output)
     if(return_status != SSP_SUCCESS)
     {
      printf("\nssp_WIFIHALGetIndexFromName::Failed\n");
-     return SSP_FAILURE;
+     return_status = SSP_FAILURE;
     }
     else
     {
      printf("\nssp_WIFIHALGetIndexFromName::Success\n");
-     return return_status;
     }
     printf("\n ssp_WIFIHALGetIndexFromName ----> Exit\n");
+    return return_status;
 }
 
 /*******************************************************************************************
@@ -964,14 +963,14 @@ int ssp_WIFIHALClearRadioResetCount()
     if(return_status != SSP_SUCCESS)
     {
      printf("\nssp_WIFIHALClearRadioResetCount::Failed\n");
-     return SSP_FAILURE;
+     return_status = SSP_FAILURE;
     }
     else
     {
      printf("\nssp_WIFIHALClearRadioResetCount::Success\n");
-     return return_status;
     }
     printf("\n ssp_WIFIHALClearRadioResetCount ----> Exit\n");
+    return return_status;
 }
 
 /*******************************************************************************************
@@ -993,14 +992,14 @@ int ssp_WIFIHALReset()
     if(return_status != SSP_SUCCESS)
     {
      printf("\nssp_WIFIHALReset::Failed\n");
-     return SSP_FAILURE;
+     return_status = SSP_FAILURE;
     }
     else
     {
      printf("\nssp_WIFIHALReset::Success\n");
-     return return_status;
     }
     printf("\n ssp_WIFIHALReset ----> Exit\n");
+    return return_status;
 }
 
 /*******************************************************************************************
@@ -1306,14 +1305,14 @@ int ssp_WIFIHALGetSSIDTrafficStats2(int radioIndex,  wifi_ssidTrafficStats2_t *s
     if(return_status != SSP_SUCCESS)
     {
      printf("\nssp_WIFIHALGetSSIDTrafficStats2::Failed\n");
-     return SSP_FAILURE;
+     return_status = SSP_FAILURE;
     }
     else
     {
      printf("\nssp_WIFIHALGetSSIDTrafficStats2::Success\n");
-     return return_status;
     }
     printf("\n ssp_WIFIHALGetSSIDTrafficStats2 ---> Exit\n");
+    return return_status;
 }
 /*******************************************************************************************
  *
@@ -1337,14 +1336,14 @@ int ssp_WIFIHALGetRadioTrafficStats2(int radioIndex,  wifi_radioTrafficStats2_t 
     if(return_status != SSP_SUCCESS)
     {
         printf("\nssp_WIFIHALGetRadioTrafficStats2::Failed\n");
-        return SSP_FAILURE;
+        return_status = SSP_FAILURE;
     }
     else
     {
         printf("\nssp_WIFIHALGetRadioTrafficStats2::Success\n");
-        return return_status;
     }
     printf("\n ssp_WiFiHalCallMethodForGetRadioTrafficStats2---> Exit\n");
+    return return_status;
 }
 /*******************************************************************************************
  *
@@ -1365,14 +1364,14 @@ int ssp_WIFIHALGetApAssociatedDeviceDiagnosticResult(int radioIndex, wifi_associ
     if(return_status != SSP_SUCCESS)
     {
      printf("\nssp_WIFIHALGetApAssociatedDeviceDiagnosticResult::Failed\n");
-     return SSP_FAILURE;
+     return_status = SSP_FAILURE;
     }
     else
     {
      printf("\n ssp_WIFIHALGetApAssociatedDeviceDiagnosticResult::Success\n");
-     return return_status;
     }
     printf("\n ssp_WIFIHALGetApAssociatedDeviceDiagnosticResult ---> Exit\n");
+    return return_status;
 }
 /*******************************************************************************************
  *
@@ -1393,14 +1392,14 @@ int ssp_WIFIHALDown()
     if(return_status != SSP_SUCCESS)
     {
      printf("\nssp_WIFIHALDown::Failed\n");
-     return SSP_FAILURE;
+     return_status = SSP_FAILURE;
     }
     else
     {
      printf("\nssp_WIFIHALDown::Success\n");
-     return return_status;
     }
     printf("\n ssp_WIFIHALDown ----> Exit\n");
+    return return_status;
 }
 /*******************************************************************************************
  *
@@ -1421,14 +1420,14 @@ int ssp_WIFIHALCreateInitialConfigFiles()
     if(return_status != SSP_SUCCESS)
     {
      printf("\nssp_WIFIHALCreateInitialConfigFiles::Failed\n");
-     return SSP_FAILURE;
+     return_status = SSP_FAILURE;
     }
     else
     {
      printf("\nssp_WIFIHALCreateInitialConfigFiles::Success\n");
-     return return_status;
     }
     printf("\n ssp_WIFIHALCreateInitialConfigFiles ----> Exit\n");
+    return return_status;
 }
 /*******************************************************************************************
  *
@@ -1450,14 +1449,14 @@ int ssp_WIFIHALGetNeighboringWiFiDiagnosticResult2(int radioIndex, wifi_neighbor
     if(return_status != SSP_SUCCESS)
     {
      printf("\nssp_WIFIHALGetNeighboringWiFiDiagnosticResult2::Failed\n");
-     return SSP_FAILURE;
+     return_status = SSP_FAILURE;
     }
     else
     {
      printf("\n ssp_WIFIHALGetNeighboringWiFiDiagnosticResult2::Success\n");
-     return return_status;
     }
     printf("\n ssp_WIFIHALGetNeighboringWiFiDiagnosticResult2 ---> Exit\n");
+    return return_status;
 }
 /*******************************************************************************************
  *
@@ -1479,14 +1478,14 @@ int ssp_WIFIHALGetNeighboringWiFiStatus(int radioIndex, wifi_neighbor_ap2_t **ne
     if(return_status != SSP_SUCCESS)
     {
      printf("\nssp_WIFIHALGetNeighboringWiFiStatus::Failed\n");
-     return SSP_FAILURE;
+     return_status = SSP_FAILURE;
     }
     else
     {
      printf("\n ssp_WIFIHALGetNeighboringWiFiStatus::Success\n");
-     return return_status;
     }
     printf("\n ssp_WIFIHALGetNeighboringWiFiStatus ---> Exit\n");
+    return return_status;
 }
 /********************************************************************************************
  *
@@ -1566,14 +1565,14 @@ int ssp_WIFIHALPushRadioChannel2(int radioIndex, unsigned int channel,unsigned i
     if(return_status != SSP_SUCCESS)
     {
      printf("\nssp_WIFIHALPushRadioChannel2::Failed\n");
-     return SSP_FAILURE;
+     return_status = SSP_FAILURE;
     }
     else
     {
      printf("\n ssp_WIFIHALPushRadioChannel2::Success\n");
-     return return_status;
     }
     printf("\n ssp_WIFIHALPushRadioChannel2 ---> Exit\n");
+    return return_status;
 }
 /*******************************************************************************************
  *
@@ -1595,14 +1594,14 @@ int ssp_WIFIHALGetRadioChannelStats(int radioIndex,  wifi_channelStats_t *channe
     if(return_status != SSP_SUCCESS)
     {
         printf("\nssp_WIFIHALGetRadioChannelStats::Failed\n");
-        return SSP_FAILURE;
+        return_status = SSP_FAILURE;
     }
     else
     {
         printf("\nssp_WIFIHALGetRadioChannelStats::Success\n");
-        return return_status;
     }
     printf("\n ssp_WiFiHalCallMethodForGetRadioChannelStats---> Exit\n");
+    return return_status;
 }
 
 /*******************************************************************************************
@@ -1653,14 +1652,14 @@ int ssp_WIFIHALGetApAssociatedDevice(int apIndex, char* associated_dev , unsigne
     if(return_status != SSP_SUCCESS)
     {
      printf("\nssp_WIFIHALGetApAssociatedDevice::Failed\n");
-     return SSP_FAILURE;
+     return_status = SSP_FAILURE;
     }
     else
     {
      printf("\n ssp_WIFIHALGetApAssociatedDevice::Success\n");
-     return return_status;
     }
     printf("\n ssp_WIFIHALGetApAssociatedDevice ---> Exit\n");
+    return return_status;
 }
 
 /*******************************************************************************************
@@ -1738,14 +1737,14 @@ int ssp_WIFIHALGetApAclDevices(int apIndex, char* mac_addr, unsigned int output_
     if(return_status != SSP_SUCCESS)
     {
      printf("\nssp_WIFIHALGetApAclDevices::Failed\n");
-     return SSP_FAILURE;
+     return_status = SSP_FAILURE;
     }
     else
     {
      printf("\n ssp_WIFIHALGetApAclDevices::Success\n");
-     return return_status;
     }
     printf("\n ssp_WIFIHALGetApAclDevices ---> Exit\n");
+    return return_status;
 }
 
 
@@ -1802,14 +1801,14 @@ int ssp_WIFIHALGetRadioChannelStats2(int radioIndex, wifi_channelStats2_t *outpu
     if(return_status != SSP_SUCCESS)
     {
         printf("\ssp_WIFIHALGetRadioChannelStats2::Failed\n");
-        return SSP_FAILURE;
+        return_status = SSP_FAILURE;
     }
     else
     {
         printf("\ssp_WIFIHALGetRadioChannelStats2::Success\n");
-        return return_status;
     }
     printf("\n ssp_WIFIHALGetRadioChannelStats2---> Exit\n");
+    return return_status;
 }
 
 /*******************************************************************************************
@@ -1854,14 +1853,14 @@ int ssp_WIFIHALGetApAssociatedDeviceDiagnosticResult3(int apIndex, wifi_associat
     if(return_status != SSP_SUCCESS)
     {
      printf("\nssp_WIFIHALGetApAssociatedDeviceDiagnosticResult3::Failed\n");
-     return SSP_FAILURE;
+     return_status = SSP_FAILURE;
     }
     else
     {
      printf("\n ssp_WIFIHALGetApAssociatedDeviceDiagnosticResult3::Success\n");
-     return return_status;
     }
     printf("\n ssp_WIFIHALGetApAssociatedDeviceDiagnosticResult3 ---> Exit\n");
+    return return_status;
 }
 
 /*******************************************************************************************
@@ -1883,14 +1882,14 @@ int ssp_WIFIHALGetApAssociatedDeviceStats(int apIndex, mac_address_t *clientMacA
     if(return_status != SSP_SUCCESS)
     {
      printf("\nssp_WIFIHALGetApAssociatedDeviceStats::Failed\n");
-     return SSP_FAILURE;
+     return_status = SSP_FAILURE;
     }
     else
     {
      printf("\n ssp_WIFIHALGetApAssociatedDeviceStats::Success\n");
-     return return_status;
     }
     printf("\n ssp_WIFIHALGetApAssociatedDeviceStats ---> Exit\n");
+    return return_status;
 }
 
 /*************************************************************************************************
@@ -1945,14 +1944,14 @@ int ssp_WIFIHALGetApAssociatedDeviceTxStatsResult(int radioIndex, mac_address_t 
     if(return_status != SSP_SUCCESS)
     {
      printf("\nssp_WIFIHALGetApAssociatedDeviceTxStatsResult::Failed\n");
-     return SSP_FAILURE;
+     return_status = SSP_FAILURE;
     }
     else
     {
      printf("\n ssp_WIFIHALGetApAssociatedDeviceTxStatsResult::Success\n");
-     return return_status;
     }
     printf("\n ssp_WIFIHALGetApAssociatedDeviceTxStatsResult ---> Exit\n");
+    return return_status;
 }
 
 /*******************************************************************************************
@@ -1976,14 +1975,14 @@ int ssp_WIFIHALGetApAssociatedDeviceRxStatsResult(int radioIndex, mac_address_t 
     if(return_status != SSP_SUCCESS)
     {
      printf("\nssp_WIFIHALGetApAssociatedDeviceRxStatsResult::Failed\n");
-     return SSP_FAILURE;
+     return_status = SSP_FAILURE;
     }
     else
     {
      printf("\n ssp_WIFIHALGetApAssociatedDeviceRxStatsResult::Success\n");
-     return return_status;
     }
     printf("\n ssp_WIFIHALGetApAssociatedDeviceRxStatsResult ---> Exit\n");
+    return return_status;
 }
 
 /*******************************************************************************************
@@ -2008,14 +2007,14 @@ int ssp_WIFIHALStartNeighborScan(int apIndex, wifi_neighborScanMode_t scan_mode,
     if(return_status != SSP_SUCCESS)
     {
      printf("\n::ssp_WIFIHALStartNeighborScan Failed\n");
-     return SSP_FAILURE;
+     return_status = SSP_FAILURE;
     }
     else
     {
      printf("\n ssp_WIFIHALStartNeighborScan::Success\n");
-     return return_status;
     }
     printf("\n ssp_WIFIHALGetNeighboringWiFiStatus ---> Exit\n");
+    return return_status;
 }
 /*******************************************************************************************
  *
@@ -2038,14 +2037,14 @@ int ssp_WIFIHALGetApAssociatedDeviceTidStatsResult(int radioIndex,  mac_address_
     if(return_status != SSP_SUCCESS)
     {
      printf("\nssp_WIFIHALGetApAssociatedDeviceTidStatsResult::Failed\n");
-     return SSP_FAILURE;
+     return_status = SSP_FAILURE;
     }
     else
     {
      printf("\n ssp_WIFIHALGetApAssociatedDeviceTidStatsResult::Success\n");
-     return return_status;
     }
     printf("\n ssp_WIFIHALGetApAssociatedDeviceTidStatsResult ---> Exit\n");
+    return return_status;
 }
 
 
@@ -2072,14 +2071,14 @@ int ssp_WIFIHALGetBandSteeringLog(int record_index, unsigned long *pSteeringTime
     if(return_status != SSP_SUCCESS)
     {
      printf("\nssp_WIFIHALGetBandSteeringLog::Failed\n");
-     return SSP_FAILURE;
+     return_status = SSP_FAILURE;
     }
     else
     {
      printf("\n ssp_WIFIHALGetBandSteeringLog::Success\n");
-     return return_status;
     }
     printf("\n ssp_WIFIHALGetBandSteeringLog ---> Exit\n");
+    return return_status;
 }
 
 
@@ -2104,14 +2103,14 @@ int ssp_WIFIHALGetApAssociatedDeviceDiagnosticResult2(int apIndex, wifi_associat
     if(return_status != SSP_SUCCESS)
     {
      printf("\n ssp_WIFIHALGetApAssociatedDeviceDiagnosticResult2::Failed\n");
-     return SSP_FAILURE;
+     return_status = SSP_FAILURE;
     }
     else
     {
      printf("\n ssp_WIFIHALGetApAssociatedDeviceDiagnosticResult2\n");
-     return return_status;
     }
     printf("\n ssp_WIFIHALGetApAssociatedDeviceDiagnosticResult2 ---> Exit\n");
+    return return_status;
 }
 
 
@@ -2193,14 +2192,14 @@ int ssp_WIFIHALGetApIndexFromName(char* ssidName, int *output)
     if(return_status != SSP_SUCCESS)
     {
      printf("\nssp_WIFIHALGetApIndexFromName::Failed\n");
-     return SSP_FAILURE;
+     return_status = SSP_FAILURE;
     }
     else
     {
      printf("\nssp_WIFIHALGetApIndexFromName::Success\n");
-     return return_status;
     }
     printf("\n ssp_WIFIHALGetApIndexFromName ----> Exit\n");
+    return return_status;
 }
 
 
@@ -2223,14 +2222,14 @@ int ssp_WIFIHALGetAssociatedDeviceDetail(int apIndex, int devIndex, wifi_device_
     if(return_status != SSP_SUCCESS)
     {
      printf("\nssp_WIFIHALGetAssociatedDeviceDetail::Failed. Ret:status %d\n", return_status);
-     return return_status;
+     return_status = SSP_FAILURE;
     }
     else
     {
      printf("\n ssp_WIFIHALGetAssociatedDeviceDetail::Success. Ret:status %d\n", return_status);
-     return return_status;
     }
     printf("\n ssp_WIFIHALGetApAssociatedDeviceDetail ---> Exit\n");
+    return return_status;
 }
 
 
@@ -2247,19 +2246,19 @@ int ssp_WIFIHALGetBasicTrafficStats(int apIndex, wifi_basicTrafficStats_t *outpu
     printf("\n ssp_WIFIHALGetBasicTrafficStats ----> Entry\n");
     printf("ap index:%d \n",apIndex);
 
-    int return_status = 1;
+    int return_status = 0;
     return_status = wifi_getBasicTrafficStats(apIndex, output_struct);
     if(return_status != SSP_SUCCESS)
     {
      printf("\nssp_WIFIHALGetBasicTrafficStats::Failed. Ret:status %d\n", return_status);
-     return return_status;
+     return_status = SSP_FAILURE;
     }
     else
     {
      printf("\n ssp_WIFIHALGetBasicTrafficStats::Success. Ret:status %d\n", return_status);
-     return return_status;
     }
     printf("\n ssp_WIFIHALGetBasicTrafficStats ---> Exit\n");
+    return return_status;
 }
 
 
@@ -2276,19 +2275,19 @@ int ssp_WIFIHALGetWifiTrafficStats(int apIndex, wifi_trafficStats_t *output_stru
     printf("\n ssp_WIFIHALGetWifiTrafficStats ----> Entry\n");
     printf("ap index:%d \n",apIndex);
 
-    int return_status = 1;
+    int return_status = 0;
     return_status = wifi_getWifiTrafficStats(apIndex, output_struct);
     if(return_status != SSP_SUCCESS)
     {
      printf("\nssp_WIFIHALGetWifiTrafficStats::Failed. Ret:status %d\n", return_status);
-     return return_status;
+     return_status = SSP_FAILURE;
     }
     else
     {
      printf("\n ssp_WIFIHALGetWifiTrafficStats::Success. Ret:status %d\n", return_status);
-     return return_status;
     }
     printf("\n ssp_WIFIHALGetWifiTrafficStats ---> Exit\n");
+    return return_status;
 }
 
 
@@ -2309,19 +2308,19 @@ int ssp_WIFIHALSteeringClientDisconnect(unsigned int steeringgroupIndex, int apI
     printf("\n ssp_WIFIHALSteeringClientDisconnect ----> Entry\n");
     printf("ap index:%d \n",apIndex);
 
-    int return_status = 1;
+    int return_status = 0;
     return_status = wifi_steering_clientDisconnect(steeringgroupIndex, apIndex, client_mac, type, reason);
     if(return_status != SSP_SUCCESS)
     {
      printf("\nssp_WIFIHALSteeringClientDisconnect::Failed. Ret:status %d\n", return_status);
-     return return_status;
+     return_status = SSP_FAILURE;
     }
     else
     {
      printf("\n ssp_WIFIHALSteeringClientDisconnect::Success. Ret:status %d\n", return_status);
-     return return_status;
     }
     printf("\n ssp_WIFIHALSteeringClientDisconnect ---> Exit\n");
+    return return_status;
 }
 
 /*******************************************************************************************
@@ -2340,19 +2339,19 @@ int ssp_WIFIHALSteeringClientSet(unsigned int steeringgroupIndex, int apIndex, m
     printf("\n ssp_WIFIHALSteeringClientSet ----> Entry\n");
     printf("ap index:%d \n",apIndex);
 
-    int return_status = 1;
+    int return_status = 0;
     return_status = wifi_steering_clientSet(steeringgroupIndex, apIndex, client_mac, cli_cfg);
     if(return_status != SSP_SUCCESS)
     {
      printf("\nssp_WIFIHALSteeringClientSet::Failed. Ret:status %d\n", return_status);
-     return return_status;
+     return_status = SSP_FAILURE;
     }
     else
     {
      printf("\n ssp_WIFIHALSteeringClientSet::Success. Ret:status %d\n", return_status);
-     return return_status;
     }
     printf("\n ssp_WIFIHALSteeringClientSet ---> Exit\n");
+    return return_status;
 }
 
 
@@ -2371,19 +2370,19 @@ int ssp_WIFIHALSteeringClientRemove(unsigned int steeringgroupIndex, int apIndex
     printf("\n ssp_WIFIHALSteeringClientRemove ----> Entry\n");
     printf("ap index:%d \n",apIndex);
 
-    int return_status = 1;
+    int return_status = 0;
     return_status = wifi_steering_clientRemove(steeringgroupIndex, apIndex, client_mac);
     if(return_status != SSP_SUCCESS)
     {
      printf("\nssp_WIFIHALSteeringClientRemove::Failed. Ret:status %d\n", return_status);
-     return return_status;
+     return_status = SSP_FAILURE;
     }
     else
     {
      printf("\n ssp_WIFIHALSteeringClientRemove::Success. Ret:status %d\n", return_status);
-     return return_status;
     }
     printf("\n ssp_WIFIHALSteeringClientRemove ---> Exit\n");
+    return return_status;
 }
 
 
@@ -2401,19 +2400,19 @@ int ssp_WIFIHALGetBTMClientCapabilityList(int apIndex, wifi_BTMCapabilities_t* b
     printf("\n ssp_WIFIHALGetBTMClientCapabilityList ----> Entry\n");
     printf("ap index:%d \n",apIndex);
 
-    int return_status = 1;
+    int return_status = 0;
     return_status = wifi_getBTMClientCapabilityList(apIndex, btm_caps);
     if(return_status != SSP_SUCCESS)
     {
      printf("\nssp_WIFIHALGetBTMClientCapabilityList::Failed. Ret:status %d\n", return_status);
-     return return_status;
+     return_status = SSP_FAILURE;
     }
     else
     {
      printf("\n ssp_WIFIHALGetBTMClientCapabilityList::Success. Ret:status %d\n", return_status);
-     return return_status;
     }
     printf("\n ssp_WIFIHALGetBTMClientCapabilityList ---> Exit\n");
+    return return_status;
 }
 
 
@@ -2431,18 +2430,19 @@ int ssp_WIFIHALGetApRoamingConsortiumElement(int apIndex, wifi_roamingConsortium
     printf("\n ssp_WIFIHALGetApRoamingConsortiumElement ----> Entry\n");
     printf("ap index:%d \n",apIndex);
 
-    int return_status = 1;
+    int return_status = 0;
     return_status = wifi_getApRoamingConsortiumElement(apIndex, roam);
     if(return_status != SSP_SUCCESS)
     {
         printf("\nssp_WIFIHALGetApRoamingConsortiumElement::Failed. Ret:status %d\n", return_status);
-        return return_status;
+        return_status = SSP_FAILURE;
     }
     else
     {
         printf("\n ssp_WIFIHALGetApRoamingConsortiumElement::Success. Ret:status %d\n", return_status);
-        return return_status;
     }
+    printf("\n ssp_WIFIHALGetApRoamingConsortiumElement ----> Exit\n");
+    return return_status;
 }
 
 
@@ -2460,18 +2460,19 @@ int ssp_WIFIHALPushApRoamingConsortiumElement(int apIndex, wifi_roamingConsortiu
     printf("\n ssp_WIFIHALPushApRoamingConsortiumElement ----> Entry\n");
     printf("ap index:%d \n",apIndex);
 
-    int return_status = 1;
+    int return_status = 0;
     return_status = wifi_pushApRoamingConsortiumElement(apIndex, roam);
     if(return_status != SSP_SUCCESS)
     {
         printf("\nssp_WIFIHALPushApRoamingConsortiumElement::Failed. Ret:status %d\n", return_status);
-        return return_status;
+        return_status = SSP_FAILURE;
     }
     else
     {
         printf("\n ssp_WIFIHALPushApRoamingConsortiumElement::Success. Ret:status %d\n", return_status);
-        return return_status;
     }
+    printf("\n ssp_WIFIHALPushApRoamingConsortiumElement ----> Exit\n");
+    return return_status;
 }
 
 /*******************************************************************************************
