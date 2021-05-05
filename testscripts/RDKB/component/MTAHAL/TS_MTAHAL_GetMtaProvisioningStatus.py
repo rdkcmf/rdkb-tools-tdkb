@@ -111,7 +111,7 @@ if "SUCCESS" in (loadmodulestatus.upper() and loadmodulestatus1.upper()):
             print "ACTUAL RESULT 2:  %s" %resultDetails;
             #Get the result of execution
             print "[TEST EXECUTION RESULT] : SUCCESS"
-            status = resultDetails.split(":")[1].split(' ')[0];
+            status = resultDetails.split(":")[1].split(' ')[1];
 
             pamtdkTestObj.addParameter("ParamName","Device.DeviceInfo.X_COMCAST-COM_MTA_IP");
             expectedresult="SUCCESS";
