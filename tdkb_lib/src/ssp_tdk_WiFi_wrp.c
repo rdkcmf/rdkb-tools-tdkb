@@ -70,6 +70,11 @@ int ssp_WIFIHALApplySettings(int radioIndex, char* methodName)
     printf("MethodName: %s\n", methodName);
     int return_status = 0;
 
+
+    #if defined (_XB7_PRODUCT_REQ_) && defined (_COSA_BCM_ARM_)
+        return_status =  wifi_apply(radioIndex);
+	printf("return value from wifi_apply is %d\n",return_status);
+    #else
     if(strstr(methodName, "setRadio")||strstr(methodName, "setAp")||strstr(methodName, "setBandSteering")||strstr(methodName, "wifi_down"))
     {
         return_status = wifi_applyRadioSettings(radioIndex);
@@ -80,6 +85,7 @@ int ssp_WIFIHALApplySettings(int radioIndex, char* methodName)
         return_status = wifi_applySSIDSettings(radioIndex);
         printf("return value from wifi_applySSIDSettings is %d\n",return_status);
     }
+
     if(return_status != SSP_SUCCESS)
     {
         printf("\nssp_WIFIHALApplySettings::Failed\n");
@@ -90,6 +96,7 @@ int ssp_WIFIHALApplySettings(int radioIndex, char* methodName)
         printf("\nssp_WIFIHALApplySettings::Success\n");
     }
     printf("\n ssp_WIFIHALApplySettings----> Exit\n");
+    #endif
     return return_status;
 }
 
@@ -2295,7 +2302,7 @@ int ssp_WIFIHALGetWifiTrafficStats(int apIndex, wifi_trafficStats_t *output_stru
  *
  * Function Name        : ssp_WIFIHALSteeringClientDisconnect
  * Description          : This function invokes WiFi hal api wifi_steering_clientDisconnect()
- * @param [in]          : steeringgroupIndex - Wifi Steering Group index 
+ * @param [in]          : steeringgroupIndex - Wifi Steering Group index
 			  apIndex   - accesspoint index
                           client_mac - The Client's MAC address
                           type - Disconnect Type
