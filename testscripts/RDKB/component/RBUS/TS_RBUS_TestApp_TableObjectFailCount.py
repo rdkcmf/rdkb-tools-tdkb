@@ -149,7 +149,7 @@ if "SUCCESS" in loadmodulestatus.upper() and "SUCCESS" in loadmodulestatus1.uppe
                 #Wait 5 min to finish the consumer app execution
                 sleep(300);
 
-                cmd = "tail -5 /tmp/rbusTestConsumer1.log | head -1";
+                cmd = "grep -w \"# Tables\" /tmp/rbusTestConsumer1.log";
                 tdkTestObj_Sys_ExeCmd.addParameter("command",cmd);
                 tdkTestObj_Sys_ExeCmd.executeTestCase(expectedresult);
                 actualresult = tdkTestObj_Sys_ExeCmd.getResult();
