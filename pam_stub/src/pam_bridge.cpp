@@ -547,9 +547,9 @@ void pam::COSAPAM_DmlDiGetParamValue(IN const Json::Value& req, OUT Json::Value&
     DEBUG_PRINT(DEBUG_TRACE,"\n pam_GetPrimaryLanIpIf --->Entry \n");
 
     int returnValue = 0;
-    char pValue[100] = {'\0'};
+    char pValue[1023] = {'\0'};
     char paramName[100] = {'\0'};
-    unsigned long size = 0;
+    unsigned long size = 1023;
     char details[100] = {'\0'};
 
     if(&req["MethodName"]==NULL)

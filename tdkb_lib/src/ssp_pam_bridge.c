@@ -471,7 +471,7 @@ int ssp_DmlDiGetParamValue(char* MethodName, char* pValue, PULONG size)
 {
     int return_status = 0;
     ANSC_HANDLE hContext = NULL;
-    *size = 0;
+    *size = 1023;
     printf("\n Entering ssp_DmlMlanGetParamValue function\n\n");
 
     return_status = CosaDmlDiInit(NULL, &hContext);
