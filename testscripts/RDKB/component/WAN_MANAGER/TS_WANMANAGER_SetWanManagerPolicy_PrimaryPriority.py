@@ -77,7 +77,7 @@ Sysutil_Stub</api_or_interface_used>
     <test_stub_interface>WAN_MANAGER</test_stub_interface>
     <test_script>TS_WANMANAGER_SetWanManagerPolicy_PrimaryPriority</test_script>
     <skipped>No</skipped>
-    <release_version>M87</release_version>
+    <release_version>M89</release_version>
     <remarks></remarks>
   </test_cases>
   <script_tags />
