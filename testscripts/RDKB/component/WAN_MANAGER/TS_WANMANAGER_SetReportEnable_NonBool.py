@@ -143,7 +143,7 @@ if "SUCCESS" in loadmodulestatus.upper() and "SUCCESS" in loadmodulestatus1.uppe
             value_list = [];
             value_list = [initial_value[0], initial_value[1], initial_value[2], initial_value[3]]
             tdkTestObj1 = obj1.createTestStep("TDKB_TR181Stub_SetMultiple");
-            set_status = setReportingParams(tdkTestObj2, expectedresult, value_list, step);
+            set_status = setReportingParams(tdkTestObj1, expectedresult, value_list, step);
 
             if set_status == 0:
                 print "Revert operation was successful";
