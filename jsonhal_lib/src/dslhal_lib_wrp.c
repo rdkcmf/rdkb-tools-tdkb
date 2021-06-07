@@ -506,58 +506,58 @@ int dslhal_getlineinfo(char *param_name, PDML_XDSL_LINE pstLineInfo)
             pstLineInfo->XTUCANSIRev = atoi(resp_param.value);
         }
         else if (strstr (resp_param.name, "CurrentProfile")) {
-            snprintf(pstLineInfo->CurrentProfile, sizeof(pstLineInfo->CurrentProfile), "%s", resp_param.value);
+            snprintf_t(pstLineInfo->CurrentProfile, sizeof(pstLineInfo->CurrentProfile), "%s", resp_param.value);
         }
         else if (strstr (resp_param.name, "AllowedProfiles")) {
-            snprintf(pstLineInfo->AllowedProfiles, sizeof(pstLineInfo->AllowedProfiles), "%s", resp_param.value);
+            snprintf_t(pstLineInfo->AllowedProfiles, sizeof(pstLineInfo->AllowedProfiles), "%s", resp_param.value);
         }
         else if (strstr (resp_param.name, "FirmwareVersion")) {
-            snprintf(pstLineInfo->FirmwareVersion, sizeof(pstLineInfo->FirmwareVersion), "%s", resp_param.value);
+            snprintf_t(pstLineInfo->FirmwareVersion, sizeof(pstLineInfo->FirmwareVersion), "%s", resp_param.value);
         }
         else if (strstr (resp_param.name, "StandardUsed")) {
-            snprintf(pstLineInfo->StandardUsed, sizeof(pstLineInfo->StandardUsed), "%s", resp_param.value);
+            snprintf_t(pstLineInfo->StandardUsed, sizeof(pstLineInfo->StandardUsed), "%s", resp_param.value);
         }
         else if (strstr (resp_param.name, "SNRMpbus")) {
-            snprintf(pstLineInfo->SNRMpbus, sizeof(pstLineInfo->SNRMpbus), "%s", resp_param.value);
+            snprintf_t(pstLineInfo->SNRMpbus, sizeof(pstLineInfo->SNRMpbus), "%s", resp_param.value);
         }
         else if (strstr (resp_param.name, "SNRMpbds")) {
-            snprintf(pstLineInfo->SNRMpbds, sizeof(pstLineInfo->SNRMpbds), "%s", resp_param.value);
+            snprintf_t(pstLineInfo->SNRMpbds, sizeof(pstLineInfo->SNRMpbds), "%s", resp_param.value);
         }
         else if (strstr (resp_param.name, "XTURVendor")) {
-            snprintf(pstLineInfo->XTURVendor, sizeof(pstLineInfo->XTURVendor), "%s", resp_param.value);
+            snprintf_t(pstLineInfo->XTURVendor, sizeof(pstLineInfo->XTURVendor), "%s", resp_param.value);
         }
         else if (strstr (resp_param.name, "XTURCountry")) {
-            snprintf(pstLineInfo->XTURCountry, sizeof(pstLineInfo->XTURCountry), "%s", resp_param.value);
+            snprintf_t(pstLineInfo->XTURCountry, sizeof(pstLineInfo->XTURCountry), "%s", resp_param.value);
         }
         else if (strstr (resp_param.name, "XTUCVendor")) {
-            snprintf(pstLineInfo->XTUCVendor, sizeof(pstLineInfo->XTUCVendor), "%s", resp_param.value);
+            snprintf_t(pstLineInfo->XTUCVendor, sizeof(pstLineInfo->XTUCVendor), "%s", resp_param.value);
         }
         else if (strstr (resp_param.name, "XTUCCountry")) {
-            snprintf(pstLineInfo->XTUCCountry, sizeof(pstLineInfo->XTUCCountry), "%s", resp_param.value);
+            snprintf_t(pstLineInfo->XTUCCountry, sizeof(pstLineInfo->XTUCCountry), "%s", resp_param.value);
         }
         else if (strstr (resp_param.name, "UPBOKLEPb")) {
-            snprintf(pstLineInfo->UPBOKLEPb, sizeof(pstLineInfo->UPBOKLEPb), "%s", resp_param.value);
+            snprintf_t(pstLineInfo->UPBOKLEPb, sizeof(pstLineInfo->UPBOKLEPb), "%s", resp_param.value);
         }
         else if (strstr (resp_param.name, "UPBOKLERPb")) {
-            snprintf(pstLineInfo->UPBOKLERPb, sizeof(pstLineInfo->UPBOKLERPb), "%s", resp_param.value);
+            snprintf_t(pstLineInfo->UPBOKLERPb, sizeof(pstLineInfo->UPBOKLERPb), "%s", resp_param.value);
         }
         else if (strstr (resp_param.name, "XTSE")) {
-            snprintf(pstLineInfo->XTSE, sizeof(pstLineInfo->XTSE), "%s", resp_param.value);
+            snprintf_t(pstLineInfo->XTSE, sizeof(pstLineInfo->XTSE), "%s", resp_param.value);
         }
         else if (strstr (resp_param.name, "XTSUsed")) {
-            snprintf(pstLineInfo->XTSUsed, sizeof(pstLineInfo->XTSUsed), "%s", resp_param.value);
+            snprintf_t(pstLineInfo->XTSUsed, sizeof(pstLineInfo->XTSUsed), "%s", resp_param.value);
         }
         else if (strstr (resp_param.name, "MREFPSDds")) {
-            snprintf(pstLineInfo->MREFPSDds, sizeof(pstLineInfo->MREFPSDds), "%s", resp_param.value);
+            snprintf_t(pstLineInfo->MREFPSDds, sizeof(pstLineInfo->MREFPSDds), "%s", resp_param.value);
         }
         else if (strstr (resp_param.name, "MREFPSDus")) {
-            snprintf(pstLineInfo->MREFPSDus, sizeof(pstLineInfo->MREFPSDus), "%s", resp_param.value);
+            snprintf_t(pstLineInfo->MREFPSDus, sizeof(pstLineInfo->MREFPSDus), "%s", resp_param.value);
         }
         else if (strstr (resp_param.name, "VirtualNoisePSDds")) {
-            snprintf(pstLineInfo->VirtualNoisePSDds, sizeof(pstLineInfo->VirtualNoisePSDds), "%s", resp_param.value);
+            snprintf_t(pstLineInfo->VirtualNoisePSDds, sizeof(pstLineInfo->VirtualNoisePSDds), "%s", resp_param.value);
         }
         else if (strstr (resp_param.name, "VirtualNoisePSDus")) {
-            snprintf(pstLineInfo->VirtualNoisePSDus, sizeof(pstLineInfo->VirtualNoisePSDus), "%s", resp_param.value);
+            snprintf_t(pstLineInfo->VirtualNoisePSDus, sizeof(pstLineInfo->VirtualNoisePSDus), "%s", resp_param.value);
         }
     }
     FREE_JSON_OBJECT(jmsg);
@@ -993,10 +993,10 @@ int xdsl_hal_dslGetChannelInfo( char *param_name, PDML_XDSL_CHANNEL pstChannelIn
             pstChannelInfo->ACTINPREIN = atoi(resp_param.value);
         }
         else if (strstr (resp_param.name, "LinkEncapsulationSupported")) {
-            snprintf(pstChannelInfo->LinkEncapsulationSupported, sizeof(pstChannelInfo->LinkEncapsulationSupported), "%s", resp_param.value);
+            snprintf_t(pstChannelInfo->LinkEncapsulationSupported, sizeof(pstChannelInfo->LinkEncapsulationSupported), "%s", resp_param.value);
         }
         else if (strstr (resp_param.name, "LinkEncapsulationUsed")) {
-            snprintf(pstChannelInfo->LinkEncapsulationUsed, sizeof(pstChannelInfo->LinkEncapsulationUsed), "%s", resp_param.value);
+            snprintf_t(pstChannelInfo->LinkEncapsulationUsed, sizeof(pstChannelInfo->LinkEncapsulationUsed), "%s", resp_param.value);
         }
     }
     // Free json objects

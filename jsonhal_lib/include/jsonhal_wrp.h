@@ -32,6 +32,9 @@
         json_object_put(expr); \
     }                          \
 
+//Defining this macro to avoid -Wformat-truncation issue from gcc
+#define snprintf_t(...) (snprintf(__VA_ARGS__) < 0 ? abort() : (void)0)
+
 #define NULL_TYPE 0
 
 #define XDSL_JSON_CONF_PATH "/etc/rdk/conf/xdsl_manager_conf.json"

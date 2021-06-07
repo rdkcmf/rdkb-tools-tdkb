@@ -164,6 +164,7 @@ AC_CONFIG_FILES([Makefile
          EPONHAL_Stub/Makefile
          mso_mgmt_hal_stub/Makefile
          BLEHAL_Stub/Makefile
-         RBUS_Stub/Makefile])
+         RBUS_Stub/Makefile
+         DSLHAL_Stub/Makefile])
 AC_OUTPUT
 
