@@ -183,7 +183,7 @@ if "SUCCESS" in loadmodulestatus.upper() and "SUCCESS" in loadmodulestatus1.uppe
 
                      if expectedresult in actualresult and details!="" and (len(details) > 0) and "SYS_SH_Zebra_restart" in details:
                         tdkTestObj_Sys_ExeCmd.setResultStatus("SUCCESS");
-                        markervalue = details.split("SYS_SH_Zebra_restart<#=#>")[1]
+                        markervalue = details.split("SYS_SH_Zebra_restart value : ")[1]
                         print "TEST STEP 6:SYS_SH_Zebra_restart  Marker should be present";1
                         print "EXPECTED RESULT 6: SYS_SH_Zebra_restart Marker should be present";
                         print "ACTUAL RESULT 6: SYS_SH_Zebra_restart  Marker Value is %s" %markervalue;

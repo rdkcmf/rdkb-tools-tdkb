@@ -189,7 +189,7 @@ if "SUCCESS" in loadmodulestatus.upper() and "SUCCESS" in loadmodulestatus1.uppe
 
                     if expectedresult in actualresult and details!="" and (len(details) > 0) and "ZeroUptime" in details:
                         tdkTestObj.setResultStatus("SUCCESS");
-                        markervalue = details.split("ZeroUptime<#=#>")[1]
+                        markervalue = details.split("ZeroUptime value : ")[1]
                         print "TEST STEP 6: ZeroUptime  Marker should be present";1
                         print "EXPECTED RESULT 6: ZeroUptime Marker should be present";
                         print "ACTUAL RESULT 6: ZeroUptime  Marker Value is %s" %markervalue;

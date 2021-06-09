@@ -182,7 +182,7 @@ if "SUCCESS" in loadmodulestatus.upper() and "SUCCESS" in loadmodulestatus1.uppe
 
                      if expectedresult in actualresult and details!="" and (len(details) > 0) and "SYS_ERROR_syseventdCrashed" in details:
                         tdkTestObj_Sys_ExeCmd.setResultStatus("SUCCESS");
-                        markervalue = details.split("SYS_ERROR_syseventdCrashed<#=#>")[1]
+                        markervalue = details.split("SYS_ERROR_syseventdCrashed value : ")[1]
                         print "TEST STEP 6:SYS_ERROR_syseventdCrashed  Marker should be present";1
                         print "EXPECTED RESULT 6: SYS_ERROR_syseventdCrashed Marker should be present";
                         print "ACTUAL RESULT 6: SYS_ERROR_syseventdCrashed  Marker Value is %s" %markervalue;

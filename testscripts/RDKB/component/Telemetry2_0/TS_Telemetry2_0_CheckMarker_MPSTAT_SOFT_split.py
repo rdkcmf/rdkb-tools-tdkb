@@ -182,7 +182,7 @@ if "SUCCESS" in loadmodulestatus.upper() and "SUCCESS" in loadmodulestatus1.uppe
 
                     if expectedresult in actualresult and details!="" and (len(details) > 0) and "MPSTAT_SOFT_split" in details:
                         tdkTestObj.setResultStatus("SUCCESS");
-                        markervalue = details.split("MPSTAT_SOFT_split<#=#>")[1]
+                        markervalue = details.split("MPSTAT_SOFT_split value : ")[1]
                         print "TEST STEP 5: MPSTAT_SOFT_split  Marker should be present";1
                         print "EXPECTED RESULT 5: MPSTAT_SOFT_split Marker should be present";
                         print "ACTUAL RESULT 5: MPSTAT_SOFT_split  Marker Value is %s" %markervalue;

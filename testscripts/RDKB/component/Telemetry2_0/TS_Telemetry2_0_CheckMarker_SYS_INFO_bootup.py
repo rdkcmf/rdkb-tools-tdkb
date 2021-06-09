@@ -134,7 +134,7 @@ if "SUCCESS" in loadmodulestatus.upper() and "SUCCESS" in loadmodulestatus1.uppe
 
         if expectedresult in actualresult and details!="" and (len(details) > 0) and "SYS_INFO_bootup" in details:
            tdkTestObj.setResultStatus("SUCCESS");
-           markervalue = details.split("SYS_INFO_bootup<#=#>")[1]
+           markervalue = details.split("SYS_INFO_bootup value : ")[1]
            print "TEST STEP 2: SYS_INFO_bootup  Marker should be present";
            print "EXPECTED RESULT 2: SYS_INFO_bootup Marker should be present";
            print "ACTUAL RESULT 2: SYS_INFO_bootup  Marker Value is ",markervalue;

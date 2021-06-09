@@ -51,7 +51,7 @@ Device.DeviceInfo.X_RDKCENTRAL-COM_RFC.Feature.Telemetry.ConfigURL
 Device.DeviceInfo.X_RDKCENTRAL-COM_RFC.Feature.Telemetry.Enable</input_parameters>
     <automation_approch>1.Load the module
 2. Get the Device.DeviceInfo.X_RDKCENTRAL-COM_RFC.Feature.Telemetry.Enable status if disabled ,enable it.
-3.Get the Device.DeviceInfo.X_RDKCENTRAL-COM_RFC.Feature.Telemetry.Version and should be 2 on enabling telemetry version.
+3.Get the Device.DeviceInfo.X_RDKCENTRAL-COM_RFC.Feature.Telemetry.Version and should be 2.0.1 on enabling telemetry version.
 4.set the Config URL using Device.DeviceInfo.X_RDKCENTRAL-COM_RFC.Feature.Telemetry.ConfigURL
 5Initiate a Reboot
 6.Check if telemetry2_0.txt.0 file is present
@@ -151,11 +151,11 @@ if "SUCCESS" in loadmodulestatus.upper() and "SUCCESS" in loadmodulestatus1.uppe
           tdkTestObj.executeTestCase(expectedresult);
           actualresult = tdkTestObj.getResult();
           telver = tdkTestObj.getResultDetails();
-          if expectedresult in actualresult and int(telver) == 2:
+          if expectedresult in actualresult and telver == "2.0.1":
              #Set the result status of execution
              tdkTestObj.setResultStatus("SUCCESS");
              print "TEST STEP 3: Get the current Telemetry version in the DUT after Telemetry Enable ";
-             print "EXPECTED RESULT 3: Should get the current Telemetry version as 2.0 in the DUT"
+             print "EXPECTED RESULT 3: Should get the current Telemetry version as 2.0.1 in the DUT"
              print "ACTUAL RESULT 3: ",telver;
              #Get the result of execution
              print "[TEST EXECUTION RESULT] : SUCCESS";

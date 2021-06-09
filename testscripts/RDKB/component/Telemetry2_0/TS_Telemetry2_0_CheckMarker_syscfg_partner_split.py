@@ -166,7 +166,7 @@ if "SUCCESS" in loadmodulestatus.upper() and "SUCCESS" in loadmodulestatus1.uppe
 
                     if expectedresult in actualresult and details!="" and (len(details) > 0) and "syscfg_partner_split" in details:
                         tdkTestObj.setResultStatus("SUCCESS");
-                        markervalue = details.split("syscfg_partner_split<#=#>")[1]
+                        markervalue = details.split("syscfg_partner_split value : ")[1]
                         print "TEST STEP 5: syscfg_partner_split  Marker should be present";1
                         print "EXPECTED RESULT 5: syscfg_partner_split Marker should be present";
                         print "ACTUAL RESULT 5: syscfg_partner_split  Marker Value is %s" %markervalue;

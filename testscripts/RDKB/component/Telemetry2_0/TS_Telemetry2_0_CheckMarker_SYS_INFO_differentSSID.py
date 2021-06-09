@@ -253,7 +253,7 @@ if "SUCCESS" in (loadmodulestatus.upper() and loadmodulestatus1.upper()) :
 
                         if expectedresult in actualresult and details!="" and (len(details) > 0) and "SYS_INFO_differentSSID" in details:
                             tdkTestObj.setResultStatus("SUCCESS");
-                            markervalue = details.split("SYS_INFO_differentSSID<#=#>")[1]
+                            markervalue = details.split("SYS_INFO_differentSSID value : ")[1]
                             print "TEST STEP 7: SYS_INFO_differentSSID  Marker should be present";1
                             print "EXPECTED RESULT 7: SYS_INFO_differentSSID Marker should be present";
                             print "ACTUAL RESULT 7: SYS_INFO_differentSSID  Marker Value is %s" %markervalue;

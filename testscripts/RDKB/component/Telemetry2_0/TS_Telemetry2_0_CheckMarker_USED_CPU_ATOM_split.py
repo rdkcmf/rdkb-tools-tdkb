@@ -181,7 +181,7 @@ if "SUCCESS" in loadmodulestatus.upper() and "SUCCESS" in loadmodulestatus1.uppe
 
                     if expectedresult in actualresult and details!="" and (len(details) > 0) and "USED_CPU_ATOM_split" in details:
                         tdkTestObj.setResultStatus("SUCCESS");
-                        markervalue = details.split("USED_CPU_ATOM_split<#=#>")[1]
+                        markervalue = details.split("USED_CPU_ATOM_split value : ")[1]
                         print "TEST STEP 5: USED_CPU_ATOM_split  Marker should be present";1
                         print "EXPECTED RESULT 5: USED_CPU_ATOM_split Marker should be present";
                         print "ACTUAL RESULT 5: USED_CPU_ATOM_split  Marker Value is %s" %markervalue;

@@ -244,7 +244,7 @@ if "SUCCESS" in (loadmodulestatus.upper() and loadmodulestatus1.upper()) :
                         print "Marker Detail Found from log file is: %s "%details;
 
                         if expectedresult in actualresult and details!="" and (len(details) > 0) and "WIFI_INFO_5G_DISABLED" in details:
-                            markervalue = details.split("WIFI_INFO_5G_DISABLED<#=#>")[1]
+                            markervalue = details.split("WIFI_INFO_5G_DISABLED value : ")[1]
                             tdkTestObj.setResultStatus("SUCCESS");
                             print "TEST STEP 7: WIFI_INFO_5G_DISABLED Marker should be present";
                             print "EXPECTED RESULT 7: WIFI_INFO_5G_DISABLED Marker should be present";

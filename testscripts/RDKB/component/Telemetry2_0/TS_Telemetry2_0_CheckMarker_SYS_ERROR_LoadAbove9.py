@@ -239,7 +239,7 @@ if "SUCCESS" in loadmodulestatus.upper() and "SUCCESS" in loadmodulestatus1.uppe
 
                             if expectedresult in actualresult and details!="" and (len(details) > 0) and "SYS_ERROR_LoadAbove9" in details:
                                 tdkTestObj_Sys_ExeCmd.setResultStatus("SUCCESS");
-                                markervalue = details.split("SYS_ERROR_LoadAbove9<#=#>")[1]
+                                markervalue = details.split("SYS_ERROR_LoadAbove9 value : ")[1]
                                 print "TEST STEP 7: SYS_ERROR_LoadAbove9  Marker should be present";1
                                 print "EXPECTED RESULT 7: SYS_ERROR_LoadAbove9 Marker should be present";
                                 print "ACTUAL RESULT 7: SYS_ERROR_LoadAbove9  Marker Value is %s" %markervalue;

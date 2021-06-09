@@ -221,7 +221,7 @@ if "SUCCESS" in loadmodulestatus.upper() and "SUCCESS" in loadmodulestatus1.uppe
 
                         if expectedresult in actualresult and details!="" and (len(details) > 0) and "XCONF_Dwld_failed" in details:
                            tdkTestObj.setResultStatus("SUCCESS");
-                           markervalue = details.split("XCONF_Dwld_failed<#=#>")[1]
+                           markervalue = details.split("XCONF_Dwld_failed value : ")[1]
                            print "TEST STEP 6: XCONF_Dwld_failed  Marker should be present";1
                            print "EXPECTED RESULT 6: XCONF_Dwld_failed Marker should be present";
                            print "ACTUAL RESULT 6: XCONF_Dwld_failed  Marker Value is %s" %markervalue;
