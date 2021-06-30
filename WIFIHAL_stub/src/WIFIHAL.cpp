@@ -753,6 +753,14 @@ void WIFIHAL::WIFIHAL_GetOrSetSecurityRadiusServer(IN const Json::Value& req, OU
             response["details"]=details;
             return;
         }
+        else
+        {
+            sprintf(details, "%s operation failed", methodName);
+            response["result"]="FAILURE";
+            response["details"]=details;
+            DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_GetOrSetSecurityRadiusServer ---->Error in execution\n");
+            return;
+       }
     }
     else
     {
@@ -773,12 +781,18 @@ void WIFIHAL::WIFIHAL_GetOrSetSecurityRadiusServer(IN const Json::Value& req, OU
             response["details"]=details;
             return;
         }
+        else
+        {
+            DEBUG_PRINT(DEBUG_TRACE,"\n output: %s\n%d\n%s\n",IPAddress,port,RadiusSecret);
+            DEBUG_PRINT(DEBUG_TRACE,"\n%s returned failure", methodName);
+            sprintf(details, "Value returned is :IPAddress=%s,Port=%u,RadiusSecret=%s",IPAddress, port, RadiusSecret);
+            response["result"]="FAILURE";
+            response["details"]=details;
+            return;
+        }
+        DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_GetOrSetSecurityRadiusServer ---->Error in execution\n");
+        return;
      }
-     sprintf(details, "%s operation failed", methodName);
-     response["result"]="FAILURE";
-     response["details"]=details;
-     DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_GetOrSetSecurityRadiusServer ---->Error in execution\n");
-     return;
 }
 /*******************************************************************************************
  *
