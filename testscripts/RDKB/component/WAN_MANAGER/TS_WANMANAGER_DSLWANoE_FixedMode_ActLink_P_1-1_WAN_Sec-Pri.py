@@ -304,8 +304,6 @@ if "SUCCESS" in (loadmodulestatus.upper() and loadmodulestatus1.upper()):
 
     obj.unloadModule("tdkbtr181");
     obj1.unloadModule("sysutil");
-    obj.unloadModule("tdkbtr181");
-    obj1.unloadModule("sysutil");
 else:
     print "Failed to load module";
     obj.setLoadModuleStatus("FAILURE");
