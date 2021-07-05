@@ -368,7 +368,7 @@ if "SUCCESS" in loadmodulestatus.upper():
             print "ACTUAL RESULT 1: getAutoChannelEnable : %s"%details;
             print "[TEST EXECUTION RESULT]: FAILURE"
             tdkTestObj.setResultStatus("FAILURE");
-        obj.unloadModule("wifihal");
+    obj.unloadModule("wifihal");
 else:
     print "Failed to load wifi module";
     obj.setLoadModuleStatus("FAILURE");
