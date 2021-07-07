@@ -207,7 +207,7 @@ int ssp_CosaDmlCMGetStartDSFrequency(int handleType)
 {
     int return_status = 0;
     ANSC_HANDLE cm_handle = NULL;
-    ULONG *pFrequency  = NULL;
+    ULONG pFrequency  = 0;
 
     printf("\n Entering ssp_CosaDmlCMGetStartDSFrequency function\n\n");
 
@@ -216,9 +216,9 @@ int ssp_CosaDmlCMGetStartDSFrequency(int handleType)
         cm_handle = bus_handle_client;
     }
 
-    return_status = CosaDmlCMGetStartDSFrequency(cm_handle,pFrequency);
+    return_status = CosaDmlCMGetStartDSFrequency(cm_handle,&pFrequency);
 
-    printf("ssp_CosaDmlCMGetStartDSFrequency: Downstream Frequency retrieved:%lu\n",*pFrequency);
+    printf("ssp_CosaDmlCMGetStartDSFrequency: Downstream Frequency retrieved:%lu\n",pFrequency);
 
     if ( return_status != SSP_SUCCESS)
     {
