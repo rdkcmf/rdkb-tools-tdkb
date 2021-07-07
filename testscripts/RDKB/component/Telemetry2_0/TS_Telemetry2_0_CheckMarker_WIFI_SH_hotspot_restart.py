@@ -217,7 +217,7 @@ if "SUCCESS" in loadmodulestatus.upper() and "SUCCESS" in loadmodulestatus1.uppe
 
                                if expectedresult in actualresult and details!="" and (len(details) > 0) and "WIFI_SH_hotspot_restart" in details:
                                   tdkTestObj_Sys_ExeCmd.setResultStatus("SUCCESS");
-                                  markervalue = details.split("WIFI_SH_hotspot_restart<#=#>")[1]
+                                  markervalue = details.split("WIFI_SH_hotspot_restart value :")[1]
                                   print "TEST STEP 9:WIFI_SH_hotspot_restart  Marker should be present";1
                                   print "EXPECTED RESULT 9: WIFI_SH_hotspot_restart Marker should be present";
                                   print "ACTUAL RESULT 9: WIFI_SH_hotspot_restart  Marker Value is %s" %markervalue;

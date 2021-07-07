@@ -70,7 +70,7 @@ Device.DeviceInfo.X_RDKCENTRAL-COM_RFC.Feature.Telemetry.ConfigURL</input_parame
     <automation_approch>1. Load the tr181 and sysutil Modules
 2. Initiate the Telemetry2_0 Pre requisite function from telemetry2_0 library, The function should return success along with revert flag and initial values
 3. Get the number of lines from the telemetry log file and store the value
-4. Copy the file from nvram and write the contents in the file in tmpfs location
+4. Copy the syscfg.db file from tmp and write the contents in the file in tmpfs location
 5. Execute log_mem_cpu_info.sh script from TAD module
 6. Get the number of lines from the telemetry log file after simulation
 7. Check if marker SYS_ERROR_TMPFS_ABOVE85 is present in telemetry log file (only between the initial line count and line count after simulation)
@@ -149,7 +149,7 @@ if "SUCCESS" in loadmodulestatus.upper() and "SUCCESS" in loadmodulestatus1.uppe
             print "Initial Line count of Telemetry Log File is ",initialLinesCount
 
             tdkTestObj = sysobj.createTestStep('ExecuteCmd');
-            cmd = "cp /nvram/syscfg.db /tmp/tmpfs_fileincrease.db";
+            cmd = "cp /tmp/syscfg.db /tmp/tmpfs_fileincrease.db";
             tdkTestObj.addParameter("command",cmd);
             tdkTestObj.executeTestCase(expectedresult);
             actualresult = tdkTestObj.getResult();
@@ -213,7 +213,7 @@ if "SUCCESS" in loadmodulestatus.upper() and "SUCCESS" in loadmodulestatus1.uppe
 
                             if expectedresult in actualresult and details!="" and (len(details) > 0) and "SYS_ERROR_TMPFS_ABOVE85" in details:
                                 tdkTestObj.setResultStatus("SUCCESS");
-                                markervalue = details.split("SYS_ERROR_TMPFS_ABOVE85<#=#>")[1]
+                                markervalue = details.split("SYS_ERROR_TMPFS_ABOVE85 value :")[1]
                                 print "TEST STEP 7:SYS_ERROR_TMPFS_ABOVE85  Marker should be present";1
                                 print "EXPECTED RESULT 7: SYS_ERROR_TMPFS_ABOVE85 Marker should be present";
                                 print "ACTUAL RESULT 7: SYS_ERROR_TMPFS_ABOVE85  Marker Value is %s" %markervalue;
