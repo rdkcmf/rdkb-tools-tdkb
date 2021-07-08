@@ -2,7 +2,7 @@
 # If not stated otherwise in this file or this component's Licenses.txt
 # file the following copyright and licenses apply:
 #
-# Copyright 2017 RDK Management
+# Copyright 2021 RDK Management
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -19,13 +19,13 @@
 '''
 <?xml version="1.0" encoding="UTF-8"?><xml>
   <id/>
-  <version>5</version>
+  <version>8</version>
   <name>TS_WIFIHAL_5GHzGetRadioChannelsInUse</name>
   <primitive_test_id/>
   <primitive_test_name>WIFIHAL_GetOrSetParamStringValue</primitive_test_name>
-  <primitive_test_version>1</primitive_test_version>
+  <primitive_test_version>8</primitive_test_version>
   <status>FREE</status>
-  <synopsis>Test if the list returned by wifi_getRadioChannelsInUse()api is a subset of the list returned by wifi_getRadioPossibleChannels()</synopsis>
+  <synopsis>Get the list returned by wifi_getRadioChannelsInUse()api</synopsis>
   <groups_id/>
   <execution_time>10</execution_time>
   <long_duration>false</long_duration>
@@ -34,7 +34,6 @@
   <skip>false</skip>
   <box_types>
     <box_type>Broadband</box_type>
-    <box_type>Emulator</box_type>
     <box_type>RPI</box_type>
   </box_types>
   <rdk_versions>
@@ -42,24 +41,21 @@
   </rdk_versions>
   <test_cases>
     <test_case_id>TC_WIFIHAL_06</test_case_id>
-    <test_objective>Test if the list returned by wifi_getRadioChannelsInUse()api is a subset of the list returned by wifi_getRadioPossibleChannels()</test_objective>
+    <test_objective>Get the list returned by wifi_getRadioChannelsInUse()api</test_objective>
     <test_type>Positive</test_type>
-    <test_setup>XB3. XB6, Emulator, Rpi</test_setup>
+    <test_setup>XB3. XB6, Rpi</test_setup>
     <pre_requisite>1.Ccsp Components  should be in a running state else invoke cosa_start.sh manually that includes all the ccsp components and TDK Component
 2.TDK Agent should be in running state or invoke it through StartTdk.sh script</pre_requisite>
     <api_or_interface_used>wifi_getRadioChannelsInUse()
-wifi_getRadioPossibleChannels()</api_or_interface_used>
-    <input_parameters>methodName : getRadioPossibleChannels
-methodName : getRadioChannelsInUse
+</api_or_interface_used>
+    <input_parameters>methodName : getRadioChannelsInUse
 radioIndex     :    1</input_parameters>
     <automation_approch>1. Load wifihal module
 2. Invoke wifi_getRadioChannelsInUse()  to get the current channels in use
-3.Get the possible channel list using wifi_getRadioPossibleChannels()  
-4. check if current channels in use value is from the possible channel list
-5. Unload wifihal module</automation_approch>
-    <except_output>current channels in use value should be from the possible channel list</except_output>
+3. Unload wifihal module</automation_approch>
+    <expected_output>Should display current channels in use</expected_output>
     <priority>High</priority>
-    <test_stub_interface>WiFiAgent</test_stub_interface>
+    <test_stub_interface>WIFIHAL</test_stub_interface>
     <test_script>TS_WIFIHAL_5GHzGetRadioChannelsInUse</test_script>
     <skipped>No</skipped>
     <release_version/>
@@ -69,8 +65,8 @@ radioIndex     :    1</input_parameters>
 </xml>
 
 '''
-# use tdklib library,which provides a wrapper for tdk testcase script 
-import tdklib; 
+# use tdklib library,which provides a wrapper for tdk testcase script
+import tdklib;
 from wifiUtility import *
 
 radio = "5G"
@@ -95,40 +91,22 @@ if "SUCCESS" in loadmodulestatus.upper():
     if idx == -1:
         print "Failed to get radio index for radio %s\n" %radio;
         tdkTestObjTemp.setResultStatus("FAILURE");
-    else: 
-
-	    expectedresult="SUCCESS";
-	    radioIndex = idx
-	    getMethod = "getRadioPossibleChannels"
-	    primitive = 'WIFIHAL_GetOrSetParamStringValue'
-	    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, "0", getMethod)
-
-	    if expectedresult in actualresult :
-		possibleCh = details.split(":")[1].strip()
-
-		getMethod = "getRadioChannelsInUse"
-		tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, "0", getMethod)
-		if expectedresult in actualresult :
-		    chInUse = details.split(":")[1].strip();
-
-		    flag = 1
-		    for index in range(len(chInUse)):
-			if chInUse[index] not in possibleCh:
-			    flag = 0;
-			    break;
-
-		    if flag == 1 :
-			print "Channel In use is a subset of possible cahannels"
-		    else:
-			print "Error:Channel In use not found in possible channel list"
-		else:
-		    print "getChannelInUse() failed"
-	    else:
-		print "getRadioPossibleChannels failed"
+    else:
+            expectedresult="SUCCESS";
+            radioIndex = idx
+            primitive = 'WIFIHAL_GetOrSetParamStringValue'
+            getMethod = "getRadioChannelsInUse"
+            tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, "0", getMethod)
+            if expectedresult in actualresult :
+                chInUse = details.split(":")[1].strip();
+                print "EXPECTED RESULT: Should get the Radio Channels in use for 5GHz";
+                print "ACTUAL RESULT: %s" %details;
+            else:
+                print "Failed to get the Radio Channels in use for 5GHz";
+                print "getChannelInUse() failed"
 
     obj.unloadModule("wifihal");
 
 else:
     print "Failed to load wifi module";
     obj.setLoadModuleStatus("FAILURE");
-
