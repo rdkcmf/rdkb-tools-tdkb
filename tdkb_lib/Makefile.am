@@ -38,9 +38,9 @@ libtdkagentssp_la_CPPFLAGS = -I$(top_srcdir)/tdkb_lib/include \
                                 -I${PKG_CONFIG_SYSROOT_DIR}$(includedir)/rtmessage
 
 if PLATFORM_ENABLED
-libtdkagentssp_la_SOURCES = src/ssp_messagebus_interface.c src/ssp_tdk_mbus_wrp.c src/ssp_tdk_mbus_lib.c src/ssp_action.c src/ssp_main.c src/ssp_tdk_CosaCM_wrp.c src/ssp_tdk_wrp.c src/ssp_tdk_CosaMTA_wrp.c src/ssp_pam_bridge.c src/ssp_tdk_WiFi_wrp.c src/ssp_tdk_cmhal_wrp.c src/ssp_tdk_Ethsw_wrp.c src/ssp_tdk_dhcp_hal_wrp.c src/ssp_tdk_platform_hal_wrp.c src/ssp_tdk_mocahal_wrp.c src/ssp_tdk_mtahal_wrp.c src/ssp_tdk_eponhal_wrp.c src/ssp_tdk_mso_mgmt_hal_wrp.c src/ssp_tdk_blehal_wrp.c src/ssp_tdk_rbus_wrp.c
+libtdkagentssp_la_SOURCES = src/ssp_messagebus_interface.c src/ssp_tdk_mbus_wrp.c src/ssp_tdk_mbus_lib.c src/ssp_action.c src/ssp_main.c src/ssp_tdk_CosaCM_wrp.c src/ssp_tdk_wrp.c src/ssp_tdk_CosaMTA_wrp.c src/ssp_pam_bridge.c src/ssp_tdk_WiFi_wrp.c src/ssp_tdk_cmhal_wrp.c src/ssp_tdk_Ethsw_wrp.c src/ssp_tdk_dhcp_hal_wrp.c src/ssp_tdk_platform_hal_wrp.c src/ssp_tdk_mocahal_wrp.c src/ssp_tdk_mtahal_wrp.c src/ssp_tdk_eponhal_wrp.c src/ssp_tdk_mso_mgmt_hal_wrp.c src/ssp_tdk_blehal_wrp.c src/ssp_tdk_rbus_wrp.c src/ssp_tdk_fwupgradehal_wrp.c
 else
-libtdkagentssp_la_SOURCES = src/ssp_messagebus_interface.c src/ssp_tdk_mbus_wrp.c src/ssp_tdk_mbus_lib.c src/ssp_action.c src/ssp_main.c src/ssp_tdk_CosaCM_wrp.c src/ssp_tdk_wrp.c src/ssp_tdk_CosaMTA_wrp.c src/ssp_tdk_WiFi_wrp.c src/ssp_tdk_cmhal_wrp.c src/ssp_tdk_Ethsw_wrp.c src/ssp_tdk_dhcp_hal_wrp.c src/ssp_tdk_platform_hal_wrp.c src/ssp_tdk_mocahal_wrp.c src/ssp_tdk_mtahal_wrp.c src/ssp_tdk_eponhal_wrp.c src/ssp_tdk_mso_mgmt_hal_wrp.c src/ssp_tdk_blehal_wrp.c src/ssp_tdk_rbus_wrp.c
+libtdkagentssp_la_SOURCES = src/ssp_messagebus_interface.c src/ssp_tdk_mbus_wrp.c src/ssp_tdk_mbus_lib.c src/ssp_action.c src/ssp_main.c src/ssp_tdk_CosaCM_wrp.c src/ssp_tdk_wrp.c src/ssp_tdk_CosaMTA_wrp.c src/ssp_tdk_WiFi_wrp.c src/ssp_tdk_cmhal_wrp.c src/ssp_tdk_Ethsw_wrp.c src/ssp_tdk_dhcp_hal_wrp.c src/ssp_tdk_platform_hal_wrp.c src/ssp_tdk_mocahal_wrp.c src/ssp_tdk_mtahal_wrp.c src/ssp_tdk_eponhal_wrp.c src/ssp_tdk_mso_mgmt_hal_wrp.c src/ssp_tdk_blehal_wrp.c src/ssp_tdk_rbus_wrp.c src/ssp_tdk_fwupgradehal_wrp.c
 endif
 if PLATFORM_ENABLED
 libtdkagentssp_la_LDFLAGS =  -lccsp_common -ltr181 -ldmltad -lhal_wifi -lrbus

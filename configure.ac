@@ -114,7 +114,7 @@ AC_ARG_ENABLE([rdkb_wan_manager],
         [
           case "${enableval}" in
              yes) rdkb_wan_manager=true
-                  SUBDIR_WANMANAGER+=" jsonhal_lib DSLHAL_Stub "
+                  SUBDIR_WANMANAGER+=" jsonhal_lib DSLHAL_Stub FWUpgradeHAL_Stub"
                   echo WAN Manager is enabled;;
              no) rdkb_wan_manager=false ;;
           *) AC_MSG_ERROR([bad value ${enableval} for --enable-rdkb_wan_manager ]) ;;
@@ -165,6 +165,7 @@ AC_CONFIG_FILES([Makefile
          mso_mgmt_hal_stub/Makefile
          BLEHAL_Stub/Makefile
          RBUS_Stub/Makefile
-         DSLHAL_Stub/Makefile])
+         DSLHAL_Stub/Makefile
+         FWUpgradeHAL_Stub/Makefile])
 AC_OUTPUT
 
