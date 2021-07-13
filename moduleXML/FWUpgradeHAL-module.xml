@@ -1,0 +1,40 @@
+<?xml version='1.0' encoding='utf-8'?>
+<xml>
+  <module>
+  <!-- Module Name  -->
+    <moduleName>FWUpgradeHAL</moduleName>
+  <!-- Category of the module  -->
+    <category>RDKB</category>
+  <!-- Excecution time out of module -->
+    <executionTimeOut>15</executionTimeOut>
+  <!-- Excecution time out of module -->
+    <testGroup>Component</testGroup>
+  <!-- Logs File Names of module -->
+    <logFileNames>[]</logFileNames>
+  <!-- Crash File Names of the module -->
+    <crashFileNames>[]</crashFileNames>
+  <!-- Total functions corresponding module  -->
+    <functions>
+      <function name='FWUPGRADEHAL_GetParamUlongValue' />
+      <function name='FWUPGRADEHAL_Set_Download_Interface' />
+      <function name='FWUPGRADEHAL_Download' />
+      <function name='FWUPGRADEHAL_Reboot_Now' />
+      <function name='FWUPGRADEHAL_Get_Download_Url' />
+      <function name='FWUPGRADEHAL_Set_Download_Url' />
+      <function name='FWUPGRADEHAL_Update_And_FactoryReset' />
+    </functions>
+  <!-- Total parameters corresponding module  -->
+    <parameters>
+      <parameter funName='FWUPGRADEHAL_GetParamUlongValue' parameterName='paramName' parameterType='STRING' range='A-Z' />
+      <parameter funName='FWUPGRADEHAL_GetParamUlongValue' parameterName='paramType' parameterType='STRING' range='A-Z' />
+      <parameter funName='FWUPGRADEHAL_Set_Download_Interface' parameterName='interface' parameterType='INTEGER' range='0-9' />
+      <parameter funName='FWUPGRADEHAL_Get_Download_Url' parameterName='URL' parameterType='STRING' range='A-Z' />
+      <parameter funName='FWUPGRADEHAL_Get_Download_Url' parameterName='filename' parameterType='STRING' range='A-Z' />
+      <parameter funName='FWUPGRADEHAL_Get_Download_Url' parameterName='paramType' parameterType='STRING' range='A-Z' />
+      <parameter funName='FWUPGRADEHAL_Set_Download_Url' parameterName='URL' parameterType='STRING' range='A-Z' />
+      <parameter funName='FWUPGRADEHAL_Set_Download_Url' parameterName='filename' parameterType='STRING' range='A-Z' />
+      <parameter funName='FWUPGRADEHAL_Update_And_FactoryReset' parameterName='url' parameterType='STRING' range='A-Z' />
+      <parameter funName='FWUPGRADEHAL_Update_And_FactoryReset' parameterName='imagename' parameterType='STRING' range='A-Z' />
+    </parameters>
+  </module>
+</xml>

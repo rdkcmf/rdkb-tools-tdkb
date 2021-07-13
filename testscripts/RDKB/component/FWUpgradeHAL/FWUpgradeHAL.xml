@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?><xml>
+  <module name="FWUpgradeHAL" testGroup="Component">
+    <primitiveTests>
+      <primitiveTest name="FWUPGRADEHAL_GetParamUlongValue" id="" version="1">
+        <function>FWUPGRADEHAL_GetParamUlongValue</function>
+        <parameters>
+          <parameter name="paramName" value=""/>
+          <parameter name="paramType" value=""/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest name="FWUPGRADEHAL_Set_Download_Interface" id=" " version="1">
+        <function>FWUPGRADEHAL_Set_Download_Interface</function>
+        <parameters>
+          <parameter name="interface" value=""/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest name="FWUPGRADEHAL_Download" id="" version="1">
+        <function>FWUPGRADEHAL_Download</function>
+        <parameters/>
+      </primitiveTest>
+      <primitiveTest name="FWUPGRADEHAL_Reboot_Now" id="" version="1">
+        <function>FWUPGRADEHAL_Reboot_Now</function>
+        <parameters/>
+      </primitiveTest>
+      <primitiveTest name="FWUPGRADEHAL_Get_Download_Url" id=" " version="1">
+        <function>FWUPGRADEHAL_Get_Download_Url</function>
+        <parameters>
+          <parameter name="filename" value=""/>
+          <parameter name="paramType" value=""/>
+          <parameter name="URL" value=""/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest name="FWUPGRADEHAL_Set_Download_Url" id=" " version="1">
+        <function>FWUPGRADEHAL_Set_Download_Url</function>
+        <parameters>
+          <parameter name="filename" value=""/>
+          <parameter name="URL" value=""/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest name="FWUPGRADEHAL_Update_And_FactoryReset" id=" " version="1">
+        <function>WUPGRADEHAL_Update_And_FactoryReset</function>
+        <parameters>
+          <parameter name="imagename" value=""/>
+          <parameter name="url" value=""/>
+        </parameters>
+      </primitiveTest>
+    </primitiveTests>
+  </module>
+</xml>
+
