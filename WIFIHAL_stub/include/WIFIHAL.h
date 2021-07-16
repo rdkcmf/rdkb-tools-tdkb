@@ -486,6 +486,23 @@ typedef struct _wifi_InterworkingElement_t
     mac_addr_str_t hessid;
 }wifi_InterworkingElement_t;
 
+typedef enum {
+    wifi_data_priority_be,
+    wifi_data_priority_bk,
+    wifi_data_priority_ee,
+    wifi_data_priority_ca,
+    wifi_data_priority_vi,
+    wifi_data_priority_vo,
+    wifi_data_prioirty_ic,
+    wifi_data_priority_nc
+} wifi_data_priority_t;
+
+typedef struct
+{
+    unsigned int txOverflow;
+} wifi_VAPTelemetry_t;
+
+
 /* To provide external linkage to C Functions defined in TDKB Component folder */
 extern "C"
 {
@@ -551,6 +568,9 @@ extern "C"
     int ssp_WIFIHALApplyGASConfiguration(wifi_GASConfiguration_t *GASConfiguration);
     int ssp_WIFIHALGetApInterworkingElement(int radioIndex, wifi_InterworkingElement_t *element);
     int ssp_WIFIHALPushApInterworkingElement(int radioIndex, wifi_InterworkingElement_t *element);
+    int ssp_WIFIHALEnableCSIEngine(int apIndex, mac_address_t sta, unsigned char * enable);
+    int ssp_WIFIHALSendDataFrame(int apIndex, mac_address_t sta, unsigned char * data, unsigned int length, unsigned char * insert_llc, unsigned int protocol, wifi_data_priority_t prio);
+    int ssp_WIFIHALGetVAPTelemetry(int apIndex, wifi_VAPTelemetry_t *VAPTelemetry);
 };
 
 class RDKTestAgent;
@@ -623,6 +643,9 @@ class WIFIHAL : public RDKTestStubInterface, public AbstractServer<WIFIHAL>
                   this->bindAndAddMethod(Procedure("WIFIHAL_ApplyGASConfiguration",PARAMS_BY_NAME, JSON_STRING, "advertisementID", JSON_INTEGER, "pauseForServerResponse", JSON_INTEGER, "responseTimeout", JSON_INTEGER, "comeBackDelay", JSON_INTEGER, "responseBufferingTime", JSON_INTEGER, "queryResponseLengthLimit", JSON_INTEGER, NULL), &WIFIHAL::WIFIHAL_ApplyGASConfiguration);
                   this->bindAndAddMethod(Procedure("WIFIHAL_GetApInterworkingElement", PARAMS_BY_NAME, JSON_STRING,"radioIndex", JSON_INTEGER, NULL), &WIFIHAL::WIFIHAL_GetApInterworkingElement);
                   this->bindAndAddMethod(Procedure("WIFIHAL_PushApInterworkingElement",PARAMS_BY_NAME, JSON_STRING, "radioIndex", JSON_INTEGER, "interworkingEnabled", JSON_INTEGER, "accessNetworkType", JSON_INTEGER, "internetAvailable", JSON_INTEGER, "asra", JSON_INTEGER, "esra", JSON_INTEGER, "uesa", JSON_INTEGER, "venueOptionPresent", JSON_INTEGER, "venueType", JSON_INTEGER, "venueGroup", JSON_INTEGER, "hessOptionPresent", JSON_INTEGER, "hessid", JSON_STRING, NULL), &WIFIHAL::WIFIHAL_PushApInterworkingElement);
+                  this->bindAndAddMethod(Procedure("WIFIHAL_EnableCSIEngine",PARAMS_BY_NAME, JSON_STRING, "apIndex", JSON_INTEGER, "MacAddress", JSON_STRING, "enable", JSON_INTEGER, NULL), &WIFIHAL::WIFIHAL_EnableCSIEngine);
+                  this->bindAndAddMethod(Procedure("WIFIHAL_SendDataFrame",PARAMS_BY_NAME, JSON_STRING, "apIndex", JSON_INTEGER, "MacAddress", JSON_STRING, "length", JSON_INTEGER, "insert_llc", JSON_INTEGER, "protocol", JSON_INTEGER, "priority", JSON_INTEGER, NULL), &WIFIHAL::WIFIHAL_SendDataFrame);
+                  this->bindAndAddMethod(Procedure("WIFIHAL_GetVAPTelemetry", PARAMS_BY_NAME, JSON_STRING,"apIndex", JSON_INTEGER, NULL), &WIFIHAL::WIFIHAL_GetVAPTelemetry);
 		}
         /*inherited functions*/
         bool initialize(IN const char* szVersion);
@@ -692,6 +715,9 @@ class WIFIHAL : public RDKTestStubInterface, public AbstractServer<WIFIHAL>
         void WIFIHAL_ApplyGASConfiguration(IN const Json::Value& req, OUT Json::Value& response);
         void WIFIHAL_GetApInterworkingElement(IN const Json::Value& req, OUT Json::Value& response);
         void WIFIHAL_PushApInterworkingElement(IN const Json::Value& req, OUT Json::Value& response);
+        void WIFIHAL_EnableCSIEngine(IN const Json::Value& req, OUT Json::Value& response);
+        void WIFIHAL_SendDataFrame(IN const Json::Value& req, OUT Json::Value& response);
+        void WIFIHAL_GetVAPTelemetry(IN const Json::Value& req, OUT Json::Value& response);
 };
 #endif //__WIFIHAL_STUB_H__
 

@@ -89,6 +89,9 @@
       <function name='WIFIHAL_ApplyGASConfiguration' />
       <function name='WIFIHAL_GetApInterworkingElement' />
       <function name='WIFIHAL_PushApInterworkingElement' />
+      <function name='WIFIHAL_EnableCSIEngine' />
+      <function name='WIFIHAL_SendDataFrame' />
+      <function name='WIFIHAL_GetVAPTelemetry' />
     </functions>
   <!-- Total parameters corresponding module  -->
     <parameters>
@@ -258,6 +261,16 @@
       <parameter funName='WIFIHAL_PushApInterworkingElement' parameterName='venueGroup' parameterType='INTEGER' range='0-100' />
       <parameter funName='WIFIHAL_PushApInterworkingElement' parameterName='hessOptionPresent' parameterType='INTEGER' range='0-1' />
       <parameter funName='WIFIHAL_PushApInterworkingElement' parameterName='hessid' parameterType='STRING' range='A-Z' />
+      <parameter funName='WIFIHAL_EnableCSIEngine' parameterName='apIndex' parameterType='INTEGER' range='0-1' />
+      <parameter funName='WIFIHAL_EnableCSIEngine' parameterName='MacAddress' parameterType='STRING' range='A-Z' />
+      <parameter funName='WIFIHAL_EnableCSIEngine' parameterName='enable' parameterType='INTEGER' range='0-1' />
+      <parameter funName='WIFIHAL_SendDataFrame' parameterName='apIndex' parameterType='INTEGER' range='0-1' />
+      <parameter funName='WIFIHAL_SendDataFrame' parameterName='MacAddress' parameterType='STRING' range='A-Z' />
+      <parameter funName='WIFIHAL_SendDataFrame' parameterName='length' parameterType='INTEGER' range='0-1000' />
+      <parameter funName='WIFIHAL_SendDataFrame' parameterName='protocol' parameterType='INTEGER' range='0-1000' />
+      <parameter funName='WIFIHAL_SendDataFrame' parameterName='insert_llc' parameterType='INTEGER' range='0-1' />
+      <parameter funName='WIFIHAL_SendDataFrame' parameterName='priority' parameterType='INTEGER' range='0-10' />
+      <parameter funName='WIFIHAL_GetVAPTelemetry' parameterName='apIndex' parameterType='INTEGER' range='0-1' />
     </parameters>
   </module>
 </xml>

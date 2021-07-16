@@ -1682,7 +1682,7 @@ void WIFIHAL::WIFIHAL_GetNeighboringWiFiStatus(IN const Json::Value& req, OUT Js
  * Description          : This function invokes WiFi hal get api which are
                           related to wifi_getRadioChannelStats()
 
- * @param [in] req-     : radioIndex : radio index of the wifi	
+ * @param [in] req-     : radioIndex : radio index of the wifi
  * @param [out] response - filled with SUCCESS or FAILURE based on the output status of operation
  *
  ********************************************************************************************/
@@ -2527,7 +2527,7 @@ void WIFIHAL::WIFIHAL_GetApAssociatedDeviceTidStatsResult(IN const Json::Value& 
     returnValue = ssp_WIFIHALGetApAssociatedDeviceTidStatsResult(radioIndex, (mac_address_t *)tmp_MACConv, & tid_stats, &handle);
     if(0 == returnValue)
     {
-          
+
           n = (sizeof(tid_stats.tid_array)/sizeof(tid_stats.tid_array[0]));
           printf ("Size of array is %d ",n);
           if ( n > 0)
@@ -2754,7 +2754,7 @@ void WIFIHAL::WIFIHAL_SetRadioMode(IN const Json::Value& req, OUT Json::Value& r
  * Function Name        : WIFIHAL_GetApIndexFromName
  * Description          : This function invokes WiFi hal api wifi_getApIndexFromName()
  * @param [in] req-     : param     - the ssid name to be passed
- * @param [out] response - Access Point index, to be returned 
+ * @param [out] response - Access Point index, to be returned
  *
  ********************************************************************************************/
 void WIFIHAL::WIFIHAL_GetApIndexFromName (IN const Json::Value& req, OUT Json::Value& response)
@@ -2914,7 +2914,7 @@ void WIFIHAL::WIFIHAL_SteeringClientDisconnect(IN const Json::Value& req, OUT Js
     DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_SteeringClientDisconnect ----->Entry\n");
     int apIndex = 0;
     unsigned int steeringgroupIndex = 0;
-    char mac[20] = {'\0'}; 
+    char mac[20] = {'\0'};
     mac_address_t client_mac;
     unsigned int macInt[6];
     wifi_disconnectType_t type;
@@ -3360,4 +3360,185 @@ void WIFIHAL::WIFIHAL_PushApInterworkingElement (IN const Json::Value& req, OUT 
         DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_PushApInterworkingElement ---->Error in execution\n");
         return;
     }
+}
+
+/*******************************************************************************************
+ *
+ * Function Name        : WIFIHAL_EnableCSIEngine
+ * Description          : This function invokes WiFi hal api wifi_enableCSIEngine()
+ * @param [in] req-     : apIndex - WiFi Access Point Index value
+                          MacAddress - Mac Address of client device connected
+                          enable - Whether CSI data collection is enabled or not
+ * @param [out] response - filled with SUCCESS or FAILURE based on the output status of operation
+ *
+ ********************************************************************************************/
+void WIFIHAL::WIFIHAL_EnableCSIEngine(IN const Json::Value& req, OUT Json::Value& response)
+{
+    DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_EnableCSIEngine ----->Entry\n");
+    int apIndex = 0;
+    mac_address_t MAC;
+    char mac[20] = {'\0'};
+    unsigned int tmp_MACConv[6] = {0};
+    unsigned char enable;
+    int returnValue = 0;
+    char details[500] = {'\0'};
+
+    if(&req["apIndex"]==NULL || &req["MacAddress"]==NULL || &req["enable"]==NULL)
+    {
+        response["result"]="FAILURE";
+        response["details"]="NULL parameter as input argument";
+        return;
+    }
+
+    apIndex = req["apIndex"].asInt();
+    enable = req["enable"].asInt();
+    strcpy(mac, req["MacAddress"].asCString());
+    sscanf(mac, "%02x:%02x:%02x:%02x:%02x:%02x", &tmp_MACConv[0], &tmp_MACConv[1], &tmp_MACConv[2], &tmp_MACConv[3], &tmp_MACConv[4], &tmp_MACConv[5]);
+
+    for(int index = 0 ; index <6; index++)
+    {
+        MAC[index]=(unsigned char)tmp_MACConv[index];
+    }
+
+    DEBUG_PRINT(DEBUG_TRACE,"\n ApIndex : %d, MAC : %s, Enable : %d\n", apIndex, MAC, enable);
+    returnValue = ssp_WIFIHALEnableCSIEngine(apIndex, MAC, &enable);
+
+    if(0 == returnValue)
+    {
+        sprintf(details, "wifi_enableCSIEngine was invoked successfully");
+        DEBUG_PRINT(DEBUG_TRACE,"\n %s", details);
+        response["result"]="SUCCESS";
+        response["details"]=details;
+    }
+    else
+    {
+        sprintf(details, "wifi_enableCSIEngine was not invoked successfully");
+        DEBUG_PRINT(DEBUG_TRACE,"\n %s", details);
+        response["result"]="FAILURE";
+        response["details"]=details;
+        DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_EnableCSIEngine ---->Error in execution\n");
+    }
+
+    DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_EnableCSIEngine ---->Exiting\n");
+    return;
+}
+
+/*******************************************************************************************
+ *
+ * Function Name        : WIFIHAL_SendDataFrame
+ * Description          : This function invokes WiFi hal api wifi_sendDataFrame()
+ * @param [in] req-     : apIndex - Index of VAP
+ *                        MacAddress - MAC address of the station associated in this VAP
+ *                        length - length of data
+ *                        insert_llc - whether LLC header should be inserted. If set to TRUE, HAL implementation MUST insert the following bytes before type field. DSAP = 0xaa, SSAP = 0xaa, Control = 0x03, followed by 3 bytes each = 0x00
+ *                        protocol - ethernet protocol
+ *                        priority - priority of the frame with which scheduler should transmit the frame
+ *
+ * @param [out] response - filled with SUCCESS or FAILURE based on the output status of operation
+ *
+ ********************************************************************************************/
+void WIFIHAL::WIFIHAL_SendDataFrame(IN const Json::Value& req, OUT Json::Value& response)
+{
+    DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_SendDataFrame ----->Entry\n");
+    int apIndex = 0;
+    mac_address_t sta;
+    char mac[20] = {'\0'};
+    unsigned int tmp_MACConv[6] = {0};
+    unsigned char data = 0;
+    unsigned int length = 0;
+    unsigned char insert_llc = 0;
+    unsigned int protocol = 0;
+    unsigned int priority = 0;
+    wifi_data_priority_t prio = wifi_data_priority_be;
+    int returnValue = 0;
+    char details[500] = {'\0'};
+
+    if(&req["apIndex"]==NULL || &req["MacAddress"]==NULL || &req["length"]==NULL || &req["protocol"]==NULL || &req["priority"]==NULL)
+    {
+        response["result"]="FAILURE";
+        response["details"]="NULL parameter as input argument";
+        return;
+    }
+
+    apIndex = req["apIndex"].asInt();
+    length = req["length"].asInt();
+    protocol = req["protocol"].asInt();
+    insert_llc = req["insert_llc"].asInt();
+    priority = req["priority"].asInt();
+    prio = wifi_data_priority_t(priority);
+    strcpy(mac, req["MacAddress"].asCString());
+    sscanf(mac, "%02x:%02x:%02x:%02x:%02x:%02x", &tmp_MACConv[0], &tmp_MACConv[1], &tmp_MACConv[2], &tmp_MACConv[3], &tmp_MACConv[4], &tmp_MACConv[5]);
+
+    for(int index = 0 ; index <6; index++)
+    {
+        sta[index]=(unsigned char)tmp_MACConv[index];
+    }
+
+    DEBUG_PRINT(DEBUG_TRACE,"\n ApIndex : %d, MAC : %s, Length : %d, Insert_LLC : %d, Protocol : %d, Priority : %s\n", apIndex, sta, length, insert_llc, protocol, prio);
+    returnValue = ssp_WIFIHALSendDataFrame(apIndex, sta, &data, length, &insert_llc, protocol, prio);
+
+    if(0 == returnValue)
+    {
+        sprintf(details, "wifi_sendDataFrame was invoked successfully");
+        DEBUG_PRINT(DEBUG_TRACE,"\n %s", details);
+        response["result"]="SUCCESS";
+        response["details"]=details;
+    }
+    else
+    {
+        sprintf(details, "wifi_sendDataFrame was not invoked successfully");
+        DEBUG_PRINT(DEBUG_TRACE,"\n %s", details);
+        response["result"]="FAILURE";
+        response["details"]=details;
+        DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_SendDataFrame ---->Error in execution\n");
+    }
+
+    DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_SendDataFrame ---->Exiting\n");
+    return;
+}
+
+/*******************************************************************************************
+ *
+ * Function Name        : WIFIHAL_GetVAPTelemetry
+ * Description          : This function invokes WiFi hal get api wifi_getVAPTelemetry()
+ * @param [in] req-     : apIndex - Access Point index
+ * @param [out] response - filled with SUCCESS or FAILURE based on the output status of operation
+ *
+ ********************************************************************************************/
+void WIFIHAL::WIFIHAL_GetVAPTelemetry(IN const Json::Value& req, OUT Json::Value& response)
+{
+    DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_GetVAPTelemetry ----->Entry\n");
+    wifi_VAPTelemetry_t VAPTelemetry;
+    int apIndex = 0;
+    int returnValue = 0;
+    char details[1000] = {'\0'};
+
+    if (&req["apIndex"] == NULL)
+    {
+        response["result"]="FAILURE";
+        response["details"]="NULL parameter as input argument";
+        return;
+    }
+
+    apIndex = req["apIndex"].asInt();
+    returnValue = ssp_WIFIHALGetVAPTelemetry(apIndex, &VAPTelemetry);
+
+    if(0 == returnValue)
+    {
+        sprintf(details, "\n wifi_getVAPTelemetry was invoked successfully; Value returned is : txOverflow = %lu", VAPTelemetry.txOverflow);
+        DEBUG_PRINT(DEBUG_TRACE,"\n %s", details);
+        response["result"]="SUCCESS";
+        response["details"]=details;
+    }
+    else
+    {
+        sprintf(details, "\n wifi_getVAPTelemetry not invoked successfully");
+        DEBUG_PRINT(DEBUG_TRACE,"\n %s", details);
+        response["result"]="FAILURE";
+        response["details"]=details;
+        DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_GetVAPTelemetry  --->Error in execution\n");
+    }
+
+    DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_GetVAPTelemetry ---->Exiting\n");
+    return;
 }

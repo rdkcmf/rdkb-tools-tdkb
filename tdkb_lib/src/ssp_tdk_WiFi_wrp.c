@@ -389,6 +389,8 @@ int ssp_WIFIHALGetOrSetParamBoolValue(int radioIndex, unsigned char *enable, cha
     }
     else if(!strcmp(method, "enableGreylistAccessControl"))
         return_status = wifi_enableGreylistAccessControl(*enable);
+    else if(!strcmp(method, "setClientDetailedStatisticsEnable"))
+        return_status = wifi_setClientDetailedStatisticsEnable(radioIndex, *enable);
     else
     {
         return_status = SSP_FAILURE;
@@ -2538,5 +2540,105 @@ int ssp_WIFIHALPushApInterworkingElement(int radioIndex, wifi_InterworkingElemen
          printf("\nssp_WIFIHALPushApInterworkingElement::Success\n");
     }
     printf("\n ssp_WIFIHALPushApInterworkingElement ---> Exit\n");
+    return return_status;
+}
+
+/*******************************************************************************************
+ *
+ * Function Name        : ssp_WIFIHALEnableCSIEngine
+ * Description          : This function invokes WiFi HAL api wifi_enableCSIEngine
+ *
+ * @param [in]          : apIndex - WiFi Access Point Index value
+                          sta - Mac Address of client device connected
+                          enable - Whether CSI data collection is enabled or not
+ * @param [out]         : return status an integer value 0-success and 1-Failure
+ ********************************************************************************************/
+int ssp_WIFIHALEnableCSIEngine(int apIndex, mac_address_t sta, unsigned char * enable)
+{
+    printf("\n ssp_WIFIHALEnableCSIEngine ----> Entry\n");
+    printf("apIndex:%d\n",apIndex);
+    printf("sta:%s\n",sta);
+    printf("enable:%d\n",*enable);
+    int return_status = 0;
+    return_status = wifi_enableCSIEngine(apIndex, sta, *enable);
+
+    if(return_status != SSP_SUCCESS)
+    {
+         printf("\nssp_WIFIHALEnableCSIEngine::Failed\n");
+         return_status = SSP_FAILURE;
+    }
+    else
+    {
+         printf("\nssp_WIFIHALEnableCSIEngine::Success\n");
+    }
+
+    printf("\n ssp_WIFIHALEnableCSIEngine ---> Exit\n");
+    return return_status;
+}
+
+/*******************************************************************************************
+ *
+ * Function Name        : ssp_WIFIHALSendDataFrame
+ * Description          : This function invokes WiFi HAL api wifi_sendDataFrame
+ *
+ * @param [in]          : apIndex - Index of VAP
+ *                        sta - MAC address of the station associated in this VAP
+ *                        data - Pointer to the data buffer. The data does not have any layer 2 information but starts with layer 3.
+ *                        length - length of data
+ *                        insert_llc - whether LLC header should be inserted. If set to TRUE, HAL implementation MUST insert the following bytes before type field. DSAP =  0xaa, SSAP = 0xaa, Control = 0x03, followed by 3 bytes each = 0x00
+ *                        protocol - ethernet protocol
+ *                        priority - priority of the frame with which scheduler should transmit the frame
+ * @param [out]         : return status an integer value 0-success and 1-Failure
+ ********************************************************************************************/
+int ssp_WIFIHALSendDataFrame(int apIndex, mac_address_t sta, unsigned char * data, unsigned int length, unsigned char * insert_llc, unsigned int protocol, wifi_data_priority_t prio)
+{
+    printf("\n ssp_WIFIHALSendDataFrame ----> Entry\n");
+    printf("apIndex:%d\n",apIndex);
+    printf("sta:%s\n",sta);
+    printf("length:%d\n",length);
+    printf("insert_llc:%d\n",*insert_llc);
+    printf("protocol:%d\n",protocol);
+    printf("priority:%d\n",prio);
+    int return_status = 0;
+    return_status = wifi_sendDataFrame(apIndex, sta, data, length, *insert_llc, protocol, prio);
+
+    if(return_status != SSP_SUCCESS)
+    {
+         printf("\nssp_WIFIHALSendDataFrame::Failed\n");
+         return_status = SSP_FAILURE;
+    }
+    else
+    {
+         printf("\nssp_WIFIHALSendDataFrame::Success\n");
+    }
+
+    printf("\n ssp_WIFIHALSendDataFrame ---> Exit\n");
+    return return_status;
+}
+
+/*******************************************************************************************
+ * Function Name        : ssp_WIFIHALGetVAPTelemetry
+ * Description          : This function invokes WiFi HAL api wifi_getVAPTelemetry
+ * @param [in]          : apIndex - WiFi Access Point Index
+ * @param [out]         : return status an integer value 0-success and 1-Failure
+ ********************************************************************************************/
+int ssp_WIFIHALGetVAPTelemetry(int apIndex, wifi_VAPTelemetry_t *VAPTelemetry)
+{
+    printf("\n ssp_WIFIHALGetVAPTelemetry ----> Entry\n");
+    printf("apIndex:%d\n", apIndex);
+    int return_status = 0;
+    return_status = wifi_getVAPTelemetry(apIndex, VAPTelemetry);
+
+    if(return_status != SSP_SUCCESS)
+    {
+         printf("\nssp_WIFIHALGetVAPTelemetry::Failed\n");
+         return_status = SSP_FAILURE;
+    }
+    else
+    {
+         printf("\nssp_WIFIHALGetVAPTelemetry::Success; Tx Overflow : %d\n", VAPTelemetry->txOverflow);
+    }
+
+    printf("\n ssp_WIFIHALGetVAPTelemetry ---> Exit\n");
     return return_status;
 }

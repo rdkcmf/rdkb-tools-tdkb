@@ -1,0 +1,174 @@
+##########################################################################
+# If not stated otherwise in this file or this component's Licenses.txt
+# file the following copyright and licenses apply:
+#
+# Copyright 2021 RDK Management
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+##########################################################################
+'''
+<?xml version="1.0" encoding="UTF-8"?><xml>
+  <id/>
+  <version>1</version>
+  <name>TS_WIFIHAL_5GHzSendDataFrame_ToConnectedClient</name>
+  <primitive_test_id/>
+  <primitive_test_name>WIFIHAL_SendDataFrame</primitive_test_name>
+  <primitive_test_version>1</primitive_test_version>
+  <status>FREE</status>
+  <synopsis>Invoke the HAL API wifi_sendDataFrame() to send a data frame to the connected client and check if the API returns success.</synopsis>
+  <groups_id/>
+  <execution_time>1</execution_time>
+  <long_duration>false</long_duration>
+  <advanced_script>false</advanced_script>
+  <remarks/>
+  <skip>false</skip>
+  <box_types>
+    <box_type>Broadband</box_type>
+  </box_types>
+  <rdk_versions>
+    <rdk_version>RDKB</rdk_version>
+  </rdk_versions>
+  <test_cases>
+    <test_case_id>TC_WIFIHAL_590</test_case_id>
+    <test_objective>Invoke the HAL API wifi_sendDataFrame() to send a data frame to the connected client and check if the API returns success.</test_objective>
+    <test_type>Positive</test_type>
+    <test_setup>Broadband</test_setup>
+    <pre_requisite>1.Ccsp Components  should be in a running state else invoke cosa_start.sh manually that includes all the ccsp components and TDK Component
+2.TDK Agent should be in running state or invoke it through StartTdk.sh script
+3. Should connect a client to 5GHz radio</pre_requisite>
+    <api_or_interface_used>WIFIHAL_GetApAssociatedDeviceDiagnosticResult3
+WIFIHAL_SendDataFrame</api_or_interface_used>
+    <input_parameters>apIndex : 1
+MacAddress : client MAC
+length : 128
+protocol : 800</input_parameters>
+    <automation_approch>1. Load the wifihal module
+2. Invoke the function WIFIHAL_GetApAssociatedDeviceDiagnosticResult3 which will invoke the HAL API wifi_getApAssociatedDeviceDiagnosticResult3 to get the connected client details.
+3. Invoke the function WIFIHAL_SendDataFrame which will in turn invoke the HAL API wifi_sendDataFrame() with apIndex, client MAC, protocol and length passed as input. The data frame should be sent successfully to the connected client and the API should return success.
+4. Unload the wifihal module.</automation_approch>
+    <expected_output>The HAL API wifi_sendDataFrame() should send the data frame to the connected client and the API should return success.</expected_output>
+    <priority>High</priority>
+    <test_stub_interface>wifihal</test_stub_interface>
+    <test_script>TS_WIFIHAL_5GHzSendDataFrame_ToConnectedClient</test_script>
+    <skipped>No</skipped>
+    <release_version>M91</release_version>
+    <remarks/>
+  </test_cases>
+</xml>
+
+'''
+# use tdklib library,which provides a wrapper for tdk testcase script
+import tdklib;
+from wifiUtility import *;
+
+radio = "5G"
+
+#Test component to be tested
+obj = tdklib.TDKScriptingLibrary("wifihal","1");
+
+#IP and Port of box, No need to change,
+#This will be replaced with correspoing Box Ip and port while executing script
+ip = <ipaddress>
+port = <port>
+obj.configureTestCase(ip,port,'TS_WIFIHAL_5GHzSendDataFrame_ToConnectedClient');
+
+#Get the result of connection with test component and DUT
+loadmodulestatus =obj.getLoadModuleResult();
+print "[LIB LOAD STATUS]  :  %s" %loadmodulestatus
+
+if "SUCCESS" in loadmodulestatus.upper():
+    obj.setLoadModuleStatus("SUCCESS");
+
+    tdkTestObjTemp, idx = getIndex(obj, radio);
+    ## Check if a invalid index is returned
+    if idx == -1:
+        print "Failed to get radio index for radio %s\n" %radio;
+        tdkTestObjTemp.setResultStatus("FAILURE");
+    else:
+        tdkTestObj = obj.createTestStep('WIFIHAL_GetApAssociatedDeviceDiagnosticResult3');
+        tdkTestObj.addParameter("apIndex", idx);
+        expectedresult="SUCCESS";
+        tdkTestObj.executeTestCase(expectedresult);
+        actualresult = tdkTestObj.getResult();
+        details = tdkTestObj.getResultDetails();
+        print "Details: %s"%details
+        print "\nTEST STEP 1: Invoke the HAL API wifi_getApAssociatedDeviceDiagnosticResult3()";
+        print "EXPECTED RESULT 1: Should successfully invoke wifi_getApAssociatedDeviceDiagnosticResult3()";
+
+        if expectedresult in actualresult and details != "":
+            tdkTestObj.setResultStatus("SUCCESS");
+            print "ACTUAL RESULT 1 : wifi_getApAssociatedDeviceDiagnosticResult3() invoked successfully";
+            size = details.split(":")[1].strip();
+            #Get the result of execution
+            print "[TEST EXECUTION RESULT] : SUCCESS";
+            output_array_size = size.split("=")[1].split(",")[0].strip();
+            print "\nTEST STEP 2: The number of associated clients should be greater than 0";
+            print "EXPECTED RESULT 2: The number of associated clients should be greater than 0";
+
+            if int(output_array_size) != 0:
+                tdkTestObj.setResultStatus("SUCCESS");
+                print "ACTUAL RESULT 2: Number of associated clients : %d" %(int(output_array_size));
+                #Get the result of execution
+                print "[TEST EXECUTION RESULT] : SUCCESS";
+
+                #Get the MAC address of the client
+                mac = details.split("MAC")[1].split(",")[0].split("=")[1].strip();
+                if mac != " ":
+                    print "MAC Address of the client : %s" %mac;
+
+                    #send data frame to a client associated in the specified VAP index
+                    length = 128;
+                    protocol = 800;
+                    priority = 0;
+                    tdkTestObj = obj.createTestStep('WIFIHAL_SendDataFrame');
+                    tdkTestObj.addParameter("apIndex", idx);
+                    tdkTestObj.addParameter("MacAddress", mac);
+                    tdkTestObj.addParameter("length",length);
+                    tdkTestObj.addParameter("protocol",protocol);
+                    tdkTestObj.addParameter("priority", priority);
+                    expectedresult="SUCCESS";
+                    tdkTestObj.executeTestCase(expectedresult);
+                    actualresult = tdkTestObj.getResult();
+                    details = tdkTestObj.getResultDetails();
+                    print "\nTEST STEP 3: Send data frame using the HAL API wifi_sendDataFrame() for the connected client with MAC Address : %s" %mac;
+                    print "EXPECTED RESULT 3: wifi_sendDataFrame() should be invoked successfully";
+
+                    if expectedresult in actualresult :
+                        tdkTestObj.setResultStatus("SUCCESS");
+                        print "ACTUAL RESULT 3 : wifi_sendDataFrame() invoked successfully";
+                        #Get the result of execution
+                        print "[TEST EXECUTION RESULT] : SUCCESS";
+                    else :
+                        tdkTestObj.setResultStatus("FAILURE");
+                        print "ACTUAL RESULT 3 : wifi_sendDataFrame() not invoked successfully";
+                        #Get the result of execution
+                        print "[TEST EXECUTION RESULT] : FAILURE";
+                else :
+                    tdkTestObj.setResultStatus("FAILURE");
+                    print "MAC Address is not fetched successfully";
+            else:
+                tdkTestObj.setResultStatus("FAILURE");
+                print "ACTUAL RESULT 2: Number of associated clients : %d" %(int(output_array_size));
+                print "[TEST EXECUTION RESULT] : FAILURE";
+        else:
+            tdkTestObj.setResultStatus("FAILURE");
+            print "ACTUAL RESULT 1: Failed to invoke wifi_getApAssociatedDeviceDiagnosticResult3()";
+            #Get the result of execution
+            print "[TEST EXECUTION RESULT] : FAILURE";
+
+    obj.unloadModule("wifihal");
+else:
+    print "Failed to load the module";
+    obj.setLoadModuleStatus("FAILURE");
+    print "Module loading failed";
+

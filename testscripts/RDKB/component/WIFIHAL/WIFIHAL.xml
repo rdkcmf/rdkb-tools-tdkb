@@ -486,6 +486,31 @@
           <parameter name="venueOptionPresent" value=""/>
           <parameter name="venueType" value=""/>
         </parameters>
+     </primitiveTest>
+      <primitiveTest name="WIFIHAL_EnableCSIEngine" id=" " version="1">
+        <function>WIFIHAL_EnableCSIEngine</function>
+        <parameters>
+          <parameter name="apIndex" value=""/>
+          <parameter name="enable" value=""/>
+          <parameter name="MacAddress" value=""/>
+        </parameters>
+     </primitiveTest>
+      <primitiveTest name="WIFIHAL_SendDataFrame" id=" " version="1">
+        <function>WIFIHAL_SendDataFrame</function>
+        <parameters>
+          <parameter name="apIndex" value=""/>
+          <parameter name="insert_llc" value=""/>
+          <parameter name="length" value=""/>
+          <parameter name="MacAddress" value=""/>
+          <parameter name="priority" value=""/>
+          <parameter name="protocol" value=""/>
+        </parameters>
+     </primitiveTest>
+      <primitiveTest name="WIFIHAL_GetVAPTelemetry" id=" " version="1">
+        <function>WIFIHAL_GetVAPTelemetry</function>
+        <parameters>
+          <parameter name="apIndex" value=""/>
+        </parameters>
       </primitiveTest>
     </primitiveTests>
   </module>
