@@ -17,26 +17,43 @@
 # limitations under the License.
 ##########################################################################
 '''
-<?xml version="1.0" encoding="UTF-8"?><xml>
-  <id/>
-  <version>1</version>
+<?xml version='1.0' encoding='utf-8'?>
+<xml>
+  <id></id>
+  <!-- Do not edit id. This will be auto filled while exporting. If you are adding a new script keep the id empty -->
+  <version>2</version>
+  <!-- Do not edit version. This will be auto incremented while updating. If you are adding a new script you can keep the vresion as 1 -->
   <name>TS_WIFIHAL_2.4GHzPublicWiFi_SetSecuritySecondaryRadiusServer</name>
-  <primitive_test_id/>
+  <!-- If you are adding a new script you can specify the script name. Script Name should be unique same as this file name with out .py extension -->
+  <primitive_test_id> </primitive_test_id>
+  <!-- Do not change primitive_test_id if you are editing an existing script. -->
   <primitive_test_name>WIFIHAL_GetOrSetSecurityRadiusServer</primitive_test_name>
+  <!--  -->
   <primitive_test_version>1</primitive_test_version>
+  <!--  -->
   <status>FREE</status>
+  <!--  -->
   <synopsis>To  set and get the SecuritySecondaryRadiusServer details  for 2.4GHz Public WiFi</synopsis>
-  <groups_id/>
+  <!--  -->
+  <groups_id />
+  <!--  -->
   <execution_time>1</execution_time>
+  <!--  -->
   <long_duration>false</long_duration>
+  <!--  -->
   <advanced_script>false</advanced_script>
-  <remarks/>
+  <!-- execution_time is the time out time for test execution -->
+  <remarks></remarks>
+  <!-- Reason for skipping the tests if marked to skip -->
   <skip>false</skip>
+  <!--  -->
   <box_types>
     <box_type>Broadband</box_type>
+    <!--  -->
   </box_types>
   <rdk_versions>
     <rdk_version>RDKB</rdk_version>
+    <!--  -->
   </rdk_versions>
   <test_cases>
     <test_case_id>TC_WIFIHAL_571</test_case_id>
@@ -53,25 +70,27 @@ wifi_setApSecurityModeEnabled()</api_or_interface_used>
 methodName : setApSecuritySecondaryRadiusServer
 methodName : getApSecurityModeEnabled
 methodName : setApSecurityModeEnabled
-ApIndex : 8</input_parameters>
+ApIndex : fetched from platform properties file</input_parameters>
     <automation_approch>1. Load wifihal module
-2. Using WIFIHAL_GetOrSetParamStringValue invoke wifi_getApSecurityModeEnabled() and save the get value
-3. If the mode is any of the  Enterprise modes : "WPA-Enterprise", "WPA2-Enterprise", "WPA-WPA2-Enterprise",  go to step 5
-4. If mode is not Enterprise mode, invoke wifi_setApSecurityModeEnabled using  WIFIHAL_GetOrSetParamStringValue and set WPA-Enterprise mode
-5. Using  WIFIHAL_GetOrSetSecurityRadiusServer invoke wifi_getApSecuritySecondaryRadiusServer() and save the value
-6. Using  WIFIHAL_GetOrSetSecurityRadiusServer invoke wifi_setApSecuritySecondaryRadiusServer() and set any values for IPaddress, port and RadiusSecret
-7. Invoke wifi_getApSecuritySecondaryRadiusServer() to get the previously set value.
-8 Compare the above two results. If the two values  are same return SUCCESS else return FAILURE
-9. Revert the SecondaryRadiusServer and ModeEnabled back to initial value
-10. Unload wifihal module</automation_approch>
-    <except_output>Set and get values of SecondaryRadiusServer (IP address, port and RadiusSecret) should be the same</except_output>
+2. Get the 2.4GHz Public WiFi AP Index from platform.properties file
+3. Using WIFIHAL_GetOrSetParamStringValue invoke wifi_getApSecurityModeEnabled() and save the get value
+4. If the mode is any of the  Enterprise modes : "WPA-Enterprise", "WPA2-Enterprise", "WPA-WPA2-Enterprise",  go to step 5
+5. If mode is not Enterprise mode, invoke wifi_setApSecurityModeEnabled using  WIFIHAL_GetOrSetParamStringValue and set WPA-Enterprise mode
+6. Using  WIFIHAL_GetOrSetSecurityRadiusServer invoke wifi_getApSecuritySecondaryRadiusServer() and save the value
+7. Using  WIFIHAL_GetOrSetSecurityRadiusServer invoke wifi_setApSecuritySecondaryRadiusServer() and set any values for IPaddress, port and RadiusSecret
+8. Invoke wifi_getApSecuritySecondaryRadiusServer() to get the previously set value.
+9 Compare the above two results. If the two values  are same return SUCCESS else return FAILURE
+10. Revert the SecondaryRadiusServer and ModeEnabled back to initial value
+11. Unload wifihal module</automation_approch>
+    <expected_output>Set and get values of SecondaryRadiusServer (IP address, port and RadiusSecret) should be the same</expected_output>
     <priority>High</priority>
     <test_stub_interface>WIFIHAL</test_stub_interface>
     <test_script>TS_WIFIHAL_2.4GHzPublicWiFi_SetSecuritySecondaryRadiusServer</test_script>
     <skipped>No</skipped>
     <release_version>M90</release_version>
-    <remarks/>
+    <remarks></remarks>
   </test_cases>
+  <script_tags />
 </xml>
 '''
 def GetorSetApSecuritySecondaryRadiusServer(obj, primitive, apIndex, IPAddress, port, RadiusSecret, methodname):
@@ -183,72 +202,107 @@ def checkApSecuritySecondaryRadiusServer(apIndex):
 # use tdklib library,which provides a wrapper for tdk testcase script
 import tdklib;
 from wifiUtility import *;
+from tdkbVariables import *;
 
 #Test component to be tested
 obj = tdklib.TDKScriptingLibrary("wifihal","1");
+sysobj = tdklib.TDKScriptingLibrary("sysutil","1");
 
 #IP and Port of box, No need to change,
-#This will be replaced with correspoing Box Ip and port while executing script
+#This will be replaced with corresponding DUT Ip and port while executing script
 ip = <ipaddress>
 port = <port>
 obj.configureTestCase(ip,port,'TS_WIFIHAL_2.4GHzPublicWiFi_SetSecuritySecondaryRadiusServer');
+sysobj.configureTestCase(ip,port,'TS_WIFIHAL_2.4GHzPublicWiFi_SetSecuritySecondaryRadiusServer');
 
+#Get the result of connection with test component and DUT
 loadmodulestatus =obj.getLoadModuleResult();
-print "[LIB LOAD STATUS]  :  %s" %loadmodulestatus
+loadmodulestatus1 =sysobj.getLoadModuleResult();
+print "[LIB LOAD STATUS]  :  %s" %loadmodulestatus ;
+print "[LIB LOAD STATUS]  :  %s" %loadmodulestatus1 ;
 
-if "SUCCESS" in loadmodulestatus.upper():
-    print "2.4GHz Public WiFi index : %s" %apIndex_2G_Public_Wifi;
-    apIndex = apIndex_2G_Public_Wifi;
-    compatibleModes = ["WPA-Enterprise", "WPA2-Enterprise", "WPA-WPA2-Enterprise"]
+if "SUCCESS" in loadmodulestatus.upper() and "SUCCESS" in loadmodulestatus1.upper():
+    obj.setLoadModuleStatus("SUCCESS");
+    sysobj.setLoadModuleStatus("SUCCESS");
+    expectedresult = "SUCCESS";
+
+    #Getting APINDEX_2G_PUBLIC_WIFI value from tdk_platform_properties"
+    cmd= "sh %s/tdk_utility.sh parseConfigFile APINDEX_2G_PUBLIC_WIFI" %TDK_PATH;
+    print cmd;
     expectedresult="SUCCESS";
-    getMethod = "getApSecurityModeEnabled"
-    primitive = 'WIFIHAL_GetOrSetParamStringValue'
-    #Calling the method to execute wifi_getApSecurityModeEnabled()
-    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, "0", getMethod)
+    tdkTestObj = sysobj.createTestStep('ExecuteCmd');
+    tdkTestObj.addParameter("command",cmd);
+    tdkTestObj.executeTestCase(expectedresult);
+    actualresult = tdkTestObj.getResult();
+    details = tdkTestObj.getResultDetails().strip().replace("\\n", "");
 
-    if expectedresult in actualresult:
-        initMode = details.split(":")[1].strip()
-        print "Initial Security Mode : %s"%initMode;
+    if expectedresult in actualresult and details != "":
+        apIndex = int(details);
+        print "TEST STEP : Get APINDEX_2G_PUBLIC_WIFI  from property file";
+        print "EXPECTED RESULT : Should  get APINDEX_2G_PUBLIC_WIFI  from property file"
+        print "ACTUAL RESULT : APINDEX_2G_PUBLIC_WIFI from property file :", apIndex ;
+        print "TEST EXECUTION RESULT :SUCCESS";
+        tdkTestObj.setResultStatus("SUCCESS");
 
-        if initMode not in compatibleModes:
-            expectedresult="SUCCESS";
-            setMethod = "setApSecurityModeEnabled"
-            primitive = 'WIFIHAL_GetOrSetParamStringValue'
-            setMode = compatibleModes[0]
-            #Calling the method to execute wifi_setApSecurityModeEnabled()
-            tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, setMode, setMethod)
+        compatibleModes = ["WPA-Enterprise", "WPA2-Enterprise", "WPA-WPA2-Enterprise"]
+        expectedresult="SUCCESS";
+        getMethod = "getApSecurityModeEnabled"
+        primitive = 'WIFIHAL_GetOrSetParamStringValue'
+        #Calling the method to execute wifi_getApSecurityModeEnabled()
+        tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, "0", getMethod)
 
-            if expectedresult in actualresult:
-                tdkTestObj.setResultStatus("SUCCESS");
-                print "ModeEnabled is changed to an WPA-Enterprise type"
-                #Calling the function to perform the settings and getting and verification of SecuritySecondaryRadiusServer
-                checkApSecuritySecondaryRadiusServer(apIndex);
-                #Revert to initial mode
+        if expectedresult in actualresult:
+            initMode = details.split(":")[1].strip()
+            print "Initial Security Mode : %s"%initMode;
+
+            if initMode not in compatibleModes:
+                expectedresult="SUCCESS";
                 setMethod = "setApSecurityModeEnabled"
                 primitive = 'WIFIHAL_GetOrSetParamStringValue'
-                setMode = initMode
+                setMode = compatibleModes[0]
                 #Calling the method to execute wifi_setApSecurityModeEnabled()
                 tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, setMode, setMethod)
 
                 if expectedresult in actualresult:
-                    print "Successfully reverted the SecurityMode to initial value"
                     tdkTestObj.setResultStatus("SUCCESS");
+                    print "ModeEnabled is changed to an WPA-Enterprise type"
+                    #Calling the function to perform the settings and getting and verification of SecuritySecondaryRadiusServer
+                    checkApSecuritySecondaryRadiusServer(apIndex);
+
+                    #Revert to initial mode
+                    setMethod = "setApSecurityModeEnabled"
+                    primitive = 'WIFIHAL_GetOrSetParamStringValue'
+                    setMode = initMode
+                    #Calling the method to execute wifi_setApSecurityModeEnabled()
+                    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, setMode, setMethod)
+
+                    if expectedresult in actualresult:
+                        print "Successfully reverted the SecurityMode to initial value"
+                        tdkTestObj.setResultStatus("SUCCESS");
+                    else:
+                        print "Unable to revert the SecurityMode to initial value"
+                        tdkTestObj.setResultStatus("FAILURE");
                 else:
-                    print "Unable to revert the SecurityMode to initial value"
                     tdkTestObj.setResultStatus("FAILURE");
+                    print "Unable to change ModeEnabled to Enterprise type"
             else:
-                tdkTestObj.setResultStatus("FAILURE");
-                print "Unable to change ModeEnabled to Enterprise type"
+                #Calling the function to perform the settings and getting and verification of SecuritySecondaryRadiusServer
+                checkApSecuritySecondaryRadiusServer(apIndex);
         else:
-            #Calling the function to perform the settings and getting and verification of SecuritySecondaryRadiusServer
-            checkApSecuritySecondaryRadiusServer(apIndex);
+            tdkTestObj.setResultStatus("FAILURE");
+            print "wifi_getApSecurityModeEnabled()call failed"
     else:
+        print "TEST STEP : Get APINDEX_2G_PUBLIC_WIFI  from property file";
+        print "EXPECTED RESULT : Should  get APINDEX_2G_PUBLIC_WIFI  from property file"
+        print "ACTUAL RESULT : APINDEX_2G_PUBLIC_WIFI from property file :", details ;
+        print "TEST EXECUTION RESULT : FAILURE";
         tdkTestObj.setResultStatus("FAILURE");
-        print "wifi_getApSecurityModeEnabled()call failed"
 
     obj.unloadModule("wifihal");
+    sysobj.unloadModule("sysutil");
 else:
     print "Failed to load the module";
     obj.setLoadModuleStatus("FAILURE");
-    print "Module loading failed";
+    sysobj.setLoadModuleStatus("FAILURE");
+    print "Module loading FAILURE";
 

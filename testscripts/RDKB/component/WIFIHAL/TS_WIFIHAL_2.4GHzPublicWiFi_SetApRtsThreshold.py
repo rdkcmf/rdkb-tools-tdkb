@@ -49,13 +49,14 @@
 wifi_setApRtsThreshold()</api_or_interface_used>
     <input_parameters>methodName : getApRtsThresholdSupported
 methodName : setApRtsThreshold
-ApIndex : 8</input_parameters>
+ApIndex : fetched from platform properties file</input_parameters>
     <automation_approch>1. Load wifihal module
-2. Using WIFIHAL_GetOrSetParamBoolValue invoke wifi_getApRtsThresholdSupported()
-3. If it is supported, invoke
+2. Get the 2.4GHz Public WiFi AP Index from platform property file
+3. Using WIFIHAL_GetOrSetParamBoolValue invoke wifi_getApRtsThresholdSupported()
+4. If it is supported, invoke
 wifi_setApRtsThreshold() using WIFIHAL_GetOrSetParamUIntValue and set a value
-4. Depending upon the return status, return SUCCESS or FAILURE
-5. Unload wifihal module</automation_approch>
+5. Depending upon the return status, return SUCCESS or FAILURE
+6. Unload wifihal module</automation_approch>
     <expected_output>Checkpoint:
 1. wifi_getApRtsThresholdSupported should be SUCCESS
 2. wifi_setApRtsThreshold should return SUCCESS</expected_output>
@@ -72,68 +73,98 @@ wifi_setApRtsThreshold() using WIFIHAL_GetOrSetParamUIntValue and set a value
 # use tdklib library,which provides a wrapper for tdk testcase script
 import tdklib;
 from wifiUtility import *;
+from tdkbVariables import *;
 
 #Test component to be tested
 obj = tdklib.TDKScriptingLibrary("wifihal","1");
+sysobj = tdklib.TDKScriptingLibrary("sysutil","1");
 
 #IP and Port of box, No need to change,
-#This will be replaced with correspoing Box Ip and port while executing script
+#This will be replaced with corresponding DUT Ip and port while executing script
 ip = <ipaddress>
 port = <port>
 obj.configureTestCase(ip,port,'TS_WIFIHAL_2.4GHzPublicWiFi_SetApRtsThreshold');
+sysobj.configureTestCase(ip,port,'TS_WIFIHAL_2.4GHzPublicWiFi_SetApRtsThreshold');
 
 #Get the result of connection with test component and DUT
 loadmodulestatus =obj.getLoadModuleResult();
+loadmodulestatus1 =sysobj.getLoadModuleResult();
 print "[LIB LOAD STATUS]  :  %s" %loadmodulestatus ;
+print "[LIB LOAD STATUS]  :  %s" %loadmodulestatus1 ;
 
-if "SUCCESS" in loadmodulestatus.upper():
+if "SUCCESS" in loadmodulestatus.upper() and "SUCCESS" in loadmodulestatus1.upper():
     obj.setLoadModuleStatus("SUCCESS");
+    sysobj.setLoadModuleStatus("SUCCESS");
+    expectedresult = "SUCCESS";
 
+    #Getting APINDEX_2G_PUBLIC_WIFI value from tdk_platform_properties"
+    cmd= "sh %s/tdk_utility.sh parseConfigFile APINDEX_2G_PUBLIC_WIFI" %TDK_PATH;
+    print cmd;
     expectedresult="SUCCESS";
-    getMethod = "getApRtsThresholdSupported"
-    apIndex = apIndex_2G_Public_Wifi;
-    primitive = 'WIFIHAL_GetOrSetParamBoolValue'
+    tdkTestObj = sysobj.createTestStep('ExecuteCmd');
+    tdkTestObj.addParameter("command",cmd);
+    tdkTestObj.executeTestCase(expectedresult);
+    actualresult = tdkTestObj.getResult();
+    details = tdkTestObj.getResultDetails().strip().replace("\\n", "");
 
-    #Calling the method from wifiUtility to execute test case and set result status for the test.
-    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, 0, getMethod)
-
-    if expectedresult in actualresult:
-        supportState = details.split(":")[1].strip()
-        print "TEST STEP 1: Check if ApRtsThreshold ie, packet size threshold is supported"
-        print "EXPECTED RESULT 1: getApRtsThresholdSupported should return SUCCESS"
-        print "ACTUAL RESULT 1: getApRtsThresholdSupported is SUCCESS"
+    if expectedresult in actualresult and details != "":
+        apIndex = int(details);
+        print "TEST STEP 1: Get APINDEX_2G_PUBLIC_WIFI  from property file";
+        print "EXPECTED RESULT 1: Should  get APINDEX_2G_PUBLIC_WIFI  from property file"
+        print "ACTUAL RESULT 1: APINDEX_2G_PUBLIC_WIFI from property file :", apIndex ;
+        print "TEST EXECUTION RESULT :SUCCESS";
         tdkTestObj.setResultStatus("SUCCESS");
 
-        if supportState == "Enabled":
-            print "getApRtsThreshold is Supported"
-            expectedresult="SUCCESS";
-            setMethod = "setApRtsThreshold"
-            setThreshold = 1000
-            primitive = 'WIFIHAL_GetOrSetParamUIntValue'
+        getMethod = "getApRtsThresholdSupported"
+        primitive = 'WIFIHAL_GetOrSetParamBoolValue'
+        #Calling the method from wifiUtility to execute test case and set result status for the test.
+        tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, 0, getMethod)
 
-            #Calling the method from wifiUtility to execute test case and set result status for the test.
-            tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, setThreshold, setMethod)
-            print "TEST STEP 2: Set the ApRtsThreshold ie, packet size threshold in bytes to apply RTS/CTS backoff rules"
-            print "EXPECTED RESULT 2: Set operation should return SUCCESS"
-
-            if expectedresult in actualresult:
-                print "ACTUAL RESULT 2: setApRtsThreshold is SUCCESS and sets aside ",setThreshold, "bytes to apply RTS/CTS backoff rules"
-                tdkTestObj.setResultStatus("SUCCESS");
-
-            else:
-                print "ACTUAL RESULT 2: setApRtsThreshold FAILED"
-                tdkTestObj.setResultStatus("FAILURE");
-
-        else:
-            print "getApRtsThreshold is NOT Supported"
+        if expectedresult in actualresult:
+            supportState = details.split(":")[1].strip()
+            print "TEST STEP 2: Check if ApRtsThreshold ie, packet size threshold is supported"
+            print "EXPECTED RESULT 2: getApRtsThresholdSupported should return SUCCESS"
+            print "ACTUAL RESULT 2: getApRtsThresholdSupported is SUCCESS"
             tdkTestObj.setResultStatus("SUCCESS");
-    else:
-        print "TEST STEP 1: Check if ApRtsThreshold ie, packet size threshold is supported"
-        print "EXPECTED RESULT 1: getApRtsThresholdSupported should return SUCCESS"
-        print "ACTUAL RESULT 1: getApRtsThresholdSupported FAILED"
-        tdkTestObj.setResultStatus("FAILURE");
-    obj.unloadModule("wifihal");
 
+            if supportState == "Enabled":
+                print "getApRtsThreshold is Supported"
+                expectedresult="SUCCESS";
+                setMethod = "setApRtsThreshold"
+                setThreshold = 1000
+                primitive = 'WIFIHAL_GetOrSetParamUIntValue'
+                #Calling the method from wifiUtility to execute test case and set result status for the test.
+                tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, setThreshold, setMethod)
+
+                print "TEST STEP 3: Set the ApRtsThreshold ie, packet size threshold in bytes to apply RTS/CTS backoff rules"
+                print "EXPECTED RESULT 3: Set operation should return SUCCESS"
+
+                if expectedresult in actualresult:
+                    print "ACTUAL RESULT 3: setApRtsThreshold is SUCCESS and sets aside ",setThreshold, "bytes to apply RTS/CTS backoff rules"
+                    tdkTestObj.setResultStatus("SUCCESS");
+                else:
+                    print "ACTUAL RESULT 3: setApRtsThreshold FAILED"
+                    tdkTestObj.setResultStatus("FAILURE");
+            else:
+                print "getApRtsThreshold is NOT Supported"
+                tdkTestObj.setResultStatus("SUCCESS");
+        else:
+            print "TEST STEP 2: Check if ApRtsThreshold ie, packet size threshold is supported"
+            print "EXPECTED RESULT 2: getApRtsThresholdSupported should return SUCCESS"
+            print "ACTUAL RESULT 2: getApRtsThresholdSupported FAILED"
+            tdkTestObj.setResultStatus("FAILURE");
+    else:
+        print "TEST STEP 1: Get APINDEX_2G_PUBLIC_WIFI  from property file";
+        print "EXPECTED RESULT 1: Should  get APINDEX_2G_PUBLIC_WIFI  from property file"
+        print "ACTUAL RESULT 1: APINDEX_2G_PUBLIC_WIFI from property file :", details ;
+        print "TEST EXECUTION RESULT : FAILURE";
+        tdkTestObj.setResultStatus("FAILURE");
+
+    obj.unloadModule("wifihal");
+    sysobj.unloadModule("sysutil");
 else:
-    print "Failed to load wifi module";
+    print "Failed to load the module";
     obj.setLoadModuleStatus("FAILURE");
+    sysobj.setLoadModuleStatus("FAILURE");
+    print "Module loading FAILURE";
+
