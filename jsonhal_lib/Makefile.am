@@ -27,7 +27,7 @@ ACLOCAL_AMFLAGS = -I m4
 lib_LTLIBRARIES = libjsonhallib.la
 
 libjsonhallib_la_CPPFLAGS = -I$(top_srcdir)/jsonhal_lib/include
-libjsonhallib_la_SOURCES = src/jsonhal_lib_wrp.c src/dslhal_lib_wrp.c
+libjsonhallib_la_SOURCES = src/jsonhal_lib_wrp.c src/dslhal_lib_wrp.c src/telcovoicemgrhal_lib_wrp.c
 
 libjsonhallib_la_LDFLAGS =  -ljson_hal_client  -ljson-c -ljson_schema_validator_wrapper
 

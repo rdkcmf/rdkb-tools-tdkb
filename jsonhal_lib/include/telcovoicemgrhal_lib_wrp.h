@@ -1,4 +1,3 @@
-
 /*
  *If not stated otherwise in this file or this component's Licenses.txt file the
  * following copyright and licenses apply:
@@ -18,11 +17,11 @@
  * limitations under the License.
 */
 
-#ifndef __JSONHAL_LIB_WRP_H__
-#define __JSONHAL_LIB_WRP_H__
+#ifndef __TELCOVOICEMGR_LIB_WRP_H__
+#define __TELCOVOICEMGR_LIB_WRP_H__
 
 #include "jsonhal_wrp.h"
-#include "string.h"
+
 #include <json-c/json.h>
 #include "json_hal_common.h"
 #include "json_hal_client.h"
@@ -33,13 +32,13 @@
 extern "C"
 {
 #endif
-    int jsonhal_init(const char * CONF_FILE);
-    int jsonhal_getparam(char *pName,char *pValue);
-    int jsonhal_setparam(char *pName, eParamType pType, char *pValue);
-    json_object *create_json_request_message(eActionType request_type, char *param_name, eParamType type, char *param_val);
+    int telcovoicemgrhal_initdata(int bStatus);
+    int telcovoicemgrhal_getlinestats(char *param_name, TELCOVOICEMGR_DML_VOICESERVICE_STATS *pLineStats);
+    int telcovoicemgrhal_getcapabilities(PTELCOVOICEMGR_DML_CAPABILITIES pCapabilities, char *param_name);
+    int telcovoicemgrhal_getvoiceprofile(DML_PROFILE_LIST_T* pVoiceProfileList, int vsIndex, char *param_name);
+    int telcovoicemgrhal_getphyinterface(DML_PHYINTERFACE_LIST_T* pPhyInterfaceList, int vsIndex, char *param_name);
 #ifdef __cplusplus
 }
 #endif
 #endif
-
 

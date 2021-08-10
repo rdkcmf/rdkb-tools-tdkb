@@ -25,6 +25,7 @@
 #define MAX_PARAMETER_SIZE 500
 #define RETURN_SUCCESS 0
 #define RETURN_FAILURE 1
+#define DSL_CONF_FILE "/etc/rdk/conf/xdsl_manager_conf.json"
 
 /********************************************************************************************
  *Function name : testmodulepre_requisites
@@ -74,7 +75,8 @@ void DSLHAL::DSLHAL_Init(IN const Json::Value& req, OUT Json::Value& response)
     DEBUG_PRINT(DEBUG_TRACE,"\n DSLHAL_Init----->Entry\n");
     int returnValue = RETURN_FAILURE;
 
-    returnValue = jsonhal_init();
+    DEBUG_PRINT(DEBUG_TRACE,"\n DSL_CONF_FILE : %s", DSL_CONF_FILE);
+    returnValue = jsonhal_init(DSL_CONF_FILE);
 
     if(returnValue == RETURN_SUCCESS)
     {

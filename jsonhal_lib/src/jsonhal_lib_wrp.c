@@ -21,17 +21,26 @@
 #include "jsonhal_wrp.h"
 #include "jsonhal_lib_wrp.h"
 #include "json_schema_validator_wrapper.h"
+#include "telcovoicemgrhal_lib_wrp.h"
 
 /*****************************************************************************************************************
  * Function Name : jsonhal_init
  * Description   : This function will invoke the json_client to connect to json hal server
- * @param [in]   : param_name  - None
+ * @param [in]   : CONF_FILE
  * @param [out]  : return status an integer value 0-success and 1-Failure
  ******************************************************************************************************************/
-int jsonhal_init( void )
+int jsonhal_init(const char * CONF_FILE)
 {
     int rc = RETURN_OK;
-    rc = json_hal_client_init(XDSL_JSON_CONF_PATH);
+
+    if (!strcmp(CONF_FILE, XDSL_JSON_CONF_PATH))
+    {
+        rc = json_hal_client_init(XDSL_JSON_CONF_PATH);
+    }
+    else if (!strcmp(CONF_FILE, TELCOVOICEMGR_CONF_FILE))
+    {
+        rc = json_hal_client_init(TELCOVOICEMGR_CONF_FILE);
+    }
     if (rc != RETURN_OK)
     {
         DEBUG_PRINT(DEBUG_TRACE,"%s-%d Failed to initialize hal client. \n",__FUNCTION__,__LINE__);
@@ -67,7 +76,15 @@ int jsonhal_init( void )
         DEBUG_PRINT(DEBUG_TRACE,"Failed to connect to the hal server. \n");
         return RETURN_ERR;
     }
-
+    if (!strcmp(CONF_FILE, TELCOVOICEMGR_CONF_FILE))
+    {
+        int bStatus = 1;
+        if(telcovoicemgrhal_initdata(bStatus) !=  RETURN_OK)
+        {
+           DEBUG_PRINT(DEBUG_TRACE, "Failed to initialise data\n");
+           rc = RETURN_ERR;
+        }
+    }
     return rc;
 }
 
