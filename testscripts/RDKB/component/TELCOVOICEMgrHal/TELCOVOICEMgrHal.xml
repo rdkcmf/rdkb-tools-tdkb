@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?><xml>
+  <module testGroup="Component" name="TELCOVOICEMgrHal">
+    <primitiveTests>
+      <primitiveTest name="TELCOVOICEMgrHal_Init" id="" version="1">
+        <function>TELCOVOICEMgrHal_Init</function>
+        <parameters/>
+      </primitiveTest>
+      <primitiveTest name="TELCOVOICEMgrHal_GetInitData" id="" version="1">
+        <function>TELCOVOICEMgrHal_GetInitData</function>
+        <parameters/>
+      </primitiveTest>
+      <primitiveTest name="TELCOVOICEMgrHal_InitData" id=" " version="1">
+        <function>TELCOVOICEMgrHal_InitData</function>
+        <parameters>
+          <parameter name="bStatus" value=""/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest name="TELCOVOICEMgrHal_GetParamValue" id=" " version="1">
+        <function>TELCOVOICEMgrHal_GetParamValue</function>
+        <parameters>
+          <parameter name="paramName" value=""/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest name="TELCOVOICEMgrHal_SetParamValue" id=" " version="1">
+        <function>TELCOVOICEMgrHal_SetParamValue</function>
+        <parameters>
+          <parameter name="paramName" value=""/>
+          <parameter name="paramType" value=""/>
+          <parameter name="paramValue" value=""/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest name="TELCOVOICEMgrHal_GetLineStats" id=" " version="3">
+        <function>TELCOVOICEMgrHal_GetLineStats</function>
+        <parameters>
+          <parameter name="paramName" value=""/>
+          <parameter name="flag" value="0"/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest name="TELCOVOICEMgrHal_GetVoiceServices" id="" version="1">
+        <function>TELCOVOICEMgrHal_GetVoiceServices</function>
+        <parameters/>
+      </primitiveTest>
+      <primitiveTest name="TELCOVOICEMgrHal_GetCapabilities" id=" " version="3">
+        <function>TELCOVOICEMgrHal_GetCapabilities</function>
+        <parameters>
+          <parameter name="flag" value="0"/>
+          <parameter name="paramName" value=""/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest name="TELCOVOICEMgrHal_GetVoiceProfile" id=" " version="3">
+        <function>TELCOVOICEMgrHal_GetVoiceProfile</function>
+        <parameters>
+          <parameter name="index" value=""/>
+          <parameter name="flag" value="0"/>
+          <parameter name="paramName" value=""/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest name="TELCOVOICEMgrHal_GetPhyInterface" id=" " version="3">
+        <function>TELCOVOICEMgrHal_GetPhyInterface</function>
+        <parameters>
+          <parameter name="index" value=""/>
+          <parameter name="flag" value="0"/>
+          <parameter name="paramName" value=""/>
+        </parameters>
+      </primitiveTest>
+    </primitiveTests>
+  </module>
+</xml>
+

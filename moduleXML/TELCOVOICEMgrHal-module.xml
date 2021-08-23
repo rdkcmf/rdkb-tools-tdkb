@@ -1,0 +1,48 @@
+<?xml version='1.0' encoding='utf-8'?>
+<xml>
+  <module>
+  <!-- Module Name  -->
+    <moduleName>TELCOVOICEMgrHal</moduleName>
+  <!-- Category of the module  -->
+    <category>RDKB</category>
+  <!-- Excecution time out of module -->
+    <executionTimeOut>2</executionTimeOut>
+  <!-- Excecution time out of module -->
+    <testGroup>Component</testGroup>
+  <!-- Logs File Names of module -->
+    <logFileNames>[]</logFileNames>
+  <!-- Crash File Names of the module -->
+    <crashFileNames>[]</crashFileNames>
+  <!-- Total functions corresponding module  -->
+    <functions>
+      <function name='TELCOVOICEMgrHal_Init' />
+      <function name='TELCOVOICEMgrHal_GetInitData' />
+      <function name='TELCOVOICEMgrHal_InitData' />
+      <function name='TELCOVOICEMgrHal_GetParamValue' />
+      <function name='TELCOVOICEMgrHal_SetParamValue' />
+      <function name='TELCOVOICEMgrHal_GetLineStats' />
+      <function name='TELCOVOICEMgrHal_GetVoiceServices' />
+      <function name='TELCOVOICEMgrHal_GetCapabilities' />
+      <function name='TELCOVOICEMgrHal_GetVoiceProfile' />
+      <function name='TELCOVOICEMgrHal_GetPhyInterface' />
+    </functions>
+  <!-- Total parameters corresponding module  -->
+    <parameters>
+      <parameter funName='TELCOVOICEMgrHal_InitData' parameterName='bStatus' parameterType='INTEGER' range='0-1' />
+      <parameter funName='TELCOVOICEMgrHal_GetParamValue' parameterName='paramName' parameterType='STRING' range='A-Z' />
+      <parameter funName='TELCOVOICEMgrHal_SetParamValue' parameterName='paramName' parameterType='STRING' range='A-Z' />
+      <parameter funName='TELCOVOICEMgrHal_SetParamValue' parameterName='paramType' parameterType='STRING' range='A-Z' />
+      <parameter funName='TELCOVOICEMgrHal_SetParamValue' parameterName='paramValue' parameterType='STRING' range='A-Z' />
+      <parameter funName='TELCOVOICEMgrHal_GetLineStats' parameterName='paramName' parameterType='STRING' range='A-Z' />
+      <parameter funName='TELCOVOICEMgrHal_GetLineStats' parameterName='flag' parameterType='INTEGER' range='0-1' />
+      <parameter funName='TELCOVOICEMgrHal_GetCapabilities' parameterName='flag' parameterType='INTEGER' range='0-1' />
+      <parameter funName='TELCOVOICEMgrHal_GetCapabilities' parameterName='paramName' parameterType='STRING' range='A-Z' />
+      <parameter funName='TELCOVOICEMgrHal_GetVoiceProfile' parameterName='index' parameterType='INTEGER' range='0-100' />
+      <parameter funName='TELCOVOICEMgrHal_GetVoiceProfile' parameterName='flag' parameterType='INTEGER' range='0-1' />
+      <parameter funName='TELCOVOICEMgrHal_GetVoiceProfile' parameterName='paramName' parameterType='STRING' range='A-Z' />
+      <parameter funName='TELCOVOICEMgrHal_GetPhyInterface' parameterName='index' parameterType='INTEGER' range='0-100' />
+      <parameter funName='TELCOVOICEMgrHal_GetPhyInterface' parameterName='flag' parameterType='INTEGER' range='0-1' />
+      <parameter funName='TELCOVOICEMgrHal_GetPhyInterface' parameterName='paramName' parameterType='STRING' range='A-Z' />
+    </parameters>
+  </module>
+</xml>
