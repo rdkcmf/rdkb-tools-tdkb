@@ -36,7 +36,6 @@
     <box_type>Broadband</box_type>
   </box_types>
   <rdk_versions>
-    <rdk_version>RDK3</rdk_version>
     <rdk_version>RDKB</rdk_version>
   </rdk_versions>
   <test_cases>

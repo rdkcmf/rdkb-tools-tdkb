@@ -108,6 +108,12 @@
           <parameter name="operation" value=""/>
           <parameter name="table_row" value=""/>
         </parameters>
+     </primitiveTest>
+      <primitiveTest name="RBUS_SetLogLevel" id=" " version="1">
+        <function>RBUS_SetLogLevel</function>
+        <parameters>
+          <parameter name="level" value=""/>
+        </parameters>
       </primitiveTest>
     </primitiveTests>
   </module>

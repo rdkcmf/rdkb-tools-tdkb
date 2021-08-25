@@ -48,6 +48,7 @@
       <function name='RBUS_PropertyCommands' />
       <function name='RBUS_ObjectCommands' />
       <function name='RBUS_TableRowCommands' />
+      <function name='RBUS_SetLogLevel' />
     </functions>
   <!-- Total parameters corresponding module  -->
     <parameters>
@@ -74,6 +75,7 @@
       <parameter funName='RBUS_ObjectCommands' parameterName='object_name' parameterType='STRING' range='a-z' />
       <parameter funName='RBUS_TableRowCommands' parameterName='operation' parameterType='STRING' range='a-z' />
       <parameter funName='RBUS_TableRowCommands' parameterName='table_row' parameterType='STRING' range='a-z' />
+      <parameter funName='RBUS_SetLogLevel' parameterName='level' parameterType='INTEGER' range='0-100' />
     </parameters>
   </module>
 </xml>
