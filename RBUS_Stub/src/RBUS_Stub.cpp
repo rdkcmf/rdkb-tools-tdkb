@@ -638,6 +638,44 @@ void RBUS::RBUS_TableRowCommands(IN const Json::Value& req, OUT Json::Value& res
     return;
 }
 
+/*****************************************************************************************************************
+ * Function Name : RBUS_SetLogLevel
+ * Description   : This function will invoke the wrapper function ssp_rbus_set_log_level
+ * @param [in]   : Required log level to be set
+ * @param [out]  : Filled with SUCCESS or FAILURE based on the output status of operation
+ **************************************************************************************************************/
+void RBUS::RBUS_SetLogLevel(IN const Json::Value& req, OUT Json::Value& response)
+{
+    DEBUG_PRINT(DEBUG_TRACE,"\n RBUS_SetLogLevel  --->Entry \n");
+    int  returnValue = RETURN_FAILURE;
+    char details[MAX_BUFFER_SIZE_TO_SEND] = {'\0'};
+    rbusLogLevel_t level = RBUS_LOG_DEBUG;
+    int log_level = 0;
+    if(&req["level"]==NULL)
+    {
+        response["result"]="FAILURE";
+        response["details"]="NULL parameter as input argument";
+        return;
+    }
+    log_level = req["level"].asInt();
+    level = rbusLogLevel_t(log_level);
+
+    returnValue = ssp_rbus_set_log_level(level);
+    if(returnValue == RETURN_SUCCESS)
+    {
+        sprintf(details, "%s", "RBUS_SetLogLevel function was success");
+        response["result"]="SUCCESS";
+        response["details"]=details;
+    }
+    else
+    {
+        response["result"]="FAILURE";
+        response["details"]="RBUS_SetLogLevel function has failed.Please check logs";
+    }
+    DEBUG_PRINT(DEBUG_TRACE,"\n RBUS_SetLogLevel --->Exit\n");
+    return;
+}
+
 /***************************************************************************************************
  *Function Name   : CreateObject
  *Description     : This function is used to create a new object of the class "RBUS".

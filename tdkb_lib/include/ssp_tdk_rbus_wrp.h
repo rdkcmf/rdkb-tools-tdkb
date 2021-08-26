@@ -40,6 +40,7 @@ extern "C"
         int ssp_rbus_property_apis(char* operation, int prop_count, char *property_name, char* name_value, int* output);
         int ssp_rbus_object_apis(char* operation, int obj_count, char *object_name, char* name_value, int* output);
         int ssp_rbus_table_row_apis(char* operation, char *table_row, int* output);
+        int ssp_rbus_set_log_level(rbusLogLevel_t level);
 #ifdef __cplusplus
 }
 #endif

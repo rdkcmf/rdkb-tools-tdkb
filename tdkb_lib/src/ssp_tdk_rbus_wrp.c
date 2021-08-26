@@ -688,6 +688,54 @@ int ssp_rbus_registerOperation(char* operation, char* object_name,char* method_n
 
         DEBUG_PRINT(DEBUG_ERROR, "removeElement Return value is %d \n",ret);
     }
+    else if (strcmp(operation,"rbus_publishEvent") == 0)
+    {
+        DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_registerOperation --> rbus_publishEvent Invoked...! \n");
+
+        rbusMessage msg1;
+        DEBUG_PRINT(DEBUG_ERROR, "rbus_publishEvent --> Calling rbusMessage_Init function to initialize value \n");
+        rbusMessage_Init(&msg1);
+        DEBUG_PRINT(DEBUG_ERROR, "rbus_publishEvent --> Calling rbusMessage_SetString function to set the value \n");
+        rbusMessage_SetString(msg1, "sample_message");
+
+        ret = rbus_publishEvent(object_name,method_name, msg1); // method_name parameter holds value for Event Name
+
+        DEBUG_PRINT(DEBUG_ERROR, "rbus_publishEvent Return value is %d \n",ret);
+    }
+    else if (strcmp(operation,"rbus_pullObj") == 0)
+    {
+        DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_registerOperation --> rbus_pullObj Invoked...! \n");
+        rbusMessage response;
+
+        ret = rbus_pullObj(object_name, 1000, &response);
+
+        DEBUG_PRINT(DEBUG_ERROR, "rbus_pullObj Return value is %d \n",ret);
+
+        // To Print the Payload value in Agent console log
+        if (ret == RBUS_ERROR_SUCCESS)
+        {
+            const char* buff = NULL;
+            DEBUG_PRINT(DEBUG_ERROR, "rbus_pullObj --> Calling rbusMessage_GetString function to get Payload value \n");
+            rbusMessage_GetString(response, &buff);
+            DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_registerOperation --> rbus_pullObj ==> Payload: %s\n", buff);
+            rbusMessage_Release(response);
+        }
+    }
+    else if (strcmp(operation,"rbus_pushObj") == 0)
+    {
+        DEBUG_PRINT(DEBUG_ERROR, "ssp_rbus_registerOperation --> rbus_pushObj Invoked...! \n");
+
+        rbusMessage setter;
+        DEBUG_PRINT(DEBUG_ERROR, "rbus_pushObj --> Calling rbusMessage_Init function to initialize the value \n");
+        rbusMessage_Init(&setter);
+
+        DEBUG_PRINT(DEBUG_ERROR, "rbus_pushObj--> Calling rbusMessage_SetString function to set the value \n");
+        rbusMessage_SetString(setter, method_name);
+
+        ret = rbus_pushObj(object_name, setter, 1000);
+
+        DEBUG_PRINT(DEBUG_ERROR, "rbus_pushObj Return value is %d \n",ret);
+    }
     if(ret != RBUS_ERROR_SUCCESS)
     {
         DEBUG_PRINT(DEBUG_ERROR, "%s failed with error code %d \n", operation,ret);
@@ -1322,3 +1370,25 @@ int ssp_rbus_table_row_apis(char* operation, char *table_row, int* ins_num)
     return result;
 }
 
+/*****************************************************************************************************************
+* Function Name : ssp_rbus_set_log_level
+* Description   : This function will invoke the RBUS API rbus_setLogLevel()
+* @param [in]   : level - Log Level to be set
+* @param [out]  : return status an integer value 0-success and 1-Failure
+******************************************************************************************************************/
+int ssp_rbus_set_log_level(rbusLogLevel_t level)
+{
+    DEBUG_PRINT(DEBUG_TRACE, "Entering the ssp_rbus_set_log_level wrapper with log level as %d\n", level);
+    int result = RETURN_OK;
+    if (rbus_setLogLevel(level) != RBUS_ERROR_SUCCESS)
+    {
+        DEBUG_PRINT(DEBUG_TRACE, "rbus_setLogLevel function failure\n");
+        result = RETURN_ERR;
+    }
+    else
+    {
+        DEBUG_PRINT(DEBUG_TRACE, "rbus_setLogLevel function success\n");
+    }
+    DEBUG_PRINT(DEBUG_TRACE, "Exit from ssp_rbus_set_log_level wrapper\n");
+    return result;
+}
