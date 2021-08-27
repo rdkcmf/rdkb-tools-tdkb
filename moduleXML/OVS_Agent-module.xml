@@ -1,0 +1,23 @@
+<?xml version='1.0' encoding='utf-8'?>
+<xml>
+  <module>
+  <!-- Module Name  -->
+    <moduleName>OVS_Agent</moduleName>
+  <!-- Category of the module  -->
+    <category>RDKB</category>
+  <!-- Excecution time out of module -->
+    <executionTimeOut>10</executionTimeOut>
+  <!-- Excecution time out of module -->
+    <testGroup>Component</testGroup>
+  <!-- Logs File Names of module -->
+    <logFileNames>[]</logFileNames>
+  <!-- Crash File Names of the module -->
+    <crashFileNames>[]</crashFileNames>
+  <!-- Total functions corresponding module  -->
+    <functions>
+      <function name='OVS_DoNothing' />
+    </functions>
+  <!-- Total parameters corresponding module  -->
+    <parameters />
+  </module>
+</xml>
