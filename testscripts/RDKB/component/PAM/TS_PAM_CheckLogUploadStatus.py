@@ -193,7 +193,7 @@ if "SUCCESS" in sysloadmodulestatus.upper() and "SUCCESS" in pamloadmodulestatus
                             print "[TEST EXECUTION RESULT] : FAILURE";
                     else:
                         tdkTestObj.setResultStatus("FAILURE");
-                        print "ACTUAL RESULT %d: upload_log_status file contains : %s"(step, details);
+                        print "ACTUAL RESULT %d: upload_log_status file contains : %s" %(step, details);
                         #Get the result of execution
                         print "[TEST EXECUTION RESULT] : FAILURE";
                 else:
