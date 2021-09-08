@@ -1333,13 +1333,13 @@ int ssp_rbus_table_row_apis(char* operation, char *table_row, int* ins_num)
     DEBUG_PRINT(DEBUG_ERROR, "Entering the ssp_rbus_table_row_apis wrapper, with operation is %s and table_row is %s\n",operation,table_row);
 
     int result = RETURN_ERR;
-    int ret = 0;
+    int ret = RBUS_ERROR_SUCCESS;
     int instanceNum = 0;
 
     if (strcmp(operation,"rbusTable_addRow") == 0)
     {
         ret = rbusTable_addRow(bus_handle, table_row, NULL, &instanceNum);
-        if (ret == 100)
+        if (ret == RBUS_ERROR_SUCCESS)
         {
             *ins_num = instanceNum;
             DEBUG_PRINT(DEBUG_ERROR, "%s success with error [%d]\n", operation, ret);
@@ -1354,7 +1354,7 @@ int ssp_rbus_table_row_apis(char* operation, char *table_row, int* ins_num)
     if (strcmp(operation,"rbusTable_removeRow") == 0)
     {
         ret= rbusTable_removeRow(bus_handle, table_row);
-        if (ret == 100)
+        if (ret == RBUS_ERROR_SUCCESS)
         {
             DEBUG_PRINT(DEBUG_ERROR, "%s success with error [%d]\n", operation, ret);
             result = RETURN_OK;
