@@ -163,8 +163,7 @@ if "SUCCESS" in loadmodulestatus.upper() and "SUCCESS" in loadmodulestatus1.uppe
                    print "ACTUAL RESULT 4:Get was successful";
                    print "[TEST EXECUTION RESULT] : SUCCESS";
 
-                   values = [setvalues[0],setvalues[1],setvalues[2],setvalues[3],setvalues[3],"true","true","true","true",setvalues[3],"true","true",setvalues[4],setvalues[5],setvalues[6],setvalues[7],setvalues[8],setvalues[7],setvalues[8],"true"];
-
+                   values = [setvalues[0],setvalues[1],setvalues[2],setvalues[3],setvalues[3],"true","true","true","true",setvalues[3],"true","true",setvalues[4],setvalues[5],setvalues[6],setvalues[7],setvalues[8],setvalues[7],setvalues[8],setvalues[3],"true","true",setvalues[4],setvalues[5],setvalues[6],setvalues[7],setvalues[8],setvalues[7],setvalues[8],"true"];
                    tdkTestObj, actualresult, details = SetPublicWiFiParamValues(wifiobj,values);
                    #Execute the test case in DUT
                    tdkTestObj.executeTestCase(expectedresult);
