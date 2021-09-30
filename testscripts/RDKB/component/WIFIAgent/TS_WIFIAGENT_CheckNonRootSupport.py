@@ -137,7 +137,7 @@ def get_EnableNonRootRFC(pamobj, step):
     else:
         #Set the result status of execution
         tdkTestObj.setResultStatus("FAILURE");
-        print "ACTUAL RESULT %d : Device.DeviceInfo.X_RDKCENTRAL-COM_RFC.Feature.NonRootSupport.Enable is not retrieved successfully; Details : %s" %(step, value, details);
+        print "ACTUAL RESULT %d : Device.DeviceInfo.X_RDKCENTRAL-COM_RFC.Feature.NonRootSupport.Enable is not retrieved successfully; Details : %s" %(step, details);
         #Get the result of execution
         print "[TEST EXECUTION RESULT] : FAILURE";
     return status, details, tdkTestObj;

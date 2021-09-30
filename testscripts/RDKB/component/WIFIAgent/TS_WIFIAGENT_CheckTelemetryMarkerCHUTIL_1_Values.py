@@ -170,6 +170,6 @@ if "SUCCESS" in sysutilloadmodulestatus.upper():
     sysObj.unloadModule("sysutil");
 else:
     print "Failed to load module";
-    sysobj.setLoadModuleStatus("FAILURE");
+    sysObj.setLoadModuleStatus("FAILURE");
     print "Module loading failed";
 

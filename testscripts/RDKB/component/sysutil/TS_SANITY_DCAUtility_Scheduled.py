@@ -106,4 +106,4 @@ if "SUCCESS" in loadmodulestatus.upper():
     obj.unloadModule("sysutil");
 else:
     print "Failed to load sysutil module";
-    obj.setLoadModuleStatus("FAILURE");i
+    obj.setLoadModuleStatus("FAILURE");

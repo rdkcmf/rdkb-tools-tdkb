@@ -149,7 +149,7 @@ if "SUCCESS" in loadmodulestatus.upper() and "SUCCESS" in loadmodulestatus1.uppe
                     tdkTestObj.executeTestCase(expectedresult);
                     actualresult2 = tdkTestObj.getResult();
                     value = tdkTestObj.getResultDetails();
-                    if expectedresult in (actualresult1 and actualresult2)  and "OutofService"  not in (details1 and details2):
+                    if expectedresult in (actualresult1 and actualresult2)  and "OutofService"  not in (details1 and value):
                         details2 = value.split("VALUE:")[1].split(' ')[0];
                         #Set the result status of execution
                         tdkTestObj.setResultStatus("SUCCESS");

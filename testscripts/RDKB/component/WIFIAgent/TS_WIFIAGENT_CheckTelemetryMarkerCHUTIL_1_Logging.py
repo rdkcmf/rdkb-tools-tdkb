@@ -268,6 +268,6 @@ if "SUCCESS" in loadmodulestatus.upper() and "SUCCESS" in sysutilloadmodulestatu
 else:
     print "Failed to load module";
     obj.setLoadModuleStatus("FAILURE");
-    sysobj.setLoadModuleStatus("FAILURE");
+    sysObj.setLoadModuleStatus("FAILURE");
     print "Module loading failed";
 
