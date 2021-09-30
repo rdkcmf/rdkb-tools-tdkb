@@ -3148,7 +3148,7 @@ void WIFIHAL::WIFIHAL_GetApRoamingConsortiumElement(IN const Json::Value& req, O
     {
         elemCount = (int)roam.wifiRoamingConsortiumCount;
         sprintf(details, "wifi_getApRoamingConsortiumElement output is: EntryCount %d", elemCount);
-        for(index=0; index<elemCount; ++index)
+        for(index=0; index<3; ++index)
         {
                 tempstr[0] = '\0';
                 for(len=0; len<roam.wifiRoamingConsortiumLen[index] && len<16; ++len) {
