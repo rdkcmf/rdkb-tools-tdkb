@@ -112,7 +112,7 @@ if "SUCCESS" in loadmodulestatus.upper():
     tdkTestObj.executeTestCase(expectedresult);
     actualresult = tdkTestObj.getResult();
     details = tdkTestObj.getResultDetails();
-    expectedBand = "a,b,g,n,ac"
+    expectedBand = "a,b,g,n,ac,ax"
     band = details.split("VALUE:")[1].split(' ')[0].split(',')
     flag = 1;
 

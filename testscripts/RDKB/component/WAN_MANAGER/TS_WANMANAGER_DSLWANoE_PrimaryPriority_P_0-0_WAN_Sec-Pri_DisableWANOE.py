@@ -116,7 +116,7 @@ if "SUCCESS" in (loadmodulestatus.upper() and loadmodulestatus1.upper()):
     status, policy_initial = get_policy(tdkTestObj, step);
     print "\n";
 
-    if  (DUT_Mode_Primary_Priority == 0 and status == 0) or (status == 0 and DUT_Mode_Primary_Priority == 1 and policy_initial=="PRIMARY_PRIORTIY"):
+    if  (DUT_Mode_Primary_Priority == 0 and status == 0) or (status == 0 and DUT_Mode_Primary_Priority == 1 and policy_initial=="PRIMARY_PRIORITY"):
 
         defaultTypePriority,actualresult  = GetCurrentWanTypeAndPriority(tdkTestObj);
         if expectedresult in actualresult:

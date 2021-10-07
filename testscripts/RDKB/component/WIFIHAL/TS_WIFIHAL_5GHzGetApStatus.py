@@ -110,7 +110,7 @@ if "SUCCESS" in loadmodulestatus.upper():
 	    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, "0", getMethod)
 
 	    #List of AP status
-	    success_values = ['Up', 'Disable']
+	    success_values = ['Up', 'Disable','Disabled']
 
 	    if expectedresult in actualresult:
 	       status_received = details.split(":")[1].strip()
