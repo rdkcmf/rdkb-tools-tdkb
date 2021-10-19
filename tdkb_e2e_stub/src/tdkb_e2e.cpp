@@ -153,12 +153,12 @@ void TDKB_E2E::tdkb_e2e_Set(IN const Json::Value& req, OUT Json::Value& response
     if ((!strncmp(ParamName, "Device.WiFi.Radio.1.", 20)) || (!strncmp(ParamName, "Device.WiFi.AccessPoint.1.", 26)) || (!strncmp(ParamName, "Device.WiFi.SSID.1.", 19)))
     {
         printf("Apply the wifi settings for 2.4GHZ\n");
-        retVal = ssp_setParameterValue("Device.WiFi.Radio.1.X_CISCO_COM_ApplySetting","true","boolean",commit);
+        retVal = ssp_setParameterValue((char *)"Device.WiFi.Radio.1.X_CISCO_COM_ApplySetting", (char *)"true", (char *)"boolean",commit);
     }
     else if ((!strncmp(ParamName, "Device.WiFi.Radio.2.", 20)) || (!strncmp(ParamName, "Device.WiFi.AccessPoint.2.", 26)) || (!strncmp(ParamName, "Device.WiFi.SSID.2.", 19)))
     {
         printf("Apply the wifi settings for 5GHZ\n");
-        retVal = ssp_setParameterValue("Device.WiFi.Radio.2.X_CISCO_COM_ApplySetting","true","boolean",commit);
+        retVal = ssp_setParameterValue((char *)"Device.WiFi.Radio.2.X_CISCO_COM_ApplySetting", (char *)"true", (char *)"boolean",commit);
     }
     if((0 == returnValue) && (0 == retVal))
     {
@@ -235,12 +235,12 @@ void TDKB_E2E::tdkb_e2e_SetMultipleParams(IN const Json::Value& req, OUT Json::V
    if ((!strncmp(paramlist[0], "Device.WiFi.Radio.1.", 20)) || (!strncmp(paramlist[0], "Device.WiFi.AccessPoint.1.", 26)) || (!strncmp(paramlist[0], "Device.WiFi.SSID.1.", 19)))
     {
         printf("Apply the wifi settings for 2.4GHZ\n");
-        retVal = ssp_setParameterValue("Device.WiFi.Radio.1.X_CISCO_COM_ApplySetting","true","boolean",commit);
+        retVal = ssp_setParameterValue((char *)"Device.WiFi.Radio.1.X_CISCO_COM_ApplySetting", (char *)"true", (char *)"boolean",commit);
     }
     else if ((!strncmp(paramlist[0], "Device.WiFi.Radio.2.", 20)) || (!strncmp(paramlist[0], "Device.WiFi.AccessPoint.2.", 26)) || (!strncmp(paramlist[0], "Device.WiFi.SSID.2.", 19)))
     {
         printf("Apply the wifi settings for 5GHZ\n");
-        retVal = ssp_setParameterValue("Device.WiFi.Radio.2.X_CISCO_COM_ApplySetting","true","boolean",commit);
+        retVal = ssp_setParameterValue((char *)"Device.WiFi.Radio.2.X_CISCO_COM_ApplySetting", (char *)"true", (char *)"boolean",commit);
     }
     if((0 == returnValue) && (0 == retVal))
     {

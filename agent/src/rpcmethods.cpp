@@ -198,7 +198,7 @@ void RpcMethods::RedirectJsonRequest (const Json::Value& request, Json::Value& r
         cout << "Received query: \n" << request << endl;
 
         std::string ipAddress;
-        ipAddress = GetInterfaceIP(GET_ATOM_ARP_IP);
+        ipAddress = GetInterfaceIP((char *)GET_ATOM_ARP_IP);
 
         TcpSocketClient client(ipAddress,LOCAL_PORT);
         Client c(client);

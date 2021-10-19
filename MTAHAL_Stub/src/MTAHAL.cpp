@@ -689,7 +689,7 @@ void MTAHAL::MTAHAL_GetDhcpStatus(IN const Json::Value& req, OUT Json::Value& re
     char details[1024] = {'\0'};
     MTAMGMT_MTA_STATUS output_pIpv4status;
     MTAMGMT_MTA_STATUS output_pIpv6status;
-    char *status_string[4] = { "MTA_INIT", "MTA_START", "MTA_COMPLETE", "MTA_ERROR" };
+    char const *status_string[4] = { "MTA_INIT", "MTA_START", "MTA_COMPLETE", "MTA_ERROR" };
     int isNegativeScenario = 0;
 
     if(&req["flag"])
@@ -736,7 +736,7 @@ void MTAHAL::MTAHAL_GetConfigFileStatus(IN const Json::Value& req, OUT Json::Val
     int returnValue = 0;
     char details[1024] = {'\0'};
     MTAMGMT_MTA_STATUS output_status;
-    char *status_string[4] = { "MTA_INIT", "MTA_START", "MTA_COMPLETE", "MTA_ERROR" };
+    char const *status_string[4] = { "MTA_INIT", "MTA_START", "MTA_COMPLETE", "MTA_ERROR" };
     int isNegativeScenario = 0;
 
     if(&req["flag"])
@@ -785,7 +785,7 @@ void MTAHAL::MTAHAL_GetLineRegisterStatus(IN const Json::Value& req, OUT Json::V
     MTAMGMT_MTA_STATUS status[8];
     unsigned long array_size = 0;
     int i;
-    char *status_string[4] = { "MTA_INIT", "MTA_START", "MTA_COMPLETE", "MTA_ERROR" };
+    char const *status_string[4] = { "MTA_INIT", "MTA_START", "MTA_COMPLETE", "MTA_ERROR" };
     int isNegativeScenario = 0;
 
     if(&req["flag"])
@@ -793,7 +793,7 @@ void MTAHAL::MTAHAL_GetLineRegisterStatus(IN const Json::Value& req, OUT Json::V
         isNegativeScenario = req["flag"].asInt();
     }
 
-    returnValue = ssp_MTAHAL_GetParamUlongValue("LineTableNumberOfEntries", &array_size);
+    returnValue = ssp_MTAHAL_GetParamUlongValue((char *)"LineTableNumberOfEntries", &array_size);
 
     if(0 == returnValue && array_size != 0)
     {
@@ -977,7 +977,7 @@ void MTAHAL::MTAHAL_getMtaOperationalStatus(IN const Json::Value& req, OUT Json:
     int returnValue = 0;
     char details[100] = {'\0'};
     MTAMGMT_MTA_STATUS status;
-    char *status_string[4] = { "MTA_INIT", "MTA_START", "MTA_COMPLETE", "MTA_ERROR" };
+    char const *status_string[4] = { "MTA_INIT", "MTA_START", "MTA_COMPLETE", "MTA_ERROR" };
     int isNegativeScenario = 0;
 
     if(&req["flag"])
@@ -1117,7 +1117,7 @@ void MTAHAL::MTAHAL_GetMtaProvisioningStatus(IN const Json::Value& req, OUT Json
     int returnValue = 0;
     char details[100] = {'\0'};
     MTAMGMT_MTA_PROVISION_STATUS status;
-    char *status_string[4] = { "MTA_PROVISIONED", "MTA_NON_PROVISIONED" };
+    char const *status_string[4] = { "MTA_PROVISIONED", "MTA_NON_PROVISIONED" };
     int isNegativeScenario = 0;
     if(&req["flag"])
     {

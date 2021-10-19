@@ -421,7 +421,7 @@ void RDKBLoggerAgent::RDKBLoggerAgent_EnvGetNum(IN const Json::Value& req, OUT J
 {
         DEBUG_PRINT(DEBUG_TRACE, "RDKBLoggerAgent_EnvGetNum --->Entry\n");
         char rdkMod[20] = {'\0'};
-	char stringDetails[5] = {'\0'};
+	char stringDetails[15] = {'\0'};
 	int modNum = -1;
 	string module = req["module"].asString();
         sprintf(rdkMod, "LOG.RDK.%s", module.c_str());

@@ -1498,7 +1498,7 @@ void WIFIHAL::WIFIHAL_Down (IN const Json::Value& req, OUT Json::Value& response
             sprintf(details, "wifi_down operation success");
             response["result"]="SUCCESS";
             response["details"]=details;
-            retValue = ssp_WIFIHALApplySettings(radioIndex,"wifi_down");
+            retValue = ssp_WIFIHALApplySettings(radioIndex, (char *)"wifi_down");
             if(0 == retValue)
             {
                 printf("applyRadioSettings operation success\n");
@@ -2725,7 +2725,7 @@ void WIFIHAL::WIFIHAL_SetRadioMode(IN const Json::Value& req, OUT Json::Value& r
     if(0 == returnValue)
     {
         DEBUG_PRINT(DEBUG_TRACE,"\n wifi_setRadioMode operation success\n");
-        returnValue = ssp_WIFIHALApplySettings(radioIndex,"setRadioMode");
+        returnValue = ssp_WIFIHALApplySettings(radioIndex, (char *)"setRadioMode");
         if(0 == returnValue)
         {
             DEBUG_PRINT(DEBUG_TRACE,"\napplyRadioSettings operation success\n");
@@ -3322,7 +3322,7 @@ void WIFIHAL::WIFIHAL_PushApInterworkingElement (IN const Json::Value& req, OUT 
     int radioIndex = 0;
     int returnValue;
     char details[500] = {'\0'};
-    if(&req["radioIndex"]==NULL || &req["interworkingEnabled"]==NULL || &req["accessNetworkType"]==NULL || &req["internetAvailable"]==NULL || &req["asra"]==NULL || &req["esra"]==NULL || &req["uesa"]==NULL || &req["venueOptionPresent"]==NULL || &req["venueType"]==NULL || &req["venueGroup"]==NULL &req["hessOptionPresent"]==NULL || &req["hessid"]==NULL)
+    if(&req["radioIndex"]==nullptr || &req["interworkingEnabled"]==nullptr || &req["accessNetworkType"]==nullptr || &req["internetAvailable"]==nullptr || &req["asra"]==nullptr || &req["esra"]==nullptr || &req["uesa"]==nullptr || &req["venueOptionPresent"]==nullptr || &req["venueType"]==nullptr || &req["venueGroup"]==nullptr &req["hessOptionPresent"]==nullptr || &req["hessid"]==nullptr)
     {
         response["result"]="FAILURE";
         response["details"]="NULL parameter as input argument";

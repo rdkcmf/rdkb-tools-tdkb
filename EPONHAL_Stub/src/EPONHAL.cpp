@@ -193,7 +193,7 @@ void EPONHAL::EPONHAL_GetManufacturerInfo(IN const Json::Value& req, OUT Json::V
 {
     DEBUG_PRINT(DEBUG_TRACE,"\n EPON_GetManufacturerInfo----->Entry\n");
     int returnValue;
-    char details[200] = {'\0'};
+    char details[582] = {'\0'};
     dpoe_manufacturer_t pManufacturerInfo;
     returnValue = ssp_EPONHAL_GetManufacturerInfo(&pManufacturerInfo);
     if(0 == returnValue)
@@ -279,7 +279,7 @@ void EPONHAL::EPONHAL_GetMaxLogicalLinks(IN const Json::Value& req, OUT Json::Va
  *******************************************************************************************************/
 void EPONHAL::EPONHAL_GetDeviceSysDescrInfo(IN const Json::Value& req, OUT Json::Value& response)
 {
-    char details[120] = {'\0'};
+    char details[152] = {'\0'};
     dpoe_device_sys_descr_info_t devSysDescrInfo;
 
     DEBUG_PRINT(DEBUG_TRACE,"\n EPONHAL_DeviceSysDescrInfo ---> Entry \n");
@@ -346,7 +346,7 @@ void EPONHAL::EPONHAL_GetOnuPacketBufferCapabilities(IN const Json::Value& req, 
 {
     DEBUG_PRINT(DEBUG_TRACE,"\n EPONHAL_GetOnuPacketBufferCapabilities----->Entry\n");
     int returnValue;
-    char details[200] = {'\0'};
+    char details[205] = {'\0'};
     dpoe_onu_packet_buffer_capabilities_t pCapabilities;
     unsigned long UpstreamQueues = 0,UpQueuesMaxPerLink =0,UpQueueIncrement =0,DownstreamQueues =0,DnQueuesMaxPerPort =0,DnQueueIncrement =0;
     returnValue = ssp_EPONHAL_GetOnuPacketBufferCapabilities(&pCapabilities);

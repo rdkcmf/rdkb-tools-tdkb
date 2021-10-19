@@ -42,13 +42,13 @@ std::string CMHAL::testmodulepre_requisites()
     DEBUG_PRINT(DEBUG_TRACE,"\n CMHAL_testmodulepre_requisites  --->Entry \n");
 
     DEBUG_PRINT(DEBUG_TRACE,"\n Initialising DB \n");
-    int DBInitStatus = ssp_CMHAL_Init("InitDB");
+    int DBInitStatus = ssp_CMHAL_Init((char *)"InitDB");
 
     DEBUG_PRINT(DEBUG_TRACE,"\n Initialising DS \n");
-    int DSInitStatus = ssp_CMHAL_Init("InitDS");
+    int DSInitStatus = ssp_CMHAL_Init((char *)"InitDS");
 
     DEBUG_PRINT(DEBUG_TRACE,"\n Initialising DB \n");
-    int USInitStatus = ssp_CMHAL_Init("InitUS");
+    int USInitStatus = ssp_CMHAL_Init((char *)"InitUS");
 
     if(DBInitStatus == 0 && DSInitStatus ==0 && USInitStatus==0)
     {

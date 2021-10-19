@@ -238,12 +238,12 @@ void WIFIAgent::WIFIAgent_Set(IN const Json::Value& req, OUT Json::Value& respon
     if ((!strncmp(ParamName, "Device.WiFi.Radio.1.", 20)) || (!strncmp(ParamName, "Device.WiFi.AccessPoint.1.", 26)) || (!strncmp(ParamName, "Device.WiFi.SSID.1.", 19)) || (!strncmp(ParamName, "Device.WiFi.AccessPoint.3.", 26)) || (!strncmp(ParamName, "Device.WiFi.SSID.3.", 19)))
     {
         printf("Apply the wifi settings for 2.4GHZ\n");
-        retVal = ssp_setParameterValue("Device.WiFi.Radio.1.X_CISCO_COM_ApplySetting","true","boolean",commit);
+        retVal = ssp_setParameterValue((char *)"Device.WiFi.Radio.1.X_CISCO_COM_ApplySetting",(char *)"true",(char *)"boolean",commit);
     }
     else if ((!strncmp(ParamName, "Device.WiFi.Radio.2.", 20)) || (!strncmp(ParamName, "Device.WiFi.AccessPoint.2.", 26)) || (!strncmp(ParamName, "Device.WiFi.SSID.2.", 19)) || (!strncmp(ParamName, "Device.WiFi.AccessPoint.4.", 26)) || (!strncmp(ParamName, "Device.WiFi.SSID.4.", 19))) 
     {
         printf("Apply the wifi settings for 5GHZ\n");
-        retVal = ssp_setParameterValue("Device.WiFi.Radio.2.X_CISCO_COM_ApplySetting","true","boolean",commit);
+        retVal = ssp_setParameterValue((char *)"Device.WiFi.Radio.2.X_CISCO_COM_ApplySetting",(char *)"true",(char *)"boolean",commit);
     }
 
     if((0 == returnValue) && (0 == retVal))
@@ -334,12 +334,12 @@ void WIFIAgent::WIFIAgent_SetMultiple(IN const Json::Value& req, OUT Json::Value
    if ((!strncmp(paramlist[0], "Device.WiFi.Radio.1.", 20)) || (!strncmp(paramlist[0], "Device.WiFi.AccessPoint.1.", 26)) || (!strncmp(paramlist[0], "Device.WiFi.SSID.1.", 19)) || (!strncmp(paramlist[0], "Device.WiFi.AccessPoint.3.", 26)) || (!strncmp(paramlist[0], "Device.WiFi.SSID.3.", 19)))
     {
         printf("Apply the wifi settings for 2.4GHZ\n");
-        retVal = ssp_setParameterValue("Device.WiFi.Radio.1.X_CISCO_COM_ApplySetting","true","boolean",commit);
+        retVal = ssp_setParameterValue((char *)"Device.WiFi.Radio.1.X_CISCO_COM_ApplySetting",(char *)"true",(char *)"boolean",commit);
     }
     else if ((!strncmp(paramlist[0], "Device.WiFi.Radio.2.", 20)) || (!strncmp(paramlist[0], "Device.WiFi.AccessPoint.2.", 26)) || (!strncmp(paramlist[0], "Device.WiFi.SSID.2.", 19)) || (!strncmp(paramlist[0], "Device.WiFi.AccessPoint.4.", 26)) || (!strncmp(paramlist[0], "Device.WiFi.SSID.4.", 19)))
     {
         printf("Apply the wifi settings for 5GHZ\n");
-        retVal = ssp_setParameterValue("Device.WiFi.Radio.2.X_CISCO_COM_ApplySetting","true","boolean",commit);
+        retVal = ssp_setParameterValue((char *)"Device.WiFi.Radio.2.X_CISCO_COM_ApplySetting",(char *)"true",(char *)"boolean",commit);
     }
 
     if((0 == returnValue) && (0 == retVal))
@@ -417,12 +417,12 @@ void WIFIAgent::WIFIAgent_Set_Get(IN const Json::Value& req, OUT Json::Value& re
     if ((!strncmp(ParamName, "Device.WiFi.Radio.1.", 20)) || (!strncmp(ParamName, "Device.WiFi.AccessPoint.1.", 26)) || (!strncmp(ParamName, "Device.WiFi.SSID.1.", 19)) || (!strncmp(ParamName, "Device.WiFi.AccessPoint.3.", 26)) || (!strncmp(ParamName, "Device.WiFi.SSID.3.", 19)))
     {
         printf("Apply the wifi settings for 2.4GHZ\n");
-        retVal = ssp_setParameterValue("Device.WiFi.Radio.1.X_CISCO_COM_ApplySetting","true","boolean",commit);
+        retVal = ssp_setParameterValue((char *)"Device.WiFi.Radio.1.X_CISCO_COM_ApplySetting",(char *)"true",(char *)"boolean",commit);
     }
     else if ((!strncmp(ParamName, "Device.WiFi.Radio.2.", 20)) || (!strncmp(ParamName, "Device.WiFi.AccessPoint.2.", 26)) || (!strncmp(ParamName, "Device.WiFi.SSID.2.", 19)) || (!strncmp(ParamName, "Device.WiFi.AccessPoint.4.", 26)) || (!strncmp(ParamName, "Device.WiFi.SSID.4.", 19)))
     {
         printf("Apply the wifi settings for 5GHZ\n");
-        retVal = ssp_setParameterValue("Device.WiFi.Radio.2.X_CISCO_COM_ApplySetting","true","boolean",commit);
+        retVal = ssp_setParameterValue((char *)"Device.WiFi.Radio.2.X_CISCO_COM_ApplySetting",(char *)"true",(char *)"boolean",commit);
     }
     if((0 == returnValue) && (0 == retVal))
     {

@@ -1861,7 +1861,7 @@ void CosaMTA::CosaMTA_GetDhcpStatus(IN const Json::Value& req, OUT Json::Value& 
     char details[1024] = {'\0'};
     unsigned long output_pIpv4status = 0;
     unsigned long output_pIpv6status = 0;
-    char *status_string[4] = { "MTA_INIT", "MTA_START", "MTA_COMPLETE", "MTA_ERROR" };
+    char const *status_string[4] = { "MTA_INIT", "MTA_START", "MTA_COMPLETE", "MTA_ERROR" };
 
     returnValue = ssp_CosaDmlMTAGetDhcpStatus(&output_pIpv4status, &output_pIpv4status);
     if(0 == returnValue)
@@ -1896,7 +1896,7 @@ void CosaMTA::CosaMTA_GetConfigFileStatus(IN const Json::Value& req, OUT Json::V
     int returnValue = 0;
     char details[1024] = {'\0'};
     unsigned long output_status = 0;
-    char *status_string[4] = { "MTA_INIT", "MTA_START", "MTA_COMPLETE", "MTA_ERROR" };
+    char const *status_string[4] = { "MTA_INIT", "MTA_START", "MTA_COMPLETE", "MTA_ERROR" };
 
     returnValue = ssp_CosaDmlMTAGetConfigFileStatus(&output_status);
     if(0 == returnValue)
