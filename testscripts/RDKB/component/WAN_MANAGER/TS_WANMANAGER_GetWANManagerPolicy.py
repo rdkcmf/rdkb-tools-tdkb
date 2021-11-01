@@ -21,7 +21,7 @@
 <xml>
   <id></id>
   <!-- Do not edit id. This will be auto filled while exporting. If you are adding a new script keep the id empty -->
-  <version>7</version>
+  <version>8</version>
   <!-- Do not edit version. This will be auto incremented while updating. If you are adding a new script you can keep the vresion as 1 -->
   <name>TS_WANMANAGER_GetWANManagerPolicy</name>
   <!-- If you are adding a new script you can specify the script name. Script Name should be unique same as this file name with out .py extension -->
@@ -50,6 +50,8 @@ FIXED_MODE_ON_BOOTUP, FIXED_MODE, PRIMARY_PRIORITY, PRIMARY_PRIORITY_ON_BOOTUP, 
   <!--  -->
   <box_types>
     <box_type>Broadband</box_type>
+    <!--  -->
+    <box_type>RPI</box_type>
     <!--  -->
   </box_types>
   <rdk_versions>

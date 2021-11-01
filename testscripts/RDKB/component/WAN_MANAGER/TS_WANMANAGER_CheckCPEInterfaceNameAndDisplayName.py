@@ -17,26 +17,45 @@
 # limitations under the License.
 ##########################################################################
 '''
-<?xml version="1.0" encoding="UTF-8"?><xml>
-  <id/>
-  <version>3</version>
+<?xml version='1.0' encoding='utf-8'?>
+<xml>
+  <id></id>
+  <!-- Do not edit id. This will be auto filled while exporting. If you are adding a new script keep the id empty -->
+  <version>4</version>
+  <!-- Do not edit version. This will be auto incremented while updating. If you are adding a new script you can keep the vresion as 1 -->
   <name>TS_WANMANAGER_CheckCPEInterfaceNameAndDisplayName</name>
-  <primitive_test_id/>
+  <!-- If you are adding a new script you can specify the script name. Script Name should be unique same as this file name with out .py extension -->
+  <primitive_test_id></primitive_test_id>
+  <!-- Do not change primitive_test_id if you are editing an existing script. -->
   <primitive_test_name>wanmanager_DoNothing</primitive_test_name>
+  <!--  -->
   <primitive_test_version>1</primitive_test_version>
+  <!--  -->
   <status>FREE</status>
+  <!--  -->
   <synopsis>To check the Wan Manager CPE Interfaces name and Display Name have the expected values</synopsis>
-  <groups_id/>
+  <!--  -->
+  <groups_id />
+  <!--  -->
   <execution_time>10</execution_time>
+  <!--  -->
   <long_duration>false</long_duration>
+  <!--  -->
   <advanced_script>false</advanced_script>
-  <remarks/>
+  <!-- execution_time is the time out time for test execution -->
+  <remarks></remarks>
+  <!-- Reason for skipping the tests if marked to skip -->
   <skip>false</skip>
+  <!--  -->
   <box_types>
     <box_type>Broadband</box_type>
+    <!--  -->
+    <box_type>RPI</box_type>
+    <!--  -->
   </box_types>
   <rdk_versions>
     <rdk_version>RDKB</rdk_version>
+    <!--  -->
   </rdk_versions>
   <test_cases>
     <test_case_id>TC_WANMANAGER_03</test_case_id>
@@ -53,8 +72,8 @@ Device.X_RDK_WanManager.CPEInterface.{i}.DisplayName</input_parameters>
     <automation_approch>1]Load the module
 2] Get the number of CPE interfaces
 3] Get the CPE interface Name and Display Name and check if the value associated are as expected
-interfaceName - dsl0, eth3, veip0
-displayName  -  DSL,WANOE,GPON
+intrName - dsl0, eth3, veip0
+disName  -  DSL,WANOE,GPON
 4]Unload the module</automation_approch>
     <expected_output>CPE interface Name and Display Name should be associated with names as expected</expected_output>
     <priority>High</priority>
@@ -64,29 +83,31 @@ displayName  -  DSL,WANOE,GPON
     <release_version>M87</release_version>
     <remarks>None</remarks>
   </test_cases>
-  <script_tags/>
+  <script_tags />
 </xml>
-
 '''
 # use tdklib library,which provides a wrapper for tdk testcase script
 import tdklib;
 from WanManager_Utility import *;
 obj = tdklib.TDKScriptingLibrary("tdkbtr181","RDKB");
-
+sysobj =tdklib.TDKScriptingLibrary("sysutil","RDKB");
 #IP and Port of box, No need to change,
 #This will be replaced with correspoing Box Ip and port while executing script
 ip = <ipaddress>
 port = <port>
 obj.configureTestCase(ip,port,'TS_WANMANAGER_CheckCPEInterfaceNameAndDisplayName');
+sysobj.configureTestCase(ip,port,'TS_WANMANAGER_CheckCPEInterfaceNameAndDisplayName');
 
 #Get the result of connection with test component and DUT
 loadmodulestatus =obj.getLoadModuleResult();
-
+loadmodulestatus1 =sysobj.getLoadModuleResult();
 print "[LIB LOAD STATUS]  :  %s" %loadmodulestatus ;
-
-if "SUCCESS" in loadmodulestatus.upper() :
+print "[LIB LOAD STATUS]  :  %s" %loadmodulestatus1 ;
+if "SUCCESS" in (loadmodulestatus.upper() and loadmodulestatus1.upper()) :
     #Set the result status of execution
     obj.setLoadModuleStatus("SUCCESS");
+    sysobj.setLoadModuleStatus("SUCCESS");
+
     expectedresult="SUCCESS";
     tdkTestObj = obj.createTestStep('TDKB_TR181Stub_Get');
     tdkTestObj.addParameter("ParamName","Device.X_RDK_WanManager.CPEInterfaceNumberOfEntries");
@@ -101,12 +122,26 @@ if "SUCCESS" in loadmodulestatus.upper() :
         print "EXPECTED RESULT 1: Should get the no of CPE Interfaces";
         print "ACTUAL RESULT 1: The value received is :",noOfEntries;
         #Get the result of execution
+
+        tdkTestObj = sysobj.createTestStep('ExecuteCmd');
+        command= "sh %s/tdk_utility.sh parseConfigFile DEVICETYPE" %TDK_PATH;
+        expectedresult="SUCCESS";
+        tdkTestObj.addParameter("command", command);
+        tdkTestObj.executeTestCase(expectedresult);
+        actualresult = tdkTestObj.getResult();
+        devicetype = tdkTestObj.getResultDetails().strip().replace("\\n","");
+        if expectedresult in actualresult and devicetype != "":
+           if devicetype == "RPI":
+              interName=intrName;
+              dispName=disName
+           else:
+               interName=interfaceName;
+               dispName=displayName;
+
         print "[TEST EXECUTION RESULT] : SUCCESS";
-
         print "TEST STEP 2:Check if CPE interface name and display name are as expected";
-
-        print "Expected CPE interface names is %s" %interfaceName;
-        print "Expected CPE display names is %s" %displayName;
+        print "Expected CPE interface names is %s" %interName;
+        print "Expected CPE display names is %s" %dispName;
         n = noOfEntries;
         flag = 0;
         for interface in range(1,noOfEntries+1):
@@ -119,7 +154,7 @@ if "SUCCESS" in loadmodulestatus.upper() :
                 tdkTestObj.executeTestCase(expectedresult);
                 actualresult = tdkTestObj.getResult();
                 details = tdkTestObj.getResultDetails();
-                if expectedresult in actualresult and details == interfaceName[inter]:
+                if expectedresult in actualresult and details == interName[inter]:
                     flag =1;
                     tdkTestObj.setResultStatus("SUCCESS");
                     print"Device.X_RDK_WanManager.CPEInterface.%i.Name is %s" %(interface,details);
@@ -133,14 +168,14 @@ if "SUCCESS" in loadmodulestatus.upper() :
                 tdkTestObj.executeTestCase(expectedresult);
                 actualresult = tdkTestObj.getResult();
                 details = tdkTestObj.getResultDetails();
-                if expectedresult in actualresult and details == displayName[inter]:
+                if expectedresult in actualresult and details == dispName[inter]:
                     flag = 1;
                     tdkTestObj.setResultStatus("SUCCESS");
                     print"Device.X_RDK_WanManager.CPEInterface.%i.DisplayName is %s which is a expected value" %(intr,details);
                 else:
                     flag = 0;
                     tdkTestObj.setResultStatus("FAILURE");
-                    print "Display Name of CPE interace Device.X_RDK_WanManager.CPEInterface.%i.DisplayName is %s but expected is %s"%(intr,details,displayName[i]);
+                    print "Display Name of CPE interace Device.X_RDK_WanManager.CPEInterface.%i.DisplayName is %s but expected is %s"%(intr,details,dispName[i]);
             else:
                 tdkTestObj.setResultStatus("FAILURE");
                 print "The CPE interface name is %s which is not among the listed interface name" %details;
@@ -161,6 +196,8 @@ if "SUCCESS" in loadmodulestatus.upper() :
         #Get the result of execution
         print "[TEST EXECUTION RESULT] : FAILURE";
     obj.unloadModule("tdkbtr181");
+    sysobj.unloadModule("sysutil");
 else:
      print "Failed to load module";
      obj.setLoadModuleStatus("FAILURE");
+     sysobj.setLoadModuleStatus("FAILURE");

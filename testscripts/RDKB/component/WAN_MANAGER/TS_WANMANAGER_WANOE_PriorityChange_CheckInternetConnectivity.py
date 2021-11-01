@@ -21,7 +21,7 @@
 <xml>
   <id></id>
   <!-- Do not edit id. This will be auto filled while exporting. If you are adding a new script keep the id empty -->
-  <version>3</version>
+  <version>4</version>
   <!-- Do not edit version. This will be auto incremented while updating. If you are adding a new script you can keep the vresion as 1 -->
   <name>TS_WANMANAGER_WANOE_PriorityChange_CheckInternetConnectivity</name>
   <!-- If you are adding a new script you can specify the script name. Script Name should be unique same as this file name with out .py extension -->
@@ -49,6 +49,8 @@
   <!--  -->
   <box_types>
     <box_type>Broadband</box_type>
+    <!--  -->
+    <box_type>RPI</box_type>
     <!--  -->
   </box_types>
   <rdk_versions>
@@ -86,7 +88,7 @@ TDKB_TR181Stub_Set</api_or_interface_used>
 '''
 import tdklib;
 import time;
-
+from tdkbVariables import *;
 #Test component to be tested
 sysObj = tdklib.TDKScriptingLibrary("sysutil","RDKB");
 obj1 = tdklib.TDKScriptingLibrary("tdkbtr181","RDKB");
@@ -108,71 +110,45 @@ if "SUCCESS" in (loadmodulestatus1.upper() and loadmodulestatus2.upper()):
     obj1.setLoadModuleStatus("SUCCESS");
     expectedresult="SUCCESS";
 
-    tdkTestObj = obj1.createTestStep('TDKB_TR181Stub_Get');
-    tdkTestObj.addParameter("ParamName","Device.X_RDK_WanManager.CPEInterface.2.Wan.Priority");
-    #Execute the test case in DUT
+    tdkTestObj = sysObj.createTestStep('ExecuteCmd');
+    command= "sh %s/tdk_utility.sh parseConfigFile DEVICETYPE" %TDK_PATH;
+    expectedresult="SUCCESS";
+    tdkTestObj.addParameter("command", command);
     tdkTestObj.executeTestCase(expectedresult);
     actualresult = tdkTestObj.getResult();
-    default = tdkTestObj.getResultDetails();
-    if expectedresult in actualresult:
+    devicetype = tdkTestObj.getResultDetails().strip().replace("\\n","");
+    if expectedresult in actualresult and devicetype != "":
         #Set the result status of execution
         tdkTestObj.setResultStatus("SUCCESS");
-        print "TEST STEP 1: Get the current WAN Priority for interface number 2";
-        print "EXPECTED RESULT 1: Should get the current WAN Priority for interface number 2";
-        print "ACTUAL RESULT 1: " ,default;
+        print "TEST STEP 1: Get the DEVICE TYPE"
+        print "EXPECTED RESULT 1: Should get the device type";
+        print "ACTUAL RESULT 1:Device type  %s" %devicetype;
         #Get the result of execution
         print "[TEST EXECUTION RESULT] : SUCCESS";
 
-        tdkTestObj = obj1.createTestStep('TDKB_TR181Stub_Set');
-        tdkTestObj.addParameter("ParamName","Device.X_RDK_WanManager.CPEInterface.2.Wan.Priority");
-        tdkTestObj.addParameter("ParamValue","2");
-        tdkTestObj.addParameter("Type","int");
-        #Execute testcase on DUT
+        if devicetype == "RPI":
+           i =1;
+        else:
+            i=2;
+
+        tdkTestObj = obj1.createTestStep('TDKB_TR181Stub_Get');
+        tdkTestObj.addParameter("ParamName","Device.X_RDK_WanManager.CPEInterface.%d.Wan.Priority"%i);
+        #Execute the test case in DUT
         tdkTestObj.executeTestCase(expectedresult);
         actualresult = tdkTestObj.getResult();
-        Setresult = tdkTestObj.getResultDetails();
+        default = tdkTestObj.getResultDetails();
         if expectedresult in actualresult:
             #Set the result status of execution
             tdkTestObj.setResultStatus("SUCCESS");
-            print "TEST STEP 2: Change the Priority for interface number 2 to 2";
-            print "EXPECTED RESULT 2: Should change the priority for interface number 2 to 2"
-            print "ACTUAL RESULT 2: ",Setresult;
+            print "TEST STEP 2: Get the current WAN Priority for WANoE interface";
+            print "EXPECTED RESULT 2: Should get the current WAN Priority for WANoE interface";
+            print "ACTUAL RESULT 2: " ,default;
             #Get the result of execution
             print "[TEST EXECUTION RESULT] : SUCCESS";
 
-            tdkTestObj = sysObj.createTestStep('ExecuteCmd');
-            sysObj.initiateReboot();
-            time.sleep(300);
-
-            query ="ping -c 2 google.com |  grep -i \"100% packet loss\"";
-            print "query:%s" %query;
-            tdkTestObj.addParameter("command",query);
-            expectedresult="SUCCESS";
-            #Execute the test case in DUT
-            tdkTestObj.executeTestCase(expectedresult);
-            actualresult = tdkTestObj.getResult();
-            details = tdkTestObj.getResultDetails().strip();
-            if expectedresult in actualresult and details == "":
-                #Set the result status of execution
-                tdkTestObj.setResultStatus("SUCCESS");
-                print "TEST STEP 3: Do a ping operation and check for internet connectivity";
-                print "EXPECTED RESULT 3: ping operation should be success with no 100% packet loss";
-                print "ACTUAL RESULT 3: ping operation is success and internet is available";
-                #Get the result of execution
-                print "[TEST EXECUTION RESULT] : SUCCESS";
-            else:
-                #Set the result status of execution
-                tdkTestObj.setResultStatus("FAILURE");
-                print "TEST STEP 3: Do a ping operation and check for internet connectivity";
-                print "EXPECTED RESULT 3: ping operation should be success with no 100% packet loss";
-                print "ACTUAL RESULT 3: %s"%details;
-                #Get the result of execution
-                print "[TEST EXECUTION RESULT] : FAILURE";
-
-            #Revert the priority to previous
             tdkTestObj = obj1.createTestStep('TDKB_TR181Stub_Set');
-            tdkTestObj.addParameter("ParamName","Device.X_RDK_WanManager.CPEInterface.2.Wan.Priority");
-            tdkTestObj.addParameter("ParamValue",default);
+            tdkTestObj.addParameter("ParamName","Device.X_RDK_WanManager.CPEInterface.%d.Wan.Priority"%i);
+            tdkTestObj.addParameter("ParamValue","2");
             tdkTestObj.addParameter("Type","int");
             #Execute testcase on DUT
             tdkTestObj.executeTestCase(expectedresult);
@@ -181,33 +157,88 @@ if "SUCCESS" in (loadmodulestatus1.upper() and loadmodulestatus2.upper()):
             if expectedresult in actualresult:
                 #Set the result status of execution
                 tdkTestObj.setResultStatus("SUCCESS");
-                print "TEST STEP 4: Revert the Priority for interface number 2 to previous";
-                print "EXPECTED RESULT 4: Should revert the priority for interface number 2 to previous ";
-                print "ACTUAL RESULT 4: ",Setresult;
+                print "TEST STEP 3: Change the Priority for WANoE interface";
+                print "EXPECTED RESULT 3: Should change the priority for WANoE interface"
+                print "ACTUAL RESULT 3: ",Setresult;
                 #Get the result of execution
                 print "[TEST EXECUTION RESULT] : SUCCESS";
+
+                tdkTestObj = sysObj.createTestStep('ExecuteCmd');
+                sysObj.initiateReboot();
+                time.sleep(300);
+
+                query ="ping -c 2 google.com |  grep -i \"100% packet loss\"";
+                print "query:%s" %query;
+                tdkTestObj.addParameter("command",query);
+                expectedresult="SUCCESS";
+                #Execute the test case in DUT
+                tdkTestObj.executeTestCase(expectedresult);
+                actualresult = tdkTestObj.getResult();
+                details = tdkTestObj.getResultDetails().strip();
+                if expectedresult in actualresult and details == "":
+                    #Set the result status of execution
+                    tdkTestObj.setResultStatus("SUCCESS");
+                    print "TEST STEP 4: Do a ping operation and check for internet connectivity";
+                    print "EXPECTED RESULT 4: ping operation should be success with no 100% packet loss";
+                    print "ACTUAL RESULT 4: ping operation is success and internet is available";
+                    #Get the result of execution
+                    print "[TEST EXECUTION RESULT] : SUCCESS";
+                else:
+                    #Set the result status of execution
+                    tdkTestObj.setResultStatus("FAILURE");
+                    print "TEST STEP 4: Do a ping operation and check for internet connectivity";
+                    print "EXPECTED RESULT 4: ping operation should be success with no 100% packet loss";
+                    print "ACTUAL RESULT 4: %s"%details;
+                    #Get the result of execution
+                    print "[TEST EXECUTION RESULT] : FAILURE";
+
+                #Revert the priority to previous
+                tdkTestObj = obj1.createTestStep('TDKB_TR181Stub_Set');
+                tdkTestObj.addParameter("ParamName","Device.X_RDK_WanManager.CPEInterface.%d.Wan.Priority"%i);
+                tdkTestObj.addParameter("ParamValue",default);
+                tdkTestObj.addParameter("Type","int");
+                #Execute testcase on DUT
+                tdkTestObj.executeTestCase(expectedresult);
+                actualresult = tdkTestObj.getResult();
+                Setresult = tdkTestObj.getResultDetails();
+                if expectedresult in actualresult:
+                    #Set the result status of execution
+                    tdkTestObj.setResultStatus("SUCCESS");
+                    print "TEST STEP 5: Revert the Priority for WANoE interface";
+                    print "EXPECTED RESULT 5: Should revert the priority for WANoE interface";
+                    print "ACTUAL RESULT 5: ",Setresult;
+                    #Get the result of execution
+                    print "[TEST EXECUTION RESULT] : SUCCESS";
+                else:
+                    #Set the result status of execution
+                    tdkTestObj.setResultStatus("FAILURE");
+                    print "TEST STEP 5: Revert the Priority for WANoE interface to previous";
+                    print "EXPECTED RESULT 5: Should revert the priority for WANoE interface";
+                    print "ACTUAL RESULT 5: ",Setresult;
+                    #Get the result of execution
+                    print "[TEST EXECUTION RESULT] : FAILURE";
             else:
                 #Set the result status of execution
                 tdkTestObj.setResultStatus("FAILURE");
-                print "TEST STEP 4: Revert the Priority for interface number 2 to previous";
-                print "EXPECTED RESULT 4: Should revert the priority for interface number 2 to previous ";
-                print "ACTUAL RESULT 4: ",Setresult;
+                print "TEST STEP 3: Change the Priority for WANoE interface";
+                print "EXPECTED RESULT 3: Should change the priority for WANoE interface "
+                print "ACTUAL RESULT 3: ",Setresult;
                 #Get the result of execution
                 print "[TEST EXECUTION RESULT] : FAILURE";
         else:
             #Set the result status of execution
             tdkTestObj.setResultStatus("FAILURE");
-            print "TEST STEP 2: Change the Priority for interface number 2 to 2";
-            print "EXPECTED RESULT 2: Should change the priority for interface number 2 to 2"
-            print "ACTUAL RESULT 2: ",Setresult;
+            print "TEST STEP 2: Get the current WAN Priority for WANoE interface number";
+            print "EXPECTED RESULT 2: Should get the current WAN Priority for WANoE interface";
+            print "ACTUAL RESULT 2: " ,default;
             #Get the result of execution
             print "[TEST EXECUTION RESULT] : FAILURE";
     else:
         #Set the result status of execution
         tdkTestObj.setResultStatus("FAILURE");
-        print "TEST STEP 1: Get the current WAN Priority for interface number 2";
-        print "EXPECTED RESULT 1: Should get the current WAN Priority for interface number 2";
-        print "ACTUAL RESULT 1: " ,default;
+        print "TEST STEP 1: Get the DEVICE TYPE"
+        print "EXPECTED RESULT 1: Should get the device type";
+        print "ACTUAL RESULT 1:Device type  %s" %devicetype;
         #Get the result of execution
         print "[TEST EXECUTION RESULT] : FAILURE";
     obj1.unloadModule("tdkbtr181");

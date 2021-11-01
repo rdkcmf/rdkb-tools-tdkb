@@ -21,7 +21,7 @@
 <xml>
   <id></id>
   <!-- Do not edit id. This will be auto filled while exporting. If you are adding a new script keep the id empty -->
-  <version>3</version>
+  <version>4</version>
   <!-- Do not edit version. This will be auto incremented while updating. If you are adding a new script you can keep the vresion as 1 -->
   <name>TS_WANMANAGER_WANOE_CheckERouterAndWANIP_Equals</name>
   <!-- If you are adding a new script you can specify the script name. Script Name should be unique same as this file name with out .py extension -->
@@ -49,6 +49,8 @@
   <!--  -->
   <box_types>
     <box_type>Broadband</box_type>
+    <!--  -->
+    <box_type>RPI</box_type>
     <!--  -->
   </box_types>
   <rdk_versions>
@@ -107,10 +109,28 @@ if "SUCCESS" in loadmodulestatus.upper() and  "SUCCESS" in loadmodulestatus1.upp
     obj1.setLoadModuleStatus("SUCCESS");
     tadobj.setLoadModuleStatus("SUCCESS");
     expectedresult="SUCCESS";
-    wan0e_wan,active = getWANoEWANStatus(tadobj,1);
 
-    if active == 0:
-        i =2;
+    tdkTestObj = obj.createTestStep('ExecuteCmd');
+    command= "sh %s/tdk_utility.sh parseConfigFile DEVICETYPE" %TDK_PATH;
+    expectedresult="SUCCESS";
+    tdkTestObj.addParameter("command", command);
+    tdkTestObj.executeTestCase(expectedresult);
+    actualresult = tdkTestObj.getResult();
+    devicetype = tdkTestObj.getResultDetails().strip().replace("\\n","");
+    if expectedresult in actualresult and devicetype != "":
+        #Set the result status of execution
+        tdkTestObj.setResultStatus("SUCCESS");
+        print "TEST STEP 1: Get the DEVICE TYPE"
+        print "EXPECTED RESULT 1: Should get the device type";
+        print "ACTUAL RESULT 1:Device type  %s" %devicetype;
+        #Get the result of execution
+        print "[TEST EXECUTION RESULT] : SUCCESS";
+
+        if devicetype == "RPI":
+            i =1;
+        else:
+            i=2;
+
         tdkTestObj = obj1.createTestStep('TDKB_TR181Stub_Get');
         tdkTestObj.addParameter("ParamName","Device.X_RDK_WanManager.CPEInterface.%s.Wan.Enable" %i);
         #Execute the test case in DUT
@@ -207,9 +227,11 @@ if "SUCCESS" in loadmodulestatus.upper() and  "SUCCESS" in loadmodulestatus1.upp
             #Get the result of execution
             print "[TEST EXECUTION RESULT] : FAILURE";
     else:
-        print "TEST STEP 1 :Check if WANOE  interface is active";
-        print "EXPECTED RESULT 1: WANOE interface is expected to be active";
-        print "ACTUAL RESULT 1: WANOE interface is inactive";
+        #Set the result status of execution
+        tdkTestObj.setResultStatus("FAILURE");
+        print "TEST STEP 1: Get the DEVICE TYPE"
+        print "EXPECTED RESULT 1: Should get the device type";
+        print "ACTUAL RESULT 1:Device type  %s" %devicetype;
         #Get the result of execution
         print "[TEST EXECUTION RESULT] : FAILURE";
 
