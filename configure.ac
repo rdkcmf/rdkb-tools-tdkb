@@ -109,20 +109,52 @@ AC_ARG_ENABLE([redirect],
 
 AC_SUBST(REDIRECT_FLAG)
 
-AC_ARG_ENABLE([rdkb_wan_manager],
-        AS_HELP_STRING([--enable-rdkb_wan_manager],[enable rdkb_wan_manager]),
+AC_ARG_ENABLE([rdkb_telcovoice_manager],
+        AS_HELP_STRING([--enable-rdkb_telcovoice_manager],[enable rdkb_telcovoice_manager]),
         [
           case "${enableval}" in
-             yes) rdkb_wan_manager=true
-                  SUBDIR_WANMANAGER+=" jsonhal_lib DSLHAL_Stub FWUpgradeHAL_Stub TELCOVOICEMgrHal_Stub"
-                  echo WAN Manager is enabled;;
-             no) rdkb_wan_manager=false ;;
-          *) AC_MSG_ERROR([bad value ${enableval} for --enable-rdkb_wan_manager ]) ;;
+             yes) rdkb_telcovoice_manager=true
+                  SUBDIR_WANMANAGER+=" jsonhal_lib TELCOVOICEMgrHal_Stub"
+                  echo Telco Voice Manager is enabled;;
+             no) rdkb_telcovoice_manager=false ;;
+          *) AC_MSG_ERROR([bad value ${enableval} for --enable-rdkb_telcovoice_manager ]) ;;
            esac
            ],
-         [echo "WAN Manager is not enabled"])
+         [echo "Telco Voice Manager is not enabled"])
 
-AM_CONDITIONAL([RDKB_WAN_MANAGER], [test x$rdkb_wan_manager = xtrue])
+AM_CONDITIONAL([RDKB_TELCOVOICE_MANAGER], [test x$rdkb_telcovoice_manager = xtrue])
+
+
+AC_ARG_ENABLE([fwupgrade_manager],
+        AS_HELP_STRING([--enable-fwupgrade_manager],[enable fwupgrade_manager]),
+        [
+          case "${enableval}" in
+             yes) fwupgrade_manager=true
+                  SUBDIR_WANMANAGER+=" jsonhal_lib FWUpgradeHAL_Stub "
+                  echo FWUpgrade Manager is enabled;;
+             no) fwupgrade_manager=false ;;
+          *) AC_MSG_ERROR([bad value ${enableval} for --enable-fwupgrade_manager ]) ;;
+           esac
+           ],
+         [echo "FWUpgrade Manager is not enabled"])
+
+AM_CONDITIONAL([FWUPGRADE_MANAGER], [test x$fwupgrade_manager = xtrue])
+
+
+AC_ARG_ENABLE([rdkb_xdsl_ppp_manager],
+        AS_HELP_STRING([--enable-rdkb_xdsl_ppp_manager],[enable rdkb_xdsl_ppp_manager]),
+        [
+          case "${enableval}" in
+             yes) rdkb_xdsl_ppp_manager=true
+                  SUBDIR_WANMANAGER+=" jsonhal_lib DSLHAL_Stub "
+                  echo XDSL Manager is enabled;;
+             no) rdkb_xdsl_ppp_manager=false ;;
+          *) AC_MSG_ERROR([bad value ${enableval} for --enable-rdkb_xdsl_ppp_manager ]) ;;
+           esac
+           ],
+         [echo "XDSL Manager is not enabled"])
+
+AM_CONDITIONAL([RDKB_XDSL_PPP_MANAGER], [test x$rdkb_xdsl_ppp_manager = xtrue])
 
 AC_SUBST(COPTS)
 AC_SUBST(AGENT_FLAGS)
