@@ -68,7 +68,7 @@ int  cmd_dispatch(int  command)
     char*                           pParamNames[]      = {"Device."};
     parameterValStruct_t**          ppReturnVal        = NULL;
     int                             ulReturnValCount   = 0;
-    ULONG                           i                  = 0;
+    int                             i                  = 0;
     switch ( command )
     {
         case	'e' :
