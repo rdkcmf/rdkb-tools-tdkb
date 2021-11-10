@@ -85,58 +85,7 @@ tr181obj.configureTestCase(ip,port,'TS_OVSAgent_OVSDisable_CheckLoggingInMeshAge
 #Get the result of connection with test component and DUT
 loadmodulestatus=sysobj.getLoadModuleResult();
 loadmodulestatus1=tr181obj.getLoadModuleResult();
-
-def ovs_PreRequisite(tdkTestObj_Tr181_Get,tdkTestObj_Tr181_Set):
-    paramlist =["Device.DeviceInfo.X_RDKCENTRAL-COM_RFC.Feature.CodeBigFirst.Enable","Device.DeviceInfo.X_RDKCENTRAL-COM_xOpsDeviceMgmt.Mesh.Enable"];
-    default =[];
-    result ="SUCCESS";
-    for item in paramlist:
-        def_result,default_value = getTR181Value(tdkTestObj_Tr181_Get,item);
-        if expectedresult in def_result:
-           default.append(default_value);
-        else:
-             result ="FAILURE";
-             print "get operation failed for %s "%item;
-             break;
-
-    setValue = ["false","true"];
-    print "\nThe default Values of CodeBig First and  Mesh are ",default;
-
-    print "\n*****As a Pre-requisite Disabling CodeBig First and Enabling Mesh****";
-
-    index =0;
-    for item in paramlist:
-        set_result, set_details = setTR181Value(tdkTestObj_Tr181_Set,item,setValue[index],"bool");
-        if expectedresult in set_result:
-           print "%s set %s successfully\n" %(item,setValue[index]);
-           index = index + 1;
-        else:
-             result ="FAILURE";
-             print "%s set %s  failed \n" %(item,setValue[index]);
-             break;
-    return result,default;
-
-def ovs_PostProcess(tdkTestObj_Tr181_Get,tdkTestObj_Tr181_Set,setValue):
-    result ="SUCCESS";
-    paramlist =["Device.DeviceInfo.X_RDKCENTRAL-COM_RFC.Feature.CodeBigFirst.Enable","Device.DeviceInfo.X_RDKCENTRAL-COM_xOpsDeviceMgmt.Mesh.Enable"];
-    index = 0;
-    for item in paramlist:
-        set_result, set_details = setTR181Value(tdkTestObj_Tr181_Set,item,setValue[index],"bool");
-        if expectedresult in set_result:
-           print "%s set %s successfully\n" %(item,setValue[index]);
-           index = index + 1;
-        else:
-             result ="FAILURE";
-             print "%s set %s  failed \n" %(item,setValue[index]);
-             break;
-    return result;
-
-
-def isOVSEnabled(tdkTestObj_Tr181_Get):
-    expectedresult="SUCCESS";
-    parameter_Name = "Device.DeviceInfo.X_RDKCENTRAL-COM_RFC.Feature.OVS.Enable";
-    def_result,default_value = getTR181Value(tdkTestObj_Tr181_Get,parameter_Name);
-    return def_result,default_value;
+revert_flag=0;
 
 def doEnableDisableOVS(enableFlag,sysobj,tdkTestObj_Tr181_Get,tdkTestObj_Tr181_Set):
     expectedresult="SUCCESS";
