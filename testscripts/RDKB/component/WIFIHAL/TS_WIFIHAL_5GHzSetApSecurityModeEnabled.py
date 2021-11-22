@@ -2,7 +2,7 @@
 # If not stated otherwise in this file or this component's Licenses.txt
 # file the following copyright and licenses apply:
 #
-# Copyright 2020 RDK Management
+# Copyright 2021 RDK Management
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@
 <xml>
   <id></id>
   <!-- Do not edit id. This will be auto filled while exporting. If you are adding a new script keep the id empty -->
-  <version>6</version>
+  <version>7</version>
   <!-- Do not edit version. This will be auto incremented while updating. If you are adding a new script you can keep the vresion as 1 -->
   <name>TS_WIFIHAL_5GHzSetApSecurityModeEnabled</name>
   <!-- If you are adding a new script you can specify the script name. Script Name should be unique same as this file name with out .py extension -->
@@ -123,6 +123,8 @@ if "SUCCESS" in loadmodulestatus.upper():
 
         if expectedresult in actualresult:
             supportedModes = details.split(":")[1].strip()
+	    supportedModes = supportedModes.split(',')
+            supportedModes = [x.strip(' ') for x in supportedModes]
 
             expectedresult="SUCCESS";
             getMethod = "getApSecurityModeEnabled"
@@ -133,10 +135,10 @@ if "SUCCESS" in loadmodulestatus.upper():
 
             if expectedresult in actualresult:
                 initMode = details.split(":")[1].strip()
-                if initMode in supportedModes.split(','):
-                    print supportedModes.split(',');
+                if initMode in supportedModes:
+                    print supportedModes;
                     tdkTestObj.setResultStatus("SUCCESS");
-                    for setMode in supportedModes.split(','):
+                    for setMode in supportedModes:
                         if setMode == initMode:
                             continue;
                         else:

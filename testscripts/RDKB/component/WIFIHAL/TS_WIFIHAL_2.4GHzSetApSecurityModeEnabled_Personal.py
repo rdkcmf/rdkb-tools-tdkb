@@ -21,7 +21,7 @@
 <xml>
   <id></id>
   <!-- Do not edit id. This will be auto filled while exporting. If you are adding a new script keep the id empty -->
-  <version>5</version>
+  <version>6</version>
   <!-- Do not edit version. This will be auto incremented while updating. If you are adding a new script you can keep the vresion as 1 -->
   <name>TS_WIFIHAL_2.4GHzSetApSecurityModeEnabled_Personal</name>
   <!-- If you are adding a new script you can specify the script name. Script Name should be unique same as this file name with out .py extension -->
@@ -128,6 +128,7 @@ if "SUCCESS" in loadmodulestatus.upper():
         if expectedresult in actualresult:
             supportedModes = details.split(":")[1].strip()
 	    supportedModes = supportedModes.split(',')
+            supportedModes = [x.strip(' ') for x in supportedModes]
             expectedresult="SUCCESS";
 	    apIndex = idx;
             getMethod = "getApSecurityModeEnabled"
