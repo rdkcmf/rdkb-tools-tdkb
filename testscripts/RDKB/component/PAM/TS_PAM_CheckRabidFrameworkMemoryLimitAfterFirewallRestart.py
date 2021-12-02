@@ -48,13 +48,13 @@
     <api_or_interface_used>N/A</api_or_interface_used>
     <input_parameters>Device.DeviceInfo.X_RDKCENTRAL-COM_RFC.Feature.RabidFramework.MemoryLimit</input_parameters>
     <automation_approch>1.Load the module
-2.Get  Device.DeviceInfo.X_RDKCENTRAL-COM_RFC.Feature.RabidFramework.MemoryLimit and pid of lua and store the value
+2.Get  Device.DeviceInfo.X_RDKCENTRAL-COM_RFC.Feature.RabidFramework.MemoryLimit and store the value
 3.Do a Firewall Restart
-4.Do a get again on  Device.DeviceInfo.X_RDKCENTRAL-COM_RFC.Feature.RabidFramework.MemoryLimit,pid of lua and compare the values with previous value.
+4.Do a get again on  Device.DeviceInfo.X_RDKCENTRAL-COM_RFC.Feature.RabidFramework.MemoryLimit and compare the value with previous value.
 5.On Comparison if the value before and after Firewall restart are equal then the result will be
 displayed as success else failure.
 6.Unload the module</automation_approch>
-    <expected_output>The memory limit and pid of lua should not change after firewall restart</expected_output>
+    <expected_output>The memory limit should not change after firewall restart</expected_output>
     <priority>High</priority>
     <test_stub_interface>PAM</test_stub_interface>
     <test_script>TS_PAM_CheckRabidFrameworkMemoryLimitAfterFirewallRestart</test_script>
@@ -104,93 +104,48 @@ if "SUCCESS" in loadmodulestatus1.upper() and loadmodulestatus2.upper:
        print "[TEST EXECUTION RESULT] : SUCCESS";
 
        tdkTestObj = sysObj.createTestStep('ExecuteCmd');
-       cmd= "pidof lua";
+       cmd= "sysevent set firewall-restart";
        expectedresult="SUCCESS";
        tdkTestObj.addParameter("command",cmd);
        tdkTestObj.executeTestCase(expectedresult);
        actualresult = tdkTestObj.getResult();
-       pid = tdkTestObj.getResultDetails().strip().replace("\\n","");
 
-       if expectedresult in actualresult and pid != "":
-          tdkTestObj.setResultStatus("SUCCESS");
-          print "TEST STEP 2: Get the pid of lua"
-          print "EXPECTED RESULT 2: Should get the pid of lua";
-          print "ACTUAL RESULT 2:pid of lua:",pid;
-          print "[TEST EXECUTION RESULT] : SUCCESS";
+       if expectedresult in actualresult:
+           tdkTestObj.setResultStatus("SUCCESS");
+           print "TEST STEP 2: Do a firewall-restart";
+           print "EXPECTED RESULT 2: Should do a firewall restart";
+           print "ACTUAL RESULT 2:Firewall restarted successfully";
+           print "[TEST EXECUTION RESULT] : SUCCESS";
 
-          tdkTestObj = sysObj.createTestStep('ExecuteCmd');
-          cmd= "sysevent set firewall-restart";
-          expectedresult="SUCCESS";
-          tdkTestObj.addParameter("command",cmd);
-          tdkTestObj.executeTestCase(expectedresult);
-          actualresult = tdkTestObj.getResult();
+           tdkTestObj = pamObj.createTestStep('pam_GetParameterValues');
+           tdkTestObj.addParameter("ParamName","Device.DeviceInfo.X_RDKCENTRAL-COM_RFC.Feature.RabidFramework.MemoryLimit")
+           expectedresult="SUCCESS";
 
-          if expectedresult in actualresult:
-             tdkTestObj.setResultStatus("SUCCESS");
-             print "TEST STEP 3: Do a firewall-restart";
-             print "EXPECTED RESULT 3: Should do a firewall restart";
-             print "ACTUAL RESULT 3:Firewall restarted successfully";
-             print "[TEST EXECUTION RESULT] : SUCCESS";
+           #Execute the test case in DUT
+           tdkTestObj.executeTestCase(expectedresult);
+           actualresult = tdkTestObj.getResult();
+           AfterFRMemLimit = tdkTestObj.getResultDetails().strip();
 
-             tdkTestObj = pamObj.createTestStep('pam_GetParameterValues');
-             tdkTestObj.addParameter("ParamName","Device.DeviceInfo.X_RDKCENTRAL-COM_RFC.Feature.RabidFramework.MemoryLimit")
-             expectedresult="SUCCESS";
+           print "Rabid Framework Memory Limit after Firewall-reset",AfterFRMemLimit;
+           print "Rabid Framework Memory Limit before Firewall-reset",MemLimit;
 
-             #Execute the test case in DUT
-             tdkTestObj.executeTestCase(expectedresult);
-             actualresult = tdkTestObj.getResult();
-             AfterFRMemLimit = tdkTestObj.getResultDetails().strip();
-
-             print "Rabid Framework Memory Limit after Firewall-reset",AfterFRMemLimit;
-             print "Rabid Framework Memory Limit before Firewall-reset",MemLimit;
-
-             if expectedresult in actualresult and AfterFRMemLimit == MemLimit:
-                tdkTestObj.setResultStatus("SUCCESS");
-                print "TEST STEP 4: Get the Rabid Framework Memory Limit after Firewall-reset";
-                print "EXPECTED RESULT 4: Should get the Rabid Framework Memory Limit before and after firewall-restart equal";
-                print "ACTUAL RESULT 4:Rabid Framework Memory Limit before and after Firewall-reset are equal";
-                print "[TEST EXECUTION RESULT] : SUCCESS";
-
-                tdkTestObj = sysObj.createTestStep('ExecuteCmd');
-                cmd= "pidof lua";
-                expectedresult="SUCCESS";
-                tdkTestObj.addParameter("command",cmd);
-                tdkTestObj.executeTestCase(expectedresult);
-                actualresult = tdkTestObj.getResult();
-                AfterFRpid = tdkTestObj.getResultDetails().strip().replace("\\n","");
-
-                print "pid of lua after Firewall-reset is ",AfterFRpid;
-                print "pid of lua before Firewall-reset is ",pid;
-
-                if expectedresult in actualresult and pid == AfterFRpid:
-                   tdkTestObj.setResultStatus("SUCCESS");
-                   print "TEST STEP 5: Get the pid of lua after Firewall-reset";
-                   print "EXPECTED RESULT 5: Should get the pid of lua before and after Firewall-rest equal";
-                   print "ACTUAL RESULT 5:pid of lua before and after Firewall-rest are equal";
-                   print "[TEST EXECUTION RESULT] : SUCCESS";
-                else:
-                    tdkTestObj.setResultStatus("FAILURE");
-                    print "TEST STEP 5: Get the pid of lua after Firewall-reset";
-                    print "EXPECTED RESULT 5: Should get the pid of lua before and after Firewall-rest equal";
-                    print "ACTUAL RESULT 5:pid of lua before and after Firewall-rest are not equal";
-                    print "[TEST EXECUTION RESULT] : FAILURE";
-             else:
-                 tdkTestObj.setResultStatus("FAILURE");
-                 print "TEST STEP 4: Get the Rabid Framework Memory Limit after Firewall-reset";
-                 print "EXPECTED RESULT 4: Should get the Rabid Framework Memory Limit before and after firewall-restart equal";
-                 print "ACTUAL RESULT 4:Rabid Framework Memory Limit before and after Firewall-reset are not equal";
-                 print "[TEST EXECUTION RESULT] : FAILURE";
-          else:
-              tdkTestObj.setResultStatus("FAILURE");
-              print "TEST STEP 3: Do a firewall-restart";
-              print "EXPECTED RESULT 3: Should do a firewall restart";
-              print "ACTUAL RESULT 3:Firewall restart failed";
-              print "[TEST EXECUTION RESULT] : FAILURE";
+           if expectedresult in actualresult and AfterFRMemLimit == MemLimit:
+               tdkTestObj.setResultStatus("SUCCESS");
+               print "TEST STEP 3: Get the Rabid Framework Memory Limit after Firewall-reset";
+               print "EXPECTED RESULT 3: Should get the Rabid Framework Memory Limit before and after firewall-restart equal";
+               print "ACTUAL RESULT 3:Rabid Framework Memory Limit before and after Firewall-reset are equal";
+               print "[TEST EXECUTION RESULT] : SUCCESS";
+           else:
+               tdkTestObj.setResultStatus("FAILURE");
+               print "TEST STEP 3: Get the Rabid Framework Memory Limit after Firewall-reset";
+               print "EXPECTED RESULT 3: Should get the Rabid Framework Memory Limit before and after firewall-restart equal";
+               print "ACTUAL RESULT 3:Rabid Framework Memory Limit before and after Firewall-reset are not equal";
+               print "[TEST EXECUTION RESULT] : FAILURE";
        else:
            tdkTestObj.setResultStatus("FAILURE");
-           print "TEST STEP 2: Get the pid of lua"
-           print "EXPECTED RESULT 2: Should get the pid of lua";
-           print "ACTUAL RESULT 2:pid of lua:",pid;
+           print "TEST STEP 2: Do a firewall-restart";
+           print "EXPECTED RESULT 2: Should do a firewall restart";
+           print "ACTUAL RESULT 2:Firewall restart failed";
            print "[TEST EXECUTION RESULT] : FAILURE";
     else:
         tdkTestObj.setResultStatus("FAILURE");
