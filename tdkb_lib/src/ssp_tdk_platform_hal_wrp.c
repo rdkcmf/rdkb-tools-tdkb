@@ -757,11 +757,6 @@ int ssp_getRPM(unsigned int fanIndex,unsigned int *rpmbuf)
         *rpmbuf = rpmValue;
         DEBUG_PRINT(DEBUG_TRACE, "Value of RPM is %d\n",rpmValue);
 
-        if ((signed)rpmValue < 0 )
-        {
-                DEBUG_PRINT(DEBUG_ERROR, "Platform funtion returns failure\n");
-                return RETURN_ERR;
-        }
         DEBUG_PRINT(DEBUG_TRACE, "Platform function returns success\n");
         return RETURN_OK;
 }
