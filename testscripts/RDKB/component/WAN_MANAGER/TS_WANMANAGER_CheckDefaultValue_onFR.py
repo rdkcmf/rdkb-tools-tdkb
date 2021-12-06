@@ -33,8 +33,7 @@
   <!--  -->
   <status>FREE</status>
   <!--  -->
-  <synopsis>Check if the default value of Device.X_RDK_WanManager.Enable is true ,Device.X_RDK_WanManager.Policy is PRIMARY_PRIORITY and
-Device.X_RDK_WanManager.IdleTimeout is 0</synopsis>
+  <synopsis>Check if the default value of Device.X_RDK_WanManager.Enable is true ,Device.X_RDK_WanManager.Policy is PRIMARY_PRIORITY and</synopsis>
   <!--  -->
   <groups_id />
   <!--  -->
@@ -60,8 +59,7 @@ Device.X_RDK_WanManager.IdleTimeout is 0</synopsis>
   </rdk_versions>
   <test_cases>
     <test_case_id>TC_WANMANAGER_09</test_case_id>
-    <test_objective>Check if the default value of Device.X_RDK_WanManager.Enable is true ,Device.X_RDK_WanManager.Policy is PRIMARY_PRIORITY and
-Device.X_RDK_WanManager.IdleTimeout is 0</test_objective>
+    <test_objective>Check if the default value of Device.X_RDK_WanManager.Enable is true ,Device.X_RDK_WanManager.Policy is PRIMARY_PRIORITY </test_objective>
     <test_type>Positive</test_type>
     <test_setup>Broadband</test_setup>
     <pre_requisite>1.Ccsp Components  should be in a running state else invoke cosa_start.sh manually that includes all the ccsp components and TDK Component
@@ -71,15 +69,12 @@ Device.X_RDK_WanManager.IdleTimeout is 0</test_objective>
 TDKB_TR181Stub_Get</api_or_interface_used>
     <input_parameters>Device.X_CISCO_COM_DeviceControl.FactoryReset
 Device.X_RDK_WanManager.Policy
-Device.X_RDK_WanManager.Enable
-Device.X_RDK_WanManager.IdleTimeout</input_parameters>
+Device.X_RDK_WanManager.Enable</input_parameters>
     <automation_approch>1] Load the module
 2] Perform Factory reset on the DUT
-3] Check if the default value of Device.X_RDK_WanManager.Enable is true ,Device.X_RDK_WanManager.Policy is PRIMARY_PRIORITY and
-Device.X_RDK_WanManager.IdleTimeout is 0
+3] Check if the default value of Device.X_RDK_WanManager.Enable is true ,Device.X_RDK_WanManager.Policy is PRIMARY_PRIORITY
 4]Unload the module</automation_approch>
-    <expected_output> Default value of Device.X_RDK_WanManager.Enable is true ,Device.X_RDK_WanManager.Policy is PRIMARY_PRIORITY and
-Device.X_RDK_WanManager.IdleTimeout is 0</expected_output>
+    <expected_output> Default value of Device.X_RDK_WanManager.Enable is true ,Device.X_RDK_WanManager.Policy is PRIMARY_PRIORITY </expected_output>
     <priority>High</priority>
     <test_stub_interface>WAN_MANAGER</test_stub_interface>
     <test_script>TS_WANMANAGER_CheckDefaultValue_onFR</test_script>
@@ -189,34 +184,6 @@ if "SUCCESS" in loadmodulestatus.upper() and "SUCCESS" in loadmodulestatus1.uppe
                     print "ACTUAL RESULT 4: The value received is %s" %details;
                     #Get the result of execution
                     print "[TEST EXECUTION RESULT] : SUCCESS";
-
-                    tdkTestObj = obj.createTestStep('TDKB_TR181Stub_Get');
-                    tdkTestObj.addParameter("ParamName", "Device.X_RDK_WanManager.IdleTimeout");
-                    tdkTestObj.executeTestCase(expectedresult);
-                    actualresult = tdkTestObj.getResult();
-                    details = tdkTestObj.getResultDetails();
-                    if expectedresult in actualresult :
-                        if int(details) == 0:
-                           tdkTestObj.setResultStatus("SUCCESS");
-                           print "TEST STEP 5 : Default WANMANAGERIdleTimeout value after Factory reset";
-                           print "EXPECTED RESULT 5: Should get WANMANAGER IdleTimeout default value after Factory reset";
-                           print "ACTUAL RESULT 5: The value received is %s" %details;
-                           #Get the result of execution
-                           print "[TEST EXECUTION RESULT] : SUCCESS";
-                        else:
-                            tdkTestObj.setResultStatus("FAILURE");
-                            print "TEST STEP 5 :  Default WANMANAGERIdleTimeout value after Factory reset";
-                            print "EXPECTED RESULT 5: Should get WANMANAGER IdleTimeout default value after Factory reset";
-                            print "ACTUAL RESULT 5: The value received is %s" %details;
-                            #Get the result of execution
-                            print "[TEST EXECUTION RESULT] : FAILURE";
-                    else:
-                        tdkTestObj.setResultStatus("FAILURE");
-                        print "TEST STEP 5 : Get Default WANMANAGERIdleTimeout value after Factory reset";
-                        print "EXPECTED RESULT 5: Should get WANMANAGER IdleTimeout default value after Factory reset";
-                        print "ACTUAL RESULT 5: Failed to fetch idle timeout after Factory reset";
-                        #Get the result of execution
-                        print "[TEST EXECUTION RESULT] : FAILURE";
                 else:
                     tdkTestObj.setResultStatus("FAILURE");
                     print "TEST STEP 4 : Default WANMANAGER Enable value after Factory reset";
