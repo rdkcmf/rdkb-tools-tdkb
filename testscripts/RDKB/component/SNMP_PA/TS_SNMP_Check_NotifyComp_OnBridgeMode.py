@@ -27,7 +27,7 @@
   <status>FREE</status>
   <synopsis>Enable bridge mode via snmpset and check if notify_comp app is not crashed</synopsis>
   <groups_id/>
-  <execution_time>0</execution_time>
+  <execution_time>5</execution_time>
   <long_duration>false</long_duration>
   <advanced_script>false</advanced_script>
   <remarks/>
@@ -135,7 +135,7 @@ if "SUCCESS" in loadmodulestatus.upper():
 	        #set lanmode as bridge-static
 	        if lanMode != "bridge-static":
 		    actResponse =snmplib.SnmpExecuteCmd("snmpset", commSetStr, "-v 2c", "1.3.6.1.4.1.17270.50.2.3.2.1.1.32 i 1", ipaddress);
-		    sleep(5);
+		    sleep(60);
 		    actResponse =snmplib.SnmpExecuteCmd("snmpget", communityString, "-v 2c", "1.3.6.1.4.1.17270.50.2.3.2.1.1.32", ipaddress);
 		    if "SNMPv2-SMI" in actResponse:
 			lanmode_new = actResponse.split("INTEGER:")[1].strip()
@@ -177,7 +177,7 @@ if "SUCCESS" in loadmodulestatus.upper():
                             print "[TEST EXECUTION RESULT] : FAILURE";
 			#Reset the value of lan mode
                         actResponse =snmplib.SnmpExecuteCmd("snmpset", commSetStr, "-v 2c", "1.3.6.1.4.1.17270.50.2.3.2.1.1.32 i 2", ipaddress);
-                        sleep(5);
+                        sleep(60);
                         actResponse =snmplib.SnmpExecuteCmd("snmpget", communityString, "-v 2c", "1.3.6.1.4.1.17270.50.2.3.2.1.1.32", ipaddress);
                         if "SNMPv2-SMI" in actResponse:
                             lanmode_revert = actResponse.split("INTEGER:")[1].strip()
