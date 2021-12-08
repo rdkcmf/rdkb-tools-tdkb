@@ -51,7 +51,7 @@
     <input_parameters>Device.X_CISCO_COM_DeviceControl.LanManagementEntry.1.LanIPAddress</input_parameters>
     <automation_approch>1.Load module
 2. Do a get on  Device.X_CISCO_COM_DeviceControl.LanManagementEntry.1.LanIPAddress and store the result
-3.Try to set different private IPs like 192.168.0.1,10.0.0.1 and 172.16.0.1 and check if the set value reflects in ifconfig brlan0
+3.Try to set different private IPs and check if the set value reflects in ifconfig brlan0
 4.TM will display the result s based on the validation as SUCCESS and FAILURE.
 5.Revert the IP to its previous value
 5.Unload the module</automation_approch>
@@ -69,6 +69,7 @@
 '''
 import tdklib;
 from time import sleep;
+from tdkbVariables import *;
 #Test component to be tested
 sysObj = tdklib.TDKScriptingLibrary("sysutil","RDKB");
 pamObj = tdklib.TDKScriptingLibrary("pam","RDKB");
@@ -117,111 +118,132 @@ if "SUCCESS" in loadmodulestatus1.upper() and loadmodulestatus2.upper:
        print "[TEST EXECUTION RESULT] : SUCCESS";
 
        SetIps = [];
-       IpLists =["192.168.0.1","172.16.0.1","10.0.0.1"];
-       #getting length of list
-       length = len(IpLists);
-       #finding the ips to be considered for validation excluding the default ip
-       for i in range(length):
-           if IpLists[i] != defaultLanIp:
-              SetIps.append(IpLists[i]);
+       tdkTestObj = sysObj.createTestStep('ExecuteCmd');
+       cmd = "sh %s/tdk_utility.sh parseConfigFile LAN_IPADDRESS" %TDK_PATH;
+       print cmd;
+       expectedresult="SUCCESS";
+       tdkTestObj.addParameter("command", cmd);
+       tdkTestObj.executeTestCase(expectedresult);
+       actualresult = tdkTestObj.getResult();
+       details = tdkTestObj.getResultDetails().strip().replace("\\n", "");
+       if expectedresult in actualresult  and details!= "":
+           tdkTestObj.setResultStatus("SUCCESS");
+           print "TEST STEP 2: Execute the command";
+           print "EXPECTED RESULT 2: Should execute the command successfully";
+           print "ACTUAL RESULT 2: Details: %s" %details;
+           print "[TEST EXECUTION RESULT] : SUCCESS";
+           IpLists=details.split(",");
 
-       #getting length of list
-       length = len(SetIps);
-       flag = 0;
-       equalflag = 0;
-       print "Trying to Set the LAN IP's to the following:",SetIps;
+           #getting length of list
+           length = len(IpLists);
+           #finding the ips to be considered for validation excluding the default ip
+           for i in range(length):
+               if IpLists[i] != defaultLanIp:
+                  SetIps.append(IpLists[i]);
 
-       for i in range(length):
-           print "Setting LAN IP to ",SetIps[i];
+           #getting length of list
+           length = len(SetIps);
+           flag = 0;
+           equalflag = 0;
+           print "Trying to Set the LAN IP's to the following:",SetIps;
 
+           for i in range(length):
+               print "Setting LAN IP to ",SetIps[i];
+
+               tdkTestObj = pamObj.createTestStep('pam_SetParameterValues');
+               tdkTestObj.addParameter("ParamName","Device.X_CISCO_COM_DeviceControl.LanManagementEntry.1.LanIPAddress")
+               tdkTestObj.addParameter("ParamValue",str(SetIps[i]));
+               tdkTestObj.addParameter("Type","string");
+               expectedresult="SUCCESS";
+
+               #Execute testcase on DUT
+               tdkTestObj.executeTestCase(expectedresult);
+               actualresult = tdkTestObj.getResult();
+               Setresult = tdkTestObj.getResultDetails();
+
+               flag = 0;
+               equalflag = 0;
+               SetValue = SetIps[i];
+
+               if expectedresult in actualresult:
+                   flag =0;
+                   print " Value set successfully to ",SetValue;
+                   sleep(20);
+                   tdkTestObj = sysObj.createTestStep('ExecuteCmd');
+                   tdkTestObj.addParameter("command", "ifconfig brlan0 | grep \"inet addr\" | cut -f2 -d ':' | cut -f1 -d ' ' | tr \"\n\" \" \"");
+                   expectedresult="SUCCESS";
+
+                   #Execute the test case in DUT
+                   tdkTestObj.executeTestCase(expectedresult);
+                   actualresult = tdkTestObj.getResult();
+                   ip = tdkTestObj.getResultDetails().strip();
+
+                   print "LAN IP in brlan0 is :",ip
+                   print "LAN IP set using tr-181 parameter :",SetValue
+
+                   if expectedresult in actualresult and ip == SetValue:
+                       equalflag =0;
+                       tdkTestObj.setResultStatus("SUCCESS");
+                       print "[TEST EXECUTION RESULT] : SUCCESS, Set ip and brlan0 ip are same";
+                   else:
+                       equalflag =1
+                       tdkTestObj.setResultStatus("FAILURE");
+                       print "[TEST EXECUTION RESULT] : FAILURE, Set ip and brlan0 ip are not same";
+                       break;
+               else:
+                   flag =1;
+                   break;
+
+           if flag == 0 and equalflag == 0:
+               #Set the result status of execution
+               tdkTestObj.setResultStatus("SUCCESS");
+               print "TEST STEP 3: Set the Lan IP Address to:",SetIps,"and check if the same ip reflects in ifconfig | grep brlan0";
+               print "EXPECTED RESULT 3: Should set the Lan IP Address to:",SetIps,"and check if the same ip reflects in ifconfig | grep brlan0";
+               print "ACTUAL RESULT 3: Lan IP Addresses were set successfully and the ip got reflected in ifconfig | grep brlan0" ;
+               #Get the result of execution
+               print "[TEST EXECUTION RESULT] : SUCCESS";
+           else:
+               #Set the result status of execution
+               tdkTestObj.setResultStatus("FAILURE");
+               print "TEST STEP 3: Set the Lan IP Address to:",SetIps,"and check if the same ip reflects in ifconfig | grep brlan0";
+               print "EXPECTED RESULT 3: Should set the Lan IP Address to:",SetIps,"and check if the same ip reflects in ifconfig | grep brlan0";
+               print "ACTUAL RESULT 3: Lan IP Addresses failed to set or failed to reflect the same in ifconfig" ;
+               #Get the result of execution
+               print "[TEST EXECUTION RESULT] : FAILURE";
+
+           #Revert the value
            tdkTestObj = pamObj.createTestStep('pam_SetParameterValues');
            tdkTestObj.addParameter("ParamName","Device.X_CISCO_COM_DeviceControl.LanManagementEntry.1.LanIPAddress")
-           tdkTestObj.addParameter("ParamValue",str(SetIps[i]));
+           tdkTestObj.addParameter("ParamValue",defaultLanIp);
            tdkTestObj.addParameter("Type","string");
            expectedresult="SUCCESS";
-
            #Execute testcase on DUT
            tdkTestObj.executeTestCase(expectedresult);
            actualresult = tdkTestObj.getResult();
-           Setresult = tdkTestObj.getResultDetails();
+           result = tdkTestObj.getResultDetails();
 
-           flag = 0;
-           equalflag = 0;
-           SetValue = SetIps[i];
-
-           if expectedresult in actualresult:
-              flag =0;
-              print " Value set successfully to ",SetValue;
-              sleep(20);
-              tdkTestObj = sysObj.createTestStep('ExecuteCmd');
-              tdkTestObj.addParameter("command", "ifconfig brlan0 | grep \"inet addr\" | cut -f2 -d ':' | cut -f1 -d ' ' | tr \"\n\" \" \"");
-              expectedresult="SUCCESS";
-
-              #Execute the test case in DUT
-              tdkTestObj.executeTestCase(expectedresult);
-              actualresult = tdkTestObj.getResult();
-              ip = tdkTestObj.getResultDetails().strip();
-
-              print "LAN IP in brlan0 is :",ip
-              print "LAN IP set using tr-181 parameter :",SetValue
-
-              if expectedresult in actualresult and ip == SetValue:
-                 equalflag =0;
-                 tdkTestObj.setResultStatus("SUCCESS");
-                 print "[TEST EXECUTION RESULT] : SUCCESS, Set ip and brlan0 ip are same";
-              else:
-                  equalflag =1
-                  tdkTestObj.setResultStatus("FAILURE");
-                  print "[TEST EXECUTION RESULT] : FAILURE, Set ip and brlan0 ip are not same";
-                  break;
+           if expectedresult in  expectedresult:
+               #Set the result status of execution
+               tdkTestObj.setResultStatus("SUCCESS");
+               print "TEST STEP 4: Revert LAN IP Address to its default";
+               print "EXPECTED RESULT 4: Revert LAN IP Address to previous value";
+               print "ACTUAL RESULT 4: Revert Operation sucesss:",result ;
+               #Get the result of execution
+               print "[TEST EXECUTION RESULT] : SUCCESS";
            else:
-                flag =1;
-                break;
-
-       if flag == 0 and equalflag == 0:
-          #Set the result status of execution
-          tdkTestObj.setResultStatus("SUCCESS");
-          print "TEST STEP 2: Set the Lan IP Address to:",SetIps,"and check if the same ip reflects in ifconfig | grep brlan0";
-          print "EXPECTED RESULT 2: Should set the Lan IP Address to:",SetIps,"and check if the same ip reflects in ifconfig | grep brlan0";
-          print "ACTUAL RESULT 2: Lan IP Addresses were set successfully and the ip got reflected in ifconfig | grep brlan0" ;
-          #Get the result of execution
-          print "[TEST EXECUTION RESULT] : SUCCESS";
+               #Set the result status of execution
+               tdkTestObj.setResultStatus("FAILURE");
+               print "TEST STEP 4: Revert LAN IP Address to its default";
+               print "EXPECTED RESULT 4: Revert LAN IP Address to previous value";
+               print "ACTUAL RESULT 4: Revert Operation sucesss:",result ;
+               #Get the result of execution
+               print "[TEST EXECUTION RESULT] : FAILURE";
        else:
-            #Set the result status of execution
-            tdkTestObj.setResultStatus("FAILURE");
-            print "TEST STEP 2: Set the Lan IP Address to:",SetIps,"and check if the same ip reflects in ifconfig | grep brlan0";
-            print "EXPECTED RESULT 2: Should set the Lan IP Address to:",SetIps,"and check if the same ip reflects in ifconfig | grep brlan0";
-            print "ACTUAL RESULT 2: Lan IP Addresses failed to set or failed to reflect the same in ifconfig" ;
-            #Get the result of execution
-            print "[TEST EXECUTION RESULT] : FAILURE";
-
-       #Revert the value
-       tdkTestObj = pamObj.createTestStep('pam_SetParameterValues');
-       tdkTestObj.addParameter("ParamName","Device.X_CISCO_COM_DeviceControl.LanManagementEntry.1.LanIPAddress")
-       tdkTestObj.addParameter("ParamValue",defaultLanIp);
-       tdkTestObj.addParameter("Type","string");
-       expectedresult="SUCCESS";
-       #Execute testcase on DUT
-       tdkTestObj.executeTestCase(expectedresult);
-       actualresult = tdkTestObj.getResult();
-       result = tdkTestObj.getResultDetails();
-
-       if expectedresult in  expectedresult:
-          #Set the result status of execution
-          tdkTestObj.setResultStatus("SUCCESS");
-          print "TEST STEP 3: Revert LAN IP Address to its default";
-          print "EXPECTED RESULT 3: Revert LAN IP Address to previous value";
-          print "ACTUAL RESULT 3: Revert Operation sucesss:",result ;
-          #Get the result of execution
-          print "[TEST EXECUTION RESULT] : SUCCESS";
-       else:
-          #Set the result status of execution
-          tdkTestObj.setResultStatus("FAILURE");
-          print "TEST STEP 3: Revert LAN IP Address to its default";
-          print "EXPECTED RESULT 3: Revert LAN IP Address to previous value";
-          print "ACTUAL RESULT 3: Revert Operation sucesss:",result ;
-          #Get the result of execution
-          print "[TEST EXECUTION RESULT] : FAILURE";
+           tdkTestObj.setResultStatus("FAILURE");
+           print "TEST STEP 2: Execute the command";
+           print "EXPECTED RESULT 2: Should execute the command successfully";
+           print "ACTUAL RESULT 2: Details: %s" %details;
+           print "[TEST EXECUTION RESULT] : FAILURE";
     else:
         tdkTestObj.setResultStatus("FAILURE");
         print "TEST STEP 1: Get the Lan IP Address via tr181 and ifconfig brlan0"
