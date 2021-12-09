@@ -2,7 +2,7 @@
 # If not stated otherwise in this file or this component's Licenses.txt
 # file the following copyright and licenses apply:
 #
-# Copyright 2016 RDK Management
+# Copyright 2021 RDK Management
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,26 +17,43 @@
 # limitations under the License.
 ##########################################################################
 '''
-<?xml version="1.0" encoding="UTF-8"?><xml>
-  <id/>
-  <version>3</version>
+<?xml version='1.0' encoding='utf-8'?>
+<xml>
+  <id></id>
+  <!-- Do not edit id. This will be auto filled while exporting. If you are adding a new script keep the id empty -->
+  <version>4</version>
+  <!-- Do not edit version. This will be auto incremented while updating. If you are adding a new script you can keep the vresion as 1 -->
   <name>TS_MOCA_SetKeyPassphrase_GreaterThan_17Chars</name>
-  <primitive_test_id/>
+  <!-- If you are adding a new script you can specify the script name. Script Name should be unique same as this file name with out .py extension -->
+  <primitive_test_id> </primitive_test_id>
+  <!-- Do not change primitive_test_id if you are editing an existing script. -->
   <primitive_test_name>Mocastub_Set</primitive_test_name>
+  <!--  -->
   <primitive_test_version>2</primitive_test_version>
+  <!--  -->
   <status>FREE</status>
+  <!--  -->
   <synopsis>To set the KeyPassphrase greater than 17 characters. Test should fail since the password is expected to be less than 17 character long</synopsis>
-  <groups_id/>
+  <!--  -->
+  <groups_id />
+  <!--  -->
   <execution_time>1</execution_time>
+  <!--  -->
   <long_duration>false</long_duration>
+  <!--  -->
   <advanced_script>false</advanced_script>
-  <remarks/>
+  <!-- execution_time is the time out time for test execution -->
+  <remarks></remarks>
+  <!-- Reason for skipping the tests if marked to skip -->
   <skip>false</skip>
+  <!--  -->
   <box_types>
     <box_type>Broadband</box_type>
+    <!--  -->
   </box_types>
   <rdk_versions>
     <rdk_version>RDKB</rdk_version>
+    <!--  -->
   </rdk_versions>
   <test_cases>
     <test_case_id>TC_MOCA_05</test_case_id>
@@ -52,27 +69,26 @@
 3. Invoke Mocastub_Set to set password greater than 17 characters
 4. Validation of  the result is done within the python script and send the result status to Test Manager.
 5.Test Manager will publish the result in GUI as PASS/FAILURE based on the response from Moca stub.</automation_approch>
-    <except_output>CheckPoint 1:
+    <expected_output>CheckPoint 1:
  The output  should be logged in the Agent console/Component log
 
 CheckPoint 2:
 Stub function result should be success and should see corresponding log in the agent console log
 
 CheckPoint 3:
-TestManager GUI will publish the result as PASS in Execution/Console page of Test Manager</except_output>
+TestManager GUI will publish the result as PASS in Execution/Console page of Test Manager</expected_output>
     <priority>High</priority>
     <test_stub_interface>None</test_stub_interface>
     <test_script>TS_MOCA_SetKeyPassphrase_GreaterThan_17Chars</test_script>
     <skipped>No</skipped>
-    <release_version/>
-    <remarks/>
+    <release_version></release_version>
+    <remarks></remarks>
   </test_cases>
-  <script_tags/>
+  <script_tags />
 </xml>
-
 '''
-# use tdklib library,which provides a wrapper for tdk testcase script 
-import tdklib; 
+# use tdklib library,which provides a wrapper for tdk testcase script
+import tdklib;
 
 #Test component to be tested
 obj = tdklib.TDKScriptingLibrary("moca","1");
@@ -151,58 +167,58 @@ if "SUCCESS" in loadmodulestatus.upper():
                 #Get the result of execution
                 print "[TEST EXECUTION RESULT] : SUCCESS";
 
-    		tdkTestObj = obj.createTestStep('Mocastub_SetKeypassphrase');
-    		tdkTestObj.addParameter("ParamName","Device.MoCA.Interface.1.KeyPassphrase");
-    		tdkTestObj.addParameter("ParamValue","12345678901234567890");
-    		tdkTestObj.addParameter("Type","string");
-    		expectedresult="FAILURE";
+                tdkTestObj = obj.createTestStep('Mocastub_SetKeypassphrase');
+                tdkTestObj.addParameter("ParamName","Device.MoCA.Interface.1.KeyPassphrase");
+                tdkTestObj.addParameter("ParamValue","12345678901234567890");
+                tdkTestObj.addParameter("Type","string");
+                expectedresult="FAILURE";
 
-    		#Execute the test case in DUT
-    		tdkTestObj.executeTestCase(expectedresult);
-    		actualresult = tdkTestObj.getResult();
-    		details= tdkTestObj.getResultDetails();
-    		if expectedresult in actualresult:
-    		    #Set the result status of execution
-    		    tdkTestObj.setResultStatus("SUCCESS");
-    		    print "TEST STEP 5: Set the KeyPassphrase";
-    		    print "EXPECTED RESULT 5: Should not set a KeyPassphrase greater than 17 character long";
-    		    print "ACTUAL RESULT 5: %s" %details;
-    		    #Get the result of execution
-    		    print "[TEST EXECUTION RESULT] : SUCCESS";
-    		else:
-    		    #Set the result status of execution
-    		    tdkTestObj.setResultStatus("FAILURE");
-    		    print "TEST STEP 5: Set the KeyPassphrase";
-    		    print "EXPECTED RESULT 5: Should not set a KeyPassphrase greater than 17 character long";
-    		    print "ACTUAL RESULT 5: %s" %details;
-    		    #Get the result of execution
-    		    print "[TEST EXECUTION RESULT] : FAILURE";
-        	#setting the default password
-        	tdkTestObj = obj.createTestStep('Mocastub_SetKeypassphrase');
-        	tdkTestObj.addParameter("ParamName","Device.MoCA.Interface.1.KeyPassphrase");
-        	tdkTestObj.addParameter("ParamValue","99999999988888888");
-        	tdkTestObj.addParameter("Type","string");
-        	expectedresult="SUCCESS";
-        	#Execute the test case in DUT
-        	tdkTestObj.executeTestCase(expectedresult);
-        	actualresult = tdkTestObj.getResult();
-        	details= tdkTestObj.getResultDetails();
-        	if expectedresult in actualresult:
-        	    #Set the result status of execution
-        	    tdkTestObj.setResultStatus("SUCCESS");
-        	    print "TEST STEP : Set the KeyPassphrase";
-        	    print "EXPECTED RESULT : Should set the default KeyPassphrase";
-        	    print "ACTUAL RESULT : %s" %details;
-        	    #Get the result of execution
-        	    print "[TEST EXECUTION RESULT] : SUCCESS";
-        	else:
-        	    #Set the result status of execution
-        	    tdkTestObj.setResultStatus("FAILURE");
-        	    print "TEST STEP : Set the KeyPassphrase";
-        	    print "EXPECTED RESULT : Should set the default KeyPassphrase";
-        	    print "ACTUAL RESULT : %s" %details;
-        	    #Get the result of execution
-        	    print "[TEST EXECUTION RESULT] : FAILURE";
+                #Execute the test case in DUT
+                tdkTestObj.executeTestCase(expectedresult);
+                actualresult = tdkTestObj.getResult();
+                details= tdkTestObj.getResultDetails();
+                if expectedresult in actualresult:
+                    #Set the result status of execution
+                    tdkTestObj.setResultStatus("SUCCESS");
+                    print "TEST STEP 5: Set the KeyPassphrase";
+                    print "EXPECTED RESULT 5: Should not set a KeyPassphrase greater than 17 character long";
+                    print "ACTUAL RESULT 5: %s" %details;
+                    #Get the result of execution
+                    print "[TEST EXECUTION RESULT] : SUCCESS";
+                else:
+                    #Set the result status of execution
+                    tdkTestObj.setResultStatus("FAILURE");
+                    print "TEST STEP 5: Set the KeyPassphrase";
+                    print "EXPECTED RESULT 5: Should not set a KeyPassphrase greater than 17 character long";
+                    print "ACTUAL RESULT 5: %s" %details;
+                    #Get the result of execution
+                    print "[TEST EXECUTION RESULT] : FAILURE";
+                #setting the default password
+                tdkTestObj = obj.createTestStep('Mocastub_SetKeypassphrase');
+                tdkTestObj.addParameter("ParamName","Device.MoCA.Interface.1.KeyPassphrase");
+                tdkTestObj.addParameter("ParamValue","99999999988888888");
+                tdkTestObj.addParameter("Type","string");
+                expectedresult="SUCCESS";
+                #Execute the test case in DUT
+                tdkTestObj.executeTestCase(expectedresult);
+                actualresult = tdkTestObj.getResult();
+                details= tdkTestObj.getResultDetails();
+                if expectedresult in actualresult:
+                    #Set the result status of execution
+                    tdkTestObj.setResultStatus("SUCCESS");
+                    print "TEST STEP : Set the KeyPassphrase";
+                    print "EXPECTED RESULT : Should set the default KeyPassphrase";
+                    print "ACTUAL RESULT : %s" %details;
+                    #Get the result of execution
+                    print "[TEST EXECUTION RESULT] : SUCCESS";
+                else:
+                    #Set the result status of execution
+                    tdkTestObj.setResultStatus("FAILURE");
+                    print "TEST STEP : Set the KeyPassphrase";
+                    print "EXPECTED RESULT : Should set the default KeyPassphrase";
+                    print "ACTUAL RESULT : %s" %details;
+                    #Get the result of execution
+                    print "[TEST EXECUTION RESULT] : FAILURE";
             else:
                 #Set the result status of execution
                 tdkTestObj.setResultStatus("FAILURE");
@@ -231,28 +247,43 @@ if "SUCCESS" in loadmodulestatus.upper():
         actualresult1 = tdkTestObj.getResult();
         details= tdkTestObj.getResultDetails();
 
-        tdkTestObj.addParameter("ParamName","Device.MoCA.Interface.1.PrivacyEnabledSetting");
-        tdkTestObj.addParameter("ParamValue",privacy_setting_status)
-        tdkTestObj.addParameter("Type","bool");
+        print "TEST STEP : Revert Device.MoCA.Interface.1.Enable to initial value";
+        print "EXPECTED RESULT : Should successfully revert Device.MoCA.Interface.1.Enable";
 
-        #Execute the test case in DUT
-        tdkTestObj.executeTestCase(expectedresult);
-        actualresult2 = tdkTestObj.getResult();
-        details= tdkTestObj.getResultDetails();
-
-        if expectedresult in (actualresult1,actualresult2):
+        if expectedresult in actualresult1:
             #Set the result status of execution
             tdkTestObj.setResultStatus("SUCCESS");
-            print "TEST STEP : Set the previous values";
-            print "EXPECTED RESULT : Should set previous values";
             print "ACTUAL RESULT : %s" %details;
             #Get the result of execution
             print "[TEST EXECUTION RESULT] : SUCCESS";
+
+            tdkTestObj.addParameter("ParamName","Device.MoCA.Interface.1.PrivacyEnabledSetting");
+            tdkTestObj.addParameter("ParamValue",privacy_setting_status)
+            tdkTestObj.addParameter("Type","bool");
+
+            #Execute the test case in DUT
+            tdkTestObj.executeTestCase(expectedresult);
+            actualresult2 = tdkTestObj.getResult();
+            details= tdkTestObj.getResultDetails();
+
+            print "TEST STEP : Revert Device.MoCA.Interface.1.PrivacyEnabledSetting to initial value";
+            print "EXPECTED RESULT : Should successfully revert Device.MoCA.Interface.1.PrivacyEnabledSetting";
+
+            if expectedresult in actualresult2:
+                    #Set the result status of execution
+                tdkTestObj.setResultStatus("SUCCESS");
+                print "ACTUAL RESULT : %s" %details;
+                #Get the result of execution
+                print "[TEST EXECUTION RESULT] : SUCCESS";
+            else:
+                #Set the result status of execution
+                tdkTestObj.setResultStatus("FAILURE");
+                print "ACTUAL RESULT : %s" %details;
+                #Get the result of execution
+                print "[TEST EXECUTION RESULT] : FAILURE";
         else:
             #Set the result status of execution
             tdkTestObj.setResultStatus("FAILURE");
-            print "TEST STEP : Set the previous values";
-            print "EXPECTED RESULT : Should set previous values";
             print "ACTUAL RESULT : %s" %details;
             #Get the result of execution
             print "[TEST EXECUTION RESULT] : FAILURE";
@@ -264,8 +295,10 @@ if "SUCCESS" in loadmodulestatus.upper():
         print "ACTUAL RESULT 1: The status of privacy settings and moca interface are %s and %s" %(privacy_setting_status,Moca_interface_status);
         #Get the result of execution
         print "[TEST EXECUTION RESULT] : FAILURE";
+
     obj.unloadModule("moca");
 else:
-        print "Failed to load moca module";
-        obj.setLoadModuleStatus("FAILURE");
-        print "Module loading failed";
+    print "Failed to load moca module";
+    obj.setLoadModuleStatus("FAILURE");
+    print "Module loading failed";
+
