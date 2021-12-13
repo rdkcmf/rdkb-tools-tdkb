@@ -3322,7 +3322,7 @@ void WIFIHAL::WIFIHAL_PushApInterworkingElement (IN const Json::Value& req, OUT 
     int radioIndex = 0;
     int returnValue;
     char details[500] = {'\0'};
-    if(&req["radioIndex"]==nullptr || &req["interworkingEnabled"]==nullptr || &req["accessNetworkType"]==nullptr || &req["internetAvailable"]==nullptr || &req["asra"]==nullptr || &req["esra"]==nullptr || &req["uesa"]==nullptr || &req["venueOptionPresent"]==nullptr || &req["venueType"]==nullptr || &req["venueGroup"]==nullptr &req["hessOptionPresent"]==nullptr || &req["hessid"]==nullptr)
+    if(&req["radioIndex"]== NULL || &req["interworkingEnabled"]== NULL || &req["accessNetworkType"]== NULL || &req["internetAvailable"]== NULL || &req["asra"]== NULL || &req["esra"]== NULL || &req["uesa"]== NULL || &req["venueOptionPresent"]== NULL || &req["venueType"]== NULL || &req["venueGroup"]== NULL &req["hessOptionPresent"]== NULL || &req["hessid"]== NULL)
     {
         response["result"]="FAILURE";
         response["details"]="NULL parameter as input argument";

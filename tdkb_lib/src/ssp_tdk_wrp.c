@@ -36,8 +36,10 @@
 #include "ssp_tdk_wrp.h"
 #include "cosa_apis.h"
 #include "plugin_main_apis.h"
+#if (!defined _COSA_INTEL_USG_ATOM_)
 #include "diag_inter.h"
 #include "diag.h"
+#endif
 
 char subsystem_prefix[32]={0};
 extern  PDSLH_CPE_CONTROLLER_OBJECT     pDslhCpeController;
@@ -1373,6 +1375,7 @@ int ssp_setMultipleParameterValue(char **paramList, int size)
 }
 
 
+#if (!defined _COSA_INTEL_USG_ATOM_)
 int ssp_Diag_Init()
 {
     diag_err_t status = diag_init();
@@ -1485,4 +1488,4 @@ int ssp_Diag_GetState(int mode, int *state)
         return 1;
     }
 }
-
+#endif
