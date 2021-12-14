@@ -456,6 +456,8 @@ int ssp_WIFIHALGetOrSetParamULongValue(int radioIndex, unsigned long *uLongVar, 
         return_status = wifi_getRadioResetCount(radioIndex, uLongVar);
     else if(!strcmp(method, "getRadioPercentageTransmitPower"))
         return_status = wifi_getRadioPercentageTransmitPower(radioIndex, uLongVar);
+    else if(!strcmp(method, "getRadioAbsoluteTransmitPower_priv"))
+        return_status = wifi_getRadioAbsoluteTransmitPower_priv(radioIndex, uLongVar);	
     else
     {
         return_status = SSP_FAILURE;
@@ -2640,5 +2642,32 @@ int ssp_WIFIHALGetVAPTelemetry(int apIndex, wifi_VAPTelemetry_t *VAPTelemetry)
     }
 
     printf("\n ssp_WIFIHALGetVAPTelemetry ---> Exit\n");
+    return return_status;
+}
+
+/*******************************************************************************************
+ *
+ * Function Name        : ssp_WIFIHALGetRadioVapInfoMap
+ * Description          : This function invokes WiFi hal api wifi_getRadioVapInfoMap()
+ * @param [out]         : return status an integer value 0-success and 1-Failure
+ *
+ ********************************************************************************************/
+int ssp_WIFIHALGetRadioVapInfoMap(wifi_radio_index_t radioIndex ,wifi_vap_info_map_t *map)
+{
+    printf("\n ssp_WIFIHALGetRadioVapInfoMap ----> Entry\n");
+
+    int return_status = 0;
+    return_status = wifi_getRadioVapInfoMap(radioIndex,map);
+    if(return_status != SSP_SUCCESS)
+    {
+        printf("\nssp_WIFIHALGetRadioVapInfoMap::Failed. Ret:status %d\n", return_status);
+        return_status = SSP_FAILURE;
+    }
+    else
+    {
+        printf("\n sssp_WIFIHALGetRadioVapInfoMap::Success. Ret:status %d\n", return_status);
+    }
+   
+    printf("\n ssp_WIFIHALGetRadioVapInfoMap ---> Exit\n");
     return return_status;
 }

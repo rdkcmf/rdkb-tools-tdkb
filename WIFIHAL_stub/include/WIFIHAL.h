@@ -38,7 +38,19 @@
 #define     MAX_BSR 32
 #define     MAX_RU_ALLOCATIONS  74
 #define     MAX_BTM_DEVICES     64
+#define MAX_NUM_FREQ_BAND 4
+#ifdef WIFI_HAL_VERSION_3
+#define MAX_NUM_RADIOS           3
+#else
+#define MAX_NUM_RADIOS           2
+#endif
+#define MAXNUMSECONDARYCHANNELS     7
+#define MAX_CHANNELS    64
+#define MAXIFACENAMESIZE    64
 
+typedef unsigned int    wifi_radio_index_t;
+typedef unsigned int    wifi_vap_index_t;
+typedef char    wifi_vap_name_t[64];
 typedef struct _wifi_radius_setting_t
 {
     int RadiusServerRetries;
@@ -502,6 +514,732 @@ typedef struct
     unsigned int txOverflow;
 } wifi_VAPTelemetry_t;
 
+typedef struct {
+    unsigned int    major;
+    unsigned int    minor;
+} wifi_hal_version_t;
+
+typedef enum {
+    wifi_countrycode_AC, /**< ASCENSION ISLAND */
+    wifi_countrycode_AD, /**< ANDORRA */
+    wifi_countrycode_AE, /**< UNITED ARAB EMIRATES */
+    wifi_countrycode_AF, /**< AFGHANISTAN */
+    wifi_countrycode_AG, /**< ANTIGUA AND BARBUDA */
+    wifi_countrycode_AI, /**< ANGUILLA */
+    wifi_countrycode_AL, /**< ALBANIA */
+    wifi_countrycode_AM, /**< ARMENIA */
+    wifi_countrycode_AN, /**< NETHERLANDS ANTILLES */
+    wifi_countrycode_AO, /**< ANGOLA */
+    wifi_countrycode_AQ, /**< ANTARCTICA */
+    wifi_countrycode_AR, /**< ARGENTINA */
+    wifi_countrycode_AS, /**< AMERICAN SAMOA */
+    wifi_countrycode_AT, /**< AUSTRIA */
+    wifi_countrycode_AU, /**< AUSTRALIA */
+    wifi_countrycode_AW, /**< ARUBA */
+    wifi_countrycode_AZ, /**< AZERBAIJAN */
+    wifi_countrycode_BA, /**< BOSNIA AND HERZEGOVINA */
+    wifi_countrycode_BB, /**< BARBADOS */
+    wifi_countrycode_BD, /**< BANGLADESH */
+    wifi_countrycode_BE, /**< BELGIUM */
+    wifi_countrycode_BF, /**< BURKINA FASO */
+    wifi_countrycode_BG, /**< BULGARIA */
+    wifi_countrycode_BH, /**< BAHRAIN */
+    wifi_countrycode_BI, /**< BURUNDI */
+    wifi_countrycode_BJ, /**< BENIN */
+    wifi_countrycode_BM, /**< BERMUDA */
+    wifi_countrycode_BN, /**< BRUNEI DARUSSALAM */
+    wifi_countrycode_BO, /**< BOLIVIA */
+    wifi_countrycode_BR, /**< BRAZIL */
+    wifi_countrycode_BS, /**< BAHAMAS */
+    wifi_countrycode_BT, /**< BHUTAN */
+    wifi_countrycode_BV, /**< BOUVET ISLAND */
+    wifi_countrycode_BW, /**< BOTSWANA */
+    wifi_countrycode_BY, /**< BELARUS */
+    wifi_countrycode_BZ, /**< BELIZE */
+    wifi_countrycode_CA, /**< CANADA */
+    wifi_countrycode_CC, /**< COCOS (KEELING) ISLANDS */
+    wifi_countrycode_CD, /**< CONGO, THE DEMOCRATIC REPUBLIC OF THE */
+    wifi_countrycode_CF, /**< CENTRAL AFRICAN REPUBLIC */
+    wifi_countrycode_CG, /**< CONGO */
+    wifi_countrycode_CH, /**< SWITZERLAND */
+    wifi_countrycode_CI, /**< COTE D'IVOIRE */
+    wifi_countrycode_CK, /**< COOK ISLANDS */
+    wifi_countrycode_CL, /**< CHILE */
+    wifi_countrycode_CM, /**< CAMEROON */
+    wifi_countrycode_CN, /**< CHINA */
+    wifi_countrycode_CO, /**< COLOMBIA */
+    wifi_countrycode_CP, /**< CLIPPERTON ISLAND */
+    wifi_countrycode_CR, /**< COSTA RICA */
+    wifi_countrycode_CU, /**< CUBA */
+    wifi_countrycode_CV, /**< CAPE VERDE */
+    wifi_countrycode_CY, /**< CYPRUS */
+    wifi_countrycode_CX, /**< CHRISTMAS ISLAND */
+    wifi_countrycode_CZ, /**< CZECH REPUBLIC */
+    wifi_countrycode_DE, /**< GERMANY */
+    wifi_countrycode_DJ, /**< DJIBOUTI */
+    wifi_countrycode_DK, /**< DENMARK */
+    wifi_countrycode_DM, /**< DOMINICA */
+    wifi_countrycode_DO, /**< DOMINICAN REPUBLIC */
+    wifi_countrycode_DZ, /**< ALGERIA */
+    wifi_countrycode_EC, /**< ECUADOR */
+    wifi_countrycode_EE, /**< ESTONIA */
+    wifi_countrycode_EG, /**< EGYPT */
+    wifi_countrycode_EH, /**< WESTERN SAHARA */
+    wifi_countrycode_ER, /**< ERITREA */
+    wifi_countrycode_ES, /**< SPAIN */
+    wifi_countrycode_ET, /**< ETHIOPIA */
+    wifi_countrycode_FI, /**< FINLAND */
+    wifi_countrycode_FJ, /**< FIJI */
+    wifi_countrycode_FK, /**< FALKLAND ISLANDS (MALVINAS) */
+    wifi_countrycode_FM, /**< MICRONESIA, FEDERATED STATES OF */
+    wifi_countrycode_FO, /**< FAROE ISLANDS */
+    wifi_countrycode_FR, /**< FRANCE */
+    wifi_countrycode_GA, /**< GABON */
+    wifi_countrycode_GB, /**< UNITED KINGDOM */
+    wifi_countrycode_GD, /**< GRENADA */
+    wifi_countrycode_GE, /**< GEORGIA */
+    wifi_countrycode_GF, /**< FRENCH GUIANA */
+    wifi_countrycode_GG, /**< GUERNSEY */
+    wifi_countrycode_GH, /**< GHANA */
+    wifi_countrycode_GI, /**< GIBRALTAR */
+    wifi_countrycode_GL, /**< GREENLAND */
+    wifi_countrycode_GM, /**< GAMBIA */
+    wifi_countrycode_GN, /**< GUINEA */
+    wifi_countrycode_GP, /**< GUADELOUPE */
+    wifi_countrycode_GQ, /**< EQUATORIAL GUINEA */
+    wifi_countrycode_GR, /**< GREECE */
+    wifi_countrycode_GS, /**< SOUTH GEORGIA AND THE SOUTH SANDWICH ISLANDS */
+    wifi_countrycode_GT, /**< GUATEMALA */
+    wifi_countrycode_GU, /**< GUAM */
+    wifi_countrycode_GW, /**< GUINEA-BISSAU */
+    wifi_countrycode_GY, /**< GUYANA */
+    wifi_countrycode_HR, /**< CROATIA */
+    wifi_countrycode_HT, /**< HAITI */
+    wifi_countrycode_HM, /**< HEARD ISLAND AND MCDONALD ISLANDS */
+    wifi_countrycode_HN, /**< HONDURAS */
+    wifi_countrycode_HK, /**< HONG KONG */
+    wifi_countrycode_HU, /**< HUNGARY */
+    wifi_countrycode_IS, /**< ICELAND */
+    wifi_countrycode_IN, /**< INDIA */
+    wifi_countrycode_ID, /**< INDONESIA */
+    wifi_countrycode_IR, /**< IRAN, ISLAMIC REPUBLIC OF */
+    wifi_countrycode_IQ, /**< IRAQ */
+    wifi_countrycode_IE, /**< IRELAND */
+    wifi_countrycode_IL, /**< ISRAEL */
+    wifi_countrycode_IM, /**< MAN, ISLE OF */
+    wifi_countrycode_IT, /**< ITALY */
+    wifi_countrycode_IO, /**< BRITISH INDIAN OCEAN TERRITORY */
+    wifi_countrycode_JM, /**< JAMAICA */
+    wifi_countrycode_JP, /**< JAPAN */
+    wifi_countrycode_JE, /**< JERSEY */
+    wifi_countrycode_JO, /**< JORDAN */
+    wifi_countrycode_KE, /**< KENYA */
+    wifi_countrycode_KG, /**< KYRGYZSTAN */
+    wifi_countrycode_KH, /**< CAMBODIA */
+    wifi_countrycode_KI, /**< KIRIBATI */
+    wifi_countrycode_KM, /**< COMOROS */
+    wifi_countrycode_KN, /**< SAINT KITTS AND NEVIS */
+    wifi_countrycode_KP, /**< KOREA, DEMOCRATIC PEOPLE'S REPUBLIC OF */
+    wifi_countrycode_KR, /**< KOREA, REPUBLIC OF */
+    wifi_countrycode_KW, /**< KUWAIT */
+    wifi_countrycode_KY, /**< CAYMAN ISLANDS */
+    wifi_countrycode_KZ, /**< KAZAKHSTAN */
+    wifi_countrycode_LA, /**< LAO PEOPLE'S DEMOCRATIC REPUBLIC */
+    wifi_countrycode_LB, /**< LEBANON */
+    wifi_countrycode_LC, /**< SAINT LUCIA */
+    wifi_countrycode_LI, /**< LIECHTENSTEIN */
+    wifi_countrycode_LK, /**< SRI LANKA */
+    wifi_countrycode_LR, /**< LIBERIA */
+    wifi_countrycode_LS, /**< LESOTHO */
+    wifi_countrycode_LT, /**< LITHUANIA */
+    wifi_countrycode_LU, /**< LUXEMBOURG */
+    wifi_countrycode_LV, /**< LATVIA */
+    wifi_countrycode_LY, /**< LIBYAN ARAB JAMAHIRIYA */
+    wifi_countrycode_MA, /**< MOROCCO */
+    wifi_countrycode_MC, /**< MONACO */
+    wifi_countrycode_MD, /**< MOLDOVA, REPUBLIC OF */
+    wifi_countrycode_ME, /**< MONTENEGRO */
+    wifi_countrycode_MG, /**< MADAGASCAR */
+    wifi_countrycode_MH, /**< MARSHALL ISLANDS */
+    wifi_countrycode_MK, /**< MACEDONIA, THE FORMER YUGOSLAV REPUBLIC OF */
+    wifi_countrycode_ML, /**< MALI */
+    wifi_countrycode_MM, /**< MYANMAR */
+    wifi_countrycode_MN, /**< MONGOLIA */
+    wifi_countrycode_MO, /**< MACAO */
+    wifi_countrycode_MQ, /**< MARTINIQUE */
+    wifi_countrycode_MR, /**< MAURITANIA */
+    wifi_countrycode_MS, /**< MONTSERRAT */
+    wifi_countrycode_MT, /**< MALTA */
+    wifi_countrycode_MU, /**< MAURITIUS */
+    wifi_countrycode_MV, /**< MALDIVES */
+    wifi_countrycode_MW, /**< MALAWI */
+    wifi_countrycode_MX, /**< MEXICO */
+    wifi_countrycode_MY, /**< MALAYSIA */
+    wifi_countrycode_MZ, /**< MOZAMBIQUE */
+    wifi_countrycode_NA, /**< NAMIBIA */
+    wifi_countrycode_NC, /**< NEW CALEDONIA */
+    wifi_countrycode_NE, /**< NIGER */
+    wifi_countrycode_NF, /**< NORFOLK ISLAND */
+    wifi_countrycode_NG, /**< NIGERIA */
+    wifi_countrycode_NI, /**< NICARAGUA */
+    wifi_countrycode_NL, /**< NETHERLANDS */
+    wifi_countrycode_NO, /**< NORWAY */
+    wifi_countrycode_NP, /**< NEPAL */
+    wifi_countrycode_NR, /**< NAURU */
+    wifi_countrycode_NU, /**< NIUE */
+    wifi_countrycode_NZ, /**< NEW ZEALAND */
+    wifi_countrycode_MP, /**< NORTHERN MARIANA ISLANDS */
+    wifi_countrycode_OM, /**< OMAN */
+    wifi_countrycode_PA, /**< PANAMA */
+    wifi_countrycode_PE, /**< PERU */
+    wifi_countrycode_PF, /**< FRENCH POLYNESIA */
+    wifi_countrycode_PG, /**< PAPUA NEW GUINEA */
+    wifi_countrycode_PH, /**< PHILIPPINES */
+    wifi_countrycode_PK, /**< PAKISTAN */
+    wifi_countrycode_PL, /**< POLAND */
+    wifi_countrycode_PM, /**< SAINT PIERRE AND MIQUELON */
+    wifi_countrycode_PN, /**< PITCAIRN */
+    wifi_countrycode_PR, /**< PUERTO RICO */
+    wifi_countrycode_PS, /**< PALESTINIAN TERRITORY, OCCUPIED */
+    wifi_countrycode_PT, /**< PORTUGAL */
+    wifi_countrycode_PW, /**< PALAU */
+    wifi_countrycode_PY, /**< PARAGUAY */
+    wifi_countrycode_QA, /**< QATAR */
+    wifi_countrycode_RE, /**< REUNION */
+    wifi_countrycode_RO, /**< ROMANIA */
+    wifi_countrycode_RS, /**< SERBIA */
+    wifi_countrycode_RU, /**< RUSSIAN FEDERATION */
+    wifi_countrycode_RW, /**< RWANDA */
+    wifi_countrycode_SA, /**< SAUDI ARABIA */
+    wifi_countrycode_SB, /**< SOLOMON ISLANDS */
+    wifi_countrycode_SD, /**< SUDAN */
+    wifi_countrycode_SE, /**< SWEDEN */
+    wifi_countrycode_SC, /**< SEYCHELLES */
+    wifi_countrycode_SG, /**< SINGAPORE */
+    wifi_countrycode_SH, /**< SAINT HELENA */
+    wifi_countrycode_SI, /**< SLOVENIA */
+    wifi_countrycode_SJ, /**< SVALBARD AND JAN MAYEN */
+    wifi_countrycode_SK, /**< SLOVAKIA */
+    wifi_countrycode_SL, /**< SIERRA LEONE */
+    wifi_countrycode_SM, /**< SAN MARINO */
+    wifi_countrycode_SN, /**< SENEGAL */
+    wifi_countrycode_SO, /**< SOMALIA */
+    wifi_countrycode_SR, /**< SURINAME */
+    wifi_countrycode_ST, /**< SAO TOME AND PRINCIPE */
+    wifi_countrycode_SV, /**< EL SALVADOR */
+    wifi_countrycode_SY, /**< SYRIAN ARAB REPUBLIC */
+    wifi_countrycode_SZ, /**< SWAZILAND */
+    wifi_countrycode_TA, /**< TRISTAN DA CUNHA */
+    wifi_countrycode_TC, /**< TURKS AND CAICOS ISLANDS */
+    wifi_countrycode_TD, /**< CHAD */
+    wifi_countrycode_TF, /**< FRENCH SOUTHERN TERRITORIES */
+    wifi_countrycode_TG, /**< TOGO */
+    wifi_countrycode_TH, /**< THAILAND */
+    wifi_countrycode_TJ, /**< TAJIKISTAN */
+    wifi_countrycode_TK, /**< TOKELAU */
+    wifi_countrycode_TL, /**< TIMOR-LESTE (EAST TIMOR) */
+    wifi_countrycode_TM, /**< TURKMENISTAN */
+    wifi_countrycode_TN, /**< TUNISIA */
+    wifi_countrycode_TO, /**< TONGA */
+    wifi_countrycode_TR, /**< TURKEY */
+    wifi_countrycode_TT, /**< TRINIDAD AND TOBAGO */
+    wifi_countrycode_TV, /**< TUVALU */
+    wifi_countrycode_TW, /**< TAIWAN, PROVINCE OF CHINA */
+    wifi_countrycode_TZ, /**< TANZANIA, UNITED REPUBLIC OF */
+    wifi_countrycode_UA, /**< UKRAINE */
+    wifi_countrycode_UG, /**< UGANDA */
+    wifi_countrycode_UM, /**< UNITED STATES MINOR OUTLYING ISLANDS */
+    wifi_countrycode_US, /**< UNITED STATES */
+    wifi_countrycode_UY, /**< URUGUAY */
+    wifi_countrycode_UZ, /**< UZBEKISTAN */
+    wifi_countrycode_VA, /**< HOLY SEE (VATICAN CITY STATE) */
+    wifi_countrycode_VC, /**< SAINT VINCENT AND THE GRENADINES */
+    wifi_countrycode_VE, /**< VENEZUELA */
+    wifi_countrycode_VG, /**< VIRGIN ISLANDS, BRITISH */
+    wifi_countrycode_VI, /**< VIRGIN ISLANDS, U.S. */
+    wifi_countrycode_VN, /**< VIET NAM */
+    wifi_countrycode_VU, /**< VANUATU */
+    wifi_countrycode_WF, /**< WALLIS AND FUTUNA */
+    wifi_countrycode_WS, /**< SAMOA */
+    wifi_countrycode_YE, /**< YEMEN */
+    wifi_countrycode_YT, /**< MAYOTTE */
+    wifi_countrycode_YU, /**< YUGOSLAVIA */
+    wifi_countrycode_ZA, /**< SOUTH AFRICA */
+    wifi_countrycode_ZM, /**< ZAMBIA */
+    wifi_countrycode_ZW, /**< ZIMBABWE */
+    wifi_countrycode_max /**< Max number of country code */
+} wifi_countrycode_type_t;
+
+typedef enum{
+    WIFI_FREQUENCY_2_4_BAND = 0x1,
+    WIFI_FREQUENCY_5_BAND   = 0x2,
+    WIFI_FREQUENCY_5L_BAND  = 0x4,
+    WIFI_FREQUENCY_5H_BAND  = 0x8,
+    WIFI_FREQUENCY_6_BAND   = 0x10,
+    WIFI_FREQUENCY_60_BAND  = 0x20
+} wifi_freq_bands_t;
+
+typedef struct {
+    int num_channels;                  /**< The number of available channels in channels_list. */
+    int annels_list[MAX_CHANNELS];   /**< List of channels. */
+} wifi_channels_list_t;
+
+typedef enum{
+    WIFI_CHANNELBANDWIDTH_20MHZ = 0x1,
+    WIFI_CHANNELBANDWIDTH_40MHZ = 0x2,
+    WIFI_CHANNELBANDWIDTH_80MHZ = 0x4,
+    WIFI_CHANNELBANDWIDTH_160MHZ = 0x8,
+    WIFI_CHANNELBANDWIDTH_80_80MHZ = 0x10
+} wifi_channelBandwidth_t;
+
+typedef enum {
+    WIFI_80211_VARIANT_A = 0x01,
+    WIFI_80211_VARIANT_B = 0x02,
+    WIFI_80211_VARIANT_G = 0x04,
+    WIFI_80211_VARIANT_N = 0x08,
+    WIFI_80211_VARIANT_H = 0x10,
+    WIFI_80211_VARIANT_AC = 0x20,
+    WIFI_80211_VARIANT_AD = 0x40,
+    WIFI_80211_VARIANT_AX = 0x80
+} wifi_ieee80211Variant_t;
+
+#define MAXNUMBEROFTRANSMIPOWERSUPPORTED 21
+typedef struct {
+    unsigned int transmitPowerSupported[MAXNUMBEROFTRANSMIPOWERSUPPORTED]; /**< List of transmit power supported. */
+    unsigned int numberOfElements;                                         /**< The number of valid elements in transmitPowerSupported. */
+} wifi_radio_trasmitPowerSupported_list_t;
+
+
+typedef enum {
+    wifi_guard_interval_400 = 0x01,
+    wifi_guard_interval_800 = 0x02,
+    wifi_guard_interval_1600 = 0x04,
+    wifi_guard_interval_3200 = 0x08,
+    wifi_guard_interval_auto = 0x10,
+} wifi_guard_interval_t ;
+
+typedef struct {
+    bool enable;                                        /**< The radio enable. */
+    wifi_freq_bands_t   band;                           /**< the radio frequency band. */
+    bool autoChannelEnabled;                            /**< set bAutoChannelEnabled to TRUE to enable Auto Channel. */
+    unsigned int channel;                                       /**< The radio primary channel. */
+    unsigned int numSecondaryChannels;                          /**< The number odf secondary channels in the list */
+    unsigned int channelSecondary[MAXNUMSECONDARYCHANNELS];     /**< The List of secondary radio channel. */
+    wifi_channelBandwidth_t channelWidth;               /**< The channel bandwidth. */
+    wifi_ieee80211Variant_t variant;                    /**< The radio operating mode */
+    unsigned int csa_beacon_count;                              /**< Specifies how long CSA need to be announced. */
+    wifi_countrycode_type_t countryCode;                /**< The country code. */
+    bool DCSEnabled;                                    /**< set DCSEnabled to TRUE to enable DCS. */
+    unsigned int dtimPeriod;                                    /**< The DTIM period. */
+    unsigned int beaconInterval;                                /**< The beacon interval. */
+    unsigned int operatingClass;                                /**< The Operating class. */
+    unsigned int basicDataTransmitRates;                        /**< The basic data transmit rates in Mbps. It uses bitmask to return multiples bitrates and wifi_bitrate_t has the definition of valid values*/
+    unsigned int operationalDataTransmitRates;                  /**< The operational data transmit rates in Mbps. It uses bitmask to return multiples bitrates and wifi_bitrate_t has the definition of valid values*/
+    unsigned int fragmentationThreshold;                        /**< The fragmentation threshold in bytes. */
+    wifi_guard_interval_t guardInterval;               /**< The guard interval. */
+    unsigned int transmitPower;                                /**<  The transmit power in percentage, eg "75", "100". */
+    unsigned int rtsThreshold;                                 /**< The packet size threshold in bytes to apply RTS/CTS backoff rules. */
+    bool factoryResetSsid;
+    unsigned int radioStatsMeasuringRate;
+    unsigned int radioStatsMeasuringInterval;
+    bool ctsProtection;
+    bool obssCoex;
+    bool stbcEnable;
+    bool greenFieldEnable;
+    unsigned int userControl;
+    unsigned int adminControl;
+    unsigned int chanUtilThreshold;
+    bool chanUtilSelfHealEnable;
+} wifi_radio_operationParam_t;
+
+typedef enum {
+    wifi_security_mode_none = 0x00000001,
+    wifi_security_mode_wep_64 = 0x00000002,
+    wifi_security_mode_wep_128 = 0x00000004,
+    wifi_security_mode_wpa_personal = 0x00000008,
+    wifi_security_mode_wpa2_personal = 0x00000010,
+    wifi_security_mode_wpa_wpa2_personal = 0x00000020,
+    wifi_security_mode_wpa_enterprise = 0x00000040,
+    wifi_security_mode_wpa2_enterprise = 0x00000080,
+    wifi_security_mode_wpa_wpa2_enterprise = 0x00000100,
+    wifi_security_mode_wpa3_personal = 0x00000200,
+    wifi_security_mode_wpa3_transition = 0x00000400,
+    wifi_security_mode_wpa3_enterprise = 0x00000800
+} wifi_security_modes_t;
+
+typedef enum {
+    wifi_mfp_cfg_disabled,
+    wifi_mfp_cfg_optional,
+    wifi_mfp_cfg_required,
+} wifi_mfp_cfg_t;
+
+typedef enum {
+    wifi_encryption_none,
+    wifi_encryption_tkip = 1,
+    wifi_encryption_aes,
+    wifi_encryption_aes_tkip,
+} wifi_encryption_method_t;
+
+typedef enum {
+    wifi_ip_family_ipv4,
+    wifi_ip_family_ipv6
+} wifi_ip_family_t;
+
+typedef struct {
+    wifi_ip_family_t family;
+    union { /* network byte ordered */
+        unsigned int   IPv4addr;           /* 32-bit IPv4 address */
+        unsigned char  IPv6addr[16];       /* 128-bit IPv6 address */
+    } u;
+}ip_addr_t;
+
+typedef struct {
+#ifdef WIFI_HAL_VERSION_3_PHASE2
+    ip_addr_t       ip;                 /**< The primary RADIUS server IP address. */
+#else
+    unsigned char   ip[45];
+#endif
+    unsigned short  port;               /**< The primary RADIUS server port. */
+    char            key[64];            /**< The primary secret. */
+#ifdef WIFI_HAL_VERSION_3_PHASE2
+    ip_addr_t       s_ip;                 /**< The secondary RADIUS server IP address. */
+#else
+    unsigned char   s_ip[45];
+#endif
+    unsigned short  s_port;             /**< The secondary RADIUS server port. */
+    char            s_key[64];          /**< The secondary secret. */
+    ip_addr_t       dasip;
+    unsigned short          dasport;
+    char            daskey[64];
+    unsigned int            max_auth_attempts;
+    unsigned int            blacklist_table_timeout;
+    unsigned int            identity_req_retry_interval;
+    unsigned int            server_retries;
+} wifi_radius_settings_t;
+
+typedef enum {
+    wifi_security_key_type_psk,
+    wifi_security_key_type_pass,
+    wifi_security_key_type_sae,
+    wifi_security_key_type_psk_sae
+} wifi_security_key_type_t;
+
+typedef struct {
+    wifi_security_key_type_t type;
+    char    key[256];
+} wifi_security_key_t;
+
+typedef struct {
+    wifi_security_modes_t   mode;
+    wifi_encryption_method_t    encr;
+#if defined(WIFI_HAL_VERSION_3)
+    wifi_mfp_cfg_t  mfp;
+#else
+    char    mfpConfig[32];
+#endif
+    bool  wpa3_transition_disable;
+    unsigned int  rekey_interval;
+    bool  strict_rekey;  // must be set for enterprise VAPs
+    unsigned int  eapol_key_timeout;
+    unsigned int  eapol_key_retries;
+    unsigned int  eap_identity_req_timeout;
+    unsigned int  eap_identity_req_retries;
+    unsigned int  eap_req_timeout;
+    unsigned int  eap_req_retries;
+    bool  disable_pmksa_caching;
+    union {
+        wifi_radius_settings_t  radius;
+        wifi_security_key_t key;
+    } u;
+} __attribute__((packed)) wifi_vap_security_t;
+
+typedef struct {
+     unsigned short capabilityList[64];
+}__attribute__((packed)) wifi_capabilityListANQP_t;
+
+typedef struct {
+    unsigned char    length;
+    unsigned char    language[3];
+    unsigned char    name[256];
+}__attribute__((packed)) wifi_venueName_t;
+
+typedef struct {
+    unsigned char            venueGroup;
+    unsigned char            venueType;
+    wifi_venueName_t venueNameTuples[16];
+}__attribute__((packed)) wifi_venueNameElement_t;
+
+typedef struct {
+    unsigned char length;
+    unsigned char oui[15];
+}__attribute__((packed)) wifi_ouiDuple_t;
+
+typedef struct {
+    unsigned char   field_format;
+}__attribute__((packed)) wifi_ipAddressAvailabality_t;
+
+typedef struct {
+    unsigned char  id;
+    unsigned char   length;
+    unsigned char   val[16];
+}__attribute__((packed)) wifi_authMethod_t;
+
+typedef struct {
+    unsigned char   length;
+    unsigned char   method;
+    unsigned char   auth_param_count;
+    wifi_authMethod_t   auth_method[16];
+}__attribute__((packed)) wifi_eapMethod_t;
+
+typedef struct {
+    unsigned short            data_field_length;
+    unsigned char             encoding;
+    unsigned char             realm_length;
+    unsigned char             realm[256];
+    unsigned char             eap_method_count;
+    wifi_eapMethod_t  eap_method[16];
+} __attribute__((packed))wifi_naiRealm_t;
+
+typedef struct {
+    wifi_ouiDuple_t ouiDuple[32];
+}__attribute__((packed)) wifi_roamingConsortium_t;
+
+typedef struct {
+    unsigned short  nai_realm_count;
+    wifi_naiRealm_t nai_realm_tuples[20];
+}__attribute__((packed)) wifi_naiRealmElement_t;
+
+typedef struct {
+    unsigned char   PLMN[3];
+}__attribute__((packed)) wifi_plmn_t;
+
+typedef struct {
+    unsigned char   iei;//copy zero for now.
+    unsigned char   plmn_length;
+    unsigned char number_of_plmns;
+    wifi_plmn_t plmn[16];
+}__attribute__((packed))wifi_3gpp_plmn_list_information_element_t;
+
+typedef struct {
+    unsigned char   gud;
+    unsigned char   uhdLength;//Length of remaining fields
+    wifi_3gpp_plmn_list_information_element_t plmn_information;
+}__attribute__((packed)) wifi_3gppCellularNetwork_t;
+
+typedef struct {
+    unsigned char length;
+    unsigned char domainName[255]; //max domain name allowed based on the spec.
+}__attribute__((packed)) wifi_domainNameTuple_t;
+  
+typedef struct {
+    wifi_domainNameTuple_t  domainNameTuple[4];
+}__attribute__((packed)) wifi_domainName_t;
+
+typedef struct {
+    int capabilityInfoLength;
+    wifi_capabilityListANQP_t capabilityInfo;
+    int venueInfoLength;
+    wifi_venueNameElement_t venueInfo;
+    int roamInfoLength;
+    wifi_roamingConsortium_t roamInfo;
+    wifi_ipAddressAvailabality_t ipAddressInfo;
+    int realmInfoLength;
+    wifi_naiRealmElement_t realmInfo;
+    int gppInfoLength;
+    wifi_3gppCellularNetwork_t gppInfo;
+    int domainInfoLength;
+    wifi_domainName_t domainNameInfo;
+    unsigned char  passpointStats[1024];
+    unsigned int   domainRespCount;
+    unsigned int   realmRespCount;
+    unsigned int   gppRespCount;
+    unsigned int   domainFailedCount;
+    unsigned int   realmFailedCount;
+    unsigned int   gppFailedCount;
+    unsigned char  anqpParameters[4096];
+} __attribute__((packed)) wifi_anqp_settings_t;
+
+typedef struct
+{
+    unsigned char capabilityList[64];
+} __attribute__((packed)) wifi_HS2_CapabilityList_t;
+
+typedef struct _wifi_HS2_OperatorNameDuple_t // figure 9-595
+{
+    unsigned char length; //length is 3(language code)+number of octects in operator name field  eg. operatorName= aaaa length is 4+3 = 7
+    unsigned char languageCode[3];
+    unsigned char operatorName[252]; //based on spec the maximum length of operator name is 252
+} __attribute__((packed)) wifi_HS2_OperatorNameDuple_t;
+
+typedef struct
+{
+    wifi_HS2_OperatorNameDuple_t operatorNameDuple[16]; //putting 16 duples supported for now story RDKB-1317 does not tell how many duples we are supporting nor the spec (spec mentions n duples)
+} __attribute__((packed)) wifi_HS2_OperatorFriendlyName_t;
+
+typedef struct // figure 9-595
+{
+    unsigned char ipProtocol;
+    unsigned short portNumber;
+    unsigned char  status;
+} __attribute__((packed)) wifi_HS2_Proto_Port_Tuple_t;
+
+typedef struct // figure 9-595
+{
+    wifi_HS2_Proto_Port_Tuple_t protoPortTuple[16];//putting 16 duples supported for now. story RDKB-1317 does not tell how many duples we are supporting nor the spec (spec mentions n duples)
+} __attribute__((packed)) wifi_HS2_ConnectionCapability_t;
+
+typedef struct// figure 9-595
+{
+    unsigned char encoding;
+    unsigned char length;
+    unsigned char name[255];//per spec maximum length is 255
+} __attribute__((packed)) wifi_HS2_NAI_Home_Realm_Data_t;
+
+typedef struct// figure 9-595
+{
+    unsigned char realmCount;
+    wifi_HS2_NAI_Home_Realm_Data_t homeRealmData[20];//as realm count is unsigned char we can put 255 realms here spec says n story does not define how many we support
+} __attribute__((packed)) wifi_HS2_NAI_Home_Realm_Query_t;
+
+typedef struct // figure 9-595
+{
+    unsigned char  wanInfo;
+    unsigned int  downLinkSpeed;
+    unsigned char upLinkSpeed;
+    unsigned char downLinkLoad;
+    unsigned char  upLinkLoad;
+    unsigned short lmd;
+} __attribute__((packed)) wifi_HS2_WANMetrics_t;
+
+typedef struct {
+    bool        enable;
+    bool        gafDisable;
+    bool        p2pDisable;
+    bool        l2tif;
+    bool        bssLoad;
+    bool        countryIE;
+    bool        proxyArp;
+
+    int capabilityInfoLength;                           //should not be implemented in the hal
+    wifi_HS2_CapabilityList_t capabilityInfo;           //should not be implemented in the hal
+    int opFriendlyNameInfoLength;                       //should not be implemented in the hal
+    wifi_HS2_OperatorFriendlyName_t opFriendlyNameInfo; //should not be implemented in the hal
+    int connCapabilityLength;                           //should not be implemented in the hal
+    wifi_HS2_ConnectionCapability_t connCapabilityInfo; //should not be implemented in the hal
+    int realmInfoLength;                                //should not be implemented in the hal
+    wifi_HS2_NAI_Home_Realm_Query_t realmInfo;          //should not be implemented in the hal
+    wifi_HS2_WANMetrics_t wanMetricsInfo;               //should not be implemented in the hal
+    unsigned char hs2Parameters[4096];                          //should not be implemented in the hal
+} __attribute__((packed)) wifi_passpoint_settings_t;
+
+typedef struct {
+    wifi_InterworkingElement_t   interworking;
+    wifi_roamingConsortiumElement_t roamingConsortium;
+    wifi_anqp_settings_t        anqp;                   //should not be implemented in the hal
+    wifi_passpoint_settings_t   passpoint;
+} __attribute__((packed)) wifi_interworking_t;
+
+#define MAX_NUM_VAP_PER_RADIO    8
+#define WIFI_AP_MAX_SSID_LEN    33
+
+typedef enum {
+    wifi_mac_filter_mode_black_list,
+    wifi_mac_filter_mode_white_list,
+} wifi_mac_filter_mode_t;
+
+typedef enum{
+    WIFI_ONBOARDINGMETHODS_USBFLASHDRIVE = 0x0001,
+    WIFI_ONBOARDINGMETHODS_ETHERNET = 0x0002,
+    WIFI_ONBOARDINGMETHODS_LABEL = 0x0004,
+    WIFI_ONBOARDINGMETHODS_DISPLAY = 0x0008,
+    WIFI_ONBOARDINGMETHODS_EXTERNALNFCTOKEN = 0x0010,
+    WIFI_ONBOARDINGMETHODS_INTEGRATEDNFCTOKEN = 0x0020,
+    WIFI_ONBOARDINGMETHODS_NFCINTERFACE = 0x0040,
+    WIFI_ONBOARDINGMETHODS_PUSHBUTTON = 0x0080,
+    WIFI_ONBOARDINGMETHODS_PIN = 0x0100,
+    WIFI_ONBOARDINGMETHODS_PHYSICALPUSHBUTTON = 0x0200,
+    WIFI_ONBOARDINGMETHODS_PHYSICALDISPLAY = 0x0400,
+    WIFI_ONBOARDINGMETHODS_VIRTUALPUSHBUTTON = 0x0800,
+    WIFI_ONBOARDINGMETHODS_VIRTUALDISPLAY = 0x1000,
+    WIFI_ONBOARDINGMETHODS_EASYCONNECT = 0x2000,
+} wifi_onboarding_methods_t;
+
+#define WIFI_AP_MAX_WPSPIN_LEN  9
+typedef struct 
+{
+    bool enable;
+    wifi_onboarding_methods_t methods;
+    char pin[WIFI_AP_MAX_WPSPIN_LEN];
+}wifi_wps_t;
+
+typedef enum {
+    WIFI_BITRATE_DEFAULT = 0x0001,      /* WIFI_BITRATE_DEFAULT is used in the set api to default the bitrate configuration */
+    WIFI_BITRATE_1MBPS   = 0x0002,
+    WIFI_BITRATE_2MBPS   = 0x0004,
+    WIFI_BITRATE_5_5MBPS = 0x0008,
+    WIFI_BITRATE_6MBPS   = 0x0010,
+    WIFI_BITRATE_9MBPS   = 0x0020,
+    WIFI_BITRATE_11MBPS  = 0x0040,
+    WIFI_BITRATE_12MBPS  = 0x0080,
+    WIFI_BITRATE_18MBPS  = 0x0100,
+    WIFI_BITRATE_24MBPS  = 0x0200,
+    WIFI_BITRATE_36MBPS  = 0x0400,
+    WIFI_BITRATE_48MBPS  = 0x0800,
+    WIFI_BITRATE_54MBPS  = 0x1000
+} wifi_bitrate_t;
+
+typedef mac_address_t   bssid_t;
+
+typedef struct {
+    char    ssid[WIFI_AP_MAX_SSID_LEN];
+    bool    enabled;
+    bool    showSsid;
+    bool    isolation;
+    int     mgmtPowerControl;
+    unsigned int    bssMaxSta;
+    bool    bssTransitionActivated;
+    bool    nbrReportActivated;
+    bool    rapidReconnectEnable;       //should not be implemented in the hal
+    unsigned int    rapidReconnThreshold;       //should not be implemented in the hal
+    bool    vapStatsEnable;             //should not be implemented in the hal
+    wifi_vap_security_t security;
+    wifi_interworking_t interworking;
+    bool    mac_filter_enable;
+    wifi_mac_filter_mode_t mac_filter_mode;
+    bool    sec_changed;                //should not be implemented in the hal
+    wifi_wps_t   wps;
+    bool    wmm_enabled;
+    bool    UAPSDEnabled;
+    wifi_bitrate_t beaconRate;
+    mac_address_t bssid;                    /**< The BSSID. This variable should only be used in the get API. It can't used to change the interface MAC */
+    unsigned int   wmmNoAck;
+    unsigned int   wepKeyLength;
+    bool   bssHotspot;
+    unsigned int   wpsPushButton;
+    char   beaconRateCtl[32];
+} wifi_front_haul_bss_t;
+
+typedef struct {
+
+} __attribute__((packed)) wifi_back_haul_sta_t;
+
+#define WIFI_BRIDGE_NAME_LEN  32
+
+typedef struct {
+    wifi_vap_index_t    vap_index;
+    wifi_vap_name_t     vap_name;
+    wifi_radio_index_t  radio_index;
+    char  bridge_name[WIFI_BRIDGE_NAME_LEN];
+    union {
+        wifi_front_haul_bss_t   bss_info;
+        wifi_back_haul_sta_t    sta_info;
+    } u;
+} __attribute__((packed)) wifi_vap_info_t;
+
+typedef struct {
+    unsigned int        num_vaps;
+    wifi_vap_info_t vap_array[MAX_NUM_VAP_PER_RADIO];
+} __attribute__((packed)) wifi_vap_info_map_t;
 
 /* To provide external linkage to C Functions defined in TDKB Component folder */
 extern "C"
@@ -571,6 +1309,7 @@ extern "C"
     int ssp_WIFIHALEnableCSIEngine(int apIndex, mac_address_t sta, unsigned char * enable);
     int ssp_WIFIHALSendDataFrame(int apIndex, mac_address_t sta, unsigned char * data, unsigned int length, unsigned char * insert_llc, unsigned int protocol, wifi_data_priority_t prio);
     int ssp_WIFIHALGetVAPTelemetry(int apIndex, wifi_VAPTelemetry_t *VAPTelemetry);
+    int ssp_WIFIHALGetRadioVapInfoMap(wifi_radio_index_t radioIndex ,wifi_vap_info_map_t *map);
 };
 
 class RDKTestAgent;
@@ -646,6 +1385,7 @@ class WIFIHAL : public RDKTestStubInterface, public AbstractServer<WIFIHAL>
                   this->bindAndAddMethod(Procedure("WIFIHAL_EnableCSIEngine",PARAMS_BY_NAME, JSON_STRING, "apIndex", JSON_INTEGER, "MacAddress", JSON_STRING, "enable", JSON_INTEGER, NULL), &WIFIHAL::WIFIHAL_EnableCSIEngine);
                   this->bindAndAddMethod(Procedure("WIFIHAL_SendDataFrame",PARAMS_BY_NAME, JSON_STRING, "apIndex", JSON_INTEGER, "MacAddress", JSON_STRING, "length", JSON_INTEGER, "insert_llc", JSON_INTEGER, "protocol", JSON_INTEGER, "priority", JSON_INTEGER, NULL), &WIFIHAL::WIFIHAL_SendDataFrame);
                   this->bindAndAddMethod(Procedure("WIFIHAL_GetVAPTelemetry", PARAMS_BY_NAME, JSON_STRING,"apIndex", JSON_INTEGER, NULL), &WIFIHAL::WIFIHAL_GetVAPTelemetry);
+		  this->bindAndAddMethod(Procedure("WIFIHAL_GetRadioVapInfoMap", PARAMS_BY_NAME, JSON_STRING,"apIndex", JSON_INTEGER, NULL), &WIFIHAL::WIFIHAL_GetRadioVapInfoMap);
 		}
         /*inherited functions*/
         bool initialize(IN const char* szVersion);
@@ -718,6 +1458,7 @@ class WIFIHAL : public RDKTestStubInterface, public AbstractServer<WIFIHAL>
         void WIFIHAL_EnableCSIEngine(IN const Json::Value& req, OUT Json::Value& response);
         void WIFIHAL_SendDataFrame(IN const Json::Value& req, OUT Json::Value& response);
         void WIFIHAL_GetVAPTelemetry(IN const Json::Value& req, OUT Json::Value& response);
+	void WIFIHAL_GetRadioVapInfoMap(IN const Json::Value& req, OUT Json::Value& response); 
 };
 #endif //__WIFIHAL_STUB_H__
 

@@ -3542,3 +3542,46 @@ void WIFIHAL::WIFIHAL_GetVAPTelemetry(IN const Json::Value& req, OUT Json::Value
     DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_GetVAPTelemetry ---->Exiting\n");
     return;
 }
+
+/*******************************************************************************************
+ * Function Name        : WIFIHAL_GetRadioVapInfoMap
+ * Description          : This function invokes WiFi hal api wifi_getRadioVapInfoMap
+ * @param [out] response - filled with SUCCESS or FAILURE based on the output status of operation
+ *
+ ********************************************************************************************/
+void WIFIHAL::WIFIHAL_GetRadioVapInfoMap(IN const Json::Value& req, OUT Json::Value& response)
+{
+    DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_GetRadioVapInfoMap ----->Entry\n");
+    wifi_radio_index_t radioIndex = 0;
+    wifi_vap_info_map_t map;
+    int returnValue = 1;
+    char details[2000] = {'\0'};
+
+    if(&req["apIndex"]==NULL)
+    {
+        response["result"]="FAILURE";
+        response["details"]="NULL parameter as input argument";
+        return;
+    }
+
+    radioIndex = req["apIndex"].asInt();
+
+    returnValue = ssp_WIFIHALGetRadioVapInfoMap(radioIndex,&map);
+    if(0 == returnValue)
+    {
+
+        sprintf(details,"The numner of Radio maps are : %lu, ",map.num_vaps);
+        response["result"]="SUCCESS";
+        response["details"]=details;
+        return;
+    }
+    else
+    {
+        sprintf(details, "wifi_getRadioVapInfoMap operation failed");
+        response["result"]="FAILURE";
+        response["details"]=details;
+        DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_GetRadioVapInfoMap ---->Error in execution\n");
+        return;
+    }
+	DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_GetRadioVapInfoMap ----->Exit\n");
+}

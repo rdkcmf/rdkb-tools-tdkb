@@ -102,3 +102,4 @@ int wifi_initRadio(int radioIndex);
 int ssp_WIFIHALEnableCSIEngine(int apIndex, mac_address_t sta, unsigned char * enable);
 int ssp_WIFIHALSendDataFrame(int apIndex, mac_address_t sta, unsigned char * data, unsigned int length, unsigned char * insert_llc, unsigned int protocol, wifi_data_priority_t prio);
 int ssp_WIFIHALGetVAPTelemetry(int apIndex, wifi_VAPTelemetry_t *VAPTelemetry);
+int ssp_WIFIHALGetRadioVapInfoMap(wifi_radio_index_t radioIndex ,wifi_vap_info_map_t *map);
