@@ -17,32 +17,51 @@
 # limitations under the License.
 ##########################################################################
 '''
-<?xml version="1.0" encoding="UTF-8"?><xml>
-  <id/>
-  <version>2</version>
+<?xml version='1.0' encoding='utf-8'?>
+<xml>
+  <id></id>
+  <!-- Do not edit id. This will be auto filled while exporting. If you are adding a new script keep the id empty -->
+  <version>3</version>
+  <!-- Do not edit version. This will be auto incremented while updating. If you are adding a new script you can keep the vresion as 1 -->
   <name>TDKB_TR181_WANMANAGER_GetAllParameterValues</name>
-  <primitive_test_id/>
+  <!-- If you are adding a new script you can specify the script name. Script Name should be unique same as this file name with out .py extension -->
+  <primitive_test_id></primitive_test_id>
+  <!-- Do not change primitive_test_id if you are editing an existing script. -->
   <primitive_test_name>TDKB_TR181Stub_Get</primitive_test_name>
+  <!--  -->
   <primitive_test_version>1</primitive_test_version>
+  <!--  -->
   <status>FREE</status>
+  <!--  -->
   <synopsis>Get all the tr181 parameters of WAN Manager</synopsis>
-  <groups_id/>
+  <!--  -->
+  <groups_id />
+  <!--  -->
   <execution_time>15</execution_time>
+  <!--  -->
   <long_duration>false</long_duration>
+  <!--  -->
   <advanced_script>false</advanced_script>
-  <remarks/>
+  <!-- execution_time is the time out time for test execution -->
+  <remarks></remarks>
+  <!-- Reason for skipping the tests if marked to skip -->
   <skip>false</skip>
+  <!--  -->
   <box_types>
     <box_type>Broadband</box_type>
+    <!--  -->
+    <box_type>RPI</box_type>
+    <!--  -->
   </box_types>
   <rdk_versions>
     <rdk_version>RDKB</rdk_version>
+    <!--  -->
   </rdk_versions>
   <test_cases>
     <test_case_id>TC_TDKB_TR181_115</test_case_id>
     <test_objective>Get all the tr181 parameters of WAN Manager</test_objective>
     <test_type>Positive</test_type>
-    <test_setup>BroadBand</test_setup>
+    <test_setup>BroadBand,RPI</test_setup>
     <pre_requisite>TDK test agent should be running
 WAN module's parameter xml should be available</pre_requisite>
     <api_or_interface_used>None</api_or_interface_used>
@@ -60,9 +79,8 @@ WAN module's parameter xml should be available</pre_requisite>
     <release_version>M87</release_version>
     <remarks>None</remarks>
   </test_cases>
-  <script_tags/>
+  <script_tags />
 </xml>
-
 '''
 # use tdklib library,which provides a wrapper for tdk testcase script
 import tdklib;
