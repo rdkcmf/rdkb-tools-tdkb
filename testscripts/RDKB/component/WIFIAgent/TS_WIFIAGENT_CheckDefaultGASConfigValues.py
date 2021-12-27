@@ -147,17 +147,17 @@ if "SUCCESS" in loadmodulestatus.upper():
           #Get the result of execution
           print "[TEST EXECUTION RESULT] : SUCCESS";
 
-          advertId = int(details.split("advertId")[1].split(":")[1].split(",")[0].strip().replace("\\n", ""));
+          advertId = int(details.split("AdvertisementId")[1].split(":")[1].split(",")[0].strip().replace("\\n", ""));
           print "advertId:",advertId;
-          pauseForServerResp = details.split("pauseForServerResp")[1].split(":")[1].split(",")[0].strip().replace("\\n", "");
+          pauseForServerResp = details.split("PauseForServerResp")[1].split(":")[1].split(",")[0].strip().replace("\\n", "");
           print "pauseForServerResp:",pauseForServerResp;
-          respTimeout = int(details.split("respTimeout")[1].split(":")[1].split(",")[0].strip().replace("\\n", ""));
+          respTimeout = int(details.split("RespTimeout")[1].split(":")[1].split(",")[0].strip().replace("\\n", ""));
           print "respTimeout:",respTimeout
-          comebackDelay = int(details.split("comebackDelay")[1].split(":")[1].split(",")[0].strip().replace("\\n", ""));
+          comebackDelay = int(details.split("ComebackDelay")[1].split(":")[1].split(",")[0].strip().replace("\\n", ""));
           print "comebackDelay:" ,comebackDelay
-          respBufferTime = int(details.split("respBufferTime")[1].split(":")[1].split(",")[0].strip().replace("\\n", ""));
+          respBufferTime = int(details.split("RespBufferTime")[1].split(":")[1].split(",")[0].strip().replace("\\n", ""));
           print "respBufferTime:",respBufferTime;
-          queryRespLengthLimit=int(details.split("queryRespLengthLimit")[1].split(":")[1].split("}")[0].strip().replace("\\n", ""));
+          queryRespLengthLimit=int(details.split("QueryRespLengthLimit")[1].split(":")[1].split("}")[0].strip().replace("\\n", ""));
           print "queryRespLengthLimit:",queryRespLengthLimit;
 
           print "*** Checking if the GAS Configurations have default Value***";

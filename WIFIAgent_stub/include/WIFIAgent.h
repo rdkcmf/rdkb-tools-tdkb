@@ -37,6 +37,7 @@
 #define TEST_FAILURE false
 #define MAX_PARAM_SIZE	100
 #define MAX_PARAM_NAMES_ARRAY	1000
+#define MAX_BUFFER_SIZE 500
 
 class RDKTestAgent;
 

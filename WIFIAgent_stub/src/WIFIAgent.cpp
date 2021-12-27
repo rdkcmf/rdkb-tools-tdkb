@@ -155,7 +155,7 @@ void WIFIAgent::WIFIAgent_Get(IN const Json::Value& req, OUT Json::Value& respon
     char ParamNames[MAX_PARAM_SIZE];
     GETPARAMVALUES *resultDetails;
     int	paramsize=0;
-    char paramDetails[200] = {0};
+    char paramDetails[MAX_BUFFER_SIZE] = {0};
 
     strcpy(ParamNames,req["paramName"].asCString());
 
