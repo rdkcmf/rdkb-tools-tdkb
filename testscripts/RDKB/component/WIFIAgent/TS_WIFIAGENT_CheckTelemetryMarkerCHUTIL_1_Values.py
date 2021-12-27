@@ -34,7 +34,6 @@
   <skip>false</skip>
   <box_types>
     <box_type>Broadband</box_type>
-    <box_type>RPI</box_type>
   </box_types>
   <rdk_versions>
     <rdk_version>RDKB</rdk_version>
@@ -43,7 +42,7 @@
     <test_case_id>TC_WIFIAGENT_149</test_case_id>
     <test_objective>To check if the CHUTIL_1 marker comes up with the three values that are comma separated :   CU due to self BSS from transmitted traffic , CU due to self BSS from received traffic and CU due to overlapping BSS.</test_objective>
     <test_type>Positive</test_type>
-    <test_setup>Broadband, RPI</test_setup>
+    <test_setup>Broadband</test_setup>
     <pre_requisite>1.Ccsp Components  should be in a running state else invoke cosa_start.sh manually that includes all the ccsp components and TDK Component
 2.TDK Agent should be in running state or invoke it through StartTdk.sh script</pre_requisite>
     <api_or_interface_used>None</api_or_interface_used>
