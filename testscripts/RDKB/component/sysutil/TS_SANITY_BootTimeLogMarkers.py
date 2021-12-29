@@ -115,29 +115,94 @@ if "SUCCESS" in loadmodulestatus.upper():
        print "EXPECTED RESULT 0: Should execute the command successfully";
        print "ACTUAL RESULT 0: Details: %s" %details;
        print "[TEST EXECUTION RESULT] : SUCCESS";
+       revert =0;
+       tdkTestObj = obj.createTestStep('ExecuteCmd');
+       command= "sh %s/tdk_utility.sh parseConfigFile DEVICETYPE" %TDK_PATH;
+       expectedresult="SUCCESS";
+       tdkTestObj.addParameter("command", command);
+       tdkTestObj.executeTestCase(expectedresult);
+       actualresult = tdkTestObj.getResult();
+       devicetype = tdkTestObj.getResultDetails().strip().replace("\\n","");
+       if expectedresult in actualresult and devicetype != "":
+           #Set the result status of execution
+           tdkTestObj.setResultStatus("SUCCESS");
+           print "TEST STEP 1: Get the DEVICE TYPE"
+           print "EXPECTED RESULT 1: Should get the device type";
+           print "ACTUAL RESULT 1:Device type  %s" %devicetype;
+           #Get the result of execution
+           print "[TEST EXECUTION RESULT] : SUCCESS";
 
-       obj.initiateReboot();
-       sleep(300);
-       logFile = "/rdklogs/logs/BootTime.log";
-       print "***************************************************";
-       print "TEST STEP 1: Checking if the following Log Message are present in /rdklogs/logs/BootTime.log";
-       print "%s" %logMsg;
-       for item in logMsg:
-           print "\n*** Checking if %s Log Message is present in BootTime File***" %item;
-           query="grep -rin \"%s\" \"%s\"" %(item,logFile);
-           print "query:%s" %query
+           print" *****if device type is RPI disable  rdkbLogMonitor.service******";
+           if devicetype == "RPI":
+               tdkTestObj = obj.createTestStep('ExecuteCmd');
+               cmd = "systemctl disable rdkbLogMonitor.service";
+               print cmd;
+               expectedresult="SUCCESS";
+               tdkTestObj.addParameter("command", cmd);
+               tdkTestObj.executeTestCase(expectedresult);
+               actualresult = tdkTestObj.getResult();
+               details = tdkTestObj.getResultDetails().strip().replace("\\n", "");
+               if expectedresult in actualresult:
+                   revert =1;
+                   print"rdkbLogMonitor.service disabled sucessfully";
+                   tdkTestObj.setResultStatus("SUCCESS");
+               else:
+                   print"rdkbLogMonitor.service disable failed";
+                   tdkTestObj.setResultStatus("FAILURE");
+
+           obj.initiateReboot();
+           sleep(300);
+           logFile = "/rdklogs/logs/BootTime.log";
+           print "***************************************************";
+           print "TEST STEP 2: Checking if the following Log Message are present in /rdklogs/logs/BootTime.log";
+           print "%s" %logMsg;
+           for item in logMsg:
+               print "\n*** Checking if %s Log Message is present in BootTime File***" %item;
+               query="grep -rin \"%s\" \"%s\"" %(item,logFile);
+               print "query:%s" %query
+               tdkTestObj = obj.createTestStep('ExecuteCmd');
+               tdkTestObj.addParameter("command", query)
+               expectedresult="SUCCESS";
+               tdkTestObj.executeTestCase(expectedresult);
+               actualresult = tdkTestObj.getResult();
+               details = tdkTestObj.getResultDetails().strip().replace("\\n","");
+               if (len(details) != 0)  and  item in details:
+                    tdkTestObj.setResultStatus("SUCCESS");
+                    print "Search Result :%s "%details;
+               else:
+                   tdkTestObj.setResultStatus("FAILURE");
+                   print "Search Result :%s "%details;
+       else:
+           #Set the result status of execution
+           tdkTestObj.setResultStatus("FAILURE");
+           print "TEST STEP 1: Get the DEVICE TYPE"
+           print "EXPECTED RESULT 1: Should get the device type";
+           print "ACTUAL RESULT 1:Device type  %s" %devicetype;
+           #Get the result of execution
+           print "[TEST EXECUTION RESULT] : FAILURE";
+       if revert ==1:
            tdkTestObj = obj.createTestStep('ExecuteCmd');
-           tdkTestObj.addParameter("command", query)
+           cmd = "systemctl enable rdkbLogMonitor.service";
+           print cmd;
            expectedresult="SUCCESS";
+           tdkTestObj.addParameter("command", cmd);
            tdkTestObj.executeTestCase(expectedresult);
            actualresult = tdkTestObj.getResult();
-           details = tdkTestObj.getResultDetails().strip().replace("\\n","");
-           if (len(details) != 0)  and  item in details:
-              tdkTestObj.setResultStatus("SUCCESS");
-              print "Search Result :%s "%details;
+           details = tdkTestObj.getResultDetails().strip().replace("\\n", "");
+           if expectedresult in actualresult:
+               tdkTestObj.setResultStatus("SUCESS");
+               print "TEST STEP 3: Enable the rdkbLogMonitor.service as a part of revertion"
+               print "EXPECTED RESULT 3: revert operation should be sucessfull";
+               print "ACTUAL RESULT 3:Revertion success";
+               #Get the result of execution
+               print "[TEST EXECUTION RESULT] : SUCCESS";
            else:
                tdkTestObj.setResultStatus("FAILURE");
-               print "Search Result :%s "%details;
+               print "TEST STEP 3: Enable the rdkbLogMonitor.service as a part of revertion"
+               print "EXPECTED RESULT 3: revert operation should be sucessfull";
+               print "ACTUAL RESULT 3:Revertion failed";
+               #Get the result of execution
+               print "[TEST EXECUTION RESULT] : FAILURE";
     else:
         tdkTestObj.setResultStatus("FAILURE");
         print "TEST STEP 0: Execute the command";

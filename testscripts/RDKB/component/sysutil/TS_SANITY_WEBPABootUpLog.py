@@ -101,46 +101,111 @@ loadmodulestatus=obj.getLoadModuleResult();
 if "SUCCESS" in loadmodulestatus.upper():
     #Set the result status of execution
     obj.setLoadModuleStatus("SUCCESS");
+    revert =0;
+    tdkTestObj = obj.createTestStep('ExecuteCmd');
+    command= "sh %s/tdk_utility.sh parseConfigFile DEVICETYPE" %TDK_PATH;
+    expectedresult="SUCCESS";
+    tdkTestObj.addParameter("command", command);
+    tdkTestObj.executeTestCase(expectedresult);
+    actualresult = tdkTestObj.getResult();
+    devicetype = tdkTestObj.getResultDetails().strip().replace("\\n","");
+    if expectedresult in actualresult and devicetype != "":
+        #Set the result status of execution
+        tdkTestObj.setResultStatus("SUCCESS");
+        print "TEST STEP 1: Get the DEVICE TYPE"
+        print "EXPECTED RESULT 1: Should get the device type";
+        print "ACTUAL RESULT 1:Device type  %s" %devicetype;
+        #Get the result of execution
+        print "[TEST EXECUTION RESULT] : SUCCESS";
 
-    obj.initiateReboot();
-    print "Device going for reboot waiting for 300 sec untill device comes up";
-    sleep(300);
-
-    logFile = "/rdklogs/logs/WEBPAlog.txt.0";
-    logMsg = ["Init for parodus Success","WEBPA: Received reboot_reason as","webpaagent", "Component caching is completed"];
-    print "***************************************************";
-    print "TEST STEP 1: Checking if the following Log Message are present in /rdklogs/logs/WEBPAlog.txt.0";
-    print "%s" %logMsg;
-
-    for item in logMsg:
-        markerfound = 0;
-        for i in range(1,3):
-            if markerfound == 1:
-               break;
+        print" *****if device type is RPI disable  rdkbLogMonitor.service******";
+        if devicetype == "RPI":
+            tdkTestObj = obj.createTestStep('ExecuteCmd');
+            cmd = "systemctl disable rdkbLogMonitor.service";
+            print cmd;
+            expectedresult="SUCCESS";
+            tdkTestObj.addParameter("command", cmd);
+            tdkTestObj.executeTestCase(expectedresult);
+            actualresult = tdkTestObj.getResult();
+            details = tdkTestObj.getResultDetails().strip().replace("\\n", "");
+            if expectedresult in actualresult:
+                revert =1;
+                print"rdkbLogMonitor.service disabled sucessfully";
+                tdkTestObj.setResultStatus("SUCCESS");
             else:
-                print "\n*** Checking if %s Log Message is present in WEBPAlog File***" %item;
-                query="grep -rin \"%s\" \"%s\"" %(item,logFile);
-                print "query:%s" %query
-                tdkTestObj = obj.createTestStep('ExecuteCmd');
-                tdkTestObj.addParameter("command", query)
-                expectedresult="SUCCESS";
-                tdkTestObj.executeTestCase(expectedresult);
-                actualresult = tdkTestObj.getResult();
-                details = tdkTestObj.getResultDetails().strip().replace("\\n","");
-                if (len(details) != 0)  and  item in details:
-                   markerfound = 1;
-                   waittime = ((i-1) *300);
-                   print " %s found within %d sec of extra waitime after bootup" %(item,waittime);
-                   print details;
+                print"rdkbLogMonitor.service disable failed";
+                tdkTestObj.setResultStatus("FAILURE");
+
+        obj.initiateReboot();
+        print "Device going for reboot waiting for 300 sec untill device comes up";
+        sleep(300);
+
+        logFile = "/rdklogs/logs/WEBPAlog.txt.0";
+        logMsg = ["Init for parodus Success","WEBPA: Received reboot_reason as","webpaagent", "Component caching is completed"];
+        print "***************************************************";
+        print "TEST STEP 2: Checking if the following Log Message are present in /rdklogs/logs/WEBPAlog.txt.0";
+        print "%s" %logMsg;
+
+        for item in logMsg:
+            markerfound = 0;
+            for i in range(1,3):
+                if markerfound == 1:
+                   break;
                 else:
-                    #In case of emulator an additional wait time of 5 min is required
-                     sleep(300);
-        if markerfound == 1:
-           tdkTestObj.setResultStatus("SUCCESS");
+                    print "\n*** Checking if %s Log Message is present in WEBPAlog File***" %item;
+                    query="grep -rin \"%s\" \"%s\"" %(item,logFile);
+                    print "query:%s" %query
+                    tdkTestObj = obj.createTestStep('ExecuteCmd');
+                    tdkTestObj.addParameter("command", query)
+                    expectedresult="SUCCESS";
+                    tdkTestObj.executeTestCase(expectedresult);
+                    actualresult = tdkTestObj.getResult();
+                    details = tdkTestObj.getResultDetails().strip().replace("\\n","");
+                    if (len(details) != 0)  and  item in details:
+                         markerfound = 1;
+                         waittime = ((i-1) *300);
+                         print " %s found within %d sec of extra waitime after bootup" %(item,waittime);
+                         print details;
+                    else:
+                        #In case of emulator an additional wait time of 5 min is required
+                        sleep(300);
+            if markerfound == 1:
+                tdkTestObj.setResultStatus("SUCCESS");
+            else:
+                tdkTestObj.setResultStatus("FAILURE");
+                print "Search Result :%s "%details;
+                print "failed to get %s even with wait time of 10 min" %item;
+    else:
+        #Set the result status of execution
+        tdkTestObj.setResultStatus("FAILURE");
+        print "TEST STEP 1: Get the DEVICE TYPE"
+        print "EXPECTED RESULT 1: Should get the device type";
+        print "ACTUAL RESULT 1:Device type  %s" %devicetype;
+        #Get the result of execution
+        print "[TEST EXECUTION RESULT] : FAILURE";
+    if revert ==1:
+        tdkTestObj = obj.createTestStep('ExecuteCmd');
+        cmd = "systemctl enable rdkbLogMonitor.service";
+        print cmd;
+        expectedresult="SUCCESS";
+        tdkTestObj.addParameter("command", cmd);
+        tdkTestObj.executeTestCase(expectedresult);
+        actualresult = tdkTestObj.getResult();
+        details = tdkTestObj.getResultDetails().strip().replace("\\n", "");
+        if expectedresult in actualresult:
+            tdkTestObj.setResultStatus("SUCESS");
+            print "TEST STEP 3: Enable the rdkbLogMonitor.service as a part of revertion"
+            print "EXPECTED RESULT 3: revert operation should be sucessfull";
+            print "ACTUAL RESULT 3:Revertion success";
+            #Get the result of execution
+            print "[TEST EXECUTION RESULT] : SUCCESS";
         else:
             tdkTestObj.setResultStatus("FAILURE");
-            print "Search Result :%s "%details;
-            print "failed to get %s even with wait time of 10 min" %item;
+            print "TEST STEP 3: Enable the rdkbLogMonitor.service as a part of revertion"
+            print "EXPECTED RESULT 3: revert operation should be sucessfull";
+            print "ACTUAL RESULT 3:Revertion failed";
+            #Get the result of execution
+            print "[TEST EXECUTION RESULT] : FAILURE";
     obj.unloadModule("sysutil");
 else:
     print "Failed to load sysutil module";
