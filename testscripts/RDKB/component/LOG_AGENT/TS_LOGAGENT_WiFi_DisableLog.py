@@ -33,9 +33,6 @@
   <remarks/>
   <skip>false</skip>
   <box_types>
-    <box_type>Broadband</box_type>
-    
-    <box_type>RPI</box_type>
   </box_types>
   <rdk_versions>
     <rdk_version>RDKB</rdk_version>
@@ -44,7 +41,7 @@
     <test_case_id>TC_LOGAGENT_8</test_case_id>
     <test_objective>Disable logging of WiFi module and check if the logs are getting updated in WiFilog.txt.0</test_objective>
     <test_type>Positive</test_type>
-    <test_setup>Broadband,RPI,Emulator</test_setup>
+    <test_setup></test_setup>
     <pre_requisite>TDK Agent should be in running state.</pre_requisite>
     <api_or_interface_used>None</api_or_interface_used>
     <input_parameters>Device.LogAgent.X_RDKCENTRAL-COM_LoggerEnable : True
