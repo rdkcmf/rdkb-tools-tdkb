@@ -82,7 +82,7 @@ pamObj.configureTestCase(ip,port,'TS_PAM_SetValidValues_WEBUI');
 loadmodulestatus1 =sysObj.getLoadModuleResult();
 loadmodulestatus2 =pamObj.getLoadModuleResult();
 
-if "SUCCESS" in (loadmodulestatus1.upper() and loadmodulestatus2.upper):
+if "SUCCESS" in (loadmodulestatus1.upper() and loadmodulestatus2.upper()):
     #Set the result status of execution
     sysObj.setLoadModuleStatus("SUCCESS");
     pamObj.setLoadModuleStatus("SUCCESS");

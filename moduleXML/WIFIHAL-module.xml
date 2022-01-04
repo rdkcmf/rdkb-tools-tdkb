@@ -92,6 +92,7 @@
       <function name='WIFIHAL_EnableCSIEngine' />
       <function name='WIFIHAL_SendDataFrame' />
       <function name='WIFIHAL_GetVAPTelemetry' />
+      <function name='WIFIHAL_GetRadioVapInfoMap' />
     </functions>
   <!-- Total parameters corresponding module  -->
     <parameters>
@@ -271,6 +272,7 @@
       <parameter funName='WIFIHAL_SendDataFrame' parameterName='insert_llc' parameterType='INTEGER' range='0-1' />
       <parameter funName='WIFIHAL_SendDataFrame' parameterName='priority' parameterType='INTEGER' range='0-10' />
       <parameter funName='WIFIHAL_GetVAPTelemetry' parameterName='apIndex' parameterType='INTEGER' range='0-1' />
+      <parameter funName='WIFIHAL_GetRadioVapInfoMap' parameterName='apIndex' parameterType='INTEGER' range='0-9' />
     </parameters>
   </module>
 </xml>

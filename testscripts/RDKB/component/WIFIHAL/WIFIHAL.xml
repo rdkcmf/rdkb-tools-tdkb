@@ -511,7 +511,13 @@
         <parameters>
           <parameter name="apIndex" value=""/>
         </parameters>
-      </primitiveTest>
+     </primitiveTest>
+      <primitiveTest name="WIFIHAL_GetRadioVapInfoMap" id=" " version="2">
+        <function>WIFIHAL_GetRadioVapInfoMap</function>
+        <parameters>
+          <parameter name="apIndex" value="0"/>
+        </parameters>
+      </primitiveTest>	
     </primitiveTests>
   </module>
 </xml>
