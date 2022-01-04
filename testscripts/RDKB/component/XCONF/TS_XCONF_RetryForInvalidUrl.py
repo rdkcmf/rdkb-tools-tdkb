@@ -2,7 +2,7 @@
 # If not stated otherwise in this file or this component's Licenses.txt
 # file the following copyright and licenses apply:
 #
-# Copyright 2016 RDK Management
+# Copyright 2021 RDK Management
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@
 <xml>
   <id></id>
   <!-- Do not edit id. This will be auto filled while exporting. If you are adding a new script keep the id empty -->
-  <version>2</version>
+  <version>10</version>
   <!-- Do not edit version. This will be auto incremented while updating. If you are adding a new script you can keep the vresion as 1 -->
   <name>TS_XCONF_RetryForInvalidUrl</name>
   <!-- If you are adding a new script you can specify the script name. Script Name should be unique same as this file name with out .py extension -->
@@ -37,7 +37,7 @@
   <!--  -->
   <groups_id />
   <!--  -->
-  <execution_time>15</execution_time>
+  <execution_time>7</execution_time>
   <!--  -->
   <long_duration>false</long_duration>
   <!--  -->
@@ -81,7 +81,7 @@ mv " + xconfFile + "_bck " + xconfFile</input_parameters>
 7. In the new log, check for the no: of retries of client request
 8. Restore override file
 9. Unload sysutil module</automation_approch>
-    <except_output>Client should do 3 retries</except_output>
+    <expected_output>Client should do 3 retries</expected_output>
     <priority>High</priority>
     <test_stub_interface>sysutil</test_stub_interface>
     <test_script>TS_XCONF_RetryForInvalidUrl</test_script>
@@ -161,12 +161,12 @@ if "SUCCESS" in result.upper() :
   	    time.sleep(10)
             ######since the url is invalid, on each retry http code 000 should be returned
             tdkTestObj = obj.createTestStep('ExecuteCmd');
-            tdkTestObj.addParameter("command","grep -inr \"http_code:000\" " + cdnLog + " | wc -l ")
+            tdkTestObj.addParameter("command","grep -inr \"RETRY is 3\" " + cdnLog)
             tdkTestObj.executeTestCase("SUCCESS");
 
             result = tdkTestObj.getResult();
             details = tdkTestObj.getResultDetails();
-            if "1" in details.lower():
+            if "RETRY is 3" in details:
                 print "TEST STEP 6: Search for pattern in logs"
                 print "EXPECTED RESULT 6: Should find the pattern in the logs"
                 print "ACTUAL RESULT 6: is %s " %details

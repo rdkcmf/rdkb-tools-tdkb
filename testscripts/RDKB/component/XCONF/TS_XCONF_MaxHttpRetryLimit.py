@@ -2,7 +2,7 @@
 # If not stated otherwise in this file or this component's Licenses.txt
 # file the following copyright and licenses apply:
 #
-# Copyright 2016 RDK Management
+# Copyright 2021 RDK Management
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@
 '''
 <?xml version="1.0" encoding="UTF-8"?><xml>
   <id/>
-  <version>1</version>
+  <version>3</version>
   <name>TS_XCONF_MaxHttpRetryLimit</name>
   <primitive_test_id/>
   <primitive_test_name>XCONF_DoNothing</primitive_test_name>
@@ -61,10 +61,10 @@ mv " + xconfFile + "_bck " + xconfFile</input_parameters>
 4. Get CDN_LOG and CDN_FILE values from the device
 5. Remove previous logs, CDN_LOG
 6. Execute CDN_FILE with retry parameter as 5
-7. In the new log, checkif retry is happening 3 times or not
+7. In the new log, check if retry is not happening for the invalid max limit of 5 times
 8. Restore override file
 9. Unload sysutil module</automation_approch>
-    <except_output>Even if retry input is 5, no: of retries shouldn't exceed the maximum retry limit of 3</except_output>
+    <expected_output>Even if retry input is 5, no: of retries shouldn't exceed the maximum retry limit of 3</expected_output>
     <priority>High</priority>
     <test_stub_interface>sysutil</test_stub_interface>
     <test_script>TS_XCONF_MaxHttpRetryLimit</test_script>
@@ -72,6 +72,7 @@ mv " + xconfFile + "_bck " + xconfFile</input_parameters>
     <release_version/>
     <remarks/>
   </test_cases>
+  <script_tags/>
 </xml>
 
 '''
@@ -146,12 +147,12 @@ if "SUCCESS" in result.upper() :
             ######since the url is invalid, on each retry http code 000 should be returned
 	    time.sleep(30)
             tdkTestObj = obj.createTestStep('ExecuteCmd');
-            tdkTestObj.addParameter("command","grep -inr \"http_code:000\" " + cdnLog + " | wc -l ")
+            tdkTestObj.addParameter("command","grep -inr \"RETRY is \" " + cdnLog)
             tdkTestObj.executeTestCase("SUCCESS");
 
             result = tdkTestObj.getResult();
             details = tdkTestObj.getResultDetails();
-            if "1" in details.lower():
+            if details and "RETRY is 5" not in details:
                 print "TEST STEP 6: Search for pattern in logs"
                 print "EXPECTED RESULT 6: Should find the pattern in the logs"
                 print "ACTUAL RESULT 6: is %s " %details
