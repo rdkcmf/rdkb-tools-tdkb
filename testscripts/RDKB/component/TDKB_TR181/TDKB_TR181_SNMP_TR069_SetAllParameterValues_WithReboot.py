@@ -33,7 +33,6 @@
   <remarks/>
   <skip>false</skip>
   <box_types>
-    <box_type>Broadband</box_type>
     <box_type>Emulator</box_type>
   </box_types>
   <rdk_versions>
@@ -61,7 +60,7 @@ TR069 module's parameter xml should be available</pre_requisite>
     <test_script>TDKB_TR181_SNMP_TR069_SetAllParameterValues_WithReboot</test_script>
     <skipped>No</skipped>
     <release_version>M76</release_version>
-    <remarks>None</remarks>
+    <remarks>script is not applicable for platforms which disable tr069 via RFC</remarks>
   </test_cases>
 </xml>
 '''
