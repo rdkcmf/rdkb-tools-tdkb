@@ -3585,3 +3585,80 @@ void WIFIHAL::WIFIHAL_GetRadioVapInfoMap(IN const Json::Value& req, OUT Json::Va
     }
 	DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_GetRadioVapInfoMap ----->Exit\n");
 }
+
+/*******************************************************************************************
+ *
+ * Function Name        : WIFIHAL_SetNeighborReports
+ * Description          : This function invokes WiFi hal api wifi_setNeighborReports()
+ * @param [in] req-     : apIndex - Index of VAP
+ *                        reports - Number of reports in the in_NeighborReports set
+ *                        bssid - MAC address of the connected client
+ *                        info - information on the bssid
+ *                        opClass - regulatory data
+ *                        channel - radio channel value
+ *                        phyTable - physical type
+ *
+ * @param [out] response - filled with SUCCESS or FAILURE based on the output status of operation
+ *
+ ********************************************************************************************/
+void WIFIHAL::WIFIHAL_SetNeighborReports(IN const Json::Value& req, OUT Json::Value& response)
+{
+    DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_SetNeighborReports ----->Entry\n");
+    unsigned int apIndex = 0;
+    unsigned int reports = 0;
+    bssid_t MacAddress;
+    char mac[20] = {'\0'};
+    unsigned int tmp_MACConv[6] = {0};
+    unsigned char info = 0;
+    unsigned char opClass = 0;
+    unsigned char channel = 0;
+    unsigned char phyTable = 0;
+    wifi_NeighborReport_t neighborReports;
+    int max_count = 6;
+    int returnValue = 0;
+    char details[500] = {'\0'};
+
+    if(&req["apIndex"]==NULL || &req["reports"]==NULL || &req["bssid"]==NULL || &req["info"]==NULL || &req["opClass"]==NULL || &req["channel"]==NULL || &req["phyTable"]==NULL)
+    {
+        response["result"]="FAILURE";
+        response["details"]="NULL parameter as input argument";
+        return;
+    }
+
+    apIndex = req["apIndex"].asInt();
+    reports = req["reports"].asInt();
+    neighborReports.info = req["info"].asInt();
+    neighborReports.opClass = req["opClass"].asInt();
+    neighborReports.channel = req["channel"].asInt();
+    neighborReports.phyTable = req["phyTable"].asInt();
+
+    strcpy(mac, req["bssid"].asCString());
+    sscanf(mac, "%02x:%02x:%02x:%02x:%02x:%02x", &tmp_MACConv[0], &tmp_MACConv[1], &tmp_MACConv[2], &tmp_MACConv[3], &tmp_MACConv[4], &tmp_MACConv[5]);
+    for(int index = 0 ; index < max_count; index++)
+    {
+        MacAddress[index]=(unsigned char)tmp_MACConv[index];
+    }
+    memcpy(neighborReports.bssid, MacAddress, max_count);
+
+    DEBUG_PRINT(DEBUG_TRACE,"\n ApIndex : %d, Number of reports : %d, BSSID : %s, Info : %d, opClass : %d, Channel : %d, PhyTable : %d\n", apIndex, reports, neighborReports.bssid, neighborReports.info, neighborReports.opClass, neighborReports.channel, neighborReports.phyTable);
+    returnValue = ssp_WIFIHALSetNeighborReports(apIndex, reports, &neighborReports);
+
+    if(0 == returnValue)
+    {
+        sprintf(details, "wifi_setNeighborReports was invoked successfully");
+        DEBUG_PRINT(DEBUG_TRACE,"\n %s", details);
+        response["result"]="SUCCESS";
+        response["details"]=details;
+    }
+    else
+    {
+        sprintf(details, "wifi_setNeighborReports was not invoked successfully");
+        DEBUG_PRINT(DEBUG_TRACE,"\n %s", details);
+        response["result"]="FAILURE";
+        response["details"]=details;
+        DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_SetNeighborReports ---->Error in execution\n");
+    }
+
+    DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_SetNeighborReports ---->Exiting\n");
+    return;
+}

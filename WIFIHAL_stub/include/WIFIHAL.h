@@ -47,6 +47,7 @@
 #define MAXNUMSECONDARYCHANNELS     7
 #define MAX_CHANNELS    64
 #define MAXIFACENAMESIZE    64
+#define MAX_VENDOR_SPECIFIC 32
 
 typedef unsigned int    wifi_radio_index_t;
 typedef unsigned int    wifi_vap_index_t;
@@ -434,7 +435,7 @@ typedef struct _wifi_basicTrafficStats
      unsigned long wifi_BytesReceived;
      unsigned long wifi_PacketsSent;
      unsigned long wifi_PacketsReceived;
-     unsigned long wifi_Associations; 	
+     unsigned long wifi_Associations;
 } wifi_basicTrafficStats_t;
 
 typedef struct _wifi_trafficStats
@@ -1030,7 +1031,7 @@ typedef struct {
     unsigned char length;
     unsigned char domainName[255]; //max domain name allowed based on the spec.
 }__attribute__((packed)) wifi_domainNameTuple_t;
-  
+
 typedef struct {
     wifi_domainNameTuple_t  domainNameTuple[4];
 }__attribute__((packed)) wifi_domainName_t;
@@ -1165,7 +1166,7 @@ typedef enum{
 } wifi_onboarding_methods_t;
 
 #define WIFI_AP_MAX_WPSPIN_LEN  9
-typedef struct 
+typedef struct
 {
     bool enable;
     wifi_onboarding_methods_t methods;
@@ -1241,6 +1242,120 @@ typedef struct {
     wifi_vap_info_t vap_array[MAX_NUM_VAP_PER_RADIO];
 } __attribute__((packed)) wifi_vap_info_map_t;
 
+typedef struct {
+    unsigned short              offset;
+    unsigned short              interval;
+} wifi_TSFInfo_t;
+
+typedef struct {
+    char                        condensedStr[3];
+} wifi_CondensedCountryString_t;
+
+typedef struct {
+    unsigned char               preference;
+} wifi_BSSTransitionCandidatePreference_t;
+
+typedef struct {
+    unsigned long               tsf;
+    unsigned short              duration;
+} wifi_BTMTerminationDuration_t;
+
+typedef struct {
+    unsigned short              bearing;
+    unsigned int                dist;
+    unsigned short              height;
+} wifi_Bearing_t;
+
+typedef struct {
+    unsigned char               bandwidth;
+    unsigned char               centerSeg0;
+    unsigned char               centerSeg1;
+} wifi_WideBWChannel_t;
+
+typedef struct {
+
+    unsigned short               info;
+    unsigned char                ampduParams;
+    unsigned char                mcs[16];
+    unsigned short               extended;
+    unsigned int                 txBeamCaps;
+    unsigned char                aselCaps;
+} wifi_HTCapabilities_t;
+
+typedef struct {
+    unsigned int                  info;
+    unsigned short                mcs;
+    unsigned short                rxHighestSupportedRate;
+    unsigned short                txVHTmcs;
+    unsigned short                txHighestSupportedRate;
+} wifi_VHTCapabilities_t;
+
+typedef struct {
+    unsigned char                 primary;
+    unsigned char                 opInfo[5];
+    unsigned char                 mcs[16];
+} wifi_HTOperation_t;
+
+typedef struct {
+    wifi_WideBWChannel_t          opInfo;
+    unsigned short                mcs_nss;
+} wifi_VHTOperation_t;
+
+typedef struct {
+    unsigned char                 secondaryChOffset;
+} wifi_SecondaryChannelOffset_t;
+
+typedef struct {
+    unsigned char                 capabilities[5];
+} wifi_RMEnabledCapabilities_t;
+
+typedef struct {
+    unsigned char                 oui[5];
+    unsigned char                 buff[MAX_VENDOR_SPECIFIC];
+} wifi_VendorSpecific_t;
+
+typedef struct {
+    unsigned char                 pilot;
+    wifi_VendorSpecific_t vendorSpecific;
+} wifi_MeasurementPilotTransmission_t;
+
+typedef struct {
+    bssid_t                                         bssid;
+    unsigned int                                    info;
+    unsigned char                                   opClass;
+    unsigned char                                   channel;
+    unsigned char                                   phyTable;
+    bool                                            tsfPresent;
+    wifi_TSFInfo_t                                  tsfInfo;
+    bool                                            condensedCountrySringPresent;
+    wifi_CondensedCountryString_t                   condensedCountryStr;
+    bool                                            bssTransitionCandidatePreferencePresent;
+    wifi_BSSTransitionCandidatePreference_t         bssTransitionCandidatePreference;
+    bool                                            btmTerminationDurationPresent;
+    wifi_BTMTerminationDuration_t                   btmTerminationDuration;
+    bool                                            bearingPresent;
+    wifi_Bearing_t                                  bearing;
+    bool                                            wideBandWidthChannelPresent;
+    wifi_WideBWChannel_t                            wideBandwidthChannel;
+    bool                                            htCapsPresent;
+    wifi_HTCapabilities_t                           htCaps;
+    bool                                            vhtCapsPresent;
+    wifi_VHTCapabilities_t                          vbhtCaps;
+    bool                                            htOpPresent;
+    wifi_HTOperation_t                              htOp;
+    bool                                            vhtOpPresent;
+    wifi_VHTOperation_t                             vhtOp;
+    bool                                            secondaryChannelOffsetPresent;
+    wifi_SecondaryChannelOffset_t                   secondaryChannelOffset;
+    bool                                            rmEnabledCapsPresent;
+    wifi_RMEnabledCapabilities_t                    rmEnabledCaps;
+    bool                                            msmtPilotTransmissionPresent;
+    wifi_MeasurementPilotTransmission_t             msmtPilotTransmission;
+    bool                                            vendorSpecificPresent;
+    wifi_VendorSpecific_t                           vendorSpecific;
+    bssid_t                                          target_ssid;
+} wifi_NeighborReport_t;
+
 /* To provide external linkage to C Functions defined in TDKB Component folder */
 extern "C"
 {
@@ -1310,6 +1425,7 @@ extern "C"
     int ssp_WIFIHALSendDataFrame(int apIndex, mac_address_t sta, unsigned char * data, unsigned int length, unsigned char * insert_llc, unsigned int protocol, wifi_data_priority_t prio);
     int ssp_WIFIHALGetVAPTelemetry(int apIndex, wifi_VAPTelemetry_t *VAPTelemetry);
     int ssp_WIFIHALGetRadioVapInfoMap(wifi_radio_index_t radioIndex ,wifi_vap_info_map_t *map);
+    int ssp_WIFIHALSetNeighborReports(unsigned int apIndex, unsigned int reports, wifi_NeighborReport_t *neighborReports);
 };
 
 class RDKTestAgent;
@@ -1386,6 +1502,7 @@ class WIFIHAL : public RDKTestStubInterface, public AbstractServer<WIFIHAL>
                   this->bindAndAddMethod(Procedure("WIFIHAL_SendDataFrame",PARAMS_BY_NAME, JSON_STRING, "apIndex", JSON_INTEGER, "MacAddress", JSON_STRING, "length", JSON_INTEGER, "insert_llc", JSON_INTEGER, "protocol", JSON_INTEGER, "priority", JSON_INTEGER, NULL), &WIFIHAL::WIFIHAL_SendDataFrame);
                   this->bindAndAddMethod(Procedure("WIFIHAL_GetVAPTelemetry", PARAMS_BY_NAME, JSON_STRING,"apIndex", JSON_INTEGER, NULL), &WIFIHAL::WIFIHAL_GetVAPTelemetry);
 		  this->bindAndAddMethod(Procedure("WIFIHAL_GetRadioVapInfoMap", PARAMS_BY_NAME, JSON_STRING,"apIndex", JSON_INTEGER, NULL), &WIFIHAL::WIFIHAL_GetRadioVapInfoMap);
+                  this->bindAndAddMethod(Procedure("WIFIHAL_SetNeighborReports",PARAMS_BY_NAME, JSON_STRING, "apIndex", JSON_INTEGER, "reports", JSON_INTEGER, "bssid", JSON_STRING, "info", JSON_INTEGER, "opClass", JSON_INTEGER, "channel", JSON_INTEGER, "phyTable", JSON_INTEGER, NULL), &WIFIHAL::WIFIHAL_SetNeighborReports);
 		}
         /*inherited functions*/
         bool initialize(IN const char* szVersion);
@@ -1458,7 +1575,8 @@ class WIFIHAL : public RDKTestStubInterface, public AbstractServer<WIFIHAL>
         void WIFIHAL_EnableCSIEngine(IN const Json::Value& req, OUT Json::Value& response);
         void WIFIHAL_SendDataFrame(IN const Json::Value& req, OUT Json::Value& response);
         void WIFIHAL_GetVAPTelemetry(IN const Json::Value& req, OUT Json::Value& response);
-	void WIFIHAL_GetRadioVapInfoMap(IN const Json::Value& req, OUT Json::Value& response); 
+	void WIFIHAL_GetRadioVapInfoMap(IN const Json::Value& req, OUT Json::Value& response);
+        void WIFIHAL_SetNeighborReports(IN const Json::Value& req, OUT Json::Value& response);
 };
 #endif //__WIFIHAL_STUB_H__
 

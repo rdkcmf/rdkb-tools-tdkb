@@ -391,6 +391,16 @@ int ssp_WIFIHALGetOrSetParamBoolValue(int radioIndex, unsigned char *enable, cha
         return_status = wifi_enableGreylistAccessControl(*enable);
     else if(!strcmp(method, "setClientDetailedStatisticsEnable"))
         return_status = wifi_setClientDetailedStatisticsEnable(radioIndex, *enable);
+    else if(!strcmp(method, "getNeighborReportActivation"))
+    {
+        if(enable)
+            return_status = wifi_getNeighborReportActivation(radioIndex, enable);
+        else
+            return_status = wifi_getNeighborReportActivation(radioIndex, NULL);
+    }
+
+    else if(!strcmp(method, "setNeighborReportActivation"))
+        return_status = wifi_setNeighborReportActivation(radioIndex, *enable);
     else
     {
         return_status = SSP_FAILURE;
@@ -457,7 +467,7 @@ int ssp_WIFIHALGetOrSetParamULongValue(int radioIndex, unsigned long *uLongVar, 
     else if(!strcmp(method, "getRadioPercentageTransmitPower"))
         return_status = wifi_getRadioPercentageTransmitPower(radioIndex, uLongVar);
     else if(!strcmp(method, "getRadioAbsoluteTransmitPower_priv"))
-        return_status = wifi_getRadioAbsoluteTransmitPower_priv(radioIndex, uLongVar);	
+        return_status = wifi_getRadioAbsoluteTransmitPower_priv(radioIndex, uLongVar);
     else
     {
         return_status = SSP_FAILURE;
@@ -807,6 +817,13 @@ int ssp_WIFIHALGetOrSetParamIntValue(int radioIndex, int* output, char* method)
           return_status = wifi_setUplinkMuType(radioIndex, *output);
     else if(!strcmp(method, "setGuardInterval"))
           return_status = wifi_setGuardInterval(radioIndex, *output);
+    else if(!strcmp(method, "getRadioClientInactivityTimout"))
+    {
+        if(output)
+            return_status = wifi_getRadioClientInactivityTimout(radioIndex, output);
+        else
+            return_status = wifi_getRadioClientInactivityTimout(radioIndex, NULL);
+    }
     else
     {
         return_status = SSP_FAILURE;
@@ -2667,7 +2684,43 @@ int ssp_WIFIHALGetRadioVapInfoMap(wifi_radio_index_t radioIndex ,wifi_vap_info_m
     {
         printf("\n sssp_WIFIHALGetRadioVapInfoMap::Success. Ret:status %d\n", return_status);
     }
-   
+
     printf("\n ssp_WIFIHALGetRadioVapInfoMap ---> Exit\n");
+    return return_status;
+}
+
+/*******************************************************************************************
+ *
+ * Function Name        : ssp_WIFIHALSetNeighborReports
+ * Description          : This function invokes WiFi HAL api wifi_setNeighborReports
+ * @param [in]          : apIndex - Index of VAP
+ *                        reports - Number of reports
+ *                        neighborReports - structure with Neighbor report details
+ * @param [out]         : return status an integer value 0-success and 1-Failure
+ ********************************************************************************************/
+int ssp_WIFIHALSetNeighborReports(unsigned int apIndex, unsigned int reports, wifi_NeighborReport_t *neighborReports)
+{
+    printf("\n ssp_WIFIHALSetNeighborReports ----> Entry\n");
+    printf("apIndex : %d\n", apIndex);
+    printf("reports : %d\n", reports);
+    printf("bssid : %s\n", neighborReports->bssid);
+    printf("info : %d\n", neighborReports->info);
+    printf("opClass : %d\n", neighborReports->opClass);
+    printf("channel : %d\n", neighborReports->channel);
+    printf("phyTable : %d\n", neighborReports->phyTable);
+    int return_status = 0;
+    return_status = wifi_setNeighborReports(apIndex, reports, neighborReports);
+
+    if(return_status != SSP_SUCCESS)
+    {
+         printf("\nssp_WIFIHALSetNeighborReports::Failed\n");
+         return_status = SSP_FAILURE;
+    }
+    else
+    {
+         printf("\nssp_WIFIHALSetNeighborReports::Success\n");
+    }
+
+    printf("\n ssp_WIFIHALSetNeighborReports ---> Exit\n");
     return return_status;
 }
