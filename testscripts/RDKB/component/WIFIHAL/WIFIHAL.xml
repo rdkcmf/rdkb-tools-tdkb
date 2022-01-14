@@ -512,12 +512,24 @@
           <parameter name="apIndex" value=""/>
         </parameters>
      </primitiveTest>
-      <primitiveTest name="WIFIHAL_GetRadioVapInfoMap" id=" " version="2">
+      <primitiveTest name="WIFIHAL_SetNeighborReports" id=" " version="1">
+        <function>WIFIHAL_SetNeighborReports</function>
+        <parameters>
+          <parameter name="apIndex" value=""/>
+          <parameter name="bssid" value=""/>
+          <parameter name="channel" value=""/>
+          <parameter name="info" value=""/>
+          <parameter name="opClass" value=""/>
+          <parameter name="phyTable" value=""/>
+          <parameter name="reports" value=""/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest name="WIFIHAL_GetRadioVapInfoMap" id=" " version="1">
         <function>WIFIHAL_GetRadioVapInfoMap</function>
         <parameters>
-          <parameter name="apIndex" value="0"/>
+          <parameter name="apIndex" value=""/>
         </parameters>
-      </primitiveTest>	
+      </primitiveTest>
     </primitiveTests>
   </module>
 </xml>

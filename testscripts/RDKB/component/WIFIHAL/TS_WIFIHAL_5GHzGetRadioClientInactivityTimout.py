@@ -1,0 +1,136 @@
+##########################################################################
+# If not stated otherwise in this file or this component's Licenses.txt
+# file the following copyright and licenses apply:
+#
+# Copyright 2021 RDK Management
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+##########################################################################
+'''
+<?xml version="1.0" encoding="UTF-8"?><xml>
+  <id/>
+  <version>4</version>
+  <name>TS_WIFIHAL_5GHzGetRadioClientInactivityTimout</name>
+  <primitive_test_id/>
+  <primitive_test_name>WIFIHAL_GetOrSetParamIntValue</primitive_test_name>
+  <primitive_test_version>5</primitive_test_version>
+  <status>FREE</status>
+  <synopsis>Invoke the HAL API wifi_getRadioClientInactivityTimout() to retrieve the inactivity timeout for 5Ghz radio.</synopsis>
+  <groups_id/>
+  <execution_time>1</execution_time>
+  <long_duration>false</long_duration>
+  <advanced_script>false</advanced_script>
+  <remarks/>
+  <skip>false</skip>
+  <box_types>
+    <box_type>Broadband</box_type>
+  </box_types>
+  <rdk_versions>
+    <rdk_version>RDKB</rdk_version>
+  </rdk_versions>
+  <test_cases>
+    <test_case_id>TC_WIFIHAL_709</test_case_id>
+    <test_objective>Invoke the HAL API wifi_getRadioClientInactivityTimout() to retrieve the inactivity timeout for 5Ghz radio.</test_objective>
+    <test_type>Positive</test_type>
+    <test_setup>Broadband</test_setup>
+    <pre_requisite>1.Ccsp Components  should be in a running state else invoke cosa_start.sh manually that includes all the ccsp components and TDK Component
+2.TDK Agent should be in running state or invoke it through StartTdk.sh script</pre_requisite>
+    <api_or_interface_used>wifi_getRadioClientInactivityTimout()</api_or_interface_used>
+    <input_parameters>methodname : getRadioClientInactivityTimout
+radioIndex : 5G radio index</input_parameters>
+    <automation_approch>1. Load the wifihal module.
+2. Invoke the HAL API wifi_getRadioClientInactivityTimout() with 5G radio index and check if the API is invoked successfully.
+3. Check if the Timeout value is an integer.
+4. Unload the modules</automation_approch>
+    <expected_output>The HAL API wifi_getRadioClientInactivityTimout() should be invoked successfully and the inactivity timeout retrieved for 5Ghz radio should be an integer.</expected_output>
+    <priority>High</priority>
+    <test_stub_interface>wifihal</test_stub_interface>
+    <test_script>TS_WIFIHAL_5GHzGetRadioClientInactivityTimout</test_script>
+    <skipped>No</skipped>
+    <release_version>M97</release_version>
+    <remarks/>
+  </test_cases>
+  <script_tags/>
+</xml>
+
+'''
+# use tdklib library,which provides a wrapper for tdk testcase script
+import tdklib;
+from wifiUtility import *;
+
+radio = "5G"
+
+#Test component to be tested
+obj = tdklib.TDKScriptingLibrary("wifihal","1");
+
+#IP and Port of box, No need to change,
+#This will be replaced with correspoing Box Ip and port while executing script
+ip = <ipaddress>
+port = <port>
+obj.configureTestCase(ip,port,'TS_WIFIHAL_5GHzGetRadioClientInactivityTimout');
+
+#Get the result of connection with test component and DUT
+loadmodulestatus =obj.getLoadModuleResult();
+print "[LIB LOAD STATUS]  :  %s" %loadmodulestatus ;
+
+if "SUCCESS" in loadmodulestatus.upper():
+    obj.setLoadModuleStatus("SUCCESS");
+    tdkTestObjTemp, idx = getIndex(obj, radio);
+
+    ## Check if a invalid index is returned
+    if idx == -1:
+        print "Failed to get radio index for radio %s\n" %radio;
+        tdkTestObjTemp.setResultStatus("FAILURE");
+    else:
+        tdkTestObj = obj.createTestStep("WIFIHAL_GetOrSetParamIntValue");
+        tdkTestObj.addParameter("methodName","getRadioClientInactivityTimout");
+        tdkTestObj.addParameter("radioIndex",idx);
+        expectedresult="SUCCESS";
+        tdkTestObj.executeTestCase(expectedresult);
+        actualresult = tdkTestObj.getResult();
+        details = tdkTestObj.getResultDetails();
+
+        print "\nTEST STEP 1: Get the radio client inactivity timeout using the HAL API wifi_getRadioClientInactivityTimout() for 5G radio";
+        print "EXPECTED RESULT 1: Should get the radio client inactivity timeout using the HAL API successfully";
+
+        if expectedresult in actualresult :
+            #Set the result status of execution
+            tdkTestObj.setResultStatus("SUCCESS");
+            print "ACTUAL RESULT 1: API was invoked successfully; Details : %s" %details;
+            #Get the result of execution
+            print "[TEST EXECUTION RESULT] : SUCCESS";
+            timeout = details.split(":")[1];
+
+            if timeout.isdigit() :
+                #Set the result status of execution
+                tdkTestObj.setResultStatus("SUCCESS");
+                print "Radio client inactivity timeout is retrieved as : %s" %timeout;
+                #Get the result of execution
+                print "[TEST EXECUTION RESULT] : SUCCESS";
+            else:
+                tdkTestObj.setResultStatus("FAILURE");
+                print "Radio client inactivity timeout is retrieved as : %s" %timeout;
+                #Get the result of execution
+                print "[TEST EXECUTION RESULT] : FAILURE";
+        else:
+            #Set the result status of execution
+            tdkTestObj.setResultStatus("FAILURE");
+            print "ACTUAL RESULT 1: API invocation failed; Details : %s" %details;
+            #Get the result of execution
+            print "[TEST EXECUTION RESULT] : FAILURE";
+
+    obj.unloadModule("wifihal");
+else:
+    print "Failed to load the module";
+    obj.setLoadModuleStatus("FAILURE");
+    print "Module loading failed";
