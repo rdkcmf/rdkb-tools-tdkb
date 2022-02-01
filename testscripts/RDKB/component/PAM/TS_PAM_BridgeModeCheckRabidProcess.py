@@ -25,7 +25,7 @@
   <primitive_test_name>pam_GetParameterNames</primitive_test_name>
   <primitive_test_version>1</primitive_test_version>
   <status>FREE</status>
-  <synopsis>To check if rabid process is stopped when device is in bridge mode.</synopsis>
+  <synopsis>To check if cujo-agent process is stopped when device is in bridge mode.</synopsis>
   <groups_id/>
   <execution_time>10</execution_time>
   <long_duration>false</long_duration>
@@ -40,7 +40,7 @@
   </rdk_versions>
   <test_cases>
     <test_case_id>TC_PAM_224</test_case_id>
-    <test_objective>To check if rabid process is stopped when device is in bridge mode</test_objective>
+    <test_objective>To check if cujo-agent process is stopped when device is in bridge mode</test_objective>
     <test_type>Positive</test_type>
     <test_setup>Broadband</test_setup>
     <pre_requisite>1.Ccsp Components  should be in a running state else invoke cosa_start.sh manually that includes all the ccsp components.
@@ -51,12 +51,12 @@
     <automation_approch>1.Load the module
 2.Get the current lan mode and store the value
 3.Change the lan mode to bridge-static
-4.Check if rabid process is running
+4.Check if cujo-agent process is running
 5.if process is not running mark script as success else mark script as failure
 6.Revert the set value
 7.Unload the module
 </automation_approch>
-    <expected_output>rabid process is not expected to run when in bridge mode</expected_output>
+    <expected_output>cujo-agent process is not expected to run when in bridge mode</expected_output>
     <priority>High</priority>
     <test_stub_interface>PAM</test_stub_interface>
     <test_script>TS_PAM_BridgeModeCheckRabidProcess</test_script>
@@ -68,6 +68,7 @@
 </xml>
 
 '''
+
 # use tdklib library,which provides a wrapper for tdk testcase script
 import tdklib;
 from time import sleep;
@@ -132,7 +133,7 @@ if "SUCCESS" in (loadmodulestatus1.upper() and loadmodulestatus2.upper()):
             print"***wait for the set operation to get reflected****";
             sleep(60);
 
-            query="pidof rabid";
+            query="pidof cujo-agent";
             print "query:%s" %query
             tdkTestObj = obj.createTestStep('ExecuteCmd');
             tdkTestObj.addParameter("command", query)
@@ -143,16 +144,16 @@ if "SUCCESS" in (loadmodulestatus1.upper() and loadmodulestatus2.upper()):
             if expectedresult in  actualresult  and details == "":
                 tdkTestObj.setResultStatus("SUCCESS");
                 #Set the result status of execution
-                print "TEST STEP 3: Check if rabid process is up"
-                print "EXPECTED RESULT 3: In Bridge mode rabid process should not be running";
-                print "ACTUAL RESULT 3: pid of rabid  is %s" %details;
+                print "TEST STEP 3: Check if cujo-agent process is up"
+                print "EXPECTED RESULT 3: In Bridge mode cujo-agent process should not be running";
+                print "ACTUAL RESULT 3: pid of cujo-agent  is %s" %details;
                 print "[TEST EXECUTION RESULT] : SUCCESS";
             else:
                 tdkTestObj.setResultStatus("FAILURE");
                 #Set the result status of execution
-                print "TEST STEP 3: Check if rabid process is up"
-                print "EXPECTED RESULT 3:  In Bridge mode rabid process should not be running";
-                print "ACTUAL RESULT 3: pid of rabid  is %s" %details;
+                print "TEST STEP 3: Check if cujo-agent process is up"
+                print "EXPECTED RESULT 3:  In Bridge mode cujo-agent process should not be running";
+                print "ACTUAL RESULT 3: pid of cujo-agent  is %s" %details;
                 print "[TEST EXECUTION RESULT] : FAILURE";
 
             #Revert the value of lanMode

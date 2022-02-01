@@ -65,7 +65,7 @@
 3.DUT should be in RBUS mode</pre_requisite>
     <api_or_interface_used>rbus_Set
 rbusValue_SetUInt32</api_or_interface_used>
-    <input_parameters>Device.LogAgent.X_RDKCENTRAL-COM_LogLevel</input_parameters>
+    <input_parameters>Device.DeviceInfo.MemoryStatus.X_RDKCENTRAL-COM_FreeMemThreshold</input_parameters>
     <automation_approch>1. Load the rbus module
 2. Open the rbus connection using rbus_open RBUS API
 3. Get the initial value of the DML parameter using rbusValue_GetUInt32 and store it
@@ -104,7 +104,7 @@ print "[LIB LOAD STATUS]  :  %s" %loadmodulestatus ;
 if "SUCCESS" in loadmodulestatus.upper() :
     obj.setLoadModuleStatus("SUCCESS");
 
-    parameterName = "Device.LogAgent.X_RDKCENTRAL-COM_LogLevel"
+    parameterName = "Device.DeviceInfo.MemoryStatus.X_RDKCENTRAL-COM_FreeMemThreshold"
 
     tdkTestObj = obj.createTestStep('RBUS_Open');
     expectedresult = "SUCCESS";
@@ -144,10 +144,10 @@ if "SUCCESS" in loadmodulestatus.upper() :
 
             new_value_to_set = "0";
 
-            if initial_Value == "4":
-                new_value_to_set = "5";
+            if initial_Value == "10":
+                new_value_to_set = "20";
             else:
-                new_value_to_set = "4";
+                new_value_to_set = "10";
 
             print "New value to be set is : ",new_value_to_set
 

@@ -139,7 +139,7 @@ if "SUCCESS" in (loadmodulestatus.upper() and sysutilloadmodulestatus.upper()):
 
            sleep(60);
            tdkTestObj = sysobj.createTestStep('ExecuteCmd');
-           cmd = "cat /rdklogs/logs/agent.txt | grep -rin \"Rabid triggering firewall restart\"";
+           cmd = "cat /rdklogs/logs/agent.txt | grep -rin \"CujoAgent triggering firewall restart\"";
            tdkTestObj.addParameter("command",cmd);
            tdkTestObj.executeTestCase(expectedresult);
            actualresult = tdkTestObj.getResult();

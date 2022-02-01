@@ -27,7 +27,7 @@
   <status>FREE</status>
   <synopsis>To ensure no DIAGNOSTICS COMPLETE logs are coming in TR069.log when the IP Ping is triggered using namespaces.</synopsis>
   <groups_id/>
-  <execution_time>2</execution_time>
+  <execution_time>5</execution_time>
   <long_duration>false</long_duration>
   <advanced_script>false</advanced_script>
   <remarks/>
@@ -48,14 +48,13 @@
     <pre_requisite>1.Ccsp Components  should be in a running state else invoke cosa_start.sh manually that includes all the ccsp components.
 2.TDK Agent should be in running state or invoke it through StartTdk.sh script</pre_requisite>
     <api_or_interface_used>TADstub_Set,TADstub_Get</api_or_interface_used>
-    <input_parameters>Device.LogAgent.X_RDKCENTRAL-COM_TR69_LogLevel
-Device.LogAgent.X_RDKCENTRAL-COM_TR69_LoggerEnable
+    <input_parameters>Device.DeviceInfo.X_RDKCENTRAL-COM_RFC.Feature.TR069support.Enable
 Device.IP.Diagnostics.IPPing.Interface
 Device.IP.Diagnostics.IPPing.Host
 Device.IP.Diagnostics.IPPing.DiagnosticsState
 Device.IP.Diagnostics.IPPing.AverageResponseTime</input_parameters>
     <automation_approch>1. Load  TAD modules
-2.Enable the TR069 logging and set the log level as DEBUG
+2. Enable the TR069 if not in enabled state initially and check if TR069 log file is present under /rdklogs/logs
 3. From script invoke TADstub_Set to set all the IPPing parameters
 4. If set returns success, check if logs are updated in the TR069 logs
 5. Validation of  the result is done within the python script and send the result status to Test Manager.
@@ -72,6 +71,7 @@ Device.IP.Diagnostics.IPPing.AverageResponseTime</input_parameters>
 </xml>
 
 '''
+
 # use tdklib library,which provides a wrapper for tdk testcase script
 import tdklib;
 import time;
@@ -85,210 +85,244 @@ sysobj = tdklib.TDKScriptingLibrary("sysutil","1");
 #This will be replaced with correspoing Box Ip and port while executing script
 ip = <ipaddress>
 port = <port>
-obj.configureTestCase(ip,port,'TS_TAD_IPPing_CheckSuccessCount');
-sysobj.configureTestCase(ip,port,'TS_TAD_IPPing_CheckSuccessCount');
-#Get the result of connection with test component and DUT
+obj.configureTestCase(ip,port,'TS_TAD_IPPing_CheckTR069Logs');
+sysobj.configureTestCase(ip,port,'TS_TAD_IPPing_CheckTR069Logs');
+
+#Get the result of connection with test component and STB
 loadmodulestatus =obj.getLoadModuleResult();
 loadmodulestatus1 =sysobj.getLoadModuleResult();
 print "[LIB LOAD STATUS]  :  %s" %loadmodulestatus ;
+print "[LIB LOAD STATUS]  :  %s" %loadmodulestatus1 ;
+
 if "SUCCESS" in loadmodulestatus.upper() and "SUCCESS" in loadmodulestatus1.upper():
     #Set the result status of execution
     obj.setLoadModuleStatus("SUCCESS");
+    sysobj.setLoadModuleStatus("SUCCESS");
+    expectedresult="SUCCESS";
+
     host = tdkutility.readtdkbConfigFile(obj);
     if host == "NULL":
         tdkTestObj.setResultStatus("FAILURE");
         print "Host name not available in tdkb config file"
     else:
-	#Set the loglevel of TR69.log to DEBUG level
-	tdkTestObj = obj.createTestStep('TADstub_Get');
-        tdkTestObj.addParameter("paramName","Device.LogAgent.X_RDKCENTRAL-COM_TR69_LoggerEnable");
-        expectedresult="SUCCESS";
+        #Check if TR69 RFC is enabled
+        step = 1;
+        tr69_flag = 0;
+        tdkTestObj = obj.createTestStep('TADstub_Get');
+        tdkTestObj.addParameter("paramName","Device.DeviceInfo.X_RDKCENTRAL-COM_RFC.Feature.TR069support.Enable");
+        #Execute the test case in DUT
         tdkTestObj.executeTestCase(expectedresult);
         actualresult = tdkTestObj.getResult();
-        logEnable = tdkTestObj.getResultDetails();
+        details = tdkTestObj.getResultDetails();
+
+        print "\nTEST STEP %d : Get the value of Device.DeviceInfo.X_RDKCENTRAL-COM_RFC.Feature.TR069support.Enable" %step;
+        print "EXPECTED RESULT %d : Should get the value of Device.DeviceInfo.X_RDKCENTRAL-COM_RFC.Feature.TR069support.Enable" %step;
+
         if expectedresult in actualresult:
-	    tdkTestObj.setResultStatus("SUCCESS");
-            print "TEST STEP 1: Get the enable status of TR069 logs";
-            print "EXPECTED RESULT 1: Should get the enable status of TR069 logs";
-            print "ACTUAL RESULT 1: %s" %logEnable
+            init_enable = details.strip().replace("\\n", "");
+            #Set the result status of execution
+            tdkTestObj.setResultStatus("SUCCESS");
+            print "ACTUAL RESULT %d : Enable Status of Device.DeviceInfo.X_RDKCENTRAL-COM_RFC.Feature.TR069support.Enable is : %s" %(step, init_enable);
             #Get the result of execution
             print "[TEST EXECUTION RESULT] : SUCCESS";
 
-	    tdkTestObj.addParameter("paramName","Device.LogAgent.X_RDKCENTRAL-COM_TR69_LogLevel");
-            tdkTestObj.executeTestCase(expectedresult);
-            actualresult = tdkTestObj.getResult();
-            logLevel = tdkTestObj.getResultDetails();
-            if expectedresult in actualresult:
-                tdkTestObj.setResultStatus("SUCCESS");
-                print "TEST STEP 2: Get the log level of TR069 logs";
-                print "EXPECTED RESULT 2: Should get the log level of TR069 logs";
-                print "ACTUAL RESULT 2: %s" %logLevel
-                #Get the result of execution
-                print "[TEST EXECUTION RESULT] : SUCCESS";
-
-		tdkTestObj = obj.createTestStep('TADstub_Set');
-                tdkTestObj.addParameter("ParamName","Device.LogAgent.X_RDKCENTRAL-COM_TR69_LogLevel");
-                tdkTestObj.addParameter("ParamValue","4");
-                tdkTestObj.addParameter("Type","unsignedint");
-                tdkTestObj.executeTestCase(expectedresult);
-                actualresult1 = tdkTestObj.getResult();
-                details1 = tdkTestObj.getResultDetails();
-
-		tdkTestObj.addParameter("ParamName","Device.LogAgent.X_RDKCENTRAL-COM_TR69_LoggerEnable");
-                tdkTestObj.addParameter("ParamValue","true");
+            #If disabled initially, then enable
+            if init_enable == "false":
+                step = step + 1;
+                value = "true";
+                tdkTestObj = obj.createTestStep('TADstub_Set');
+                tdkTestObj.addParameter("ParamName","Device.DeviceInfo.X_RDKCENTRAL-COM_RFC.Feature.TR069support.Enable");
+                tdkTestObj.addParameter("ParamValue",value);
                 tdkTestObj.addParameter("Type","bool");
+                #Execute the test case in DUT
                 tdkTestObj.executeTestCase(expectedresult);
-                actualresult2 = tdkTestObj.getResult();
-                details2 = tdkTestObj.getResultDetails();
+                actualresult = tdkTestObj.getResult();
+                details = tdkTestObj.getResultDetails();
 
-		if expectedresult in actualresult1 and  expectedresult in actualresult2:
-		    tdkTestObj.setResultStatus("SUCCESS");
-                    print "TEST STEP 3: Enable TR069 logging and set level as DEBUG";
-                    print "EXPECTED RESULT 3: Should enable the TR069 logging and set level as DEBUG";
-                    print "ACTUAL RESULT 3: %s,%s" %(details1,details2);
+                print "\nTEST STEP %d: Set Device.DeviceInfo.X_RDKCENTRAL-COM_RFC.Feature.TR069support.Enable to %s" %(step, value);
+                print "EXPECTED RESULT %d: Device.DeviceInfo.X_RDKCENTRAL-COM_RFC.Feature.TR069support.Enable should be set to %s successfully" %(step,value);
+
+                if expectedresult in actualresult:
+                    tr69_flag = 1;
+                    #Set the result status of execution
+                    tdkTestObj.setResultStatus("SUCCESS");
+                    print "ACTUAL RESULT %d : Device.DeviceInfo.X_RDKCENTRAL-COM_RFC.Feature.TR069support.Enable is set to %s successfully; Details : %s" %(step, value, details);
+                    #Get the result of execution
+                    print "[TEST EXECUTION RESULT] : SUCCESS";
+                else:
+                    #Set the result status of execution
+                    tdkTestObj.setResultStatus("FAILURE");
+                    print "ACTUAL RESULT %d : Device.DeviceInfo.X_RDKCENTRAL-COM_RFC.Feature.TR069support.Enable is not set to %s successfully; Details : %s" %(step, value, details);
+                    #Get the result of execution
+                    print "[TEST EXECUTION RESULT] : FAILURE";
+            else:
+                tr69_flag = 1;
+                tdkTestObj.setResultStatus("SUCCESS");
+                print "TR69 RFC is enabled initially";
+
+            if tr69_flag == 1:
+                #Check if the TR69 log file is created under /rdklogs/logs/TR69log.txt.0
+                step = step + 1;
+                time.sleep(10);
+                tdkTestObj = sysobj.createTestStep('ExecuteCmd');
+                file = "/rdklogs/logs/TR69log.txt.0"
+                cmd = "[ -f " + file + " ] && echo \"File exist\" || echo \"File does not exist\"";
+                print "Command : ", cmd;
+                tdkTestObj.addParameter("command",cmd);
+                tdkTestObj.executeTestCase(expectedresult);
+                actualresult = tdkTestObj.getResult();
+                details = tdkTestObj.getResultDetails().strip().replace("\\n", "");
+
+                print "\nTEST STEP %d: Check for %s file presence" %(step, file);
+                print "EXPECTED RESULT %d: %s file should be present" %(step, file);
+
+                if details == "File exist":
+                    tdkTestObj.setResultStatus("SUCCESS");
+                    print "ACTUAL RESULT %d: %s file is present" %(step, file);
                     #Get the result of execution
                     print "[TEST EXECUTION RESULT] : SUCCESS";
 
-		    #set the IP Ping params
-        	    tdkTestObj.addParameter("ParamName","Device.IP.Diagnostics.IPPing.Interface");
-        	    tdkTestObj.addParameter("ParamValue","Interface_erouter0");
-        	    tdkTestObj.addParameter("Type","string");
-        	    tdkTestObj.executeTestCase(expectedresult);
-        	    actualresult = tdkTestObj.getResult();
-        	    details = tdkTestObj.getResultDetails();
-        	    if expectedresult in actualresult:
-        	        #Set the result status of execution
-        	        tdkTestObj.setResultStatus("SUCCESS");
-        	        print "TEST STEP 4: Set the interface of IPPing";
-        	        print "EXPECTED RESULT 4: Should set the interface of IPPing";
-        	        print "ACTUAL RESULT 4: %s" %details;
-        	        #Get the result of execution
-        	        print "[TEST EXECUTION RESULT] : SUCCESS";
-
-        	        tdkTestObj.addParameter("ParamName","Device.IP.Diagnostics.IPPing.Host");
-        	        tdkTestObj.addParameter("ParamValue",host);
-        	        tdkTestObj.addParameter("Type","string");
-        	        tdkTestObj.executeTestCase(expectedresult);
-        	        actualresult = tdkTestObj.getResult();
-        	        details = tdkTestObj.getResultDetails();
-        	        if expectedresult in actualresult:
-        	            #Set the result status of execution
-        	            tdkTestObj.setResultStatus("SUCCESS");
-        	            print "TEST STEP 5: Set the host of IPPing";
-        	            print "EXPECTED RESULT 5: Should set the host of IPPing";
-        	            print "ACTUAL RESULT 5: %s" %details;
-        	            #Get the result of execution
-        	            print "[TEST EXECUTION RESULT] : SUCCESS";
-
-                	    tdkTestObj.addParameter("ParamName","Device.IP.Diagnostics.IPPing.DiagnosticsState");
-                	    tdkTestObj.addParameter("ParamValue","Requested");
-                	    tdkTestObj.addParameter("Type","string");
-                	    expectedresult="SUCCESS";
-                	    tdkTestObj.executeTestCase(expectedresult);
-                	    actualresult = tdkTestObj.getResult();
-                	    details = tdkTestObj.getResultDetails();
-                	    if expectedresult in actualresult:
-                	        #Set the result status of execution
-                	        tdkTestObj.setResultStatus("SUCCESS");
-                	        print "TEST STEP 6: Set DiagnosticsState of IPPing as Requested";
-                	        print "EXPECTED RESULT 6: Should set DiagnosticsState of IPPing as Requested";
-                	        print "ACTUAL RESULT 6: %s" %details;
-                	        #Get the result of execution
-                	        print "[TEST EXECUTION RESULT] : SUCCESS";
-                    		time.sleep(40);
-
-				tdkTestObj = sysobj.createTestStep('ExecuteCmd');
-                		cmd = "cat /rdklogs/logs/TR69log.txt.0 | grep 'CwmpEvent->EventCode = 8 DIAGNOSTICS COMPLETE'"
-                		tdkTestObj.addParameter("command", cmd);
-                		tdkTestObj.executeTestCase(expectedresult);
-                		actualresult = tdkTestObj.getResult();
-                		logstatus = tdkTestObj.getResultDetails().strip();
-				if logstatus:
-				    tdkTestObj.setResultStatus("FAILURE");
-				    print "The logs for ip ping are updated in the TR069 log file"
-				else:
-				    tdkTestObj.setResultStatus("SUCCESS");
-				    print "The logs for ip ping are not updated in the TR069 log file"
-                	    else:
-                	        #Set the result status of execution
-                	        tdkTestObj.setResultStatus("FAILURE");
-                	        print "TEST STEP 6: Set DiagnosticsState of IPPing as Requested";
-                	        print "EXPECTED RESULT 6: Should set DiagnosticsState of IPPing as Requested";
-                	        print "ACTUAL RESULT 6: %s" %details;
-                	        #Get the result of execution
-                	        print "[TEST EXECUTION RESULT] : FAILURE";
-        	        else:
-        	            #Set the result status of execution
-        	            tdkTestObj.setResultStatus("FAILURE");
-        	            print "TEST STEP 5: Set the host of IPPing";
-        	            print "EXPECTED RESULT 5: Should set the host of IPPing";
-        	            print "ACTUAL RESULT 5: %s" %details;
-        	            #Get the result of execution
-        	            print "[TEST EXECUTION RESULT] : FAILURE";
-        	    else:
-        	        #Set the result status of execution
-        	        tdkTestObj.setResultStatus("FAILURE");
-        	        print "TEST STEP 4: Set the interface of IPPing";
-        	        print "EXPECTED RESULT 4: Should set the interface of IPPing";
-        	        print "ACTUAL RESULT 4: %s" %details;
-        	        #Get the result of execution
-        	        print "[TEST EXECUTION RESULT] : FAILURE";
-		    #Revert the log param values
-		    tdkTestObj = obj.createTestStep('TADstub_Set');
-                    tdkTestObj.addParameter("ParamName","Device.LogAgent.X_RDKCENTRAL-COM_TR69_LogLevel");
-                    tdkTestObj.addParameter("ParamValue",logLevel);
-                    tdkTestObj.addParameter("Type","unsignedint");
+                    #Set Device.IP.Diagnostics.TraceRoute.Interface
+                    step = step + 1;
+                    tdkTestObj = obj.createTestStep('TADstub_Set');
+                    tdkTestObj.addParameter("ParamName","Device.IP.Diagnostics.IPPing.Interface");
+                    tdkTestObj.addParameter("ParamValue","Interface_erouter0");
+                    tdkTestObj.addParameter("Type","string");
                     tdkTestObj.executeTestCase(expectedresult);
-                    actualresult1 = tdkTestObj.getResult();
-                    details1 = tdkTestObj.getResultDetails();
+                    actualresult = tdkTestObj.getResult();
+                    details = tdkTestObj.getResultDetails();
 
-                    tdkTestObj.addParameter("ParamName","Device.LogAgent.X_RDKCENTRAL-COM_TR69_LoggerEnable");
-                    tdkTestObj.addParameter("ParamValue",logEnable);
-                    tdkTestObj.addParameter("Type","bool");
-                    tdkTestObj.executeTestCase(expectedresult);
-                    actualresult2 = tdkTestObj.getResult();
-                    details2 = tdkTestObj.getResultDetails();
+                    print "\nTEST STEP %d: Set the interface of IPPing" %step;
+                    print "EXPECTED RESULT %d: Should set the interface of IPPing" %step;
 
-                    if expectedresult in actualresult1 and  expectedresult in actualresult2:
+                    if expectedresult in actualresult:
+                        #Set the result status of execution
                         tdkTestObj.setResultStatus("SUCCESS");
-                        print "TEST STEP : Revert the loglevel and enable status";
-                        print "EXPECTED RESULT : Should revert the loglevel and enable status";
-                        print "ACTUAL RESULT : %s,%s" %(details1,details2);
+                        print "ACTUAL RESULT %d: %s" %(step, details);
                         #Get the result of execution
                         print "[TEST EXECUTION RESULT] : SUCCESS";
-		    else:
-			tdkTestObj.setResultStatus("FAILURE");
-                        print "TEST STEP : Revert the loglevel and enable status";
-                        print "EXPECTED RESULT : Should revert the loglevel and enable status";
-                        print "ACTUAL RESULT : %s,%s" %(details1,details2);
+
+                        #Set Device.IP.Diagnostics.TraceRoute.Host
+                        step = step + 1;
+                        tdkTestObj = obj.createTestStep('TADstub_Set');
+                        tdkTestObj.addParameter("ParamName","Device.IP.Diagnostics.IPPing.Host");
+                        tdkTestObj.addParameter("ParamValue",host);
+                        tdkTestObj.addParameter("Type","string");
+                        tdkTestObj.executeTestCase(expectedresult);
+                        actualresult = tdkTestObj.getResult();
+                        details = tdkTestObj.getResultDetails();
+
+                        print "\nTEST STEP %d: Set the host of IPPing" %step;
+                        print "EXPECTED RESULT %d: Should set the host of IPPing" %step;
+
+                        if expectedresult in actualresult:
+                            #Set the result status of execution
+                            tdkTestObj.setResultStatus("SUCCESS");
+                            print "ACTUAL RESULT %d: %s" %(step, details);
+                            #Get the result of execution
+                            print "[TEST EXECUTION RESULT] : SUCCESS";
+
+                            #Set Device.IP.Diagnostics.TraceRoute.DiagnosticsState
+                            step = step + 1;
+                            tdkTestObj = obj.createTestStep('TADstub_Set');
+                            tdkTestObj.addParameter("ParamName","Device.IP.Diagnostics.IPPing.DiagnosticsState");
+                            tdkTestObj.addParameter("ParamValue","Requested");
+                            tdkTestObj.addParameter("Type","string");
+                            tdkTestObj.executeTestCase(expectedresult);
+                            actualresult = tdkTestObj.getResult();
+                            details = tdkTestObj.getResultDetails();
+
+                            print "\nTEST STEP %d: Set DiagnosticsState of IPPing as Requested" %step;
+                            print "EXPECTED RESULT %d: Should set DiagnosticsState of IPPing as Requested" %step;
+
+                            if expectedresult in actualresult:
+                                #Set the result status of execution
+                                tdkTestObj.setResultStatus("SUCCESS");
+                                print "ACTUAL RESULT %d: %s" %(step, details);
+                                #Get the result of execution
+                                print "[TEST EXECUTION RESULT] : SUCCESS";
+
+                                #Check if 'CwmpEvent->EventCode = 8 DIAGNOSTICS COMPLETE' is present in TR69 log file
+                                step = step + 1;
+                                time.sleep(180);
+                                tdkTestObj = sysobj.createTestStep('ExecuteCmd');
+                                cmd = "cat /rdklogs/logs/TR69log.txt.0 | grep 'CwmpEvent->EventCode = 8 DIAGNOSTICS COMPLETE'"
+                                tdkTestObj.addParameter("command", cmd);
+                                tdkTestObj.executeTestCase(expectedresult);
+                                actualresult = tdkTestObj.getResult();
+                                logstatus = tdkTestObj.getResultDetails().strip();
+
+                                print "\nTEST STEP %d : Check if the logs for traceroute are updated in TR069 log file" %step;
+                                print "EXPECTED RESULT %d : Logs for tracerouter should not be updated in TR69 log file" %step;
+
+                                if "COMPLETE" in logstatus:
+                                    tdkTestObj.setResultStatus("FAILURE");
+                                    print "ACTUAL RESULT %d : The logs for traceroute are updated in the TR069 log file; Details : %s"%(step, logstatus);
+                                    #Get the result of execution
+                                    print "[TEST EXECUTION RESULT] : FAILURE";
+                                else:
+                                    tdkTestObj.setResultStatus("SUCCESS");
+                                    print "ACTUAL RESULT %d : The logs for traceroute are not updated in the TR069 log file" %step;
+                                    #Get the result of execution
+                                    print "[TEST EXECUTION RESULT] : SUCCESS";
+                            else:
+                                #Set the result status of execution
+                                tdkTestObj.setResultStatus("FAILURE");
+                                print "ACTUAL RESULT %d: %s" %(step, details);
+                                #Get the result of execution
+                                print "[TEST EXECUTION RESULT] : FAILURE";
+                        else:
+                            #Set the result status of execution
+                            tdkTestObj.setResultStatus("FAILURE");
+                            print "ACTUAL RESULT %d: %s" %(step, details);
+                            #Get the result of execution
+                            print "[TEST EXECUTION RESULT] : FAILURE";
+                    else:
+                        #Set the result status of execution
+                        tdkTestObj.setResultStatus("FAILURE");
+                        print "ACTUAL RESULT %d: %s" %(step, details);
                         #Get the result of execution
                         print "[TEST EXECUTION RESULT] : FAILURE";
-		  
-		else:
-		    tdkTestObj.setResultStatus("FAILURE");
-                    print "TEST STEP 3: Enable TR069 logging and set level as DEBUG";
-                    print "EXPECTED RESULT 3: Should enable the TR069 logging and set level as DEBUG";
-                    print "ACTUAL RESULT 3: %s,%s" %(details1,details2);
+                else:
+                    tdkTestObj.setResultStatus("FAILURE");
+                    print "ACTUAL RESULT %d: %s file is not present" %(step, file);
                     #Get the result of execution
                     print "[TEST EXECUTION RESULT] : FAILURE";
-	    else:
-		tdkTestObj.setResultStatus("FAILURE");
-                print "TEST STEP 2: Get the log level of TR069 logs";
-                print "EXPECTED RESULT 2: Should get the log level of TR069 logs";
-                print "ACTUAL RESULT 2: %s" %logLevel
-                #Get the result of execution
-                print "[TEST EXECUTION RESULT] : FAILURE";
-	else:
-	    tdkTestObj.setResultStatus("FAILURE");
-            print "TEST STEP 1: Get the enable status of TR069 logs";
-            print "EXPECTED RESULT 1: Should get the enable status of TR069 logs";
-            print "ACTUAL RESULT 1: %s" %logEnable
-            #Get the result of execution
-            print "[TEST EXECUTION RESULT] : FAILURE";
-    obj.unloadModule("tad");
-    obj.unloadModule("sysutil");
 
+                #Revert operation
+                if init_enable != "true":
+                    tdkTestObj = obj.createTestStep('TADstub_Set');
+                    tdkTestObj.addParameter("ParamName","Device.DeviceInfo.X_RDKCENTRAL-COM_RFC.Feature.TR069support.Enable");
+                    tdkTestObj.addParameter("ParamValue","false");
+                    tdkTestObj.addParameter("Type","bool");
+                    #Execute the test case in DUT
+                    tdkTestObj.executeTestCase(expectedresult);
+                    actualresult = tdkTestObj.getResult();
+                    details = tdkTestObj.getResultDetails();
+
+                    if expectedresult in actualresult :
+                        tdkTestObj.setResultStatus("SUCCESS");
+                        print "Revert operation of TR69 RFC was success";
+                    else :
+                        tdkTestObj.setResultStatus("FAILURE");
+                        print "Revert operation of TR69 RFC was failed";
+                else:
+                    print "TR69 RFC revert not required";
+            else :
+                tdkTestObj.setResultStatus("FAILURE");
+                print "TR69 RFC could not be enabled";
+        else:
+            #Set the result status of execution
+            tdkTestObj.setResultStatus("SUCCESS");
+            print "ACTUAL RESULT %d : GET operation failed; Details : %s" %(step, details);
+            #Get the result of execution
+            print "[TEST EXECUTION RESULT] : SUCCESS";
+
+    obj.unloadModule("tad");
+    sysobj.unloadModule("sysutil");
 else:
-        print "Failed to load tad module";
-        obj.setLoadModuleStatus("FAILURE");
-        print "Module loading failed";
+    print "Failed to load tad module";
+    obj.setLoadModuleStatus("FAILURE");
+    sysobj.setLoadModuleStatus("FAILURE");
+    print "Module loading failed";
+

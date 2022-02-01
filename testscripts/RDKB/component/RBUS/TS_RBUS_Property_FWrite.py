@@ -2,7 +2,7 @@
 # If not stated otherwise in this file or this component's Licenses.txt
 # file the following copyright and licenses apply:
 #
-# Copyright 2020 RDK Management
+# Copyright 2021 RDK Management
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@
 <xml>
   <id></id>
   <!-- Do not edit id. This will be auto filled while exporting. If you are adding a new script keep the id empty -->
-  <version>7</version>
+  <version>10</version>
   <!-- Do not edit version. This will be auto incremented while updating. If you are adding a new script you can keep the vresion as 1 -->
   <name>TS_RBUS_Property_FWrite</name>
   <!-- If you are adding a new script you can specify the script name. Script Name should be unique same as this file name with out .py extension -->
@@ -230,7 +230,7 @@ if "SUCCESS" in loadmodulestatus.upper() :
         tdkTestObj.addParameter("property_name","dummy");
         tdkTestObj.executeTestCase(expectedresult);
         actualresult = tdkTestObj.getResult();
-        fwrite_data = tdkTestObj.getResultDetails().strip().replace("\\n", "");
+        fwrite_data = tdkTestObj.getResultDetails().strip().replace("\\n", "").replace("\\r", "");
         print "RBUS rbusProperty_fwrite Detail is ",fwrite_data
 
         if expectedresult in actualresult:

@@ -33,7 +33,7 @@
   <!--  -->
   <status>FREE</status>
   <!--  -->
-  <synopsis>To enable Device FingerPrint and check if rabid process is running and disable Device FingerPrint and check if rabid process is not running</synopsis>
+  <synopsis>To enable Device FingerPrint and check if cujo-agent process is running and disable Device FingerPrint and check if cujo-agent process is not running</synopsis>
   <!--  -->
   <groups_id />
   <!--  -->
@@ -57,7 +57,7 @@
   </rdk_versions>
   <test_cases>
     <test_case_id>TC_PAM_156</test_case_id>
-    <test_objective>To enable Device FingerPrint and check if rabid process is running and disable Device FingerPrint and check if rabid process is not running</test_objective>
+    <test_objective>To enable Device FingerPrint and check if cujo-agent process is running and disable Device FingerPrint and check if cujo-agent process is not running</test_objective>
     <test_type>Positive</test_type>
     <test_setup>Broadband</test_setup>
     <pre_requisite>1.Ccsp Components in DUT should be in a running state that includes component under test Cable Modem
@@ -66,10 +66,10 @@
     <input_parameters>Device.DeviceInfo.X_RDKCENTRAL-COM_DeviceFingerPrint.Enable</input_parameters>
     <automation_approch>1.Load module
 2.Get value of Device.DeviceInfo.X_RDKCENTRAL-COM_DeviceFingerPrint.Enable
-3.If it is true,Check if rabid process is running
-4.If it is false,Check if rabid process is not running
+3.If it is true,Check if cujo-agent process is running
+4.If it is false,Check if cujo-agent process is not running
 5.Toggle the value and check if process is running or not</automation_approch>
-    <expected_output>After enabling Device FingerPrint rabid process should be running and after disabling Device FingerPrint rabid process should not be running</expected_output>
+    <expected_output>After enabling Device FingerPrint cujo-agent process should be running and after disabling Device FingerPrint cujo-agent process should not be running</expected_output>
     <priority>High</priority>
     <test_stub_interface>None</test_stub_interface>
     <test_script>TS_PAM_CheckRabidProcess</test_script>
@@ -80,10 +80,11 @@
   <script_tags />
 </xml>
 '''
+
 import tdklib;
 import time;
 from tdkbVariables import *;
-MAX_RETRY = 10;
+MAX_RETRY = 5;
 
 #Test component to be tested
 obj = tdklib.TDKScriptingLibrary("pam","RDKB");
@@ -124,7 +125,7 @@ if "SUCCESS" in loadmodulestatus.upper() and "SUCCESS" in loadmodulestatus1.uppe
         print "[TEST EXECUTION RESULT] : SUCCESS"
         if orgValue == "true":
             #check whether the process is running or not
-            query="sh %s/tdk_platform_utility.sh checkProcess rabid" %TDK_PATH
+            query="sh %s/tdk_platform_utility.sh checkProcess cujo-agent" %TDK_PATH
             print "query:%s" %query
             tdkTestObj = obj1.createTestStep('ExecuteCmd');
             tdkTestObj.addParameter("command", query)
@@ -134,9 +135,9 @@ if "SUCCESS" in loadmodulestatus.upper() and "SUCCESS" in loadmodulestatus1.uppe
             pid = tdkTestObj.getResultDetails().strip().replace("\\n","");
             if expectedresult in actualresult and pid:
                 tdkTestObj.setResultStatus("SUCCESS");
-                print "TEST STEP 2:Check if rabid process is running";
-                print "EXPECTED RESUT 2: Should get the PID of Rabid if process is running";
-                print "ACTUAL RESULT 2: PID of Rabid process %s" %pid;
+                print "TEST STEP 2:Check if cujo-agent process is running";
+                print "EXPECTED RESUT 2: Should get the PID of cujo-agent if process is running";
+                print "ACTUAL RESULT 2: PID of cujo-agent process %s" %pid;
                 #Get the result of execution
                 print "[TEST EXECUTION RESULT] : SUCCESS";
                 tdkTestObj = obj.createTestStep('pam_SetParameterValues');
@@ -156,7 +157,7 @@ if "SUCCESS" in loadmodulestatus.upper() and "SUCCESS" in loadmodulestatus1.uppe
                     #Get the result of execution
                     print "[TEST EXECUTION RESULT] : SUCCESS"
                     #check whether the process is running or not
-                    query="sh %s/tdk_platform_utility.sh checkProcess rabid" %TDK_PATH
+                    query="sh %s/tdk_platform_utility.sh checkProcess cujo-agent" %TDK_PATH
                     print "query:%s" %query
                     tdkTestObj = obj1.createTestStep('ExecuteCmd');
                     tdkTestObj.addParameter("command", query)
@@ -177,16 +178,16 @@ if "SUCCESS" in loadmodulestatus.upper() and "SUCCESS" in loadmodulestatus1.uppe
                             retryCount = retryCount + 1;
                     if expectedresult in actualresult and pid == "":
                         tdkTestObj.setResultStatus("SUCCESS");
-                        print "TEST STEP 4:Check if rabid process is not running";
-                        print "EXPECTED RESULT 4: Rabid process should not be running";
-                        print "ACTUAL RESULT 4: Rabid process is not running";
+                        print "TEST STEP 4:Check if cujo-agent process is not running";
+                        print "EXPECTED RESULT 4: cujo-agent process should not be running";
+                        print "ACTUAL RESULT 4: cujo-agent process is not running";
                         #Get the result of execution
                         print "[TEST EXECUTION RESULT] : SUCCESS";
                     else:
                         tdkTestObj.setResultStatus("FAILURE");
-                        print "TEST STEP 4:Check if rabid process is not running";
-                        print "EXPECTED RESULT 4: Rabid process should not be running";
-                        print "ACTUAL RESULT 4: Rabid process is running";
+                        print "TEST STEP 4:Check if cujo-agent process is not running";
+                        print "EXPECTED RESULT 4: cujo-agent process should not be running";
+                        print "ACTUAL RESULT 4: cujo-agent process is running";
                         #Get the result of execution
                         print "[TEST EXECUTION RESULT] : FAILURE";
                 else:
@@ -198,14 +199,14 @@ if "SUCCESS" in loadmodulestatus.upper() and "SUCCESS" in loadmodulestatus1.uppe
                     print "[TEST EXECUTION RESULT] : FAILURE"
             else:
                 tdkTestObj.setResultStatus("FAILURE");
-                print "TEST STEP 2:Check if rabid process is running";
-                print "EXPECTED RESULT 2: rabid process should be running";
-                print "ACTUAL RESULT 2: Rabid process is not running";
+                print "TEST STEP 2:Check if cujo-agent process is running";
+                print "EXPECTED RESULT 2: cujo-agent process should be running";
+                print "ACTUAL RESULT 2: cujo-agent process is not running";
                 #Get the result of execution
                 print "[TEST EXECUTION RESULT] : FAILURE";
         else:
             #check whether the process is running or not
-            query="sh %s/tdk_platform_utility.sh checkProcess rabid" %TDK_PATH
+            query="sh %s/tdk_platform_utility.sh checkProcess cujo-agent" %TDK_PATH
             print "query:%s" %query
             tdkTestObj = obj1.createTestStep('ExecuteCmd');
             tdkTestObj.addParameter("command", query)
@@ -215,9 +216,9 @@ if "SUCCESS" in loadmodulestatus.upper() and "SUCCESS" in loadmodulestatus1.uppe
             pid = tdkTestObj.getResultDetails().strip().replace("\\n","");
             if expectedresult in actualresult and pid == "":
                 tdkTestObj.setResultStatus("SUCCESS");
-                print "TEST STEP 5:Check if rabid process is not running";
-                print "EXPECTED RESULT 5: rabid process should not be running";
-                print "ACTUAL RESULT 5: Rabid process is not running";
+                print "TEST STEP 5:Check if cujo-agent process is not running";
+                print "EXPECTED RESULT 5: cujo-agent process should not be running";
+                print "ACTUAL RESULT 5: cujo-agent process is not running";
                 #Get the result of execution
                 print "[TEST EXECUTION RESULT] : SUCCESS";
                 tdkTestObj = obj.createTestStep('pam_SetParameterValues');
@@ -237,7 +238,7 @@ if "SUCCESS" in loadmodulestatus.upper() and "SUCCESS" in loadmodulestatus1.uppe
                     #Get the result of execution
                     print "[TEST EXECUTION RESULT] : SUCCESS"
                     #check whether the process is running or not
-                    query="sh %s/tdk_platform_utility.sh checkProcess rabid" %TDK_PATH
+                    query="sh %s/tdk_platform_utility.sh checkProcess cujo-agent" %TDK_PATH
                     print "query:%s" %query
                     tdkTestObj = obj1.createTestStep('ExecuteCmd');
                     tdkTestObj.addParameter("command", query)
@@ -258,16 +259,16 @@ if "SUCCESS" in loadmodulestatus.upper() and "SUCCESS" in loadmodulestatus1.uppe
                             retryCount = retryCount + 1;
                     if expectedresult in actualresult and pid:
                         tdkTestObj.setResultStatus("SUCCESS");
-                        print "TEST STEP 7:Check if rabid process is running";
-                        print "EXPECTED RESULT 7: Rabid process should be running";
-                        print "ACTUAL RESULT 7: Rabid process is running with PID:%s" %pid;
+                        print "TEST STEP 7:Check if cujo-agent process is running";
+                        print "EXPECTED RESULT 7: cujo-agent process should be running";
+                        print "ACTUAL RESULT 7: cujo-agent process is running with PID:%s" %pid;
                         #Get the result of execution
                         print "[TEST EXECUTION RESULT] : SUCCESS";
                     else:
                         tdkTestObj.setResultStatus("FAILURE");
-                        print "TEST STEP 7:Check if rabid process is running";
-                        print "EXPECTED RESULT 7: Rabid process should be running";
-                        print "ACTUAL RESULT 7: Rabid process is not running";
+                        print "TEST STEP 7:Check if cujo-agent process is running";
+                        print "EXPECTED RESULT 7: cujo-agent process should be running";
+                        print "ACTUAL RESULT 7: cujo-agent process is not running";
                         #Get the result of execution
                         print "[TEST EXECUTION RESULT] : FAILURE";
                 else:
@@ -279,9 +280,9 @@ if "SUCCESS" in loadmodulestatus.upper() and "SUCCESS" in loadmodulestatus1.uppe
                     print "[TEST EXECUTION RESULT] : FAILURE"
             else:
                 tdkTestObj.setResultStatus("FAILURE");
-                print "TEST STEP 2:Check if rabid process is not running";
-                print "EXPECTED RESULT 2: Rabid process shoul not be running";
-                print "ACTUAL RESULT 2: Rabid process is running";
+                print "TEST STEP 2:Check if cujo-agent process is not running";
+                print "EXPECTED RESULT 2: cujo-agent process shoul not be running";
+                print "ACTUAL RESULT 2: cujo-agent process is running";
                 #Get the result of execution
                 print "[TEST EXECUTION RESULT] : FAILURE";
 
@@ -321,3 +322,4 @@ else:
     print "Failed to load pam module";
     obj.setLoadModuleStatus("FAILURE");
     print "Module loading failed";
+

@@ -2,7 +2,7 @@
 # If not stated otherwise in this file or this component's Licenses.txt
 # file the following copyright and licenses apply:
 #
-# Copyright 2020 RDK Management
+# Copyright 2021 RDK Management
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@
 <xml>
   <id></id>
   <!-- Do not edit id. This will be auto filled while exporting. If you are adding a new script keep the id empty -->
-  <version>4</version>
+  <version>8</version>
   <!-- Do not edit version. This will be auto incremented while updating. If you are adding a new script you can keep the vresion as 1 -->
   <name>TS_RBUS_AddElementsWithMultipleObjects</name>
   <!-- If you are adding a new script you can specify the script name. Script Name should be unique same as this file name with out .py extension -->
@@ -111,6 +111,7 @@ print "[RBUS LIB LOAD STATUS]  :  %s" %loadmodulestatus ;
 if "SUCCESS" in loadmodulestatus.upper():
     obj.setLoadModuleStatus("SUCCESS");
     expectedresult="SUCCESS";
+    dynamic_element_name = 0
 
     print "\n*************Start of Broker Connection*******************************";
     tdkTestObj = obj.createTestStep('RBUS_RegisterOperation');
@@ -135,13 +136,16 @@ if "SUCCESS" in loadmodulestatus.upper():
         for obj_count in range(1,4):
             if obj_count == 1:
                 obj_name = "tdkb_server.obj1"
+                dynamic_element_name = 0;
                 element_count = 10;
             elif obj_count == 2:
                 obj_name = "tdkb_server.obj2"
-                element_count = 8;
+                dynamic_element_name = 10;
+                element_count = 18;
             else:
                 obj_name = "tdkb_server.obj3"
-                element_count = 12;
+                dynamic_element_name = 18;
+                element_count = 30;
 
             print "\n*************Start of Registering Object-%s *****************************" %obj_count
             tdkTestObj = obj.createTestStep('RBUS_RegisterOperation');
@@ -165,7 +169,7 @@ if "SUCCESS" in loadmodulestatus.upper():
 
                 print "\n*************Start of Adding Elements in object-%s *****************************" %obj_count
                 element_name = "";
-                for element in range(0,element_count):
+                for element in range(dynamic_element_name,element_count):
                     element_name = "Element"+str(element);
 
                     tdkTestObj = obj.createTestStep('RBUS_RegisterOperation');
@@ -210,17 +214,20 @@ if "SUCCESS" in loadmodulestatus.upper():
         for obj_count in range(1,4):
             if obj_count == 1:
                 obj_name = "tdkb_server.obj1"
+                dynamic_element_name = 0;
                 element_count = 10;
             elif obj_count == 2:
                 obj_name = "tdkb_server.obj2"
-                element_count = 8;
+                dynamic_element_name = 10;
+                element_count = 18;
             else:
                 obj_name = "tdkb_server.obj3"
-                element_count = 12;
+                dynamic_element_name = 18;
+                element_count = 30;
 
             print "\n*************Start of RemoveElements in Object %s*****************************" %obj_count
             element_name = "";
-            for element in range(0,element_count):
+            for element in range(dynamic_element_name,element_count):
                 element_name = "Element"+str(element);
 
                 tdkTestObj = obj.createTestStep('RBUS_RegisterOperation');
