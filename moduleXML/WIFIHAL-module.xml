@@ -94,6 +94,10 @@
       <function name='WIFIHAL_GetVAPTelemetry' />
       <function name='WIFIHAL_GetRadioVapInfoMap' />
       <function name='WIFIHAL_SetNeighborReports' />
+      <function name="WIFIHAL_GetApAssociatedClientDiagnosticResult"/>
+      <function name="WIFIHAL_GetAPCapabilities"/>
+      <function name="WIFIHAL_GetAvailableBSSColor"/>
+      <function name="WIFIHAL_GetOrSetFTMobilityDomainID"/>
     </functions>
   <!-- Total parameters corresponding module  -->
     <parameters>
@@ -281,6 +285,15 @@
       <parameter funName='WIFIHAL_SetNeighborReports' parameterName='opClass' parameterType='INTEGER' range='0-100' />
       <parameter funName='WIFIHAL_SetNeighborReports' parameterName='channel' parameterType='INTEGER' range='0-1000' />
       <parameter funName='WIFIHAL_SetNeighborReports' parameterName='phyTable' parameterType='INTEGER' range='0-1000' />
+      <parameter funName='WIFIHAL_GetApAssociatedClientDiagnosticResult' parameterName='apIndex' parameterType='INTEGER' range='0-100' />
+      <parameter funName='WIFIHAL_GetApAssociatedClientDiagnosticResult' parameterName='mac_addr' parameterType='STRING' range='A-Z' />
+      <parameter funName='WIFIHAL_GetAPCapabilities' parameterName='apIndex' parameterType='INTEGER' range='0-100' />
+      <parameter funName='WIFIHAL_GetAvailableBSSColor' parameterName='radioIndex' parameterType='INTEGER' range='0-10' />
+      <parameter funName='WIFIHAL_GetAvailableBSSColor' parameterName='maxNumberColors' parameterType='INTEGER' range='0-200' />
+      <parameter funName='WIFIHAL_GetOrSetFTMobilityDomainID' parameterName='apIndex' parameterType='INTEGER' range='0-100' />
+      <parameter funName='WIFIHAL_GetOrSetFTMobilityDomainID' parameterName='radioIndex' parameterType='INTEGER' range='0-10' />
+      <parameter funName='WIFIHAL_GetOrSetFTMobilityDomainID' parameterName='methodName' parameterType='STRING' range='A-Z' />
+      <parameter funName='WIFIHAL_GetOrSetFTMobilityDomainID' parameterName='mobilityDomain' parameterType='INTEGER' range='0-10000' />
     </parameters>
   </module>
 </xml>

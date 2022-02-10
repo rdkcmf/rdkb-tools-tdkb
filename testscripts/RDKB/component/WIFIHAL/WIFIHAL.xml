@@ -530,6 +530,35 @@
           <parameter name="apIndex" value=""/>
         </parameters>
       </primitiveTest>
+      <primitiveTest name="WIFIHAL_GetApAssociatedClientDiagnosticResult" id=" " version="1">
+        <function>WIFIHAL_GetApAssociatedClientDiagnosticResult</function>
+        <parameters>
+          <parameter name="apIndex" value=""/>
+          <parameter name="mac_addr" value=""/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest name="WIFIHAL_GetAPCapabilities" id=" " version="1">
+        <function>WIFIHAL_GetAPCapabilities</function>
+        <parameters>
+          <parameter name="apIndex" value=""/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest name="WIFIHAL_GetAvailableBSSColor" id=" " version="1">
+        <function>WIFIHAL_GetAvailableBSSColor</function>
+        <parameters>
+          <parameter name="maxNumberColors" value=""/>
+          <parameter name="radioIndex" value=""/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest name="WIFIHAL_GetOrSetFTMobilityDomainID" id=" " version="3">
+        <function>WIFIHAL_GetOrSetFTMobilityDomainID</function>
+        <parameters>
+          <parameter name="apIndex" value=""/>
+          <parameter name="radioIndex" value=""/>
+          <parameter name="methodName" value=""/>
+          <parameter name="mobilityDomain" value=""/>
+        </parameters>
+      </primitiveTest>
     </primitiveTests>
   </module>
 </xml>

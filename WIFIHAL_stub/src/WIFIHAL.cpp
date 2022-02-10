@@ -2023,7 +2023,7 @@ void WIFIHAL::WIFIHAL_GetApAssociatedDeviceDiagnosticResult3(IN const Json::Valu
     {
        if(associated_dev_array and output_array_size > 0)
        {
-            sprintf(details,"Value returned is : output_array_size=%u, MAC=%02x:%02x:%02x:%02x:%02x:%02x, IP=%s, AuthState=%d, LastDataDownlinkRate=%u, LastDataUplinkRate=%u, SignalStrength=%d, Retransmissions=%u, Active=%d, OperatingStd= %s, OperatingChBw=%s, SNR=%d, interferenceSources=%s, DataFramesSentAck=%lu, cli_DataFramesSentNoAck=%lu, cli_BytesSent=%lu, cli_BytesReceived=%lu, cli_RSSI=%d, cli_MinRSSI=%d, cli_MaxRSSI=%d, Disassociations=%u, AuthFailures=%u, cli_Associations=%llu, PacketsSent=%lu, PacketsReceived=%lu, ErrorsSent=%lu, RetransCount=%lu, FailedRetransCount=%lu, RetryCount=%lu, MultipleRetryCount=%lu, MaxDownlinkRate=%u, MaxUplinkRate=%u",output_array_size,associated_dev_array->cli_MACAddress[0],associated_dev_array->cli_MACAddress[1],associated_dev_array->cli_MACAddress[2],associated_dev_array->cli_MACAddress[3],associated_dev_array->cli_MACAddress[4],associated_dev_array->cli_MACAddress[5],associated_dev_array->cli_IPAddress,associated_dev_array->cli_AuthenticationState,associated_dev_array->cli_LastDataDownlinkRate,associated_dev_array->cli_LastDataUplinkRate,associated_dev_array->cli_SignalStrength,associated_dev_array->cli_Retransmissions,associated_dev_array->cli_Active,associated_dev_array->cli_OperatingStandard,associated_dev_array->cli_OperatingChannelBandwidth,associated_dev_array->cli_SNR,associated_dev_array->cli_interferenceSources,associated_dev_array->cli_DataFramesSentAck,associated_dev_array->cli_DataFramesSentNoAck,associated_dev_array->cli_BytesSent,associated_dev_array->cli_BytesReceived,associated_dev_array->cli_RSSI,associated_dev_array->cli_MinRSSI,associated_dev_array->cli_MaxRSSI,associated_dev_array->cli_Disassociations,associated_dev_array->cli_AuthenticationFailures,associated_dev_array->cli_Associations,associated_dev_array->cli_PacketsSent,associated_dev_array->cli_PacketsReceived,associated_dev_array->cli_ErrorsSent,associated_dev_array->cli_RetransCount,associated_dev_array->cli_FailedRetransCount,associated_dev_array->cli_RetryCount,associated_dev_array->cli_MultipleRetryCount,associated_dev_array->cli_MaxDownlinkRate,associated_dev_array->cli_MaxUplinkRate);
+            sprintf(details,"Value returned is : output_array_size=%u, MAC=%02x:%02x:%02x:%02x:%02x:%02x, IP=%s, AuthState=%d, LastDataDownlinkRate=%u, LastDataUplinkRate=%u, SignalStrength=%d, Retransmissions=%u, Active=%d, OperatingStd= %s, OperatingChBw=%s, SNR=%d, interferenceSources=%s, DataFramesSentAck=%lu, cli_DataFramesSentNoAck=%lu, cli_BytesSent=%lu, cli_BytesReceived=%lu, cli_RSSI=%d, cli_MinRSSI=%d, cli_MaxRSSI=%d, Disassociations=%u, AuthFailures=%u, cli_Associations=%llu, PacketsSent=%lu, PacketsReceived=%lu, ErrorsSent=%lu, RetransCount=%lu, FailedRetransCount=%lu, RetryCount=%lu, MultipleRetryCount=%lu, MaxDownlinkRate=%u, MaxUplinkRate=%u",output_array_size,associated_dev_array->cli_MACAddress[0],associated_dev_array->cli_MACAddress[1],associated_dev_array->cli_MACAddress[2],associated_dev_array->cli_MACAddress[3],associated_dev_array->cli_MACAddress[4],associated_dev_array->cli_MACAddress[5],associated_dev_array->cli_IPAddress,associated_dev_array->cli_AuthenticationState,associated_dev_array->cli_LastDataDownlinkRate,associated_dev_array->cli_LastDataUplinkRate,associated_dev_array->cli_SignalStrength,associated_dev_array->cli_Retransmissions,associated_dev_array->cli_Active,associated_dev_array->cli_OperatingStandard,associated_dev_array->cli_OperatingChannelBandwidth,associated_dev_array->cli_SNR,associated_dev_array->cli_InterferenceSources,associated_dev_array->cli_DataFramesSentAck,associated_dev_array->cli_DataFramesSentNoAck,associated_dev_array->cli_BytesSent,associated_dev_array->cli_BytesReceived,associated_dev_array->cli_RSSI,associated_dev_array->cli_MinRSSI,associated_dev_array->cli_MaxRSSI,associated_dev_array->cli_Disassociations,associated_dev_array->cli_AuthenticationFailures,associated_dev_array->cli_Associations,associated_dev_array->cli_PacketsSent,associated_dev_array->cli_PacketsReceived,associated_dev_array->cli_ErrorsSent,associated_dev_array->cli_RetransCount,associated_dev_array->cli_FailedRetransCount,associated_dev_array->cli_RetryCount,associated_dev_array->cli_MultipleRetryCount,associated_dev_array->cli_MaxDownlinkRate,associated_dev_array->cli_MaxUplinkRate);
             response["result"]="SUCCESS";
             response["details"]=details;
             return;
@@ -3662,3 +3662,288 @@ void WIFIHAL::WIFIHAL_SetNeighborReports(IN const Json::Value& req, OUT Json::Va
     DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_SetNeighborReports ---->Exiting\n");
     return;
 }
+
+/*******************************************************************************************
+ *
+ * Function Name        : WIFIHAL_GetApAssociatedClientDiagnosticResult
+ * Description          : This function invokes WiFi hal api wifi_getApAssociatedClientDiagnosticResult
+ * @param [in] req-     : apIndex - ap index of the wifi
+ *                      : mac_addr - client MAC address
+ * @param [out] response - filled with SUCCESS or FAILURE based on the output status of operation
+ *
+ ********************************************************************************************/
+void WIFIHAL::WIFIHAL_GetApAssociatedClientDiagnosticResult(IN const Json::Value& req, OUT Json::Value& response)
+{
+    DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_GetApAssociatedClientDiagnosticResult ----->Entry\n");
+    wifi_associated_dev3_t *dev_conn = (wifi_associated_dev3_t *) malloc(sizeof(wifi_associated_dev3_t));
+    memset(dev_conn, 0, sizeof(wifi_associated_dev3_t));
+    int apIndex = 0;
+    char MAC[64] = {'\0'};
+    int returnValue = 0;
+    char details[2000] = {'\0'};
+
+    if(&req["apIndex"]==NULL || &req["mac_addr"]==NULL)
+    {
+        response["result"]="FAILURE";
+        response["details"]="NULL parameter as input argument";
+        return;
+    }
+
+    apIndex = req["apIndex"].asInt();
+    strcpy(MAC, req["mac_addr"].asCString());
+
+    DEBUG_PRINT(DEBUG_TRACE,"\n ApIndex : %d, MAC : %s\n", apIndex, MAC);
+    returnValue = ssp_WIFIHALGetApAssociatedClientDiagnosticResult(apIndex, MAC, dev_conn);
+
+    if(0 == returnValue)
+    {
+        sprintf(details,"Client Diagnostic Result : MAC=%02x:%02x:%02x:%02x:%02x:%02x, IP=%s, AuthState=%d, LastDataDownlinkRate=%u, LastDataUplinkRate=%u, SignalStrength=%d, Retransmissions=%u, Active=%d, OperatingStd= %s, OperatingChBw=%s, SNR=%d, interferenceSources=%s, DataFramesSentAck=%lu, cli_DataFramesSentNoAck=%lu, cli_BytesSent=%lu, cli_BytesReceived=%lu, cli_RSSI=%d, cli_MinRSSI=%d, cli_MaxRSSI=%d, Disassociations=%u, AuthFailures=%u, cli_Associations=%llu, PacketsSent=%lu, PacketsReceived=%lu, ErrorsSent=%lu, RetransCount=%lu, FailedRetransCount=%lu, RetryCount=%lu, MultipleRetryCount=%lu, MaxDownlinkRate=%u, MaxUplinkRate=%u", dev_conn->cli_MACAddress[0], dev_conn->cli_MACAddress[1], dev_conn->cli_MACAddress[2], dev_conn->cli_MACAddress[3], dev_conn->cli_MACAddress[4], dev_conn->cli_MACAddress[5], dev_conn->cli_IPAddress, dev_conn->cli_AuthenticationState, dev_conn->cli_LastDataDownlinkRate, dev_conn->cli_LastDataUplinkRate, dev_conn->cli_SignalStrength, dev_conn->cli_Retransmissions, dev_conn->cli_Active, dev_conn->cli_OperatingStandard, dev_conn->cli_OperatingChannelBandwidth, dev_conn->cli_SNR, dev_conn->cli_InterferenceSources, dev_conn->cli_DataFramesSentAck, dev_conn->cli_DataFramesSentNoAck, dev_conn->cli_BytesSent, dev_conn->cli_BytesReceived, dev_conn->cli_RSSI, dev_conn->cli_MinRSSI, dev_conn->cli_MaxRSSI, dev_conn->cli_Disassociations, dev_conn->cli_AuthenticationFailures, dev_conn->cli_Associations, dev_conn->cli_PacketsSent, dev_conn->cli_PacketsReceived, dev_conn->cli_ErrorsSent, dev_conn->cli_RetransCount, dev_conn->cli_FailedRetransCount, dev_conn->cli_RetryCount, dev_conn->cli_MultipleRetryCount, dev_conn->cli_MaxDownlinkRate, dev_conn->cli_MaxUplinkRate);
+        response["result"]="SUCCESS";
+        response["details"]=details;
+    }
+    else
+    {
+        sprintf(details, "wifi_getApAssociatedClientDiagnosticResult operation failed");
+        DEBUG_PRINT(DEBUG_TRACE,"\n %s", details);
+        response["result"]="FAILURE";
+        response["details"]=details;
+        DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_GetApAssociatedClientDiagnosticResult ---->Error in execution\n");
+    }
+
+    free(dev_conn);
+    DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_GetApAssociatedClientDiagnosticResult ---->Exiting\n");
+    return;
+}
+
+/*******************************************************************************************
+ *
+ * Function Name        : WIFIHAL_GetAPCapabilities
+ * Description          : This function invokes WiFi hal get api wifi_getAPCapabilities()
+ * @param [in] req-     : apIndex - Access Point index
+ * @param [out] response - filled with SUCCESS or FAILURE based on the output status of operation
+ *
+ ********************************************************************************************/
+void WIFIHAL::WIFIHAL_GetAPCapabilities(IN const Json::Value& req, OUT Json::Value& response)
+{
+    DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_GetAPCapabilities ----->Entry\n");
+    wifi_ap_capabilities_t *APCapabilities = (wifi_ap_capabilities_t *)malloc(sizeof(wifi_ap_capabilities_t));
+    memset(APCapabilities, 0, sizeof(wifi_ap_capabilities_t));
+    int apIndex = 0;
+    int returnValue = 0;
+    char details[1000] = {'\0'};
+    char output[1000] = {'\0'};
+
+    if (&req["apIndex"] == NULL)
+    {
+        response["result"]="FAILURE";
+        response["details"]="NULL parameter as input argument";
+        return;
+    }
+
+    apIndex = req["apIndex"].asInt();
+    DEBUG_PRINT(DEBUG_TRACE,"\n ApIndex : %d", apIndex);
+    returnValue = ssp_WIFIHALGetAPCapabilities(apIndex, APCapabilities, output);
+
+    if(0 == returnValue)
+    {
+        sprintf(details, "wifi_getAPCapabilities invoked successfully; Details : %s", output);
+        DEBUG_PRINT(DEBUG_TRACE,"\n %s", details);
+        response["result"]="SUCCESS";
+        response["details"]=details;
+    }
+    else
+    {
+        sprintf(details, "\n wifi_getAPCapabilities not invoked successfully");
+        DEBUG_PRINT(DEBUG_TRACE,"\n %s", details);
+        response["result"]="FAILURE";
+        response["details"]=details;
+        DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_GetAPCapabilities  --->Error in execution\n");
+    }
+
+    free(APCapabilities);
+    DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_GetAPCapabilities ---->Exiting\n");
+    return;
+}
+
+/*******************************************************************************************
+ *
+ * Function Name        : WIFIHAL_GetAvailableBSSColor
+ * Description          : This function invokes WiFi hal's wifi_getAvailableBSSColor() api
+ * @param [in] req-     : radioIndex - radio index value of wifi
+ *                        maxNumberColors - WL_COLOR_MAX_VALUE from wlioctl.h
+ * @param [out] response - filled with SUCCESS or FAILURE based on the output staus of operation
+ *
+ ********************************************************************************************/
+void WIFIHAL::WIFIHAL_GetAvailableBSSColor(IN const Json::Value& req, OUT Json::Value& response)
+{
+    DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_GetAvailableBSSColor --->Entry\n");
+    int radioIndex = 0;
+    int maxNumberColors = 0;
+    unsigned char colorList[200] = {0};
+    int numColorReturned = 0;
+    int returnValue = 0;
+    char details[1000] = {'\0'};
+    char details_add[200] = {'\0'};
+    int iteration = 0;
+
+    if(&req["radioIndex"]==NULL || &req["maxNumberColors"]==NULL)
+    {
+        response["result"]="FAILURE";
+        response["details"]="NULL parameter as input argument";
+        return;
+    }
+
+    radioIndex = req["radioIndex"].asInt();
+    maxNumberColors = req["maxNumberColors"].asInt();
+
+    DEBUG_PRINT(DEBUG_TRACE,"\n radioIndex : %d, maxNumberColors : %d", radioIndex, maxNumberColors);
+    returnValue = ssp_WIFIHALGetAvailableBSSColor(radioIndex, maxNumberColors, colorList, &numColorReturned);
+
+    if(0 == returnValue)
+    {
+        sprintf(details, "WIFIHAL_GetAvailableBSSColor operation success :: NumColorReturned : %d, ", numColorReturned);
+
+        if (numColorReturned > 0)
+        {
+            sprintf(details_add, " Available BSSColor List = ");
+            strcat(details, details_add);
+            for (iteration = 0; iteration < numColorReturned; iteration++)
+            {
+                sprintf(details_add, "%d ", colorList[iteration]);
+                strcat(details, details_add);
+            }
+        }
+        else
+        {
+             sprintf(details_add, " Available BSSColor List is Empty\n");
+             strcat(details, details_add);
+        }
+
+        DEBUG_PRINT(DEBUG_TRACE,"\n %s", details);
+        response["result"]="SUCCESS";
+        response["details"]=details;
+    }
+    else
+    {
+        sprintf(details, "WIFIHAL_GetAvailableBSSColor operation failed");
+        DEBUG_PRINT(DEBUG_TRACE,"\n %s", details);
+        response["result"]="FAILURE";
+        response["details"]=details;
+        DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_GetAvailableBSSColor --->Error in execution\n");
+    }
+
+    DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_GetAvailableBSSColor ---->Exiting\n");
+    return;
+}
+
+/*******************************************************************************************
+ *
+ * Function Name        : WIFIHAL_GetOrSetFTMobilityDomainID
+ * Description          : This function invokes WiFi hal's get/set apis, when the value to be
+ *                        get /set is related to FTMobilityDomainID
+ * @param [in] req-     : methodName - HAL API name (wifi_getFTMobilityDomainID or wifi_setFTMobilityDomainID)
+ *                        apIndex - Access Point index
+ *                        radioIndex - WiFi Radio Index
+ *                        mobilityDomain - Value of the FT Mobility Domain for this AP to get/set
+ * @param [out] response - filled with SUCCESS or FAILURE based on the output status of operation
+ *
+ ********************************************************************************************/
+void WIFIHAL::WIFIHAL_GetOrSetFTMobilityDomainID(IN const Json::Value& req, OUT Json::Value& response)
+{
+    DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_GetOrSetFTMobilityDomainID  ----->Entry\n");
+    char methodName[50] = {'\0'};
+    int apIndex = 0;
+    int radioIndex = 0;
+    int returnValue = 0;
+    int retValue = 0;
+    char details[200] = {'\0'};
+    int size = 64;
+    unsigned char mobilityDomain[size];
+    int mobilityDomain_Int = 0;
+    int * mobilityDomain_IntPtr = NULL;
+    char details_add[200] = {'\0'};
+
+    if(&req["apIndex"]==NULL || &req["methodName"]==NULL)
+    {
+        response["result"]="FAILURE";
+        response["details"]="NULL parameter as input argument";
+        return;
+    }
+
+    strcpy(methodName, req["methodName"].asCString());
+    apIndex = req["apIndex"].asInt();
+
+    if(!strncmp(methodName, "set",3))
+    {
+        printf("wifi_setFTMobilityDomainID operation to be done\n");
+
+        if(&req["mobilityDomain"]==NULL || &req["radioIndex"]==NULL)
+        {
+            response["result"]="FAILURE";
+            response["details"]="NULL parameter as input argument";
+            return;
+        }
+
+        mobilityDomain_Int = req["mobilityDomain"].asInt();
+        mobilityDomain_IntPtr = &mobilityDomain_Int;
+        memcpy(mobilityDomain, (char *)mobilityDomain_IntPtr, size);
+        radioIndex = req["radioIndex"].asInt();
+
+        DEBUG_PRINT(DEBUG_TRACE,"\n apIndex : %d", apIndex);
+        DEBUG_PRINT(DEBUG_TRACE,"\n Mobility Domain ID[0] : 0x%x, Mobility Domain ID[1] : 0x%x", mobilityDomain[0], mobilityDomain[1]);
+        returnValue = ssp_WIFIHALGetOrSetFTMobilityDomainID(apIndex, mobilityDomain, methodName);
+
+        if(0 == returnValue)
+        {
+            sprintf(details_add, "wifi_%s operation success;", methodName);
+            strcat(details, details_add);
+
+            retValue = ssp_WIFIHALApplySettings(radioIndex,methodName);
+            if(0 == retValue)
+            {
+                sprintf(details_add, " applyRadioSettings operation success");
+                strcat(details, details_add);
+            }
+            else
+            {
+                sprintf(details_add, " applyRadioSettings operation failed");
+                strcat(details, details_add);
+            }
+
+            response["result"]="SUCCESS";
+            response["details"]=details;
+        }
+        else
+        {
+            sprintf(details, "wifi_%s operation failed", methodName);
+            response["result"]="FAILURE";
+            response["details"]=details;
+            DEBUG_PRINT(DEBUG_TRACE,"\n WiFiCallMethodForGetOrSetFTMobilityDomainID --->Error in execution\n");
+        }
+    }
+    else
+    {
+        printf("wifi_getFTMobilityDomainID operation to be done\n");
+        returnValue = ssp_WIFIHALGetOrSetFTMobilityDomainID(apIndex, mobilityDomain, methodName);
+
+        if(0 == returnValue)
+        {
+            sprintf(details, "Mobility Domain ID[0] : 0x%x, Mobility Domian ID[1] : 0x%x", mobilityDomain[0], mobilityDomain[1]);
+            DEBUG_PRINT(DEBUG_TRACE,"\n %s", details);
+            response["result"]="SUCCESS";
+            response["details"]=details;
+        }
+        else
+        {
+            sprintf(details, "wifi_%s operation failed", methodName);
+            DEBUG_PRINT(DEBUG_TRACE,"\n %s", details);
+            response["result"]="FAILURE";
+            response["details"]=details;
+            DEBUG_PRINT(DEBUG_TRACE,"\n WiFiCallMethodForGetOrSetFTMobilityDomainID --->Error in execution\n");
+        }
+    }
+
+    DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_GetOrSetFTMobilityDomainID ---->Exiting\n");
+    return;
+}
+

@@ -401,6 +401,13 @@ int ssp_WIFIHALGetOrSetParamBoolValue(int radioIndex, unsigned char *enable, cha
 
     else if(!strcmp(method, "setNeighborReportActivation"))
         return_status = wifi_setNeighborReportActivation(radioIndex, *enable);
+    else if(!strcmp(method, "getFTOverDSActivated"))
+    {
+        if(enable)
+            return_status = wifi_getFTOverDSActivated(radioIndex, enable);
+        else
+            return_status = wifi_getFTOverDSActivated(radioIndex, NULL);
+    }
     else
     {
         return_status = SSP_FAILURE;
@@ -2724,3 +2731,170 @@ int ssp_WIFIHALSetNeighborReports(unsigned int apIndex, unsigned int reports, wi
     printf("\n ssp_WIFIHALSetNeighborReports ---> Exit\n");
     return return_status;
 }
+
+/*******************************************************************************************
+ *
+ * Function Name        : ssp_WIFIHALGetApAssociatedClientDiagnosticResult
+ * Description          : This function invokes WiFi HAL api wifi_getApAssociatedClientDiagnosticResult
+ * @param [in]          : apIndex - Index of VAP
+ *                        mac_addr - MAC address of the client
+ *                        dev_conn - structure with Client Diagnostic result
+ * @param [out]         : return status an integer value 0-success and 1-Failure
+ ********************************************************************************************/
+int ssp_WIFIHALGetApAssociatedClientDiagnosticResult(int apIndex, char * mac_addr, wifi_associated_dev3_t *dev_conn)
+{
+    printf("\n ssp_WIFIHALGetApAssociatedClientDiagnosticResult ----> Entry\n");
+    printf("apIndex : %d\n", apIndex);
+    printf("mac : %s\n", mac_addr);
+    int return_status = 0;
+
+    return_status = wifi_getApAssociatedClientDiagnosticResult(apIndex, mac_addr, dev_conn);
+
+    if(return_status != SSP_SUCCESS)
+    {
+        printf("\nWIFIHALGetApAssociatedClientDiagnosticResult::Failed\n");
+        return_status = SSP_FAILURE;
+    }
+    else
+    {
+        printf("\nWIFIHALGetApAssociatedClientDiagnosticResult::Success\n");
+        printf("\nClient Diagnostic Result : MAC=%02x:%02x:%02x:%02x:%02x:%02x, IP=%s, AuthState=%d, LastDataDownlinkRate=%u, LastDataUplinkRate=%u, SignalStrength=%d, Retransmissions=%u, Active=%d, OperatingStd= %s, OperatingChBw=%s, SNR=%d, interferenceSources=%s, DataFramesSentAck=%lu, cli_DataFramesSentNoAck=%lu, cli_BytesSent=%lu, cli_BytesReceived=%lu, cli_RSSI=%d, cli_MinRSSI=%d, cli_MaxRSSI=%d, Disassociations=%u, AuthFailures=%u, cli_Associations=%llu, PacketsSent=%lu, PacketsReceived=%lu, ErrorsSent=%lu, RetransCount=%lu, FailedRetransCount=%lu, RetryCount=%lu, MultipleRetryCount=%lu, MaxDownlinkRate=%u, MaxUplinkRate=%u\n", dev_conn->cli_MACAddress[0], dev_conn->cli_MACAddress[1], dev_conn->cli_MACAddress[2], dev_conn->cli_MACAddress[3], dev_conn->cli_MACAddress[4], dev_conn->cli_MACAddress[5], dev_conn->cli_IPAddress, dev_conn->cli_AuthenticationState, dev_conn->cli_LastDataDownlinkRate, dev_conn->cli_LastDataUplinkRate, dev_conn->cli_SignalStrength, dev_conn->cli_Retransmissions, dev_conn->cli_Active, dev_conn->cli_OperatingStandard, dev_conn->cli_OperatingChannelBandwidth, dev_conn->cli_SNR, dev_conn->cli_InterferenceSources, dev_conn->cli_DataFramesSentAck, dev_conn->cli_DataFramesSentNoAck, dev_conn->cli_BytesSent, dev_conn->cli_BytesReceived, dev_conn->cli_RSSI, dev_conn->cli_MinRSSI, dev_conn->cli_MaxRSSI, dev_conn->cli_Disassociations, dev_conn->cli_AuthenticationFailures, dev_conn->cli_Associations, dev_conn->cli_PacketsSent, dev_conn->cli_PacketsReceived, dev_conn->cli_ErrorsSent, dev_conn->cli_RetransCount, dev_conn->cli_FailedRetransCount, dev_conn->cli_RetryCount, dev_conn->cli_MultipleRetryCount, dev_conn->cli_MaxDownlinkRate, dev_conn->cli_MaxUplinkRate);
+    }
+
+    printf("\n ssp_WIFIHALGetApAssociatedClientDiagnosticResult ---> Exit\n");
+    return return_status;
+}
+
+/*******************************************************************************************
+ * Function Name        : ssp_WIFIHALGetAPCapabilities
+ * Description          : This function invokes WiFi HAL api wifi_getAPCapabilities
+ * @param [in]          : apIndex - WiFi Access Point Index
+ *                        apCapabilities - structure with the access point capabilities details
+ *                        output_string - To pass the formatted string containing the required structure parameter values
+ * @param [out]         : return status an integer value 0-success and 1-Failure
+ ********************************************************************************************/
+int ssp_WIFIHALGetAPCapabilities(int apIndex, wifi_ap_capabilities_t *apCapabilities, char * output_string)
+{
+    printf("\n ssp_WIFIHALGetAPCapabilities ----> Entry\n");
+    printf("apIndex : %d\n", apIndex);
+    int return_status = 0;
+
+    return_status = wifi_getAPCapabilities(apIndex, apCapabilities);
+
+    if(return_status != SSP_SUCCESS)
+    {
+        printf("\nssp_WIFIHALGetAPCapabilities::Failed\n");
+        return_status = SSP_FAILURE;
+    }
+    else
+    {
+        printf("\nssp_WIFIHALGetAPCapabilities::Success; Access Point Capabilities : RTS Threshold Supported = %s, Security Modes Supported = 0x%04x, Onboarding Methods Supported = 0x%04x, WMM Supported = %s, UAPSD Supported = %s, Interworking Service Supported = %s, BSS Transition Implemented = %s\n", (apCapabilities->rtsThresholdSupported) ? "TRUE" : "FALSE", apCapabilities->securityModesSupported, apCapabilities->methodsSupported, (apCapabilities->WMMSupported) ? "TRUE" : "FALSE", (apCapabilities->UAPSDSupported) ? "TRUE" : "FALSE", (apCapabilities->interworkingServiceSupported) ? "TRUE" : "FALSE", (apCapabilities->BSSTransitionImplemented) ? "TRUE" : "FALSE");
+        sprintf(output_string, "Access Point Capabilities : RTS Threshold Supported = %s, Security Modes Supported = 0x%04x, Onboarding Methods Supported = 0x%04x, WMM Supported = %s, UAPSD Supported = %s, Interworking Service Supported = %s, BSS Transition Implemented = %s\n", (apCapabilities->rtsThresholdSupported) ? "TRUE" : "FALSE", apCapabilities->securityModesSupported, apCapabilities->methodsSupported, (apCapabilities->WMMSupported) ? "TRUE" : "FALSE", (apCapabilities->UAPSDSupported) ? "TRUE" : "FALSE", (apCapabilities->interworkingServiceSupported) ? "TRUE" : "FALSE", (apCapabilities->BSSTransitionImplemented) ? "TRUE" : "FALSE");
+    }
+
+    printf("\n ssp_WIFIHALGetAPCapabilities ---> Exit\n");
+    return return_status;
+}
+
+/*******************************************************************************************
+ * Function Name        : ssp_WIFIHALGetAvailableBSSColor
+ * Description          : This function invokes WiFi HAL api wifi_getAvailableBSSColor
+ * @param [in]          : radio_index - Radio Index
+ *                        maxNumberColors - WL_COLOR_MAX_VALUE from wlioctl.h
+ *                        colorList - List of available colors
+ *                        numColorReturned - Number of colors returned in the list
+ * @param [out]         : return status an integer value 0-success and 1-Failure
+ ********************************************************************************************/
+int ssp_WIFIHALGetAvailableBSSColor(int radio_index, int maxNumberColors, unsigned char* colorList, int *numColorReturned)
+{
+    printf("\n ssp_WIFIHALGetAvailableBSSColor ----> Entry\n");
+    printf("radioIndex : %d\n", radio_index);
+    printf("maxNumberColors : %d\n", maxNumberColors);
+    int return_status = 0;
+    int iteration = 0;
+
+    return_status = wifi_getAvailableBSSColor(radio_index, maxNumberColors, colorList, numColorReturned);
+
+    if(return_status != SSP_SUCCESS)
+    {
+        printf("\nssp_WIFIHALGetAvailableBSSColor::Failed\n");
+        return_status = SSP_FAILURE;
+    }
+    else
+    {
+        printf("\nssp_WIFIHALGetAvailableBSSColor::Success; NumColorReturned = %d\n", *numColorReturned);
+
+        if (*numColorReturned > 0)
+        {
+            printf("Available BSSColor List = ");
+            for (iteration = 0; iteration < *numColorReturned; iteration++)
+            {
+                printf("%d ", colorList[iteration]);
+            }
+        }
+        else
+        {
+             printf("Available BSSColor List is Empty\n");
+        }
+    }
+
+    printf("\n ssp_WIFIHALGetAvailableBSSColor ---> Exit\n");
+    return return_status;
+}
+
+/*******************************************************************************************
+ *
+ * Function Name        : ssp_WIFIHALGetOrSetFTMobilityDomainID
+ * Description          : This function invokes WiFi hal's get/set api's which are related to FTMobilityDomainID
+ * @param [in]          : apIndex - Access Point index
+ * @param [in]          : method - name of the wifi hal api to be invoked
+ * @param [in]          : mobilityDomain - Value of the FT Mobility Domain for this AP
+ * @param [out]         : return status an integer value 0-success and 1-Failure
+ ********************************************************************************************/
+int ssp_WIFIHALGetOrSetFTMobilityDomainID(int apIndex, unsigned char mobilityDomain[2], char * method)
+{
+    printf("\n ssp_WIFIHALGetOrSetFTMobilityDomainID ----> Entry\n");
+    printf("Ap index : %d\n",apIndex);
+    printf("MethodName : %s\n", method);
+
+    int return_status = 0;
+
+    if(!strcmp(method, "getFTMobilityDomainID"))
+    {
+        return_status = wifi_getFTMobilityDomainID(apIndex, mobilityDomain);
+
+        if(return_status != SSP_SUCCESS)
+        {
+            printf("\n%s returned failure; ssp_WIFIHALGetOrSetFTMobilityDomainID::Failed\n", method);
+            return_status = SSP_FAILURE;
+        }
+        else
+        {
+            printf("\n%s returned success; ssp_WIFIHALGetOrSetFTMobilityDomainID::Success; Mobility Domain ID[0] : 0x%x, Mobility Domain ID[1] : 0x%x\n", method, mobilityDomain[0], mobilityDomain[1]);
+        }
+    }
+    else if(!strcmp(method, "setFTMobilityDomainID"))
+    {
+        printf("mobilityDomain : %s\n",mobilityDomain);
+        return_status = wifi_setFTMobilityDomainID(apIndex, mobilityDomain);
+
+        if(return_status != SSP_SUCCESS)
+        {
+            printf("\n%s returned failure; ssp_WIFIHALGetOrSetFTMobilityDomainID::Failed\n", method);
+            return_status = SSP_FAILURE;
+        }
+        else
+        {
+            printf("\n%s returned success; ssp_WIFIHALGetOrSetFTMobilityDomainID::Success\n", method);
+        }
+    }
+    else
+    {
+        return_status = SSP_FAILURE;
+        printf("\n ssp_WiFiHalCallMethodForGetOrSetFTMobilityDomainID::Invalid Method Name\n");
+    }
+
+    printf("\n ssp_WiFiHalCallMethodForGetOrSetFTMobilityDomainID--> Exit\n");
+    return return_status;
+}
+

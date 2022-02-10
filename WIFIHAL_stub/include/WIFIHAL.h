@@ -371,7 +371,7 @@ typedef struct _wifi_associated_dev3
         char  cli_OperatingStandard[64];
         char  cli_OperatingChannelBandwidth[64];
         int   cli_SNR;
-        char  cli_interferenceSources[64];
+        char  cli_InterferenceSources[64];
         unsigned long cli_DataFramesSentAck;
         unsigned long cli_DataFramesSentNoAck;
         unsigned long cli_BytesSent;
@@ -1353,8 +1353,18 @@ typedef struct {
     wifi_MeasurementPilotTransmission_t             msmtPilotTransmission;
     bool                                            vendorSpecificPresent;
     wifi_VendorSpecific_t                           vendorSpecific;
-    bssid_t                                          target_ssid;
+    bssid_t                                         target_ssid;
 } wifi_NeighborReport_t;
+
+typedef struct {
+    bool rtsThresholdSupported;                                 /**< if bRtsThresholdSupported is TRUE, packet size threshold to apply RTS/CTS backoff rules is supported. */
+    wifi_security_modes_t securityModesSupported;               /**< The security modes supported (uses bitmask to return multiples modes). */
+    wifi_onboarding_methods_t methodsSupported;                 /**< The on boarding methods supported (uses bitmask to return multiples values). */
+    bool WMMSupported;                                          /**< if bWMMSupported is TRUE, WiFi Multimedia (WMM) Access Categories (AC) is supported. */
+    bool UAPSDSupported;                                        /**< if bUAPSDSupported is TRUE, WMM Unscheduled Automatic Power Save Delivery (U-APSD) is supported. */
+    bool interworkingServiceSupported;                          /**< if bInterworkingServiceSupported is TRUE, indicates whether the access point supports interworking with external networks. */
+    bool BSSTransitionImplemented;                              /**< if BSSTransitionImplemented is TRUE, BTM implemented. */
+} wifi_ap_capabilities_t;
 
 /* To provide external linkage to C Functions defined in TDKB Component folder */
 extern "C"
@@ -1426,6 +1436,10 @@ extern "C"
     int ssp_WIFIHALGetVAPTelemetry(int apIndex, wifi_VAPTelemetry_t *VAPTelemetry);
     int ssp_WIFIHALGetRadioVapInfoMap(wifi_radio_index_t radioIndex ,wifi_vap_info_map_t *map);
     int ssp_WIFIHALSetNeighborReports(unsigned int apIndex, unsigned int reports, wifi_NeighborReport_t *neighborReports);
+    int ssp_WIFIHALGetApAssociatedClientDiagnosticResult(int apIndex, char * mac_addr, wifi_associated_dev3_t *dev_conn);
+    int ssp_WIFIHALGetAPCapabilities(int apIndex, wifi_ap_capabilities_t *apCapabilities, char * output_string);
+    int ssp_WIFIHALGetAvailableBSSColor(int radio_index, int maxNumberColors, unsigned char* colorList, int *numColorReturned);
+    int ssp_WIFIHALGetOrSetFTMobilityDomainID(int apIndex, unsigned char mobilityDomain[2], char * method);
 };
 
 class RDKTestAgent;
@@ -1503,6 +1517,10 @@ class WIFIHAL : public RDKTestStubInterface, public AbstractServer<WIFIHAL>
                   this->bindAndAddMethod(Procedure("WIFIHAL_GetVAPTelemetry", PARAMS_BY_NAME, JSON_STRING,"apIndex", JSON_INTEGER, NULL), &WIFIHAL::WIFIHAL_GetVAPTelemetry);
 		  this->bindAndAddMethod(Procedure("WIFIHAL_GetRadioVapInfoMap", PARAMS_BY_NAME, JSON_STRING,"apIndex", JSON_INTEGER, NULL), &WIFIHAL::WIFIHAL_GetRadioVapInfoMap);
                   this->bindAndAddMethod(Procedure("WIFIHAL_SetNeighborReports",PARAMS_BY_NAME, JSON_STRING, "apIndex", JSON_INTEGER, "reports", JSON_INTEGER, "bssid", JSON_STRING, "info", JSON_INTEGER, "opClass", JSON_INTEGER, "channel", JSON_INTEGER, "phyTable", JSON_INTEGER, NULL), &WIFIHAL::WIFIHAL_SetNeighborReports);
+                  this->bindAndAddMethod(Procedure("WIFIHAL_GetApAssociatedClientDiagnosticResult",PARAMS_BY_NAME, JSON_STRING, "apIndex", JSON_INTEGER, "mac_addr", JSON_STRING, NULL), &WIFIHAL::WIFIHAL_GetApAssociatedClientDiagnosticResult);
+                  this->bindAndAddMethod(Procedure("WIFIHAL_GetAPCapabilities",PARAMS_BY_NAME, JSON_STRING, "apIndex", JSON_INTEGER, NULL), &WIFIHAL::WIFIHAL_GetAPCapabilities);
+                  this->bindAndAddMethod(Procedure("WIFIHAL_GetAvailableBSSColor",PARAMS_BY_NAME, JSON_STRING, "radioIndex", JSON_INTEGER, "maxNumberColors", JSON_INTEGER, NULL), &WIFIHAL::WIFIHAL_GetAvailableBSSColor);
+                  this->bindAndAddMethod(Procedure("WIFIHAL_GetOrSetFTMobilityDomainID",PARAMS_BY_NAME, JSON_STRING, "apIndex", JSON_INTEGER, "radioIndex", JSON_INTEGER, "mobilityDomain", JSON_INTEGER, "methodName", JSON_STRING, NULL), &WIFIHAL::WIFIHAL_GetOrSetFTMobilityDomainID);
 		}
         /*inherited functions*/
         bool initialize(IN const char* szVersion);
@@ -1577,6 +1595,10 @@ class WIFIHAL : public RDKTestStubInterface, public AbstractServer<WIFIHAL>
         void WIFIHAL_GetVAPTelemetry(IN const Json::Value& req, OUT Json::Value& response);
 	void WIFIHAL_GetRadioVapInfoMap(IN const Json::Value& req, OUT Json::Value& response);
         void WIFIHAL_SetNeighborReports(IN const Json::Value& req, OUT Json::Value& response);
+        void WIFIHAL_GetApAssociatedClientDiagnosticResult(IN const Json::Value& req, OUT Json::Value& response);
+        void WIFIHAL_GetAPCapabilities(IN const Json::Value& req, OUT Json::Value& response);
+        void WIFIHAL_GetAvailableBSSColor(IN const Json::Value& req, OUT Json::Value& response);
+        void WIFIHAL_GetOrSetFTMobilityDomainID(IN const Json::Value& req, OUT Json::Value& response);
 };
 #endif //__WIFIHAL_STUB_H__
 

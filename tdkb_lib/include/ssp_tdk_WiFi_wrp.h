@@ -104,3 +104,7 @@ int ssp_WIFIHALSendDataFrame(int apIndex, mac_address_t sta, unsigned char * dat
 int ssp_WIFIHALGetVAPTelemetry(int apIndex, wifi_VAPTelemetry_t *VAPTelemetry);
 int ssp_WIFIHALGetRadioVapInfoMap(wifi_radio_index_t radioIndex ,wifi_vap_info_map_t *map);
 int ssp_WIFIHALSetNeighborReports(unsigned int apIndex, unsigned int reports, wifi_NeighborReport_t *neighborReports);
+int ssp_WIFIHALGetApAssociatedClientDiagnosticResult(int apIndex, char * mac_addr, wifi_associated_dev3_t *dev_conn);
+int ssp_WIFIHALGetAPCapabilities(int apIndex, wifi_ap_capabilities_t *apCapabilities, char * output_string);
+int ssp_WIFIHALGetAvailableBSSColor(int radio_index, int maxNumberColors, unsigned char* colorList, int *numColorReturned);
+int ssp_WIFIHALGetOrSetFTMobilityDomainID(int apIndex, unsigned char mobilityDomain[2], char * method);
