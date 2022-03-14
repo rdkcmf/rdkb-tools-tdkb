@@ -98,6 +98,10 @@
       <function name="WIFIHAL_GetAPCapabilities"/>
       <function name="WIFIHAL_GetAvailableBSSColor"/>
       <function name="WIFIHAL_GetOrSetFTMobilityDomainID"/>
+      <function name='WIFIHAL_GetOrSetFTR0KeyHolderID' />
+      <function name='WIFIHAL_GetRMCapabilities' />
+      <function name='WIFIHAL_GetApSecurity' />
+      <function name='WIFIHAL_SetApSecurity' />
     </functions>
   <!-- Total parameters corresponding module  -->
     <parameters>
@@ -294,6 +298,19 @@
       <parameter funName='WIFIHAL_GetOrSetFTMobilityDomainID' parameterName='radioIndex' parameterType='INTEGER' range='0-10' />
       <parameter funName='WIFIHAL_GetOrSetFTMobilityDomainID' parameterName='methodName' parameterType='STRING' range='A-Z' />
       <parameter funName='WIFIHAL_GetOrSetFTMobilityDomainID' parameterName='mobilityDomain' parameterType='INTEGER' range='0-10000' />
+      <parameter funName='WIFIHAL_GetOrSetFTR0KeyHolderID' parameterName='apIndex' parameterType='INTEGER' range='0-100' />
+      <parameter funName='WIFIHAL_GetOrSetFTR0KeyHolderID' parameterName='radioIndex' parameterType='INTEGER' range='0-10' />
+      <parameter funName='WIFIHAL_GetOrSetFTR0KeyHolderID' parameterName='methodName' parameterType='STRING' range='A-Z' />
+      <parameter funName='WIFIHAL_GetOrSetFTR0KeyHolderID' parameterName='KeyHolderID' parameterType='STRING' range='A-Z' />
+      <parameter funName='WIFIHAL_GetRMCapabilities' parameterName='peer' parameterType='STRING' range='A-Z' />
+      <parameter funName='WIFIHAL_GetApSecurity' parameterName='apIndex' parameterType='INTEGER' range='0-100' />
+      <parameter funName='WIFIHAL_SetApSecurity' parameterName='apIndex' parameterType='INTEGER' range='0-100' />
+      <parameter funName='WIFIHAL_SetApSecurity' parameterName='mode' parameterType='INTEGER' range='0-3000' />
+      <parameter funName='WIFIHAL_SetApSecurity' parameterName='encr' parameterType='INTEGER' range='0-10' />
+      <parameter funName='WIFIHAL_SetApSecurity' parameterName='key_type' parameterType='INTEGER' range='0-10' />
+      <parameter funName='WIFIHAL_SetApSecurity' parameterName='key' parameterType='STRING' range='A-Z' />
+      <parameter funName='WIFIHAL_SetApSecurity' parameterName='wpa3_transition_disable' parameterType='INTEGER' range='0-1' />
+      <parameter funName='WIFIHAL_SetApSecurity' parameterName='mfp' parameterType='INTEGER' range='0-2' />
     </parameters>
   </module>
 </xml>

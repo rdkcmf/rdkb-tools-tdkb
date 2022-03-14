@@ -469,6 +469,7 @@ int ssp_addTableRow(char *pObjTbl,int *pInstanceNumber)
     char *dst_componentid = NULL;
     char *dst_pathname = NULL;
     int instanceNumber = 0;
+    int cmpt = 0;
 
     if(pObjTbl == NULL)
     {
@@ -507,23 +508,27 @@ int ssp_addTableRow(char *pObjTbl,int *pInstanceNumber)
         return 1;
     }
 
-    dst_componentid = ppComponents[0]->componentName;
-    printf("\nssp_addTableRow::Destination Component ID is %s\n",dst_componentid);
-    dst_pathname = ppComponents[0]->dbusPath;
-    printf("\nssp_addTableRow::Destination Component Name is %s\n",dst_pathname);
+    for (cmpt=0; cmpt < size2 ; cmpt++)
+    {
+        dst_componentid = ppComponents[cmpt]->componentName;
+        printf("\nssp_addTableRow::Destination Component ID is %s\n",dst_componentid);
 
-    ret = CcspBaseIf_AddTblRow(
-            bus_handle_client,
-            dst_componentid,
-            dst_pathname,
-            0,
-            pObjTbl,
-            &instanceNumber
-            );
+        dst_pathname = ppComponents[cmpt]->dbusPath;
+        printf("\nssp_addTableRow::Destination Component Name is %s\n",dst_pathname);
 
-    printf("\nssp_addTableRow::Instance number of Object added:%d\n",instanceNumber);
+        ret = CcspBaseIf_AddTblRow(
+                bus_handle_client,
+                dst_componentid,
+                dst_pathname,
+                0,
+                pObjTbl,
+                &instanceNumber
+                );
 
-    *pInstanceNumber = instanceNumber;
+        printf("\nssp_addTableRow::Instance number of Object added:%d\n",instanceNumber);
+
+        *pInstanceNumber = instanceNumber;
+    }
 
     free_componentStruct_t(bus_handle_client, size2, ppComponents);
 
@@ -559,6 +564,7 @@ int ssp_deleteTableRow(char *pObjTbl)
     int         ret ;
     char *      dst_componentid         =  NULL;
     char *      dst_pathname            =  NULL;
+    int         cmpt = 0;
 
 
     if(pObjTbl == NULL)
@@ -598,18 +604,22 @@ int ssp_deleteTableRow(char *pObjTbl)
         return 1;
     }
 
-    dst_componentid = ppComponents[0]->componentName;
-    printf("\nssp_deleteTableRow::Destination Component ID is %s\n",dst_componentid);
-    dst_pathname    = ppComponents[0]->dbusPath;
-    printf("\nssp_deleteTableRow::Destination Component Name is %s\n",dst_pathname);
+    for (cmpt=0; cmpt < size2 ; cmpt++)
+    {
+        dst_componentid = ppComponents[cmpt]->componentName;
+        printf("\nssp_deleteTableRow::Destination Component ID is %s\n",dst_componentid);
 
-    ret = CcspBaseIf_DeleteTblRow(
-            bus_handle_client,
-            dst_componentid,
-            dst_pathname,
-            0,
-            pObjTbl
-            );
+        dst_pathname    = ppComponents[cmpt]->dbusPath;
+        printf("\nssp_deleteTableRow::Destination Component Name is %s\n",dst_pathname);
+
+        ret = CcspBaseIf_DeleteTblRow(
+                bus_handle_client,
+                dst_componentid,
+                dst_pathname,
+                0,
+                pObjTbl
+                );
+    }
 
     free_componentStruct_t(bus_handle_client, size2, ppComponents);
 

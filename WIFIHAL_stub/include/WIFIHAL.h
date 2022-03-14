@@ -1440,6 +1440,10 @@ extern "C"
     int ssp_WIFIHALGetAPCapabilities(int apIndex, wifi_ap_capabilities_t *apCapabilities, char * output_string);
     int ssp_WIFIHALGetAvailableBSSColor(int radio_index, int maxNumberColors, unsigned char* colorList, int *numColorReturned);
     int ssp_WIFIHALGetOrSetFTMobilityDomainID(int apIndex, unsigned char mobilityDomain[2], char * method);
+    int ssp_WIFIHALGetOrSetFTR0KeyHolderID(int apIndex, unsigned char * KeyHolderID, char * method);
+    int ssp_WIFIHALGetRMCapabilities(mac_address_t peer, unsigned char out_Capabilities[5]);
+    int ssp_WIFIHALGetApSecurity(int apIndex, wifi_vap_security_t * security, char * output_string);
+    int ssp_WIFIHALSetApSecurity(int apIndex, wifi_vap_security_t * security);
 };
 
 class RDKTestAgent;
@@ -1521,6 +1525,10 @@ class WIFIHAL : public RDKTestStubInterface, public AbstractServer<WIFIHAL>
                   this->bindAndAddMethod(Procedure("WIFIHAL_GetAPCapabilities",PARAMS_BY_NAME, JSON_STRING, "apIndex", JSON_INTEGER, NULL), &WIFIHAL::WIFIHAL_GetAPCapabilities);
                   this->bindAndAddMethod(Procedure("WIFIHAL_GetAvailableBSSColor",PARAMS_BY_NAME, JSON_STRING, "radioIndex", JSON_INTEGER, "maxNumberColors", JSON_INTEGER, NULL), &WIFIHAL::WIFIHAL_GetAvailableBSSColor);
                   this->bindAndAddMethod(Procedure("WIFIHAL_GetOrSetFTMobilityDomainID",PARAMS_BY_NAME, JSON_STRING, "apIndex", JSON_INTEGER, "radioIndex", JSON_INTEGER, "mobilityDomain", JSON_INTEGER, "methodName", JSON_STRING, NULL), &WIFIHAL::WIFIHAL_GetOrSetFTMobilityDomainID);
+                  this->bindAndAddMethod(Procedure("WIFIHAL_GetOrSetFTR0KeyHolderID",PARAMS_BY_NAME, JSON_STRING, "apIndex", JSON_INTEGER, "radioIndex", JSON_INTEGER, "KeyHolderID", JSON_STRING, "methodName", JSON_STRING, NULL), &WIFIHAL::WIFIHAL_GetOrSetFTR0KeyHolderID);
+                  this->bindAndAddMethod(Procedure("WIFIHAL_GetRMCapabilities",PARAMS_BY_NAME, JSON_STRING, "peer", JSON_STRING, NULL), &WIFIHAL::WIFIHAL_GetRMCapabilities);
+                  this->bindAndAddMethod(Procedure("WIFIHAL_GetApSecurity",PARAMS_BY_NAME, JSON_STRING, "apIndex", JSON_INTEGER, NULL), &WIFIHAL::WIFIHAL_GetApSecurity);
+                  this->bindAndAddMethod(Procedure("WIFIHAL_SetApSecurity",PARAMS_BY_NAME, JSON_STRING, "apIndex", JSON_INTEGER, "mode", JSON_INTEGER, "mfp", JSON_INTEGER, "encr", JSON_INTEGER, "key_type", JSON_INTEGER, "key", JSON_STRING, "wpa3_transition_disable", JSON_INTEGER, NULL), &WIFIHAL::WIFIHAL_SetApSecurity);
 		}
         /*inherited functions*/
         bool initialize(IN const char* szVersion);
@@ -1599,6 +1607,10 @@ class WIFIHAL : public RDKTestStubInterface, public AbstractServer<WIFIHAL>
         void WIFIHAL_GetAPCapabilities(IN const Json::Value& req, OUT Json::Value& response);
         void WIFIHAL_GetAvailableBSSColor(IN const Json::Value& req, OUT Json::Value& response);
         void WIFIHAL_GetOrSetFTMobilityDomainID(IN const Json::Value& req, OUT Json::Value& response);
+        void WIFIHAL_GetOrSetFTR0KeyHolderID(IN const Json::Value& req, OUT Json::Value& response);
+        void WIFIHAL_GetRMCapabilities(IN const Json::Value& req, OUT Json::Value& response);
+        void WIFIHAL_GetApSecurity(IN const Json::Value& req, OUT Json::Value& response);
+        void WIFIHAL_SetApSecurity(IN const Json::Value& req, OUT Json::Value& response);
 };
 #endif //__WIFIHAL_STUB_H__
 

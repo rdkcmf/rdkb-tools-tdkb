@@ -213,17 +213,17 @@ if "SUCCESS" in loadmodulestatus1.upper() and  "SUCCESS" in loadmodulestatus2.up
 
                                 bandSteeringValuesList = bandSteeringValuesList.split(",");
                                 for item in bandSteeringValuesList:
-                                     if item == orgValue[i]:
+                                     if item == defaultValue[i]:
                                          tdkTestObj.setResultStatus("SUCCESS");
                                          print "TEST STEP 8: Should get the default Threshold values after wifi factory reset"
-                                         print "ACTUAL RESULT 8:Comparing threshold value %s and %s from properties file" %(item,orgValue[i]);
+                                         print "ACTUAL RESULT 8:Comparing threshold value %s and %s from properties file" %(item,defaultValue[i]);
                                          #Get the result of execution
                                          print "[TEST EXECUTION RESULT] : SUCCESS";
                                          i = i+1;
                                      else:
                                          tdkTestObj.setResultStatus("FAILURE");
                                          print "TEST STEP 8: Should get the default Threshold values after wifi factory reset"
-                                         print "ACTUAL RESULT 8:Comparing threshold value %s and %s from properties file" %(item,orgValue[i]);
+                                         print "ACTUAL RESULT 8:Comparing threshold value %s and %s from properties file" %(item,defaultValue[i]);
                                          #Get the result of execution
                                          print "[TEST EXECUTION RESULT] : FAILURE";
                             else:

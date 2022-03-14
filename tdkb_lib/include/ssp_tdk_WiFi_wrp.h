@@ -108,3 +108,7 @@ int ssp_WIFIHALGetApAssociatedClientDiagnosticResult(int apIndex, char * mac_add
 int ssp_WIFIHALGetAPCapabilities(int apIndex, wifi_ap_capabilities_t *apCapabilities, char * output_string);
 int ssp_WIFIHALGetAvailableBSSColor(int radio_index, int maxNumberColors, unsigned char* colorList, int *numColorReturned);
 int ssp_WIFIHALGetOrSetFTMobilityDomainID(int apIndex, unsigned char mobilityDomain[2], char * method);
+int ssp_WIFIHALGetOrSetFTR0KeyHolderID(int apIndex, unsigned char * KeyHolderID, char * method);
+int ssp_WIFIHALGetRMCapabilities(mac_address_t peer, unsigned char out_Capabilities[5]);
+int ssp_WIFIHALGetApSecurity(int apIndex, wifi_vap_security_t * security, char * output_string);
+int ssp_WIFIHALSetApSecurity(int apIndex, wifi_vap_security_t * security);

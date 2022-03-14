@@ -559,6 +559,39 @@
           <parameter name="mobilityDomain" value=""/>
         </parameters>
       </primitiveTest>
+      <primitiveTest name="WIFIHAL_GetOrSetFTR0KeyHolderID" id=" " version="1">
+        <function>WIFIHAL_GetOrSetFTR0KeyHolderID</function>
+        <parameters>
+          <parameter name="apIndex" value=""/>
+          <parameter name="KeyHolderID" value=""/>
+          <parameter name="methodName" value=""/>
+          <parameter name="radioIndex" value=""/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest name="WIFIHAL_GetRMCapabilities" id=" " version="1">
+        <function>WIFIHAL_GetRMCapabilities</function>
+        <parameters>
+          <parameter name="peer" value=""/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest name="WIFIHAL_GetApSecurity" id=" " version="1">
+        <function>WIFIHAL_GetApSecurity</function>
+        <parameters>
+          <parameter name="apIndex" value=""/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest name="WIFIHAL_SetApSecurity" id=" " version="1">
+        <function>WIFIHAL_SetApSecurity</function>
+        <parameters>
+          <parameter name="apIndex" value=""/>
+          <parameter name="encr" value=""/>
+          <parameter name="key" value=""/>
+          <parameter name="key_type" value=""/>
+          <parameter name="mfp" value=""/>
+          <parameter name="mode" value=""/>
+          <parameter name="wpa3_transition_disable" value=""/>
+        </parameters>
+      </primitiveTest>
     </primitiveTests>
   </module>
 </xml>

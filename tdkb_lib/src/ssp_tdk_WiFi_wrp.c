@@ -408,6 +408,8 @@ int ssp_WIFIHALGetOrSetParamBoolValue(int radioIndex, unsigned char *enable, cha
         else
             return_status = wifi_getFTOverDSActivated(radioIndex, NULL);
     }
+    else if(!strcmp(method, "setFTOverDSActivated"))
+        return_status = wifi_setFTOverDSActivated(radioIndex, enable);
     else
     {
         return_status = SSP_FAILURE;
@@ -2898,3 +2900,207 @@ int ssp_WIFIHALGetOrSetFTMobilityDomainID(int apIndex, unsigned char mobilityDom
     return return_status;
 }
 
+/*******************************************************************************************
+ *
+ * Function Name        : ssp_WIFIHALGetOrSetFTR0KeyHolderID
+ * Description          : This function invokes WiFi hal's get/set api's which are related to FTR0KeyHolderID
+ * @param [in]          : apIndex - Access Point index
+ * @param [in]          : method - name of the wifi hal api to be invoked
+ * @param [in]          : KeyHolderID - Value of the FTR0 Key Holder ID for this AP
+ * @param [out]         : return status an integer value 0-success and 1-Failure
+ ********************************************************************************************/
+int ssp_WIFIHALGetOrSetFTR0KeyHolderID(int apIndex, unsigned char * KeyHolderID, char * method)
+{
+    printf("\n ssp_WIFIHALGetOrSetFTR0KeyHolderID ----> Entry\n");
+    printf("Ap index : %d\n",apIndex);
+    printf("MethodName : %s\n", method);
+    int return_status = 0;
+    int index = 0;
+
+    if(!strcmp(method, "getFTR0KeyHolderID"))
+    {
+        return_status = wifi_getFTR0KeyHolderID(apIndex, KeyHolderID);
+        if(return_status != SSP_SUCCESS)
+        {
+            printf("\n%s returned failure; ssp_WIFIHALGetOrSetFTR0KeyHolderID::Failed\n", method);
+            return_status = SSP_FAILURE;
+        }
+        else
+        {
+            printf("\n%s returned success; ssp_WIFIHALGetOrSetFTR0KeyHolderID::Success", method);
+
+            if(KeyHolderID[0] == '\0')
+            {
+                printf("\nKey Holder ID[0] : 0x%x", KeyHolderID[0]);
+            }
+            else
+            {
+                for(index = 0; KeyHolderID[index] != '\0'; index++)
+                {
+                    printf("\nKey Holder ID[%d] : 0x%x", index, KeyHolderID[index]);
+                }
+            }
+        }
+    }
+
+    else if(!strcmp(method, "setFTR0KeyHolderID"))
+    {
+        if(KeyHolderID[0] == '\0')
+        {
+            printf("\nKey Holder ID[0] : 0x%x", KeyHolderID[0]);
+        }
+        else
+        {
+            for(index = 0; KeyHolderID[index] != '\0'; index++)
+            {
+                printf("\nKey Holder ID[%d] : 0x%x", index, KeyHolderID[index]);
+            }
+        }
+
+        return_status = wifi_setFTR0KeyHolderID(apIndex, KeyHolderID);
+
+        if(return_status != SSP_SUCCESS)
+        {
+            printf("\n%s returned failure; ssp_WIFIHALGetOrSetFTR0KeyHolderID::Failed\n", method);
+            return_status = SSP_FAILURE;
+        }
+        else
+        {
+            printf("\n%s returned success; ssp_WIFIHALGetOrSetFTR0KeyHolderID::Success\n", method);
+        }
+    }
+
+    else
+    {
+        return_status = SSP_FAILURE;
+        printf("\n ssp_WiFiHalCallMethodForGetOrSetFTR0KeyHolderID::Invalid Method Name\n");
+    }
+
+    printf("\n ssp_WiFiHalCallMethodForGetOrSetFTR0KeyHolderID--> Exit\n");
+    return return_status;
+}
+
+/*******************************************************************************************
+ *
+ * Function Name        : ssp_WIFIHALGetRMCapabilities
+ * Description          : This function invokes WiFi HAL api wifi_getRMCapabilities
+ * @param [in]          : peer - MAC address of the client
+ *                        out_Capabilities[5] - Array with RM capabilities details
+ * @param [out]         : return status an integer value 0-success and 1-Failure
+ ********************************************************************************************/
+int ssp_WIFIHALGetRMCapabilities(mac_address_t peer, unsigned char out_Capabilities[5])
+{
+    printf("\n ssp_WIFIHALGetRMCapabilities ----> Entry\n");
+    printf("Peer : %s\n", peer);
+    int return_status = 0;
+
+    return_status = wifi_getRMCapabilities(peer, out_Capabilities);
+
+    if(return_status != SSP_SUCCESS)
+    {
+        printf("\nWIFIHALGetRMCapabilities::Failed\n");
+        return_status = SSP_FAILURE;
+    }
+    else
+    {
+        printf("\nWIFIHALGetRMCapabilities::Success\n");
+        printf("\nRM Capabilities = capabilities[0] : %02X, capabilities[1] : %02X, capabilities[2] : %02X, capabilities[3] :  %02X, capabilities[4] : %02X ", out_Capabilities[0], out_Capabilities[1],out_Capabilities[2], out_Capabilities[3], out_Capabilities[4]);
+    }
+
+    printf("\n ssp_WIFIHALGetRMCapabilities ---> Exit\n");
+    return return_status;
+}
+
+/*******************************************************************************************
+ * Function Name        : ssp_WIFIHALGetApSecurity
+ * Description          : This function invokes WiFi HAL api wifi_getApSecurity
+ * @param [in]          : apIndex - WiFi Access Point Index
+ *                        security - structure with the AP security details
+ * @param [out]         : return status an integer value 0-success and 1-Failure
+ ********************************************************************************************/
+int ssp_WIFIHALGetApSecurity(int apIndex, wifi_vap_security_t * security, char * output_string)
+{
+    printf("\n ssp_WIFIHALGetApSecurity ----> Entry\n");
+    printf("apIndex : %d\n", apIndex);
+    char output[1000] = {'\0'};
+    int return_status = 0;
+
+    return_status = wifi_getApSecurity(apIndex, security);
+
+    if(return_status != SSP_SUCCESS)
+    {
+        printf("\nssp_WIFIHALGetApSecurity::Failed\n");
+        return_status = SSP_FAILURE;
+    }
+    else
+    {
+        printf("\nssp_WIFIHALGetApSecurity::Success; AP Security details : Security Mode : 0x%04x, Encrytion Method : %d, WPA3 Transition : %s, Rekey Interval : %d, Strict Rekey : %s, Eapol Key Timeout : %d, Eapol Key Retries : %d, Eap Identity Timeout : %d, Eap Identity Retries : %d, Eap Timeout : %d, Eap Retries : %d, PMKSA Cashing : %s, Security Key Type : %d", security->mode, security->encr, security->wpa3_transition_disable ? "Disabled" : "Enabled", security->rekey_interval, security->strict_rekey ? "Disabled" : "Enabled", security->eapol_key_timeout, security->eapol_key_retries, security->eap_identity_req_timeout, security->eap_identity_req_retries, security->eap_req_timeout, security->eap_req_retries, security->disable_pmksa_caching ? "Disabled" : "Enabled", security->u.key.type);
+        sprintf(output, "AP Security details : Security Mode : 0x%04x, Encrytion Method : %d, WPA3 Transition : %s, Rekey Interval : %d, Strict Rekey : %s, Eapol Key Timeout : %d, Eapol Key Retries : %d, Eap Identity Timeout : %d, Eap Identity Retries : %d, Eap Timeout : %d, Eap Retries : %d, PMKSA Cashing : %s, Security Key Type : %d", security->mode, security->encr, security->wpa3_transition_disable ? "Disabled" : "Enabled", security->rekey_interval, security->strict_rekey ? "Disabled" : "Enabled", security->eapol_key_timeout, security->eapol_key_retries, security->eap_identity_req_timeout, security->eap_identity_req_retries, security->eap_req_timeout, security->eap_req_retries, security->disable_pmksa_caching ? "Disabled" : "Enabled", security->u.key.type);
+        strcat(output_string, output);
+
+        if (security->u.key.type == wifi_security_key_type_psk)
+        {
+            printf(", WPA PSK : 0x%s", security->u.key.key);
+            sprintf(output, ", WPA PSK : 0x%s", security->u.key.key);
+            strcat(output_string, output);
+        }
+        else
+        {
+            printf(", WPA Passphrase : %s", security->u.key.key);
+            sprintf(output, ", WPA Passphrase : %s", security->u.key.key);
+            strcat(output_string, output);
+        }
+
+#if defined(WIFI_HAL_VERSION_3)
+        printf(", MFP : %d", security->mfp);
+        sprintf(output, ", MFP : %d", security->mfp);
+        strcat(output_string, output);
+#endif
+    }
+
+    printf("\n ssp_WIFIHALGetApSecurity ---> Exit\n");
+    return return_status;
+}
+
+/*******************************************************************************************
+ * Function Name        : ssp_WIFIHALSetApSecurity
+ * Description          : This function invokes WiFi HAL api wifi_setApSecurity
+ * @param [in]          : apIndex - WiFi Access Point Index
+ *                        security - structure with the AP security details
+ * @param [out]         : return status an integer value 0-success and 1-Failure
+ ********************************************************************************************/
+int ssp_WIFIHALSetApSecurity(int apIndex, wifi_vap_security_t * security)
+{
+    printf("\n ssp_WIFIHALGetApSecurity ----> Entry\n");
+    printf("ApIndex : %d\n", apIndex);
+    printf("Security Mode : 0x%04x\n", security->mode);
+    printf("Encryption Method : %d\n", security->encr);
+    printf("Key Type : %d\n", security->u.key.type);
+    printf("Key : %s\n", security->u.key.key);
+
+#if defined(WIFI_HAL_VERSION_3)
+    printf("MFP : %d\n", security->mfp);
+#endif
+
+    if (security->mode == wifi_security_mode_wpa3_transition)
+    {
+        printf("WPA3 Transition Disable Status : %d\n", security->wpa3_transition_disable);
+    }
+
+    int return_status = 0;
+
+    return_status = wifi_setApSecurity(apIndex, security);
+
+    if(return_status != SSP_SUCCESS)
+    {
+        printf("\nssp_WIFIHALSetApSecurity::Failed\n");
+        return_status = SSP_FAILURE;
+    }
+    else
+    {
+        printf("\nssp_WIFIHALSetApSecurity::Success");
+    }
+
+    printf("\n ssp_WIFIHALSetApSecurity ---> Exit\n");
+    return return_status;
+}

@@ -3858,7 +3858,7 @@ void WIFIHAL::WIFIHAL_GetOrSetFTMobilityDomainID(IN const Json::Value& req, OUT 
     int retValue = 0;
     char details[200] = {'\0'};
     int size = 64;
-    unsigned char mobilityDomain[size];
+    unsigned char mobilityDomain[64] = {'\0'};
     int mobilityDomain_Int = 0;
     int * mobilityDomain_IntPtr = NULL;
     char details_add[200] = {'\0'};
@@ -3947,3 +3947,378 @@ void WIFIHAL::WIFIHAL_GetOrSetFTMobilityDomainID(IN const Json::Value& req, OUT 
     return;
 }
 
+/*******************************************************************************************
+ *
+ * Function Name        : WIFIHAL_GetOrSetFTR0KeyHolderID
+ * Description          : This function invokes WiFi hal's get/set apis, when the value to be
+ *                        get /set is related to FTR0KeyHolderID
+ * @param [in] req-     : methodName - HAL API name (wifi_getFTR0KeyHolderID or wifi_setFTR0KeyHolderID)
+ *                        apIndex - Access Point index
+ *                        radioIndex - WiFi Radio Index
+ *                        KeyHolderID - Value of the FTR0 Key Holder ID for this AP to get/set
+ * @param [out] response - filled with SUCCESS or FAILURE based on the output status of operation
+ *
+ ********************************************************************************************/
+void WIFIHAL::WIFIHAL_GetOrSetFTR0KeyHolderID(IN const Json::Value& req, OUT Json::Value& response)
+{
+    DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_GetOrSetFTR0KeyHolderID  ----->Entry\n");
+    char methodName[50] = {'\0'};
+    int apIndex = 0;
+    int radioIndex = 0;
+    int returnValue = 0;
+    int retValue = 0;
+    char details[2000] = {'\0'};
+    unsigned char key_id[64] = {'\0'};
+    char KeyHolderID[64] = {'\0'};
+    char details_add[1000] = {'\0'};
+
+    if(&req["apIndex"]==NULL || &req["methodName"]==NULL)
+    {
+        response["result"]="FAILURE";
+        response["details"]="NULL parameter as input argument";
+        return;
+    }
+
+    apIndex = req["apIndex"].asInt();
+    strcpy(methodName, req["methodName"].asCString());
+
+    if(!strncmp(methodName, "set",3))
+    {
+        printf("wifi_setFTR0KeyHolderID operation to be done\n");
+
+        if(&req["KeyHolderID"]==NULL || &req["radioIndex"]==NULL)
+        {
+            response["result"]="FAILURE";
+            response["details"]="NULL parameter as input argument";
+            return;
+        }
+
+        strcpy(KeyHolderID, req["KeyHolderID"].asCString());
+        memcpy(&key_id[0], KeyHolderID, strlen(KeyHolderID));
+        radioIndex = req["radioIndex"].asInt();
+
+        DEBUG_PRINT(DEBUG_TRACE,"\n apIndex : %d", apIndex);
+        DEBUG_PRINT(DEBUG_TRACE,"\n Key Holder ID : %s", KeyHolderID);
+        DEBUG_PRINT(DEBUG_TRACE,"\n Key_ID : %p\n", &key_id[0]);
+
+        if(key_id[0] == '\0')
+        {
+            DEBUG_PRINT(DEBUG_TRACE, "Key Holder ID[0] : 0x%x", key_id[0]);
+        }
+        else
+        {
+            for(int index = 0; key_id[index] != '\0'; index++)
+            {
+                DEBUG_PRINT(DEBUG_TRACE, "Key Holder ID[%d] : 0x%x", index, key_id[index]);
+            }
+        }
+
+        returnValue = ssp_WIFIHALGetOrSetFTR0KeyHolderID(apIndex, &key_id[0], methodName);
+
+        if(0 == returnValue)
+        {
+            sprintf(details_add, "wifi_%s operation success;", methodName);
+            DEBUG_PRINT(DEBUG_TRACE,"\n%s", details_add);
+            strcat(details, details_add);
+            retValue = ssp_WIFIHALApplySettings(radioIndex,methodName);
+
+            if(0 == retValue)
+            {
+                sprintf(details_add, " applyRadioSettings operation success");
+                DEBUG_PRINT(DEBUG_TRACE,"\n%s", details_add);
+                strcat(details, details_add);
+            }
+            else
+            {
+                sprintf(details_add, " applyRadioSettings operation failed");
+                DEBUG_PRINT(DEBUG_TRACE,"\n%s", details_add);
+                strcat(details, details_add);
+            }
+            response["result"]="SUCCESS";
+            response["details"]=details;
+        }
+
+        else
+        {
+            sprintf(details, "wifi_%s operation failed", methodName);
+            response["result"]="FAILURE";
+            response["details"]=details;
+            DEBUG_PRINT(DEBUG_TRACE,"\n WiFiCallMethodForGetOrSetFTR0KeyHolderID --->Error in execution\n");
+        }
+    }
+
+    else
+    {
+        printf("wifi_getFTR0KeyHolderID operation to be done\n");
+        returnValue = ssp_WIFIHALGetOrSetFTR0KeyHolderID(apIndex, &key_id[0], methodName);
+
+        if(0 == returnValue)
+        {
+            sprintf(details_add, "FTR0 Key Holder ID Details -");
+            strcat(details, details_add);
+
+            if(key_id[0] == '\0')
+            {
+                sprintf(details_add, " Key Holder ID[0] : 0x%x", key_id[0]);
+                strcat(details, details_add);
+            }
+            else
+            {
+                for(int index = 0; key_id[index] != '\0'; index++)
+                {
+                    sprintf(details_add, " Key Holder ID[%d] : 0x%x", index, key_id[index]);
+                    strcat(details, details_add);
+                }
+            }
+
+            DEBUG_PRINT(DEBUG_TRACE,"\n %s", details);
+            response["result"]="SUCCESS";
+            response["details"]=details;
+        }
+        else
+        {
+            sprintf(details, "wifi_%s operation failed", methodName);
+            DEBUG_PRINT(DEBUG_TRACE,"\n %s", details);
+            response["result"]="FAILURE";
+            response["details"]=details;
+            DEBUG_PRINT(DEBUG_TRACE,"\n WiFiCallMethodForGetOrSetFTR0KeyHolderID --->Error in execution\n");
+        }
+    }
+
+    DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_GetOrSetFTR0KeyHolderID ---->Exiting\n");
+    return;
+}
+
+/*******************************************************************************************
+ *
+ * Function Name        : WIFIHAL_GetRMCapabilities
+ * Description          : This function invokes WiFi hal api wifi_getRMCapabilities
+ * @param [in] req-     : peer - connected client mac address
+ * @param [out] response - filled with SUCCESS or FAILURE based on the output status of operation
+ *
+ ********************************************************************************************/
+void WIFIHAL::WIFIHAL_GetRMCapabilities(IN const Json::Value& req, OUT Json::Value& response)
+{
+    DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_GetRMCapabilities ----->Entry\n");
+    mac_address_t peer;
+    int max_size = 6;
+    char mac[20] = {'\0'};
+    unsigned int tmp_MACConv[6] = {0};
+    unsigned char out_Capabilities[5] = {'\0'};
+    int returnValue = 0;
+    char details[2000] = {'\0'};
+
+    if(&req["peer"]==NULL)
+    {
+        response["result"]="FAILURE";
+        response["details"]="NULL parameter as input argument";
+        return;
+    }
+
+    strcpy(mac, req["peer"].asCString());
+    sscanf(mac, "%02x:%02x:%02x:%02x:%02x:%02x", &tmp_MACConv[0], &tmp_MACConv[1], &tmp_MACConv[2], &tmp_MACConv[3], &tmp_MACConv[4], &tmp_MACConv[5]);
+
+    for(int index = 0 ; index < max_size; index++)
+    {
+        peer[index]=(unsigned char)tmp_MACConv[index];
+    }
+
+    DEBUG_PRINT(DEBUG_TRACE,"\nPeer : %s\n", peer);
+    returnValue = ssp_WIFIHALGetRMCapabilities(peer, out_Capabilities);
+
+    if(0 == returnValue)
+    {
+        sprintf(details,"wifi_getRMCapabilities operation success : capabilities[0] : %02X, capabilities[1] : %02X, capabilities[2] : %02X, capabilities[3] :  %02X, capabilities[4] : %02X ", out_Capabilities[0], out_Capabilities[1], out_Capabilities[2], out_Capabilities[3], out_Capabilities[4]);
+        response["result"]="SUCCESS";
+        response["details"]=details;
+    }
+    else
+    {
+        sprintf(details, "wifi_getRMCapabilities operation failed");
+        DEBUG_PRINT(DEBUG_TRACE,"\n %s", details);
+        response["result"]="FAILURE";
+        response["details"]=details;
+        DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_GetRMCapabilities ---->Error in execution\n");
+    }
+
+    DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_GetRMCapabilities ---->Exiting\n");
+    return;
+}
+
+
+/*******************************************************************************************
+ *
+ * Function Name        : WIFIHAL_GetApSecurity
+ * Description          : This function invokes WiFi hal get api wifi_getApSecurity()
+ * @param [in] req-     : apIndex - Access Point index
+ * @param [out] response - filled with SUCCESS or FAILURE based on the output status of operation
+ *
+ ********************************************************************************************/
+void WIFIHAL::WIFIHAL_GetApSecurity(IN const Json::Value& req, OUT Json::Value& response)
+{
+    DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_GetApSecurity ----->Entry\n");
+    wifi_vap_security_t security;
+    int apIndex = 0;
+    int returnValue = 0;
+    char details[2000] = {'\0'};
+    char output[2000] = {'\0'};
+
+    if (&req["apIndex"] == NULL)
+    {
+        response["result"]="FAILURE";
+        response["details"]="NULL parameter as input argument";
+        return;
+    }
+
+    apIndex = req["apIndex"].asInt();
+    DEBUG_PRINT(DEBUG_TRACE,"\n ApIndex : %d", apIndex);
+
+    returnValue = ssp_WIFIHALGetApSecurity(apIndex, &security, output);
+
+    if(0 == returnValue)
+    {
+        sprintf(details, "wifi_getApSecurity invoked successfully; Details : %s", output);
+        DEBUG_PRINT(DEBUG_TRACE,"\n %s", details);
+        response["result"]="SUCCESS";
+        response["details"]=details;
+    }
+    else
+    {
+        sprintf(details, "wifi_getApSecurity not invoked successfully");
+        DEBUG_PRINT(DEBUG_TRACE,"\n %s", details);
+        response["result"]="FAILURE";
+        response["details"]=details;
+        DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_GetApSecurity  --->Error in execution\n");
+    }
+
+    DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_GetApSecurity ---->Exiting\n");
+    return;
+}
+
+/*******************************************************************************************
+ *
+ * Function Name        : WIFIHAL_SetApSecurity
+ * Description          : This function invokes WiFi hal get api wifi_setApSecurity()
+ * @param [in] req-     : apIndex - Access Point index
+ *                        mode - Access Point security mode
+ *                        mfp - MFP value disabled, optional or required
+ *                        encr - Access Point encryption method
+ *                        key_type - Access Point key type
+ *                        key - Access Point key according to the key type
+ *                        wpa3_transition_disable - If Access Point mode is WPA3-Personal-Transition,
+ *                        then wpa3_transition_enable will hold its enable state
+ * @param [out] response - filled with SUCCESS or FAILURE based on the output status of operation
+ *
+ ********************************************************************************************/
+void WIFIHAL::WIFIHAL_SetApSecurity(IN const Json::Value& req, OUT Json::Value& response)
+{
+    DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_SetApSecurity ----->Entry\n");
+    wifi_vap_security_t security;
+    int apIndex = 0;
+    int mode = 0;
+    int returnValue = 0;
+    char details[2000] = {'\0'};
+
+    if (&req["apIndex"] == NULL || &req["mode"] == NULL || &req["mfp"] == NULL || &req["encr"] == NULL || &req["key_type"] == NULL || &req["key"] == NULL)
+    {
+        response["result"]="FAILURE";
+        response["details"]="NULL parameter as input argument";
+        return;
+    }
+
+    apIndex = req["apIndex"].asInt();
+    DEBUG_PRINT(DEBUG_TRACE,"\n ApIndex : %d", apIndex);
+
+    mode = req["mode"].asInt();
+    switch(mode)
+    {
+        case 1 :
+                security.mode = wifi_security_mode_none;
+                break;
+        case 2 :
+                security.mode = wifi_security_mode_wep_64;
+                break;
+        case 4 :
+                security.mode = wifi_security_mode_wep_128;
+                break;
+        case 8 :
+                security.mode = wifi_security_mode_wpa_personal;
+                break;
+        case 16 :
+                security.mode = wifi_security_mode_wpa2_personal;
+                break;
+        case 32 :
+                security.mode = wifi_security_mode_wpa_wpa2_personal;
+                break;
+        case 64 :
+                security.mode = wifi_security_mode_wpa_enterprise;
+                break;
+        case 128 :
+                security.mode = wifi_security_mode_wpa2_enterprise;
+                break;
+        case 256 :
+                security.mode = wifi_security_mode_wpa_wpa2_enterprise;
+                break;
+        case 512 :
+                security.mode = wifi_security_mode_wpa3_personal;
+                break;
+        case 1024 :
+                security.mode = wifi_security_mode_wpa3_transition;
+
+                if (&req["wpa3_transition_disable"] == NULL)
+                {
+                    response["result"]="FAILURE";
+                    response["details"]="WPA3 Transition Disable parameter is not received when security mode is WPA3-Personal-Transition";
+                    return;
+                }
+                else
+                {
+                    security.wpa3_transition_disable = req["wpa3_transition_disable"].asBool();
+                    DEBUG_PRINT(DEBUG_TRACE,"\n WPA3 Transition Disable : %s", security.wpa3_transition_disable ? "true" : "false");
+                }
+                break;
+        case 2048 :
+                security.mode = wifi_security_mode_wpa3_enterprise;
+                break;
+        default :
+               response["result"]="FAILURE";
+               response["details"]="Invalid Mode";
+               return;
+    }
+    DEBUG_PRINT(DEBUG_TRACE,"\n Security Mode : 0x%04x", security.mode);
+
+#if defined(WIFI_HAL_VERSION_3)
+    security.mfp = (wifi_mfp_cfg_t)req["mfp"].asInt();
+    DEBUG_PRINT(DEBUG_TRACE,"\n MFP : %d", security.mfp);
+#endif
+
+    security.encr = (wifi_encryption_method_t)req["encr"].asInt();
+    DEBUG_PRINT(DEBUG_TRACE,"\n Encryption Method : %d", security.encr);
+
+    security.u.key.type = (wifi_security_key_type_t)req["key_type"].asInt();
+    DEBUG_PRINT(DEBUG_TRACE,"\n Key Type : %d", security.u.key.type);
+
+    strcpy(security.u.key.key, req["key"].asCString());
+    DEBUG_PRINT(DEBUG_TRACE,"\n Key : %s", security.u.key.key);
+
+    returnValue = ssp_WIFIHALSetApSecurity(apIndex, &security);
+
+    if(0 == returnValue)
+    {
+        sprintf(details, "wifi_setApSecurity invoked successfully");
+        DEBUG_PRINT(DEBUG_TRACE,"\n %s", details);
+        response["result"]="SUCCESS";
+        response["details"]=details;
+    }
+    else
+    {
+        sprintf(details, "wifi_setApSecurity not invoked successfully");
+        DEBUG_PRINT(DEBUG_TRACE,"\n %s", details);
+        response["result"]="FAILURE";
+        response["details"]=details;
+        DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_SetApSecurity  --->Error in execution\n");
+    }
+
+    DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_SetApSecurity ---->Exiting\n");
+    return;
+}
