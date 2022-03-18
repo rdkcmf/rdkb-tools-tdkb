@@ -219,7 +219,8 @@ if "SUCCESS" in loadmodulestatus.upper()and "SUCCESS" in sysloadmodulestatus.upp
 		tdkTestObj, actualresult, details1 = GetSetApSecurityMode(obj,"0","getApSecurityModesSupported", idx);
 		if expectedresult in actualresult :
 		    tdkTestObj.setResultStatus("SUCCESS");
-		    supportedModes = details1.split(":")[1].strip();
+		    supportedModes = details1.split(":")[1].strip().split(',');
+                    supportedModes = [x.strip(' ') for x in supportedModes]
 		    print "**************************************************";
 		    print "TEST STEP 2: Get list of Ap Security Modes Supported"
 		    print "EXPECTED RESULT 2: Should get the list of Ap Security Modes Supported successfully";
@@ -238,7 +239,7 @@ if "SUCCESS" in loadmodulestatus.upper()and "SUCCESS" in sysloadmodulestatus.upp
 			#Get the result of execution
 			print "[TEST EXECUTION RESULT] : SUCCESS";
 			print "**************************************************";
-			if initMode in supportedModes.split(','):
+			if initMode in supportedModes:
 			    tdkTestObj.setResultStatus("SUCCESS");
 			    print "**************************************************";
 			    print "TEST STEP 4: To check whether the initial Ap Security Mode Enabled is from the list of Ap Security Modes Supported";
@@ -250,7 +251,7 @@ if "SUCCESS" in loadmodulestatus.upper()and "SUCCESS" in sysloadmodulestatus.upp
 			    if initMode == DefaultMode :
 				print "The initial Ap Security Mode Enabled value is equal to the default Mode";
 				print "Setting the Ap Security Mode Enabled value to another value before invoking wifi_setApSecurityReset() api";
-				for setMode in supportedModes.split(','):
+				for setMode in supportedModes:
 				    if setMode == initMode :
 					continue;
 				    else:
