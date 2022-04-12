@@ -410,6 +410,13 @@ int ssp_WIFIHALGetOrSetParamBoolValue(int radioIndex, unsigned char *enable, cha
     }
     else if(!strcmp(method, "setFTOverDSActivated"))
         return_status = wifi_setFTOverDSActivated(radioIndex, enable);
+    else if(!strcmp(method, "getBSSTransitionActivated"))
+    {
+        if(enable)
+            return_status = wifi_getBSSTransitionActivated(radioIndex, enable);
+        else
+            return_status = wifi_getBSSTransitionActivated(radioIndex, NULL);
+    }
     else
     {
         return_status = SSP_FAILURE;
@@ -3102,5 +3109,274 @@ int ssp_WIFIHALSetApSecurity(int apIndex, wifi_vap_security_t * security)
     }
 
     printf("\n ssp_WIFIHALSetApSecurity ---> Exit\n");
+    return return_status;
+}
+
+/*******************************************************************************************
+ * Function Name        : ssp_WIFIHALGetApWpsConfiguration
+ * Description          : This function invokes WiFi HAL api wifi_getApWpsConfiguration
+ * @param [in]          : apIndex - WiFi Access Point Index
+ *                        wpsConfig - structure with the AP WPS configuration details
+ * @param [out]         : return status an integer value 0-success and 1-Failure
+ ********************************************************************************************/
+int ssp_WIFIHALGetApWpsConfiguration(int apIndex, wifi_wps_t * wpsConfig, char * output_string)
+{
+    printf("\n ssp_WIFIHALGetApWpsConfiguration ----> Entry\n");
+    printf("apIndex : %d\n", apIndex);
+    char output[1000] = {'\0'};
+    int wps_method = 0;
+    int return_status = 0;
+
+    return_status = wifi_getApWpsConfiguration(apIndex, wpsConfig);
+
+    if(return_status != SSP_SUCCESS)
+    {
+        printf("\nssp_WIFIHALGetApWpsConfiguration :: Failed\n");
+        return_status = SSP_FAILURE;
+    }
+    else
+    {
+        if(wpsConfig != NULL)
+        {
+            printf("ssp_WIFIHALGetApWpsConfiguration Success :: WPS Mode : %s\n", (wpsConfig->enable ? "Enabled" : "Disabled"));
+            sprintf(output, "WPS Mode : %s", (wpsConfig->enable ? "Enabled" : "Disabled"));
+            strcat(output_string, output);
+
+            if (wpsConfig->enable)
+            {
+                printf("WPS device PIN: %s\n", wpsConfig->pin);
+                sprintf(output, ", WPS device PIN: %s", wpsConfig->pin);
+                strcat(output_string, output);
+
+                printf("WPS enabled configuration methods : ");
+                sprintf(output, ", WPS enabled configuration methods : ");
+                strcat(output_string, output);
+
+                for(wps_method = WIFI_ONBOARDINGMETHODS_USBFLASHDRIVE; wps_method <= WIFI_ONBOARDINGMETHODS_EASYCONNECT; wps_method = wps_method * 2)
+                {
+
+                    if (wpsConfig->methods & wps_method)
+                    {
+                        printf("0x%04x ", wps_method);
+                        sprintf(output, "0x%04x ", wps_method);
+                        strcat(output_string, output);
+                    }
+                }
+            }
+        }
+        else
+        {
+            printf("\nssp_WIFIHALGetApWpsConfiguration::NULL Pointer::Failure");
+            return_status = SSP_FAILURE;
+        }
+    }
+
+    printf("\nReturn Status : %d :: ssp_WIFIHALGetApWpsConfiguration ---> Exit\n", return_status);
+    return return_status;
+}
+
+/*******************************************************************************************
+ * Function Name        : ssp_WIFIHALSetApWpsConfiguration
+ * Description          : This function invokes WiFi HAL api wifi_setApWpsConfiguration
+ * @param [in]          : apIndex - WiFi Access Point Index
+ *                        wpsConfig - structure with the AP WPS configuration details
+ * @param [out]         : return status an integer value 0-success and 1-Failure
+ ********************************************************************************************/
+int ssp_WIFIHALSetApWpsConfiguration(int apIndex, wifi_wps_t * wpsConfig)
+{
+    int return_status = 0;
+    int wps_method = 0;
+    printf("\n ssp_WIFIHALSetApWpsConfiguration ----> Entry\n");
+    printf("ApIndex : %d\n", apIndex);
+
+    if (wpsConfig != NULL)
+    {
+        printf("WPS Mode : %s\n", (wpsConfig->enable ? "Enabled" : "Disabled"));
+
+        if(wpsConfig->enable)
+        {
+            printf("WPS Methods : 0x%04x\n", wpsConfig->methods);
+            printf("WPS enabled configuration methods list : ");
+
+            for(wps_method = WIFI_ONBOARDINGMETHODS_USBFLASHDRIVE; wps_method <= WIFI_ONBOARDINGMETHODS_EASYCONNECT; wps_method = wps_method * 2)
+            {
+                if (wpsConfig->methods & wps_method)
+                {
+                    printf("0x%04x ", wps_method);
+                }
+            }
+
+            printf("WPS PIN : %s\n", wpsConfig->pin);
+        }
+    }
+    else
+    {
+        printf("\nssp_WIFIHALSetApWpsConfiguration::NULL Pointer::Failure");
+        return_status = SSP_FAILURE;
+    }
+
+    return_status = wifi_setApWpsConfiguration(apIndex, wpsConfig);
+
+    if(return_status != SSP_SUCCESS)
+    {
+        printf("\nssp_WIFIHALSetApWpsConfiguration::Failed\n");
+        return_status = SSP_FAILURE;
+    }
+    else
+    {
+        printf("\nssp_WIFIHALSetApWpsConfiguration::Success");
+    }
+
+    printf("\nReturn Status : %d :: ssp_WIFIHALSetApWpsConfiguration ---> Exit\n", return_status);
+    return return_status;
+}
+
+/*******************************************************************************************
+ *
+ * Function Name        : ssp_WIFIHALGetOrSetFTR1KeyHolderID
+ * Description          : This function invokes WiFi hal's get/set api's which are related to FTR1KeyHolderID
+ * @param [in]          : apIndex - Access Point index
+ * @param [in]          : method - name of the wifi hal api to be invoked
+ * @param [in]          : KeyHolderID - Value of the FTR1 Key Holder ID for this AP
+ * @param [out]         : return status an integer value 0-success and 1-Failure
+ ********************************************************************************************/
+int ssp_WIFIHALGetOrSetFTR1KeyHolderID(int apIndex, unsigned char * KeyHolderID, char * method)
+{
+    printf("\n ssp_WIFIHALGetOrSetFTR1KeyHolderID ----> Entry\n");
+    printf("Ap index : %d\n",apIndex);
+    printf("MethodName : %s\n", method);
+    int return_status = 0;
+    int index = 0;
+
+    if(!strcmp(method, "getFTR1KeyHolderID"))
+    {
+        return_status = wifi_getFTR1KeyHolderID(apIndex, KeyHolderID);
+
+        if(return_status != SSP_SUCCESS)
+        {
+            printf("\n%s returned failure; ssp_WIFIHALGetOrSetFTR1KeyHolderID::Failed\n", method);
+            return_status = SSP_FAILURE;
+        }
+        else
+        {
+            printf("\n%s returned success; ssp_WIFIHALGetOrSetFTR1KeyHolderID::Success", method);
+
+            if(KeyHolderID[0] == '\0')
+            {
+                printf("\nKey Holder ID[0] : 0x%x", KeyHolderID[0]);
+            }
+            else
+            {
+                for(index = 0; index < 64 && KeyHolderID[index] != '\0'; index++)
+                {
+                    printf("\nKey Holder ID[%d] : 0x%x", index, KeyHolderID[index]);
+                }
+            }
+        }
+    }
+    else if(!strcmp(method, "setFTR1KeyHolderID"))
+    {
+        if(KeyHolderID[0] == '\0')
+        {
+            printf("\nKey Holder ID[0] : 0x%x", KeyHolderID[0]);
+        }
+        else
+        {
+            for(index = 0; index < 64 && KeyHolderID[index] != '\0'; index++)
+            {
+                printf("\nKey Holder ID[%d] : 0x%x", index, KeyHolderID[index]);
+            }
+        }
+
+        return_status = wifi_setFTR1KeyHolderID(apIndex, KeyHolderID);
+
+        if(return_status != SSP_SUCCESS)
+        {
+            printf("\n%s returned failure; ssp_WIFIHALGetOrSetFTR1KeyHolderID::Failed\n", method);
+            return_status = SSP_FAILURE;
+        }
+        else
+        {
+            printf("\n%s returned success; ssp_WIFIHALGetOrSetFTR1KeyHolderID::Success\n", method);
+        }
+    }
+    else
+    {
+        return_status = SSP_FAILURE;
+        printf("\n ssp_WiFiHalCallMethodForGetOrSetFTR1KeyHolderID::Invalid Method Name\n");
+    }
+
+    printf("\nReturn Status : %d :: ssp_WiFiHalCallMethodForGetOrSetFTR1KeyHolderID--> Exit\n", return_status);
+    return return_status;
+}
+
+/*******************************************************************************************
+ * Function Name        : ssp_WIFIHALSetBSSColor
+ * Description          : This function invokes WiFi HAL api wifi_setBSSColor
+ * @param [in]          : radio_index - Radio Index
+ *                        color - BSS color value to be set
+ * @param [out]         : return status an integer value 0-success and 1-Failure
+ ********************************************************************************************/
+int ssp_WIFIHALSetBSSColor(int radio_index, unsigned char color)
+{
+    printf("\n ssp_WIFIHALSetBSSColor ----> Entry\n");
+    printf("radioIndex : %d\n", radio_index);
+    printf("color : %d\n", color);
+    int return_status = 0;
+
+    return_status = wifi_setBSSColor(radio_index, color);
+
+    if(return_status != SSP_SUCCESS)
+    {
+        printf("\nssp_WIFIHALSetBSSColor::Failed\n");
+        return_status = SSP_FAILURE;
+    }
+    else
+    {
+        printf("\nssp_WIFIHALSetBSSColor::Success\n");
+    }
+
+    printf("\nReturn Status : %d :: ssp_WIFIHALSetBSSColor ---> Exit\n", return_status);
+    return return_status;
+}
+
+/*******************************************************************************************
+ * Function Name        : ssp_WIFIHALPushApFastTransitionConfig
+ * Description          : This function invokes WiFi HAL api wifi_PushApFastTransitionConfig()
+ * @param [in]          : apIndex - Access Point Index
+ *                        ftCfg - Fast Transition Configuration structure
+ * @param [out]         : return status an integer value 0-success and 1-Failure
+ ********************************************************************************************/
+int ssp_WIFIHALPushApFastTransitionConfig(int apIndex, wifi_FastTransitionConfig_t * ftCfg)
+{
+    printf("\n ssp_WIFIHALPushApFastTransitionConfig ----> Entry\n");
+    int return_status = 0;
+
+    if (ftCfg != NULL)
+    {
+        printf("apIndex : %d\n", apIndex);
+        printf("FT Support : %d\n", ftCfg->support);
+        printf("FT Mobility Domain ID : 0x%04x\n", ftCfg->mobilityDomain);
+        printf("FT Over DS : %d\n", ftCfg->overDS);
+    }
+    else
+    {
+        printf("\nssp_WIFIHALPushApFastTransitionConfig::NULL Pointer::Failure");
+        return_status = SSP_FAILURE;
+    }
+
+    return_status = wifi_pushApFastTransitionConfig(apIndex, ftCfg);
+
+    if(return_status != SSP_SUCCESS)
+    {
+        printf("\nssp_WIFIHALPushApFastTransitionConfig::Failed\n");
+        return_status = SSP_FAILURE;
+    }
+    else
+    {
+        printf("\nssp_WIFIHALPushApFastTransitionConfig::Success\n");
+    }
+
+    printf("\nReturn Status : %d :: ssp_WIFIHALPushApFastTransitionConfig ---> Exit\n", return_status);
     return return_status;
 }

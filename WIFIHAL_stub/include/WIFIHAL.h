@@ -1171,7 +1171,7 @@ typedef struct
     bool enable;
     wifi_onboarding_methods_t methods;
     char pin[WIFI_AP_MAX_WPSPIN_LEN];
-}wifi_wps_t;
+}__attribute__((packed)) wifi_wps_t;
 
 typedef enum {
     WIFI_BITRATE_DEFAULT = 0x0001,      /* WIFI_BITRATE_DEFAULT is used in the set api to default the bitrate configuration */
@@ -1366,6 +1366,45 @@ typedef struct {
     bool BSSTransitionImplemented;                              /**< if BSSTransitionImplemented is TRUE, BTM implemented. */
 } wifi_ap_capabilities_t;
 
+#define MAX_KEY_HOLDERS 8
+
+typedef char            nas_id_t[49];
+typedef unsigned char   r0r1_key_t[16];
+typedef char            r0r1_key_str_t[33];
+
+typedef enum {
+    FT_SUPPORT_DISABLED,
+    FT_SUPPORT_FULL,
+    FT_SUPPORT_ADAPTIVE
+} wifi_fastTrasitionSupport_t;
+
+typedef struct {
+    mac_address_t   mac;
+    nas_id_t        nasId;
+    r0r1_key_t      key;
+} wifi_r0KH_t;
+
+typedef struct {
+    mac_address_t   mac;
+    mac_address_t   r1khId;
+    r0r1_key_t      key;
+} wifi_r1KH_t;
+
+typedef struct {
+    wifi_fastTrasitionSupport_t support;
+    unsigned short              mobilityDomain;
+    bool                        overDS;
+    nas_id_t                    r0KeyHolder;
+    unsigned short              r0KeyLifeTime;
+    mac_address_t               r1KeyHolder;
+    unsigned short              reassocDeadLine;
+    bool                        pmkR1Push;
+    unsigned char               numR0KHs;
+    wifi_r0KH_t                 r0KH[MAX_KEY_HOLDERS];
+    unsigned char               numR1KHs;
+    wifi_r1KH_t                 r1KH[MAX_KEY_HOLDERS];
+} wifi_FastTransitionConfig_t;
+
 /* To provide external linkage to C Functions defined in TDKB Component folder */
 extern "C"
 {
@@ -1444,6 +1483,11 @@ extern "C"
     int ssp_WIFIHALGetRMCapabilities(mac_address_t peer, unsigned char out_Capabilities[5]);
     int ssp_WIFIHALGetApSecurity(int apIndex, wifi_vap_security_t * security, char * output_string);
     int ssp_WIFIHALSetApSecurity(int apIndex, wifi_vap_security_t * security);
+    int ssp_WIFIHALGetApWpsConfiguration(int apIndex, wifi_wps_t * wpsConfig, char * output_string);
+    int ssp_WIFIHALSetApWpsConfiguration(int apIndex, wifi_wps_t * wpsConfig);
+    int ssp_WIFIHALGetOrSetFTR1KeyHolderID(int apIndex, unsigned char * KeyHolderID, char * method);
+    int ssp_WIFIHALSetBSSColor(int radio_index, unsigned char color);
+    int ssp_WIFIHALPushApFastTransitionConfig(int apIndex, wifi_FastTransitionConfig_t * ftCfg);
 };
 
 class RDKTestAgent;
@@ -1529,6 +1573,11 @@ class WIFIHAL : public RDKTestStubInterface, public AbstractServer<WIFIHAL>
                   this->bindAndAddMethod(Procedure("WIFIHAL_GetRMCapabilities",PARAMS_BY_NAME, JSON_STRING, "peer", JSON_STRING, NULL), &WIFIHAL::WIFIHAL_GetRMCapabilities);
                   this->bindAndAddMethod(Procedure("WIFIHAL_GetApSecurity",PARAMS_BY_NAME, JSON_STRING, "apIndex", JSON_INTEGER, NULL), &WIFIHAL::WIFIHAL_GetApSecurity);
                   this->bindAndAddMethod(Procedure("WIFIHAL_SetApSecurity",PARAMS_BY_NAME, JSON_STRING, "apIndex", JSON_INTEGER, "mode", JSON_INTEGER, "mfp", JSON_INTEGER, "encr", JSON_INTEGER, "key_type", JSON_INTEGER, "key", JSON_STRING, "wpa3_transition_disable", JSON_INTEGER, NULL), &WIFIHAL::WIFIHAL_SetApSecurity);
+                  this->bindAndAddMethod(Procedure("WIFIHAL_GetApWpsConfiguration",PARAMS_BY_NAME, JSON_STRING, "apIndex", JSON_INTEGER, NULL), &WIFIHAL::WIFIHAL_GetApWpsConfiguration);
+                  this->bindAndAddMethod(Procedure("WIFIHAL_SetApWpsConfiguration",PARAMS_BY_NAME, JSON_STRING, "apIndex", JSON_INTEGER, "radioIndex", JSON_INTEGER, "enable", JSON_INTEGER, "pin", JSON_STRING, "methods", JSON_INTEGER, NULL), &WIFIHAL::WIFIHAL_SetApWpsConfiguration);
+                  this->bindAndAddMethod(Procedure("WIFIHAL_GetOrSetFTR1KeyHolderID",PARAMS_BY_NAME, JSON_STRING, "apIndex", JSON_INTEGER, "radioIndex", JSON_INTEGER, "KeyHolderID", JSON_STRING, "methodName", JSON_STRING, NULL), &WIFIHAL::WIFIHAL_GetOrSetFTR1KeyHolderID);
+                  this->bindAndAddMethod(Procedure("WIFIHAL_SetBSSColor",PARAMS_BY_NAME, JSON_STRING, "radioIndex", JSON_INTEGER, "color", JSON_INTEGER, NULL), &WIFIHAL::WIFIHAL_SetBSSColor);
+                  this->bindAndAddMethod(Procedure("WIFIHAL_PushApFastTransitionConfig",PARAMS_BY_NAME, JSON_STRING, "apIndex", JSON_INTEGER, "support", JSON_INTEGER, "mobilityDomain", JSON_INTEGER, "overDS", JSON_INTEGER, "radioIndex", JSON_INTEGER, NULL), &WIFIHAL::WIFIHAL_PushApFastTransitionConfig);
 		}
         /*inherited functions*/
         bool initialize(IN const char* szVersion);
@@ -1611,6 +1660,11 @@ class WIFIHAL : public RDKTestStubInterface, public AbstractServer<WIFIHAL>
         void WIFIHAL_GetRMCapabilities(IN const Json::Value& req, OUT Json::Value& response);
         void WIFIHAL_GetApSecurity(IN const Json::Value& req, OUT Json::Value& response);
         void WIFIHAL_SetApSecurity(IN const Json::Value& req, OUT Json::Value& response);
+        void WIFIHAL_GetApWpsConfiguration(IN const Json::Value& req, OUT Json::Value& response);
+        void WIFIHAL_SetApWpsConfiguration(IN const Json::Value& req, OUT Json::Value& response);
+        void WIFIHAL_GetOrSetFTR1KeyHolderID(IN const Json::Value& req, OUT Json::Value& response);
+        void WIFIHAL_SetBSSColor(IN const Json::Value& req, OUT Json::Value& response);
+        void WIFIHAL_PushApFastTransitionConfig(IN const Json::Value& req, OUT Json::Value& response);
 };
 #endif //__WIFIHAL_STUB_H__
 

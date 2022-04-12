@@ -4322,3 +4322,440 @@ void WIFIHAL::WIFIHAL_SetApSecurity(IN const Json::Value& req, OUT Json::Value& 
     DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_SetApSecurity ---->Exiting\n");
     return;
 }
+
+/*******************************************************************************************
+ *
+ * Function Name        : WIFIHAL_GetApWpsConfiguration
+ * Description          : This function invokes WiFi hal get api wifi_getApWpsConfiguration()
+ * @param [in] req-     : apIndex - Access Point index
+ * @param [out] response - filled with SUCCESS or FAILURE based on the output status of operation
+ *
+ ********************************************************************************************/
+void WIFIHAL::WIFIHAL_GetApWpsConfiguration(IN const Json::Value& req, OUT Json::Value& response)
+{
+    DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_GetApWpsConfiguration ----->Entry\n");
+    wifi_wps_t wpsConfig;
+    int apIndex = 0;
+    int returnValue = 0;
+    char details[2000] = {'\0'};
+    char output[2000] = {'\0'};
+
+    if (&req["apIndex"] == NULL)
+    {
+        response["result"]="FAILURE";
+        response["details"]="NULL parameter as input argument";
+        return;
+    }
+
+    apIndex = req["apIndex"].asInt();
+    DEBUG_PRINT(DEBUG_TRACE,"\n ApIndex : %d", apIndex);
+
+    returnValue = ssp_WIFIHALGetApWpsConfiguration(apIndex, &wpsConfig, output);
+
+    if(0 == returnValue)
+    {
+        sprintf(details, "wifi_getApWpsConfiguration invoked successfully; Details : %s", output);
+        DEBUG_PRINT(DEBUG_TRACE,"\n %s", details);
+        response["result"]="SUCCESS";
+        response["details"]=details;
+    }
+    else
+    {
+        sprintf(details, "wifi_getApWpsConfiguration not invoked successfully");
+        DEBUG_PRINT(DEBUG_TRACE,"\n %s", details);
+        response["result"]="FAILURE";
+        response["details"]=details;
+        DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_GetApWpsConfiguration  --->Error in execution\n");
+    }
+
+    DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_GetApWpsConfiguration ---->Exiting\n");
+    return;
+}
+
+/*******************************************************************************************
+ *
+ * Function Name        : WIFIHAL_SetApWpsConfiguration
+ * Description          : This function invokes WiFi hal get api wifi_setApWpsConfiguration()
+ * @param [in] req-     : apIndex - Access Point index
+ *                        enable - Access Point WPS enable status
+ *                        pin - Access Point WPS PIN
+ *                        num_methods - Number of WPS configuration methods
+ *                        methods - Access Point WPS methods
+ * @param [out] response - filled with SUCCESS or FAILURE based on the output status of operation
+ *
+ ********************************************************************************************/
+void WIFIHAL::WIFIHAL_SetApWpsConfiguration(IN const Json::Value& req, OUT Json::Value& response)
+{
+    DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_SetApWpsConfiguration ----->Entry\n");
+    wifi_wps_t wpsConfig;
+    int apIndex = 0;
+    int radioIndex = 0;
+    int returnValue = 0;
+    int retValue = 0;
+    char details[2000] = {'\0'};
+    char detailsAdd[1000] = {'\0'};
+
+    if (&req["apIndex"] == NULL || &req["enable"] == NULL)
+    {
+        response["result"]="FAILURE";
+        response["details"]="NULL parameter as input argument";
+        return;
+    }
+
+    apIndex = req["apIndex"].asInt();
+    DEBUG_PRINT(DEBUG_TRACE,"\n ApIndex : %d", apIndex);
+
+    wpsConfig.enable = req["enable"].asBool();
+    DEBUG_PRINT(DEBUG_TRACE,"\n WPS Mode : %d", wpsConfig.enable);
+
+    if (wpsConfig.enable)
+    {
+        if (&req["pin"] == NULL || &req["methods"] == NULL || &req["radioIndex"] == NULL)
+        {
+            response["result"]="FAILURE";
+            response["details"]="If WPS mode is set to enable, WPS PIN and WPS Configuration methods cannot be NULL parameters";
+            return;
+        }
+
+        radioIndex = req["radioIndex"].asInt();
+        DEBUG_PRINT(DEBUG_TRACE,"\n radioIndex : %d", radioIndex);
+
+        strcpy(wpsConfig.pin, req["pin"].asCString());
+        DEBUG_PRINT(DEBUG_TRACE,"\n WPS PIN : %s", wpsConfig.pin);
+
+        wpsConfig.methods = (wifi_onboarding_methods_t)req["methods"].asInt();
+        DEBUG_PRINT(DEBUG_TRACE,"\n WPS Methods : 0x%04x", wpsConfig.methods);
+    }
+
+    returnValue = ssp_WIFIHALSetApWpsConfiguration(apIndex, &wpsConfig);
+
+    if(0 == returnValue)
+    {
+        sprintf(detailsAdd, "wifi_setApWpsConfiguration operation success;");
+        DEBUG_PRINT(DEBUG_TRACE,"\n%s", detailsAdd);
+        strcat(details, detailsAdd);
+
+        retValue = ssp_WIFIHALApplySettings(radioIndex, (char *)"setApWpsConfiguration");
+
+        if(0 == retValue)
+        {
+            sprintf(detailsAdd, " applyRadioSettings operation success");
+            DEBUG_PRINT(DEBUG_TRACE,"\n%s", detailsAdd);
+            strcat(details, detailsAdd);
+            response["result"]="SUCCESS";
+        }
+        else
+        {
+            sprintf(detailsAdd, " applyRadioSettings operation failed");
+            DEBUG_PRINT(DEBUG_TRACE,"\n%s", detailsAdd);
+            strcat(details, detailsAdd);
+            response["result"]="FAILURE";
+        }
+
+        response["details"]=details;
+    }
+    else
+    {
+        sprintf(details, "wifi_setApWpsConfiguration not invoked successfully");
+        DEBUG_PRINT(DEBUG_TRACE,"\n %s", details);
+        response["result"]="FAILURE";
+        response["details"]=details;
+        DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_SetApWpsConfiguration  --->Error in execution\n");
+    }
+
+    DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_SetApWpsConfiguration ---->Exiting\n");
+    return;
+}
+
+/*******************************************************************************************
+ *
+ * Function Name        : WIFIHAL_GetOrSetFTR1KeyHolderID
+ * Description          : This function invokes WiFi hal's get/set apis, when the value to be
+ *                        get /set is related to FTR1KeyHolderID
+ * @param [in] req-     : methodName - HAL API name (wifi_getFTR1KeyHolderID or wifi_setFTR1KeyHolderID)
+ *                        apIndex - Access Point index
+ *                        radioIndex - WiFi Radio Index
+ *                        KeyHolderID - Value of the FTR1 Key Holder ID for this AP to get/set
+ * @param [out] response - filled with SUCCESS or FAILURE based on the output status of operation
+ *
+ ********************************************************************************************/
+void WIFIHAL::WIFIHAL_GetOrSetFTR1KeyHolderID(IN const Json::Value& req, OUT Json::Value& response)
+{
+    DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_GetOrSetFTR1KeyHolderID  ----->Entry\n");
+    char methodName[50] = {'\0'};
+    int apIndex = 0;
+    int radioIndex = 0;
+    int returnValue = 0;
+    int retValue = 0;
+    char details[2000] = {'\0'};
+    unsigned char keyId[64] = {'\0'};
+    char keyHolderID[64] = {'\0'};
+    char detailsAdd[1000] = {'\0'};
+
+    if(&req["apIndex"]==NULL || &req["methodName"]==NULL)
+    {
+        response["result"]="FAILURE";
+        response["details"]="NULL parameter as input argument";
+        return;
+    }
+
+    apIndex = req["apIndex"].asInt();
+    strcpy(methodName, req["methodName"].asCString());
+
+    if(!strncmp(methodName, "set",3))
+    {
+        printf("wifi_setFTR1KeyHolderID operation to be done\n");
+
+        if(&req["KeyHolderID"]==NULL || &req["radioIndex"]==NULL)
+        {
+            response["result"]="FAILURE";
+            response["details"]="NULL parameter as input argument";
+            return;
+        }
+
+        strcpy(keyHolderID, req["KeyHolderID"].asCString());
+        memcpy(&keyId[0], keyHolderID, strlen(keyHolderID));
+
+        radioIndex = req["radioIndex"].asInt();
+
+        DEBUG_PRINT(DEBUG_TRACE,"\n apIndex : %d", apIndex);
+        DEBUG_PRINT(DEBUG_TRACE,"\n Key Holder ID : %s", keyHolderID);
+        DEBUG_PRINT(DEBUG_TRACE,"\n Key_ID : %p\n", &keyId[0]);
+
+        if(keyId[0] == '\0')
+        {
+            DEBUG_PRINT(DEBUG_TRACE, "Key Holder ID : 0x%x", keyId[0]);
+        }
+        else
+        {
+            for(int index = 0; index < 64 && keyId[index] != '\0'; index++)
+            {
+                DEBUG_PRINT(DEBUG_TRACE, "Key Holder ID[%d] : 0x%x", index, keyId[index]);
+            }
+        }
+
+        returnValue = ssp_WIFIHALGetOrSetFTR1KeyHolderID(apIndex, &keyId[0], methodName);
+
+        if(0 == returnValue)
+        {
+            sprintf(detailsAdd, "wifi_%s operation success;", methodName);
+            DEBUG_PRINT(DEBUG_TRACE,"\n%s", detailsAdd);
+            strcat(details, detailsAdd);
+            retValue = ssp_WIFIHALApplySettings(radioIndex,methodName);
+
+            if(0 == retValue)
+            {
+                sprintf(detailsAdd, " applyRadioSettings operation success");
+                DEBUG_PRINT(DEBUG_TRACE,"\n%s", detailsAdd);
+                strcat(details, detailsAdd);
+                response["result"]="SUCCESS";
+            }
+            else
+            {
+                sprintf(detailsAdd, " applyRadioSettings operation failed");
+                DEBUG_PRINT(DEBUG_TRACE,"\n%s", detailsAdd);
+                strcat(details, detailsAdd);
+                response["result"]="FAILURE";
+            }
+
+            response["details"]=details;
+        }
+        else
+        {
+            sprintf(details, "wifi_%s operation failed", methodName);
+            response["result"]="FAILURE";
+            response["details"]=details;
+            DEBUG_PRINT(DEBUG_TRACE,"\n WiFiCallMethodForGetOrSetFTR1KeyHolderID --->Error in execution\n");
+        }
+    }
+    else
+    {
+        printf("wifi_getFTR1KeyHolderID operation to be done\n");
+        returnValue = ssp_WIFIHALGetOrSetFTR1KeyHolderID(apIndex, &keyId[0], methodName);
+
+        if(0 == returnValue)
+        {
+            sprintf(detailsAdd, "FTR1 Key Holder ID Details -");
+            strcat(details, detailsAdd);
+
+            if(keyId[0] == '\0')
+            {
+                sprintf(detailsAdd, " Key Holder ID[0] : 0x%x", keyId[0]);
+                strcat(details, detailsAdd);
+            }
+            else
+            {
+                for(int index = 0; index < 64 && keyId[index] != '\0' ; index++)
+                {
+                    sprintf(detailsAdd, " Key Holder ID[%d] : 0x%x", index, keyId[index]);
+                    strcat(details, detailsAdd);
+                }
+            }
+
+            DEBUG_PRINT(DEBUG_TRACE,"\n %s", details);
+            response["result"]="SUCCESS";
+            response["details"]=details;
+        }
+        else
+        {
+            sprintf(details, "wifi_%s operation failed", methodName);
+            DEBUG_PRINT(DEBUG_TRACE,"\n %s", details);
+            response["result"]="FAILURE";
+            response["details"]=details;
+            DEBUG_PRINT(DEBUG_TRACE,"\n WiFiCallMethodForGetOrSetFTR1KeyHolderID --->Error in execution\n");
+        }
+    }
+
+    DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_GetOrSetFTR1KeyHolderID ---->Exiting\n");
+    return;
+}
+
+/*******************************************************************************************
+ *
+ * Function Name        : WIFIHAL_SetBSSColor
+ * Description          : This function invokes WiFi hal's wifi_setBSSColor() api
+ * @param [in] req-     : radioIndex - radio index value of wifi
+ *                        color - color value to be set
+ * @param [out] response - filled with SUCCESS or FAILURE based on the output staus of operation
+ *
+ ********************************************************************************************/
+void WIFIHAL::WIFIHAL_SetBSSColor(IN const Json::Value& req, OUT Json::Value& response)
+{
+    DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_SetBSSColor --->Entry\n");
+    int radioIndex = 0;
+    unsigned char color = 0;
+    int retValue = 0;
+    int returnValue = 0;
+    char details[2000] = {'\0'};
+    char detailsAdd[1000] = {'\0'};
+
+    if(&req["radioIndex"]==NULL || &req["color"]==NULL)
+    {
+        response["result"]="FAILURE";
+        response["details"]="NULL parameter as input argument";
+        return;
+    }
+
+    radioIndex = req["radioIndex"].asInt();
+    color = req["color"].asInt();
+    DEBUG_PRINT(DEBUG_TRACE,"\n radioIndex : %d, color : %d", radioIndex, color);
+
+    returnValue = ssp_WIFIHALSetBSSColor(radioIndex, color);
+
+    if(0 == returnValue)
+    {
+        sprintf(detailsAdd, "wifi_setBSSColor operation success;");
+        DEBUG_PRINT(DEBUG_TRACE,"\n%s", detailsAdd);
+        strcat(details, detailsAdd);
+
+        retValue = ssp_WIFIHALApplySettings(radioIndex, (char *)"setBSSColor");
+
+        if(0 == retValue)
+        {
+            sprintf(detailsAdd, " applyRadioSettings operation success");
+            DEBUG_PRINT(DEBUG_TRACE,"\n%s", detailsAdd);
+            strcat(details, detailsAdd);
+            response["result"]="SUCCESS";
+        }
+        else
+        {
+            sprintf(detailsAdd, " applyRadioSettings operation failed");
+            DEBUG_PRINT(DEBUG_TRACE,"\n%s", detailsAdd);
+            strcat(details, detailsAdd);
+            response["result"]="FAILURE";
+        }
+
+        response["details"]=details;
+    }
+    else
+    {
+        sprintf(details, "WIFIHAL_SetBSSColor operation failed");
+        DEBUG_PRINT(DEBUG_TRACE,"\n %s", details);
+        response["result"]="FAILURE";
+        response["details"]=details;
+        DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_SetBSSColor --->Error in execution\n");
+    }
+
+    DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_SetBSSColor ---->Exiting\n");
+    return;
+}
+
+/*******************************************************************************************
+ *
+ * Function Name        : WIFIHAL_PushApFastTransitionConfig
+ * Description          : This function invokes WiFi hal's Push FT API
+ * @param [in] req-     : apIndex - Access Point index
+ *                        radioIndex - WiFi Radio Index
+ *                        support - FT support(Disabled/Full/Adaptive)
+ *                        mobilityDomain - Value of the FT Mobility Domain for this AP to set
+ *                        overDS - FT Over DS activated(Enabled/Disabled)
+ * @param [out] response - filled with SUCCESS or FAILURE based on the output status of operation
+ *
+ ********************************************************************************************/
+void WIFIHAL::WIFIHAL_PushApFastTransitionConfig(IN const Json::Value& req, OUT Json::Value& response)
+{
+    DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_PushApFastTransitionConfig  ----->Entry\n");
+    int apIndex = 0;
+    int radioIndex = 0;
+    int returnValue = 0;
+    int retValue = 0;
+    wifi_FastTransitionConfig_t ftCfg;
+    char detailsAdd[200] = {'\0'};
+    char details[200] = {'\0'};
+
+    if(&req["apIndex"]==NULL || &req["support"]==NULL || &req["mobilityDomain"]==NULL || &req["overDS"]==NULL || &req["radioIndex"]==NULL)
+    {
+        response["result"]="FAILURE";
+        response["details"]="NULL parameter as input argument";
+        return;
+    }
+
+    apIndex = req["apIndex"].asInt();
+    DEBUG_PRINT(DEBUG_TRACE,"\n apIndex : %d", apIndex);
+
+    ftCfg.support = (wifi_fastTrasitionSupport_t)req["support"].asInt();
+    DEBUG_PRINT(DEBUG_TRACE,"\n FT Support : %d", ftCfg.support);
+
+    ftCfg.mobilityDomain = req["mobilityDomain"].asInt();
+    DEBUG_PRINT(DEBUG_TRACE,"\n Mobility Domain ID : 0x%04x", ftCfg.mobilityDomain);
+
+    ftCfg.overDS = req["overDS"].asInt();
+    DEBUG_PRINT(DEBUG_TRACE,"\n FT Over DS : %d", ftCfg.overDS);
+
+    radioIndex = req["radioIndex"].asInt();
+    DEBUG_PRINT(DEBUG_TRACE,"\n radioIndex : %d", radioIndex);
+
+    returnValue = ssp_WIFIHALPushApFastTransitionConfig(apIndex, &ftCfg);
+
+    if(0 == returnValue)
+    {
+        sprintf(detailsAdd, "wifi_PushApFastTransitionConfig operation success;");
+        strcat(details, detailsAdd);
+        retValue = ssp_WIFIHALApplySettings(radioIndex, (char *)"PushApFastTransitionConfig");
+
+        if(0 == retValue)
+        {
+            sprintf(detailsAdd, " applyRadioSettings operation success");
+            strcat(details, detailsAdd);
+            response["result"]="SUCCESS";
+        }
+        else
+        {
+            sprintf(detailsAdd, " applyRadioSettings operation failed");
+            strcat(details, detailsAdd);
+            response["result"]="FAILURE";
+        }
+
+        response["details"]=details;
+    }
+    else
+    {
+        sprintf(details, "wifi_PushApFastTransitionConfig operation failed");
+        response["result"]="FAILURE";
+        response["details"]=details;
+        DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_PushApFastTransitionConfig --->Error in execution\n");
+    }
+
+    DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_PushApFastTransitionConfig ---->Exiting\n");
+    return;
+}

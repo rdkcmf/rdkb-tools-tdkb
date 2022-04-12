@@ -112,3 +112,8 @@ int ssp_WIFIHALGetOrSetFTR0KeyHolderID(int apIndex, unsigned char * KeyHolderID,
 int ssp_WIFIHALGetRMCapabilities(mac_address_t peer, unsigned char out_Capabilities[5]);
 int ssp_WIFIHALGetApSecurity(int apIndex, wifi_vap_security_t * security, char * output_string);
 int ssp_WIFIHALSetApSecurity(int apIndex, wifi_vap_security_t * security);
+int ssp_WIFIHALGetApWpsConfiguration(int apIndex, wifi_wps_t * wpsConfig, char * output_string);
+int ssp_WIFIHALSetApWpsConfiguration(int apIndex, wifi_wps_t * wpsConfig);
+int ssp_WIFIHALGetOrSetFTR1KeyHolderID(int apIndex, unsigned char * KeyHolderID, char * method);
+int ssp_WIFIHALSetBSSColor(int radio_index, unsigned char color);
+int ssp_WIFIHALPushApFastTransitionConfig(int apIndex, wifi_FastTransitionConfig_t * ftCfg);
