@@ -2,7 +2,7 @@
 # If not stated otherwise in this file or this component's Licenses.txt
 # file the following copyright and licenses apply:
 #
-# Copyright 2018 RDK Management
+# Copyright 2021 RDK Management
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,29 +17,47 @@
 # limitations under the License.
 ##########################################################################
 '''
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='utf-8'?>
 <xml>
-  <id/>
-  <version>2</version>
+  <id></id>
+  <!-- Do not edit id. This will be auto filled while exporting. If you are adding a new script keep the id empty -->
+  <version>3</version>
+  <!-- Do not edit version. This will be auto incremented while updating. If you are adding a new script you can keep the vresion as 1 -->
   <name>TS_WIFIAGENT_2.4GHZ_PublicWiFi_GetModesSupported</name>
-  <primitive_test_id/>
+  <!-- If you are adding a new script you can specify the script name. Script Name should be unique same as this file name with out .py extension -->
+  <primitive_test_id> </primitive_test_id>
+  <!-- Do not change primitive_test_id if you are editing an existing script. -->
   <primitive_test_name>WIFIAgent_Set</primitive_test_name>
+  <!--  -->
   <primitive_test_version>2</primitive_test_version>
+  <!--  -->
   <status>FREE</status>
+  <!--  -->
   <synopsis>Get Device.WiFi.AccessPoint.5.Security.ModesSupported and check whether it is in supported modes</synopsis>
-  <groups_id/>
+  <!--  -->
+  <groups_id />
+  <!--  -->
   <execution_time>4</execution_time>
+  <!--  -->
   <long_duration>false</long_duration>
+  <!--  -->
   <advanced_script>false</advanced_script>
-  <remarks/>
+  <!-- execution_time is the time out time for test execution -->
+  <remarks></remarks>
+  <!-- Reason for skipping the tests if marked to skip -->
   <skip>false</skip>
+  <!--  -->
   <box_types>
     <box_type>Broadband</box_type>
+    <!--  -->
     <box_type>Emulator</box_type>
+    <!--  -->
     <box_type>RPI</box_type>
+    <!--  -->
   </box_types>
   <rdk_versions>
     <rdk_version>RDKB</rdk_version>
+    <!--  -->
   </rdk_versions>
   <test_cases>
     <test_case_id>TC_WIFIAGENT_60</test_case_id>
@@ -54,17 +72,16 @@
 2. Using WIFIAgent_Get, get Device.WiFi.AccessPoint.5.Security.ModesSupported
 3. Check if it is in supported modes or not
 </automation_approch>
-    <except_output>Device.WiFi.AccessPoint.5.Security.ModesSupported should return supported modes</except_output>
+    <expected_output>Device.WiFi.AccessPoint.5.Security.ModesSupported should return supported modes</expected_output>
     <priority>High</priority>
     <test_stub_interface>WifiAgent</test_stub_interface>
     <test_script>TS_WIFIAGENT_2.4GHZ_PublicWiFi_GetModesSupported</test_script>
     <skipped>No</skipped>
     <release_version>M58</release_version>
-    <remarks/>
+    <remarks></remarks>
   </test_cases>
-  <script_tags/>
+  <script_tags />
 </xml>
-
 '''
 # use tdklib library,which provides a wrapper for tdk testcase script
 import tdklib;
@@ -93,7 +110,7 @@ if "SUCCESS" in loadmodulestatus.upper():
    actualresult = tdkTestObj.getResult();
    details = tdkTestObj.getResultDetails();
    Mode = details.split("VALUE:")[1].split(' ')[0].split(',');
-   expectedModes = ["None", "WEP-64", "WEP-128", "WPA-Personal","WPA2-Personal","WPA-WPA2-Personal","WPA-Enterprise","WPA2-Enterprise","WPA-WPA2-Enterprise","WPA3-Personal","WPA3-Enterprise"]
+   expectedModes = ["None", "WEP-64", "WEP-128", "WPA-Personal","WPA2-Personal","WPA-WPA2-Personal","WPA-Enterprise","WPA2-Enterprise","WPA-WPA2-Enterprise","WPA3-Personal","WPA3-Enterprise","WPA3-Personal-Transition"]
 
    #Check if the get modes are all available in expectedModes
    result =  all(elem in expectedModes for elem in Mode)

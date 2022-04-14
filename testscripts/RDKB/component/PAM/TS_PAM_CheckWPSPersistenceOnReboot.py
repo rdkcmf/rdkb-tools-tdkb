@@ -2,7 +2,7 @@
 # If not stated otherwise in this file or this component's Licenses.txt
 # file the following copyright and licenses apply:
 #
-# Copyright 2019 RDK Management
+# Copyright 2021 RDK Management
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@
 <xml>
   <id></id>
   <!-- Do not edit id. This will be auto filled while exporting. If you are adding a new script keep the id empty -->
-  <version>2</version>
+  <version>3</version>
   <!-- Do not edit version. This will be auto incremented while updating. If you are adding a new script you can keep the vresion as 1 -->
   <name>TS_PAM_CheckWPSPersistenceOnReboot</name>
   <!-- If you are adding a new script you can specify the script name. Script Name should be unique same as this file name with out .py extension -->
@@ -87,20 +87,24 @@ import tdklib;
 import time;
 #Test component to be tested
 obj = tdklib.TDKScriptingLibrary("pam","RDKB");
+wifiObj = tdklib.TDKScriptingLibrary("wifiagent","1");
 
 #IP and Port of box, No need to change,
 #This will be replaced with correspoing Box Ip and port while executing script
 ip = <ipaddress>
 port = <port>
 obj.configureTestCase(ip,port,'TS_PAM_CheckWPSPersistenceOnReboot');
+wifiObj.configureTestCase(ip,port,'TS_PAM_CheckWPSPersistenceOnReboot');
 
 #Get the result of connection with test component and DUT
 loadmodulestatus =obj.getLoadModuleResult();
-print "[LIB LOAD STATUS]  :  %s" %loadmodulestatus ;
+loadmodulestatus1 =wifiObj.getLoadModuleResult();
+print "[LIB LOAD STATUS]  :  %s %s" %(loadmodulestatus,loadmodulestatus1) ;
 
-if "SUCCESS" in loadmodulestatus.upper():
+if "SUCCESS" in loadmodulestatus.upper() and loadmodulestatus1.upper():
     #Set the result status of execution
     obj.setLoadModuleStatus("SUCCESS");
+    wifiObj.setLoadModuleStatus("SUCCESS");
     tdkTestObj = obj.createTestStep('pam_GetParameterValues');
     tdkTestObj.addParameter("ParamName","Device.WiFi.AccessPoint.1.WPS.Enable");
     expectedresult="SUCCESS";
@@ -122,10 +126,10 @@ if "SUCCESS" in loadmodulestatus.upper():
         else:
             print "Enable WPS Enable status"
             setValue = "true"
-        tdkTestObj = obj.createTestStep('pam_Setparams');
-        tdkTestObj.addParameter("ParamName","Device.WiFi.AccessPoint.1.WPS.Enable");
-        tdkTestObj.addParameter("ParamValue","false");
-        tdkTestObj.addParameter("Type","bool");
+        tdkTestObj = wifiObj.createTestStep('WIFIAgent_Set');
+        tdkTestObj.addParameter("paramName","Device.WiFi.AccessPoint.1.WPS.Enable");
+        tdkTestObj.addParameter("paramValue","false");
+        tdkTestObj.addParameter("paramType","bool");
         expectedresult="SUCCESS";
         tdkTestObj.executeTestCase(expectedresult);
         actualresult = tdkTestObj.getResult();
@@ -163,10 +167,10 @@ if "SUCCESS" in loadmodulestatus.upper():
                 print "ACTUAL RESULT 3:WPS status does not persist on reboot";
                 #Get the result of execution
                 print "[TEST EXECUTION RESULT] : FAILURE";
-            tdkTestObj = obj.createTestStep('pam_Setparams');
-            tdkTestObj.addParameter("ParamName","Device.WiFi.AccessPoint.1.WPS.Enable");
-            tdkTestObj.addParameter("ParamValue",orgValue);
-            tdkTestObj.addParameter("Type","bool");
+            tdkTestObj = wifiObj.createTestStep('WIFIAgent_Set');
+            tdkTestObj.addParameter("paramName","Device.WiFi.AccessPoint.1.WPS.Enable");
+            tdkTestObj.addParameter("paramValue",orgValue);
+            tdkTestObj.addParameter("paramType","bool");
             tdkTestObj.executeTestCase(expectedresult);
             actualresult = tdkTestObj.getResult();
             details = tdkTestObj.getResultDetails();
@@ -201,6 +205,7 @@ if "SUCCESS" in loadmodulestatus.upper():
         print "[TEST EXECUTION RESULT] : FAILURE";
 
     obj.unloadModule("pam");
+    wifiObj.unloadModule("wifiagent");
 
 else:
     print "Failed to load pam module";
