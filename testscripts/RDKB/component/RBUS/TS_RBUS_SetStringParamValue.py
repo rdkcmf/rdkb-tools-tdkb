@@ -65,7 +65,7 @@
 3.DUT should be in RBUS mode</pre_requisite>
     <api_or_interface_used>rbus_Set
 rbusValue_SetString</api_or_interface_used>
-    <input_parameters>Device.WiFi.SSID.1.SSID</input_parameters>
+    <input_parameters>Device.DeviceInfo.X_RDKCENTRAL-COM_FirmwareDownloadURL</input_parameters>
     <automation_approch>1. Load the rbus module
 2. Open the rbus connection using rbus_open RBUS API
 3. Get the initial value of the DML parameter using rbusValue_GetString and store it
@@ -105,7 +105,7 @@ print "[LIB LOAD STATUS]  :  %s" %loadmodulestatus ;
 if "SUCCESS" in loadmodulestatus.upper() :
     obj.setLoadModuleStatus("SUCCESS");
 
-    parameterName = "Device.WiFi.SSID.1.SSID"
+    parameterName = "Device.DeviceInfo.X_RDKCENTRAL-COM_FirmwareDownloadURL"
 
     tdkTestObj = obj.createTestStep('RBUS_Open');
     expectedresult = "SUCCESS";
@@ -143,13 +143,7 @@ if "SUCCESS" in loadmodulestatus.upper() :
             #Get the result of execution
             print "[TEST EXECUTION RESULT] : %s" %actualresult ;
 
-            new_value_to_set = "";
-
-            if initial_Value == "New_WiFi_2_4":
-                new_value_to_set = "WiFi_New_2_4";
-            else:
-                new_value_to_set = "New_WiFi_2_4";
-
+            new_value_to_set = "http://sampleURL:8080/Images";
             print "New value to be set is : ",new_value_to_set
 
             tdkTestObj = obj.createTestStep('RBUS_SetValue');

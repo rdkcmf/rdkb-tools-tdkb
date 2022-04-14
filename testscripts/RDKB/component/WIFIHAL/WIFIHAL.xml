@@ -591,6 +591,48 @@
           <parameter name="mode" value=""/>
           <parameter name="wpa3_transition_disable" value=""/>
         </parameters>
+       </primitiveTest>
+      <primitiveTest name="WIFIHAL_GetApWpsConfiguration" id=" " version="1">
+        <function>WIFIHAL_GetApWpsConfiguration</function>
+        <parameters>
+          <parameter name="apIndex" value=""/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest name="WIFIHAL_SetApWpsConfiguration" id=" " version="1">
+        <function>WIFIHAL_SetApWpsConfiguration</function>
+        <parameters>
+          <parameter name="apIndex" value=""/>
+          <parameter name="enable" value=""/>
+          <parameter name="methods" value=""/>
+          <parameter name="pin" value=""/>
+          <parameter name="radioIndex" value=""/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest name="WIFIHAL_GetOrSetFTR1KeyHolderID" id=" " version="1">
+        <function>WIFIHAL_GetOrSetFTR1KeyHolderID</function>
+        <parameters>
+          <parameter name="apIndex" value=""/>
+          <parameter name="KeyHolderID" value=""/>
+          <parameter name="methodName" value=""/>
+          <parameter name="radioIndex" value=""/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest name="WIFIHAL_SetBSSColor" id=" " version="1">
+        <function>WIFIHAL_SetBSSColor</function>
+        <parameters>
+          <parameter name="color" value=""/>
+          <parameter name="radioIndex" value=""/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest name="WIFIHAL_PushApFastTransitionConfig" id=" " version="1">
+        <function>WIFIHAL_PushApFastTransitionConfig</function>
+        <parameters>
+          <parameter name="apIndex" value=""/>
+          <parameter name="mobilityDomain" value=""/>
+          <parameter name="overDS" value=""/>
+          <parameter name="radioIndex" value=""/>
+          <parameter name="support" value=""/>
+        </parameters>
       </primitiveTest>
     </primitiveTests>
   </module>

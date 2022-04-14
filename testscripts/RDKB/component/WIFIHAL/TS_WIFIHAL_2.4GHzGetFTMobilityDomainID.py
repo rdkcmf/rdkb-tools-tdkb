@@ -177,15 +177,17 @@ if "SUCCESS" in loadmodulestatus.upper() and "SUCCESS" in loadmodulestatus1.uppe
                     print "\nTEST STEP 4: Execute the command in the DUT to obtian the Mobility Domain ID";
                     print "EXPECTED RESULT 4: Should successfully execute the FT Mobility Domain ID check command"
 
-                    if expectedresult in actualresult and "mdid=" in details:
+                    if expectedresult in actualresult :
                         print "ACTUAL RESULT 4: FT Mobility Domain ID :", details ;
                         print "TEST EXECUTION RESULT :SUCCESS";
                         tdkTestObj.setResultStatus("SUCCESS");
 
                         #check if the FT Mobility Domain ID value from the HAL API is same as the value retrieved using the command
-                        fbt_mdid_value = details.split("mdid=")[1];
-                        print "\nTEST STEP 5 : Validate the FT Mobility Domain ID value retrieved using the HAL API";
-                        print "EXPECTED RESULT 5 : the FT Mobility Domain ID value from the HAL API should be the same as the value retrieved using the command";  
+                        if "mdid=" in details and details.split("mdid=")[1] != "":
+                            fbt_mdid_value = details.split("mdid=")[1];
+                        #if no value is received from nvram, consider the value as 0
+                        else :
+                            fbt_mdid_value = "0";
 
                         if fbt_mdid_value.isdigit() :
                             fbt_mdid_value = int(fbt_mdid_value);

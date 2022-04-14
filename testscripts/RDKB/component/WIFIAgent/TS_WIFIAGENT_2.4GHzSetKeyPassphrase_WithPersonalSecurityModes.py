@@ -216,55 +216,60 @@ if "SUCCESS" in loadmodulestatus1.upper():
             if expectedresult in actualresult:
                 #Set the KeyPassphrase for each of the Security modes
                 for mode in supported_modes:
-                    #KeyPassphrase should be SET only in Personal modes
+                    #KeyPassphrase should be SET only in applicable Personal modes
                     if "Personal" in mode:
                         print "\n****************For Mode %s********************" %mode;
-                        #Set the security mode
-                        step = step + 1;
-                        actualresult =  setSecurityMode(obj1, mode, step);
 
-                        if expectedresult in actualresult :
-                            #Verify the SET with GET
+                        if "WPA3" in mode :
+                            print "The security mode %s is a WPA3 Personal mode for which KeyPassphrase setting is not applicable..." %mode;
+                        else :
+                            #Set the security mode
                             step = step + 1;
-                            actualresult, final_mode = getSecurityMode(obj1, step);
-                            print "Set Mode : ", mode;
-                            print "Get Mode : ", final_mode;
+                            actualresult =  setSecurityMode(obj1, mode, step);
 
-                            if final_mode == mode:
-                                tdkTestObj.setResultStatus("SUCCESS");
-                                print "SET is reflected in GET";
-
-                                #Set the KeyPassPhrase
+                            if expectedresult in actualresult :
+                                #Verify the SET with GET
                                 step = step + 1;
-                                keyPassphrase = "test_password_" + str(step);
-                                actualresult = setKeyPassphrase(obj1, keyPassphrase, step);
+                                actualresult, final_mode = getSecurityMode(obj1, step);
+                                print "Set Mode : ", mode;
+                                print "Get Mode : ", final_mode;
 
-                                if expectedresult in actualresult :
-                                    #Check if the SET is reflected in GET
+                                if final_mode == mode:
+                                    tdkTestObj.setResultStatus("SUCCESS");
+                                    print "SET is reflected in GET";
+
+                                    #Set the KeyPassPhrase
                                     step = step + 1;
-                                    actualresult, final_passphrase = getKeyPassphrase(obj1, step);
-                                    print "Set KeyPassphrase : ", keyPassphrase;
-                                    print "Get KeyPassphrase : ", final_passphrase;
+                                    keyPassphrase = "test_password_" + str(step);
+                                    actualresult = setKeyPassphrase(obj1, keyPassphrase, step);
 
-                                    if keyPassphrase == final_passphrase:
-                                        tdkTestObj.setResultStatus("SUCCESS");
-                                        print "SET is reflected in GET";
+                                    if expectedresult in actualresult :
+                                        #Check if the SET is reflected in GET
+                                        step = step + 1;
+                                        actualresult, final_passphrase = getKeyPassphrase(obj1, step);
+                                        print "Set KeyPassphrase : ", keyPassphrase;
+                                        print "Get KeyPassphrase : ", final_passphrase;
+
+                                        if keyPassphrase == final_passphrase:
+                                            tdkTestObj.setResultStatus("SUCCESS");
+                                            print "SET is reflected in GET";
+                                        else:
+                                            tdkTestObj.setResultStatus("FAILURE");
+                                            print "SET is not reflected in GET";
                                     else:
                                         tdkTestObj.setResultStatus("FAILURE");
-                                        print "SET is not reflected in GET";
+                                        print "SET operation failed";
                                 else:
                                     tdkTestObj.setResultStatus("FAILURE");
-                                    print "GET operation failed after SET";
+                                    print "SET is not reflected in GET";
                             else:
                                 tdkTestObj.setResultStatus("FAILURE");
-                                print "SET is not reflected in GET";
-                        else:
-                            tdkTestObj.setResultStatus("FAILURE");
-                            print "GET operation failed after SET";
+                                print "SET operation failed";
                     else:
                         continue;
+
                 #Revert operation
-                print "Reverting to initial KeyPassPhrase..."
+                print "\nReverting to initial KeyPassPhrase..."
                 step = step + 1;
                 actualresult = setKeyPassphrase(obj1, initial_passphrase, step)
 

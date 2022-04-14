@@ -102,6 +102,11 @@
       <function name='WIFIHAL_GetRMCapabilities' />
       <function name='WIFIHAL_GetApSecurity' />
       <function name='WIFIHAL_SetApSecurity' />
+      <function name='WIFIHAL_GetApWpsConfiguration' />
+      <function name='WIFIHAL_SetApWpsConfiguration' />
+      <function name='WIFIHAL_GetOrSetFTR1KeyHolderID' />
+      <function name='WIFIHAL_SetBSSColor' />
+      <function name='WIFIHAL_PushApFastTransitionConfig' />
     </functions>
   <!-- Total parameters corresponding module  -->
     <parameters>
@@ -311,6 +316,23 @@
       <parameter funName='WIFIHAL_SetApSecurity' parameterName='key' parameterType='STRING' range='A-Z' />
       <parameter funName='WIFIHAL_SetApSecurity' parameterName='wpa3_transition_disable' parameterType='INTEGER' range='0-1' />
       <parameter funName='WIFIHAL_SetApSecurity' parameterName='mfp' parameterType='INTEGER' range='0-2' />
+      <parameter funName='WIFIHAL_GetApWpsConfiguration' parameterName='apIndex' parameterType='INTEGER' range='0-100' />
+      <parameter funName='WIFIHAL_SetApWpsConfiguration' parameterName='apIndex' parameterType='INTEGER' range='0-100' />
+      <parameter funName='WIFIHAL_SetApWpsConfiguration' parameterName='radioIndex' parameterType='INTEGER' range='0-10' />
+      <parameter funName='WIFIHAL_SetApWpsConfiguration' parameterName='enable' parameterType='INTEGER' range='0-1' />
+      <parameter funName='WIFIHAL_SetApWpsConfiguration' parameterName='methods' parameterType='INTEGER' range='0-60000' />
+      <parameter funName='WIFIHAL_SetApWpsConfiguration' parameterName='pin' parameterType='STRING' range='A-Z' />
+      <parameter funName='WIFIHAL_GetOrSetFTR1KeyHolderID' parameterName='apIndex' parameterType='INTEGER' range='0-100' />
+      <parameter funName='WIFIHAL_GetOrSetFTR1KeyHolderID' parameterName='radioIndex' parameterType='INTEGER' range='0-10' />
+      <parameter funName='WIFIHAL_GetOrSetFTR1KeyHolderID' parameterName='KeyHolderID' parameterType='STRING' range='A-Z' />
+      <parameter funName='WIFIHAL_GetOrSetFTR1KeyHolderID' parameterName='methodName' parameterType='STRING' range='A-Z' />
+      <parameter funName='WIFIHAL_SetBSSColor' parameterName='radioIndex' parameterType='INTEGER' range='0-10' />
+      <parameter funName='WIFIHAL_SetBSSColor' parameterName='color' parameterType='INTEGER' range='0-100' />
+      <parameter funName='WIFIHAL_PushApFastTransitionConfig' parameterName='apIndex' parameterType='INTEGER' range='0-100' />
+      <parameter funName='WIFIHAL_PushApFastTransitionConfig' parameterName='support' parameterType='INTEGER' range='0-2' />
+      <parameter funName='WIFIHAL_PushApFastTransitionConfig' parameterName='mobilityDomain' parameterType='INTEGER' range='0-10000' />
+      <parameter funName='WIFIHAL_PushApFastTransitionConfig' parameterName='overDS' parameterType='INTEGER' range='0-1' />
+      <parameter funName='WIFIHAL_PushApFastTransitionConfig' parameterName='radioIndex' parameterType='INTEGER' range='0-10' />
     </parameters>
   </module>
 </xml>

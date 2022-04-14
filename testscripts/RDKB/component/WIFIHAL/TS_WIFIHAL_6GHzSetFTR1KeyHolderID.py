@@ -19,13 +19,13 @@
 '''
 <?xml version="1.0" encoding="UTF-8"?><xml>
   <id/>
-  <version>4</version>
-  <name>TS_WIFIHAL_6GHzSetFTR0KeyHolderID</name>
+  <version>2</version>
+  <name>TS_WIFIHAL_6GHzSetFTR1KeyHolderID</name>
   <primitive_test_id/>
-  <primitive_test_name>WIFIHAL_GetOrSetFTMobilityDomainID</primitive_test_name>
-  <primitive_test_version>3</primitive_test_version>
+  <primitive_test_name>WIFIHAL_GetOrSetFTR1KeyHolderID</primitive_test_name>
+  <primitive_test_version>1</primitive_test_version>
   <status>FREE</status>
-  <synopsis>Set the FTR0 Key Holder ID by invoking the HAL API wifi_setFTR0KeyHolderID() and validate the SET using the GET API wifi_getFTR0KeyHolderID() for 6G private AP</synopsis>
+  <synopsis>Set the FTR1 Key Holder ID by invoking the HAL API wifi_setFTR1KeyHolderID() and validate the SET using the GET API wifi_getFTR1KeyHolderID() for 6G private AP</synopsis>
   <groups_id/>
   <execution_time>1</execution_time>
   <long_duration>false</long_duration>
@@ -39,34 +39,34 @@
     <rdk_version>RDKB</rdk_version>
   </rdk_versions>
   <test_cases>
-    <test_case_id>TC_WIFIHAL_755</test_case_id>
-    <test_objective>Set the FTR0 Key Holder ID by invoking the HAL API wifi_setFTR0KeyHolderID() and validate the SET using the GET API wifi_getFTR0KeyHolderID() for 6G private AP</test_objective>
+    <test_case_id>TC_WIFIHAL_775</test_case_id>
+    <test_objective>Set the FTR1 Key Holder ID by invoking the HAL API wifi_setFTR1KeyHolderID() and validate the SET using the GET API wifi_getFTR1KeyHolderID() for 6G private AP</test_objective>
     <test_type>Positive</test_type>
     <test_setup>Broadband</test_setup>
     <pre_requisite>1.Ccsp Components  should be in a running state else invoke cosa_start.sh manually that includes all the ccsp components and TDK Component
 2.TDK Agent should be in running state or invoke it through StartTdk.sh script</pre_requisite>
-    <api_or_interface_used>wifi_setFTR0KeyHolderID()
-wifi_getFTR0KeyHolderID()</api_or_interface_used>
-    <input_parameters>methodName : getFTR0KeyHolderID
-methodName : setFTR0KeyHolderID
+    <api_or_interface_used>wifi_setFTR1KeyHolderID()
+wifi_getFTR1KeyHolderID()</api_or_interface_used>
+    <input_parameters>methodName : getFTR1KeyHolderID
+methodName : setFTR1KeyHolderID
 apIndex : 6G private AP index
 radioIndex : 6G radio index
-KeyHolderID : string value assigned dynamically</input_parameters>
+KeyHolderID : string value assigned dynamically in MAC format</input_parameters>
     <automation_approch>1. Load the modules
-2. Get the initial FTR0 Key Holder ID using the HAL API wifi_getFTR0KeyHolderID() for 6G private AP.
+2. Get the initial FTR1 Key Holder ID using the HAL API wifi_getFTR1KeyHolderID() for 6G private AP.
 3. Get the corresponding unicode string representation of the initial Key Holder and store it.
 4. Generate a new Key Holder ID randomly
-5. Invoke the HAL API wifi_setFTR0KeyHolderID() and pass the newly generated Key Holder ID for 6G private AP and check if the SET operation returns success.
-6. Invoke the HAL API wifi_getFTR0KeyHolderID() and retrieve the current Key Holder ID after the set operation.
+5. Invoke the HAL API wifi_setFTR1KeyHolderID() and pass the newly generated Key Holder ID for 6G private API and check if the SET operation returns success.
+6. Invoke the HAL API wifi_getFTR1KeyHolderID() and retrieve the current Key Holder ID after the set operation.
 7. Compare if the Key Holder ID retrieved is same as the SET value.
 8. Revert to initial state.
 9. Unload the modules.</automation_approch>
-    <expected_output>Should be able to set the FTR0 Key Holder ID by invoking the HAL API wifi_setFTR0KeyHolderID() and the SET value should be validated successfully using the GET API wifi_getFTR0KeyHolderID() for 6G private AP.</expected_output>
+    <expected_output>Should be able to set the FTR1 Key Holder ID by invoking the HAL API wifi_setFTR1KeyHolderID() and the SET value should be validated successfully using the GET API wifi_getFTR1KeyHolderID() for 6G private AP.</expected_output>
     <priority>High</priority>
     <test_stub_interface>wifihal</test_stub_interface>
-    <test_script>TS_WIFIHAL_6GHzSetFTR0KeyHolderID</test_script>
+    <test_script>TS_WIFIHAL_6GHzSetFTR1KeyHolderID</test_script>
     <skipped>No</skipped>
-    <release_version>M99</release_version>
+    <release_version>M100</release_version>
     <remarks/>
   </test_cases>
   <script_tags/>
@@ -75,8 +75,8 @@ KeyHolderID : string value assigned dynamically</input_parameters>
 '''
 def getKeyHolder(tdkTestObj, apIndex):
     expectedresult = "SUCCESS";
-    tdkTestObj = obj.createTestStep("WIFIHAL_GetOrSetFTR0KeyHolderID");
-    tdkTestObj.addParameter("methodName","getFTR0KeyHolderID");
+    tdkTestObj = obj.createTestStep("WIFIHAL_GetOrSetFTR1KeyHolderID");
+    tdkTestObj.addParameter("methodName","getFTR1KeyHolderID");
     tdkTestObj.addParameter("apIndex",apIndex);
     tdkTestObj.executeTestCase(expectedresult);
     actualresult = tdkTestObj.getResult();
@@ -85,7 +85,7 @@ def getKeyHolder(tdkTestObj, apIndex):
 
 def setKeyHolder(tdkTestObj, apIndex, radioIndex, setValue):
     expectedresult = "SUCCESS";
-    tdkTestObj.addParameter("methodName","setFTR0KeyHolderID");
+    tdkTestObj.addParameter("methodName","setFTR1KeyHolderID");
     tdkTestObj.addParameter("apIndex",apIndex);
     tdkTestObj.addParameter("radioIndex", radioIndex);
     tdkTestObj.addParameter("KeyHolderID", setValue);
@@ -103,19 +103,15 @@ def HextoUnicodeConversion(num_hex_values, hex_values):
         unicode_string.append(chr(hex_to_integer));
         #Concatenate the string parts to get the full unicode string value
         unicode_key_id = unicode_key_id + unicode_string[iteration];
-    #Handle the condition when the Key Holder ID is 0x0, the unicode equivalent is Null
-    if unicode_key_id == "\x00":
-        unicode_key_id = "Null";
-    print "The Equivalent unicode string value of the FTR0 Key Holder ID is : %s" %unicode_key_id;
+
+    print "The Equivalent unicode string value of the FTR1 Key Holder ID is : %s" %unicode_key_id;
     return unicode_key_id
 
 # use tdklib library,which provides a wrapper for tdk testcase script
 import tdklib;
 from wifiUtility import *;
 from tdkbVariables import *;
-import string;
 from random import randint;
-from random import choice;
 
 radio = "6G"
 
@@ -127,8 +123,8 @@ sysobj = tdklib.TDKScriptingLibrary("sysutil","1");
 #This will be replaced with correspoing Box Ip and port while executing script
 ip = <ipaddress>
 port = <port>
-obj.configureTestCase(ip,port,'TS_WIFIHAL_6GHzSetFTR0KeyHolderID');
-sysobj.configureTestCase(ip,port,'TS_WIFIHAL_6GHzSetFTR0KeyHolderID');
+obj.configureTestCase(ip,port,'TS_WIFIHAL_6GHzSetFTR1KeyHolderID');
+sysobj.configureTestCase(ip,port,'TS_WIFIHAL_6GHzSetFTR1KeyHolderID');
 
 #Get the result of connection with test component and DUT
 loadmodulestatus =obj.getLoadModuleResult();
@@ -140,8 +136,8 @@ if "SUCCESS" in loadmodulestatus.upper() and "SUCCESS" in loadmodulestatus1.uppe
     obj.setLoadModuleStatus("SUCCESS");
     sysobj.setLoadModuleStatus("SUCCESS");
     expectedresult="SUCCESS";
-    tdkTestObjTemp, idx = getIndex(obj, radio);
 
+    tdkTestObjTemp, idx = getIndex(obj, radio);
     ## Check if an invalid index is returned
     if idx == -1:
         print "Failed to get radio index for radio %s\n" %radio;
@@ -157,8 +153,8 @@ if "SUCCESS" in loadmodulestatus.upper() and "SUCCESS" in loadmodulestatus1.uppe
             tdkTestObj = obj.createTestStep("WIFIHAL_GetOrSetFTKeyHolderID");
             tdkTestObj, actualresult, details = getKeyHolder(tdkTestObj, apIndex);
 
-            print "\nTEST STEP 2: Invoke the HAL API wifi_getFTR0KeyHolderID() to retrieve the FTR0 Key Holder ID for 5G private AP";
-            print "EXPECTED RESULT 2: Should get the FTR0 Key Holder ID using the HAL API successfully";
+            print "\nTEST STEP 2: Invoke the HAL API wifi_getFTR1KeyHolderID() to retrieve the FTR1 Key Holder ID for 6G private AP";
+            print "EXPECTED RESULT 2: Should get the FTR1 Key Holder ID using the HAL API successfully";
 
             if expectedresult in actualresult :
                 #Set the result status of execution
@@ -168,10 +164,10 @@ if "SUCCESS" in loadmodulestatus.upper() and "SUCCESS" in loadmodulestatus1.uppe
                 print "[TEST EXECUTION RESULT] : SUCCESS";
 
                 #Check if proper Hex values are retrieved and convert them to corresponding string value
-                print "\nTEST STEP 3 : Check if the FTR0 Key Holder ID is retrieved as one or more Hex Values";
-                print "EXPECTED RESULT 3 : FTR0 Key Holder ID should be retrieved as one or more Hex Values";
-
+                print "\nTEST STEP 3 : Check if the FTR1 Key Holder ID is retrieved as one or more Hex Values";
+                print "EXPECTED RESULT 3 : FTR1 Key Holder ID should be retrieved as one or more Hex Values";
                 details = details.split("Key Holder ID");
+
                 #Compute the number of Hex values by subtracting the first two list elements as they are debug prints
                 details.remove(details[0]);
                 details.remove(details[0]);
@@ -182,26 +178,26 @@ if "SUCCESS" in loadmodulestatus.upper() and "SUCCESS" in loadmodulestatus1.uppe
                 hex_values = [];
                 for iteration in range(0, num_hex_values):
                     hex_values.append(details[iteration].split(" : ")[1]);
-                    print "FTR0 Key Holder ID[%d] : %s" %(iteration, hex_values[iteration]);
+                    print "FTR1 Key Holder ID[%d] : %s" %(iteration, hex_values[iteration]);
 
                 if num_hex_values >= 1:
                     #Set the result status of execution
                     tdkTestObj.setResultStatus("SUCCESS");
-                    print "ACTUAL RESULT 3: FTR0 Key Holder ID is retrieved as the Hex values : ", hex_values;
+                    print "ACTUAL RESULT 3: FTR1 Key Holder ID is retrieved as the Hex values : ", hex_values;
                     #Get the result of execution
                     print "[TEST EXECUTION RESULT] : SUCCESS";
 
                     #Covert to corresponding unicode string
                     initial_KeyHolder = HextoUnicodeConversion(num_hex_values, hex_values);
 
-                    #Set to new Key Holder ID
+                    #Set to new Key Holder ID in MAC format
                     radioIndex = idx;
                     apIndex = apIndex;
-                    setValue = str(randint(0, 100)) + choice(string.ascii_letters) + str(randint(0, 100));
+                    setValue = str(randint(0, 9)) + str(randint(0, 9)) + ":" + str(randint(0, 9)) + str(randint(0, 9)) + ":" + str(randint(0, 9)) + str(randint(0, 9)) + ":" + str(randint(0, 9)) + str(randint(0, 9)) + ":" + str(randint(0, 9)) + str(randint(0, 9)) + ":" + str(randint(0, 9)) + str(randint(0, 9));
                     tdkTestObj, actualresult, details = setKeyHolder(tdkTestObj, apIndex, radioIndex, setValue);
 
-                    print "\nTEST STEP 4: Invoke the HAL API wifi_setFTR0KeyHolderID() to set the FTR0 Key Holder ID for 5G private AP";
-                    print "EXPECTED RESULT 4: Should set the FTR0 Key Holder ID to %s using the HAL API successfully" %setValue;
+                    print "\nTEST STEP 4: Invoke the HAL API wifi_setFTR1KeyHolderID() to set the FTR1 Key Holder ID for 5G private AP";
+                    print "EXPECTED RESULT 4: Should set the FTR1 Key Holder ID to %s using the HAL API successfully" %setValue;
 
                     if expectedresult in actualresult :
                         #Set the result status of execution
@@ -212,9 +208,8 @@ if "SUCCESS" in loadmodulestatus.upper() and "SUCCESS" in loadmodulestatus1.uppe
 
                         #Cross check the SET with GET API
                         tdkTestObj, actualresult, details = getKeyHolder(tdkTestObj, apIndex);
-
-                        print "\nTEST STEP 5: Invoke the HAL API wifi_getFTR0KeyHolderID() to retrieve the FTR0 Key Holder ID Set operation";
-                        print "EXPECTED RESULT 5: Should get the FTR0 Key Holder ID using the HAL API successfully";
+                        print "\nTEST STEP 5: Invoke the HAL API wifi_getFTR1KeyHolderID() to retrieve the FTR1 Key Holder ID Set operation";
+                        print "EXPECTED RESULT 5: Should get the FTR1 Key Holder ID using the HAL API successfully";
 
                         if expectedresult in actualresult :
                             #Set the result status of execution
@@ -224,10 +219,10 @@ if "SUCCESS" in loadmodulestatus.upper() and "SUCCESS" in loadmodulestatus1.uppe
                             print "[TEST EXECUTION RESULT] : SUCCESS";
 
                             #Check if proper Hex values are retrieved and convert them to corresponding string value
-                            print "\nTEST STEP 6 : Check if the FTR0 Key Holder ID is retrieved as one or more Hex Values after set operation";
-                            print "EXPECTED RESULT 6 : FTR0 Key Holder ID should be retrieved as one or more Hex Values after set operation";
-
+                            print "\nTEST STEP 6 : Check if the FTR1 Key Holder ID is retrieved as one or more Hex Values after set operation";
+                            print "EXPECTED RESULT 6 : FTR1 Key Holder ID should be retrieved as one or more Hex Values after set operation";
                             details = details.split("Key Holder ID");
+
                             #Compute the number of Hex values by subtracting the first two list elements as they are debug prints
                             details.remove(details[0]);
                             details.remove(details[0]);
@@ -238,37 +233,32 @@ if "SUCCESS" in loadmodulestatus.upper() and "SUCCESS" in loadmodulestatus1.uppe
                             hex_values_final = [];
                             for iteration in range(0, num_hex_values):
                                 hex_values_final.append(details[iteration].split(" : ")[1]);
-                                print "FTR0 Key Holder ID[%d] : %s" %(iteration, hex_values_final[iteration]);
+                                print "FTR1 Key Holder ID[%d] : %s" %(iteration, hex_values_final[iteration]);
 
                             if num_hex_values >= 1:
                                 #Set the result status of execution
                                 tdkTestObj.setResultStatus("SUCCESS");
-                                print "ACTUAL RESULT 6: FTR0 Key Holder ID is retrieved as the Hex values : ", hex_values_final;
+                                print "ACTUAL RESULT 6: FTR1 Key Holder ID is retrieved as the Hex values : ", hex_values_final;
                                 #Get the result of execution
                                 print "[TEST EXECUTION RESULT] : SUCCESS";
 
                                 #Covert to corresponding unicode string
                                 final_KeyHolder = HextoUnicodeConversion(num_hex_values, hex_values_final);
-
-                                print "\nTEST STEP 7 : Check if the SET value and GET value of FTR0 Key Holder ID match";
-                                print "EXPECTED RESULT 7 :Tthe SET value and GET value of FTR0 Key Holder ID should match";
-
-                                print "SET FTR0 Key Holder ID : %s" %setValue;
-                                print "GET FTR0 Key Holder ID : %s" %final_KeyHolder;
+                                print "\nTEST STEP 7 : Check if the SET value and GET value of FTR1 Key Holder ID match";
+                                print "EXPECTED RESULT 7 :Tthe SET value and GET value of FTR1 Key Holder ID should match";
+                                print "SET FTR1 Key Holder ID : %s" %setValue;
+                                print "GET FTR1 Key Holder ID : %s" %final_KeyHolder;
 
                                 if setValue == final_KeyHolder:
                                     #Set the result status of execution
                                     tdkTestObj.setResultStatus("SUCCESS");
-                                    print "ACTUAL RESULT 7: The SET value and GET value of FTR0 Key Holder ID match";
+                                    print "ACTUAL RESULT 7: The SET value and GET value of FTR1 Key Holder ID match";
                                     #Get the result of execution
                                     print "[TEST EXECUTION RESULT] : SUCCESS";
 
                                     #Revert to initial FT Key Holder ID
-                                    if initial_KeyHolder == "Null":
-                                        initial_KeyHolder = "";
                                     tdkTestObj, actualresult, details = setKeyHolder(tdkTestObj, apIndex, radioIndex, initial_KeyHolder);
-
-                                    print "\nTEST STEP 8: Invoke the HAL API wifi_setFTR0KeyHolderID() to revert to initial value";
+                                    print "\nTEST STEP 8: Invoke the HAL API wifi_setFTR1KeyHolderID() to revert to initial value";
                                     print "EXPECTED RESULT 8: Should set the Key Holder ID to %s using the HAL API successfully" %initial_KeyHolder;
 
                                     if expectedresult in actualresult :
@@ -292,7 +282,7 @@ if "SUCCESS" in loadmodulestatus.upper() and "SUCCESS" in loadmodulestatus1.uppe
                             else:
                                 #Set the result status of execution
                                 tdkTestObj.setResultStatus("FAILURE");
-                                print "ACTUAL RESULT 6: FTR0 Key Holder ID is not retrieved as one or more Hex values";
+                                print "ACTUAL RESULT 6: FTR1 Key Holder ID is not retrieved as one or more Hex values";
                                 #Get the result of execution
                                 print "[TEST EXECUTION RESULT] : FAILURE";
                         else :
@@ -310,7 +300,7 @@ if "SUCCESS" in loadmodulestatus.upper() and "SUCCESS" in loadmodulestatus1.uppe
                 else:
                     #Set the result status of execution
                     tdkTestObj.setResultStatus("FAILURE");
-                    print "ACTUAL RESULT 3: FTR0 Key Holder ID is not retrieved as two Hex values";
+                    print "ACTUAL RESULT 3: FTR1 Key Holder ID is not retrieved as two Hex values";
                     #Get the result of execution
                     print "[TEST EXECUTION RESULT] : FAILURE";
             else:

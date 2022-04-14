@@ -126,7 +126,7 @@ if "SUCCESS" in (loadmodulestatus.upper() and sysutilloadmodulestatus.upper()):
             print "[TEST EXECUTION RESULT] : SUCCESS"
 
             sleep(60);
-            logMsgs =["ignoring cloud's attempt to enable fingerprint","ADVANCED_SECURITY_CLOUD_SECURITY_ASSOC_SUCCESS"];
+            logMsgs =["ignoring cloud's attempt to enable feature","ADVANCED_SECURITY_CLOUD_SECURITY_ASSOC_SUCCESS"];
 
             print "TEST STER 3 : The following log msgs are expected to be present on Disabling finger print ";
             print "\n%s \n" %logMsgs;

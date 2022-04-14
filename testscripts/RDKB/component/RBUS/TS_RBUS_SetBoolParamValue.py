@@ -65,7 +65,7 @@
 3.DUT should be in RBUS mode</pre_requisite>
     <api_or_interface_used>rbus_set
 rbusValue_SetBoolean</api_or_interface_used>
-    <input_parameters>Device.WiFi.SSID.1.Enable</input_parameters>
+    <input_parameters>Device.DeviceInfo.X_RDKCENTRAL-COM_CloudUIEnable</input_parameters>
     <automation_approch>1. Load the rbus module
 2. Open the rbus connection using rbus_open RBUS API
 3. Get the initial value of the DML parameter using rbusValue_GetBoolean and store it
@@ -105,7 +105,7 @@ print "[LIB LOAD STATUS]  :  %s" %loadmodulestatus ;
 if "SUCCESS" in loadmodulestatus.upper() :
     obj.setLoadModuleStatus("SUCCESS");
 
-    parameterName = "Device.WiFi.SSID.1.Enable"
+    parameterName = "Device.DeviceInfo.X_RDKCENTRAL-COM_CloudUIEnable"
 
     tdkTestObj = obj.createTestStep('RBUS_Open');
     expectedresult = "SUCCESS";
