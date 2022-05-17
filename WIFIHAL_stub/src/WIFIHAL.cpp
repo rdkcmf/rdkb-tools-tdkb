@@ -4759,3 +4759,213 @@ void WIFIHAL::WIFIHAL_PushApFastTransitionConfig(IN const Json::Value& req, OUT 
     DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_PushApFastTransitionConfig ---->Exiting\n");
     return;
 }
+
+/*******************************************************************************************
+ *
+ * Function Name        : WIFIHAL_GetMuEdca
+ * Description          : This function invokes WiFi hal get api wifi_getMuEdca()
+ * @param [in] req-     : radioIndex - radio index
+ * @param [in] req-     : accessCategory - Access Category for MU (Multi-User) EDCA
+ *                        (Enhanced Distributed Channel Access) includes background, best effort,
+ *                        video, voice
+ * @param [out] response - filled with SUCCESS or FAILURE based on the output status of operation
+ *
+ ********************************************************************************************/
+void WIFIHAL::WIFIHAL_GetMuEdca(IN const Json::Value& req, OUT Json::Value& response)
+{
+    DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_GetMuEdca ----->Entry\n");
+    wifi_edca_t edca;
+    int radioIndex = 0;
+    int returnValue = 0;
+    wifi_access_category_t accessCategory = wifi_access_category_background;
+    char details[2000] = {'\0'};
+    char output[2000] = {'\0'};
+
+    if (&req["radioIndex"] == NULL)
+    {
+        response["result"]="FAILURE";
+        response["details"]="NULL parameter as input argument";
+        return;
+    }
+
+    radioIndex = req["radioIndex"].asInt();
+    DEBUG_PRINT(DEBUG_TRACE,"\n Radio Index : %d", radioIndex);
+
+    accessCategory = (wifi_access_category_t)req["accessCategory"].asInt();
+    DEBUG_PRINT(DEBUG_TRACE,"\n Access Category : %d", accessCategory);
+
+    returnValue = ssp_WIFIHALGetMuEdca(radioIndex, accessCategory, &edca, output);
+
+    if(0 == returnValue)
+    {
+        sprintf(details, "wifi_getMuEdca invoked successfully; Details : %s", output);
+        DEBUG_PRINT(DEBUG_TRACE,"\n %s", details);
+        response["result"]="SUCCESS";
+        response["details"]=details;
+    }
+    else
+    {
+        sprintf(details, "wifi_getMuEdca not invoked successfully");
+        DEBUG_PRINT(DEBUG_TRACE,"\n %s", details);
+        response["result"]="FAILURE";
+        response["details"]=details;
+        DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_GetMuEdca  --->Error in execution\n");
+    }
+
+    DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_GetMuEdca ---->Exiting\n");
+    return;
+}
+
+/*******************************************************************************************
+ *
+ * Function Name        : WIFIHAL_GetRadioOperatingParameters
+ * Description          : This function invokes WiFi hal get api wifi_getRadioOperatingParameters()
+ * @param [in] req-     : radioIndex - radio index
+ * @param [out] response - filled with SUCCESS or FAILURE based on the output status of operation
+ *
+ ********************************************************************************************/
+void WIFIHAL::WIFIHAL_GetRadioOperatingParameters(IN const Json::Value& req, OUT Json::Value& response)
+{
+    DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_GetRadioOperatingParameters ----->Entry\n");
+    wifi_radio_operationParam_t operationParams;
+    int radioIndex = 0;
+    int returnValue = 0;
+    char details[2000] = {'\0'};
+    char output[2000] = {'\0'};
+
+    if (&req["radioIndex"] == NULL)
+    {
+        response["result"]="FAILURE";
+        response["details"]="NULL parameter as input argument";
+        return;
+    }
+
+    radioIndex = (wifi_radio_index_t)req["radioIndex"].asInt();
+    DEBUG_PRINT(DEBUG_TRACE,"\n Radio Index : %d", radioIndex);
+
+    returnValue = ssp_WIFIHALGetRadioOperatingParameters(radioIndex, &operationParams, output);
+
+    if(0 == returnValue)
+    {
+        sprintf(details, "wifi_getRadioOperatingParameters invoked successfully; Details : %s", output);
+        DEBUG_PRINT(DEBUG_TRACE,"\n %s", details);
+        response["result"]="SUCCESS";
+        response["details"]=details;
+    }
+    else
+    {
+        sprintf(details, "wifi_getRadioOperatingParameters not invoked successfully");
+        DEBUG_PRINT(DEBUG_TRACE,"\n %s", details);
+        response["result"]="FAILURE";
+        response["details"]=details;
+        DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_GetRadioOperatingParameters  --->Error in execution\n");
+    }
+
+    DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_GetRadioOperatingParameters ---->Exiting\n");
+    return;
+}
+
+/*******************************************************************************************
+ *
+ * Function Name        : WIFIHAL_GetRadioChannels
+ * Description          : This function invokes WiFi hal get api wifi_getRadioChannels()
+ * @param [in] req-     : radioIndex - radio index
+ * @param [in] req-     : numberOfChannels - Number of channels available for each radio
+ * @param [out] response - filled with SUCCESS or FAILURE based on the output status of operation
+ *
+ ********************************************************************************************/
+void WIFIHAL::WIFIHAL_GetRadioChannels(IN const Json::Value& req, OUT Json::Value& response)
+{
+    DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_GetRadioChannels ----->Entry\n");
+    wifi_channelMap_t radioChannels[NUM_CH_ALL];
+    memset(&radioChannels, 0, sizeof(radioChannels));
+    int radioIndex = 0;
+    int numberOfChannels = 0;
+    int returnValue = 0;
+    char details[4000] = {'\0'};
+    char output[4000] = {'\0'};
+
+    if (&req["radioIndex"] == NULL || &req["numberOfChannels"] == NULL)
+    {
+        response["result"]="FAILURE";
+        response["details"]="NULL parameter as input argument";
+        return;
+    }
+
+    radioIndex = req["radioIndex"].asInt();
+    DEBUG_PRINT(DEBUG_TRACE,"\n Radio Index : %d", radioIndex);
+
+    numberOfChannels = req["numberOfChannels"].asInt();
+    DEBUG_PRINT(DEBUG_TRACE,"\n Number of channels : %d", numberOfChannels);
+
+    returnValue = ssp_WIFIHALGetRadioChannels(radioIndex, radioChannels, NUM_CH_ALL, numberOfChannels, output);
+
+    if(0 == returnValue)
+    {
+        sprintf(details, "wifi_getRadioChannels invoked successfully; Details : %s", output);
+        DEBUG_PRINT(DEBUG_TRACE,"\n %s", details);
+        response["result"]="SUCCESS";
+        response["details"]=details;
+    }
+    else
+    {
+        sprintf(details, "wifi_getRadioChannels not invoked successfully");
+        DEBUG_PRINT(DEBUG_TRACE,"\n %s", details);
+        response["result"]="FAILURE";
+        response["details"]=details;
+        DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_GetRadioChannels  --->Error in execution\n");
+    }
+
+    DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_GetRadioChannels ---->Exiting\n");
+    return;
+}
+
+/*******************************************************************************************
+ *
+ * Function Name        : WIFIHAL_GetEAPParam
+ * Description          : This function invokes WiFi hal get api wifi_getEAP_Param()
+ * @param [in] req-     : apIndex - Access Point index
+ * @param [out] response - filled with SUCCESS or FAILURE based on the output status of operation
+ *
+ ********************************************************************************************/
+void WIFIHAL::WIFIHAL_GetEAPParam(IN const Json::Value& req, OUT Json::Value& response)
+{
+    DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_GetEAPParam ----->Entry\n");
+    wifi_eap_config_t eapConfig;
+    memset(&eapConfig, 0, sizeof(eapConfig));
+    int apIndex = 0;
+    int returnValue = 0;
+    char details[2000] = {'\0'};
+    char output[2000] = {'\0'};
+
+    if (&req["apIndex"] == NULL)
+    {
+        response["result"]="FAILURE";
+        response["details"]="NULL parameter as input argument";
+        return;
+    }
+
+    apIndex = req["apIndex"].asInt();
+    DEBUG_PRINT(DEBUG_TRACE,"\n ApIndex : %d", apIndex);
+
+    returnValue = ssp_WIFIHALGetEAPParam(apIndex, &eapConfig, output);
+
+    if(0 == returnValue)
+    {
+        sprintf(details, "wifi_getEAP_Param invoked successfully; Details : %s", output);
+        DEBUG_PRINT(DEBUG_TRACE,"\n %s", details);
+        response["result"]="SUCCESS";
+        response["details"]=details;
+    }
+    else
+    {
+        sprintf(details, "wifi_getEAP_Param not invoked successfully");
+        DEBUG_PRINT(DEBUG_TRACE,"\n %s", details);
+        response["result"]="FAILURE";
+        response["details"]=details;
+        DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_GetEAPParam  --->Error in execution\n");
+    }
+
+    DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_GetEAPParam ---->Exiting\n");
+    return;
+}

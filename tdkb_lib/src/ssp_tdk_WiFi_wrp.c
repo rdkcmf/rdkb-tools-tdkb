@@ -417,6 +417,8 @@ int ssp_WIFIHALGetOrSetParamBoolValue(int radioIndex, unsigned char *enable, cha
         else
             return_status = wifi_getBSSTransitionActivated(radioIndex, NULL);
     }
+    else if(!strcmp(method, "setFastBSSTransitionActivated"))
+        return_status = wifi_setFastBSSTransitionActivated(radioIndex, *enable);
     else
     {
         return_status = SSP_FAILURE;
@@ -3378,5 +3380,289 @@ int ssp_WIFIHALPushApFastTransitionConfig(int apIndex, wifi_FastTransitionConfig
     }
 
     printf("\nReturn Status : %d :: ssp_WIFIHALPushApFastTransitionConfig ---> Exit\n", return_status);
+    return return_status;
+}
+
+/*******************************************************************************************
+ * Function Name        : ssp_WIFIHALGetMuEdca
+ * Description          : This function invokes WiFi HAL api wifi_getMuEdca
+ * @param [in]          : radioIndex - WiFi Radio Index
+ *                        accessCategory - Access Category for MU (Multi-User) EDCA
+ *                        (Enhanced Distributed Channel Access) includes background, best effort,
+ *                        video, voice
+ *                        edca - structure with the EDCA details for a given access category
+ * @param [out]         : return status an integer value 0-success and 1-Failure
+ ********************************************************************************************/
+int ssp_WIFIHALGetMuEdca(int radioIndex, wifi_access_category_t accessCategory, wifi_edca_t *edca, char * output_string)
+{
+    printf("\n ssp_WIFIHALGetMuEdca ----> Entry\n");
+    printf("radioIndex : %d\n", radioIndex);
+    printf("Access Category : %d\n", accessCategory);
+    int returnStatus = SSP_SUCCESS;
+
+    returnStatus = wifi_getMuEdca(radioIndex, accessCategory, edca);
+
+    if(returnStatus != SSP_SUCCESS)
+    {
+        printf("\nssp_WIFIHALGetMuEdca :: Failed\n");
+        returnStatus = SSP_FAILURE;
+    }
+    else
+    {
+        if(edca != NULL)
+        {
+            printf("ssp_WIFIHALGetMuEdca Success :: MuEdca for Access Category = %d : aifsn=%d, cw_min=%d, cw_max=%d, timer=%d\n", accessCategory, edca->aifsn, edca->cw_min, edca->cw_max, edca->timer);
+            sprintf(output_string, "MuEdca for Access Category = %d : aifsn=%d, cw_min=%d, cw_max=%d, timer=%d", accessCategory, edca->aifsn, edca->cw_min, edca->cw_max, edca->timer);
+        }
+        else
+        {
+            printf("\nssp_WIFIHALGetMuEdca::HAL API returned NULL Buffer::Failure");
+            returnStatus = SSP_FAILURE;
+        }
+    }
+
+    printf("\nReturn Status : %d :: ssp_WIFIHALGetMuEdca ---> Exit\n", returnStatus);
+    return returnStatus;
+}
+
+/*******************************************************************************************
+ * Function Name        : ssp_WIFIHALGetRadioOperatingParameters
+ * Description          : This function invokes WiFi HAL api wifi_getRadioOperatingParameters
+ * @param [in]          : radioIndex - WiFi Radio Index
+ *                        operationParams - structure with the operating parameters details for
+ *                        the given radio
+ * @param [out]         : return status an integer value 0-success and 1-Failure
+ ********************************************************************************************/
+int ssp_WIFIHALGetRadioOperatingParameters(wifi_radio_index_t radioIndex, wifi_radio_operationParam_t *operationParams, char * output_string)
+{
+    printf("\n ssp_WIFIHALGetRadioOperatingParameters ----> Entry\n");
+    printf("radioIndex : %d\n", radioIndex);
+    char output[2000] = {'\0'};
+    int bands = 0;
+    int rates = 0;
+    int iteration = 0;
+    int chanWidth = 0;
+    int variant = 0;
+    int returnStatus = SSP_SUCCESS;
+
+    returnStatus = wifi_getRadioOperatingParameters(radioIndex, operationParams);
+
+    if(returnStatus != SSP_SUCCESS)
+    {
+        printf("\nssp_WIFIHALGetRadioOperatingParameters :: Failed\n");
+        returnStatus = SSP_FAILURE;
+    }
+    else
+    {
+        if(operationParams != NULL)
+        {
+            printf("ssp_WIFIHALGetRadioOperatingParameters :: Success");
+            printf("Radio Enable: %d\n", operationParams->enable);
+            printf("AutoChannel Enabled: %d\n", operationParams->autoChannelEnabled);
+            printf("Channel: %d\n", operationParams->channel);
+            printf("CSA Beacon Count: %d\n", operationParams->csa_beacon_count);
+            printf("DCS Enabled: %d\n", operationParams->DCSEnabled);
+            printf("DTIM Period: %d\n", operationParams->dtimPeriod);
+            printf("Beacon Interval: %d\n", operationParams->beaconInterval);
+            printf("Operating Class: %d\n", operationParams->operatingClass);
+            printf("Fragmentation Threshold: %d\n", operationParams->fragmentationThreshold);
+            printf("Guard Interval: %d\n", operationParams->guardInterval);
+            printf("Transmit Power: %d\n", operationParams->transmitPower);
+            printf("RTS Threshold: %d\n", operationParams->rtsThreshold);
+            printf("Radio Country Code: 0x%04x\n", operationParams->countryCode);
+            printf("Number of Secondary Channels: %d\n", operationParams->numSecondaryChannels);
+
+            sprintf(output, "Radio Enable: %d, AutoChannel Enabled: %d, Channel: %d, CSA Beacon Count: %d, DCS Enabled: %d, DTIM Period: %d, Beacon Interval: %d, Operating Class: %d, Fragmentation Threshold: %d, Guard Interval: %d, Transmit Power: %d, RTS Threshold: %d, Radio Country Code : 0x%04x, Number of Secondary Channels: %d,", operationParams->enable,operationParams->autoChannelEnabled, operationParams->channel, operationParams->csa_beacon_count, operationParams->DCSEnabled,operationParams->dtimPeriod, operationParams->beaconInterval, operationParams->operatingClass, operationParams->fragmentationThreshold,operationParams->guardInterval, operationParams->transmitPower, operationParams->rtsThreshold, operationParams->countryCode, operationParams->numSecondaryChannels);
+            strcat(output_string, output);
+
+            printf("Secondary Channels - \n");
+            sprintf(output, " Channel Secondary: ");
+            strcat(output_string, output);
+            for (iteration = 0; iteration < operationParams->numSecondaryChannels; iteration++)
+            {
+                printf("channelSecondary[%d]: %d ", iteration, operationParams->channelSecondary[iteration]);
+                sprintf(output, " %d", operationParams->channelSecondary[iteration]);
+                strcat(output_string, output);
+            }
+            if(operationParams->numSecondaryChannels == 0)
+            {
+                printf("None\n");
+                sprintf(output, "None");
+                strcat(output_string, output);
+            }
+
+            printf("\nBands: 0x%04x", operationParams->band);
+            sprintf(output, ", Bands: 0x%04x", operationParams->band);
+            strcat(output_string, output);
+            for(bands = WIFI_FREQUENCY_2_4_BAND; bands <= WIFI_FREQUENCY_60_BAND; bands = bands * 2)
+            {
+                if (operationParams->band & bands)
+                {
+                    printf("0x%04x ", bands);
+                    sprintf(output, " 0x%04x", bands);
+                    strcat(output_string, output);
+                }
+            }
+
+            printf("\nChannel Width: 0x%04x", operationParams->channelWidth);
+            sprintf(output, ", Channel Width: 0x%04x", operationParams->channelWidth);
+            strcat(output_string, output);
+            for(chanWidth = WIFI_CHANNELBANDWIDTH_20MHZ; chanWidth <= WIFI_CHANNELBANDWIDTH_80_80MHZ; chanWidth = chanWidth * 2)
+            {
+                if (operationParams->channelWidth & chanWidth)
+                {
+                    printf("0x%04x ", chanWidth);
+                    sprintf(output, " 0x%04x", chanWidth);
+                    strcat(output_string, output);
+                }
+            }
+
+            printf("\n80211 Variants: 0x%04x \n", operationParams->variant);
+            sprintf(output, ", 80211 Variants: 0x%04x", operationParams->variant);
+            strcat(output_string, output);
+            for(variant = WIFI_80211_VARIANT_A; variant <= WIFI_80211_VARIANT_AX; variant = variant * 2)
+            {
+                if (operationParams->variant & variant)
+                {
+                    printf("0x%04x ", variant);
+                    sprintf(output, " 0x%04x", variant);
+                    strcat(output_string, output);
+                }
+            }
+
+            printf("\nBasic Data Transmit Rates: 0x%04x", operationParams->basicDataTransmitRates);
+            sprintf(output, ", Basic Data Transmit Rates: 0x%04x", operationParams->basicDataTransmitRates);
+            strcat(output_string, output);
+            for(rates = WIFI_BITRATE_DEFAULT; rates <= WIFI_BITRATE_54MBPS; rates = rates * 2)
+            {
+                if (operationParams->basicDataTransmitRates & rates)
+                {
+                    printf("0x%04x ", rates);
+                    sprintf(output, " 0x%04x", rates);
+                    strcat(output_string, output);
+                }
+            }
+
+            printf("\nOperational Data Transmit Rates: 0x%04x", operationParams->operationalDataTransmitRates);
+            sprintf(output, ", Operational Data Transmit Rates: 0x%04x", operationParams->operationalDataTransmitRates);
+            strcat(output_string, output);
+            for(rates = WIFI_BITRATE_DEFAULT; rates <= WIFI_BITRATE_54MBPS; rates = rates * 2)
+            {
+                if (operationParams->operationalDataTransmitRates & rates)
+                {
+                    printf("0x%04x ", rates);
+                    sprintf(output, " 0x%04x", rates);
+                    strcat(output_string, output);
+                }
+            }
+        }
+        else
+        {
+            printf("\nssp_WIFIHALGetRadioOperatingParameters::HAL API returned NULL Buffer::Failure");
+            returnStatus = SSP_FAILURE;
+        }
+    }
+
+    printf("\nReturn Status : %d :: ssp_WIFIHALGetRadioOperatingParameters ---> Exit\n", returnStatus);
+    return returnStatus;
+}
+
+/*******************************************************************************************
+ * Function Name        : ssp_WIFIHALGetRadioChannels
+ * Description          : This function invokes WiFi HAL api wifi_getRadioChannels
+ * @param [in]          : radioIndex - WiFi Radio Index
+ *                        outputMapSize - Size of radio channels buffer
+ *                        outputMap - Structure with the Channel number and its corresponding state details
+ *                        numberOfChannels - Number of possible radio channels for the radio
+ * @param [out]         : return status an integer value 0-success and 1-Failure
+ ********************************************************************************************/
+int ssp_WIFIHALGetRadioChannels(int radioIndex, wifi_channelMap_t *outputMap, int outputMapSize, int numberOfChannels, char * output_string)
+{
+    printf("\n ssp_WIFIHALGetRadioChannels ----> Entry\n");
+    printf("radioIndex : %d\n", radioIndex);
+    printf("Size of the radio channels buffer : %d\n", outputMapSize);
+    printf("Number of Channels : %d\n", numberOfChannels);
+    int channel = 0;
+    wifi_channelMap_t *chan;
+    char output[4000] = {'\0'};
+    int returnStatus = SSP_SUCCESS;
+
+    returnStatus = wifi_getRadioChannels(radioIndex, outputMap, outputMapSize);
+
+    if(returnStatus != SSP_SUCCESS)
+    {
+        printf("\nssp_WIFIHALGetRadioChannels :: Failed\n");
+        returnStatus = SSP_FAILURE;
+    }
+    else
+    {
+        printf("ssp_WIFIHALGetRadioChannels Success");
+        sprintf(output, "Channel Details -- ");
+        strcat(output_string, output);
+
+        if(outputMap != NULL)
+        {
+
+            for(channel = 0; channel < numberOfChannels; channel++)
+            {
+                chan = &outputMap[channel];
+                printf("\nChannel %d : State %d", chan->ch_number, chan->ch_state);
+                sprintf(output, "Channel %d : State %d ", chan->ch_number, chan->ch_state);
+                strcat(output_string, output);
+            }
+        }
+        else
+        {
+            printf("\nssp_WIFIHALGetRadioChannels::HAL API returned NULL Buffer::Failure");
+            returnStatus = SSP_FAILURE;
+        }
+    }
+
+    printf("\nReturn Status : %d :: ssp_WIFIHALGetRadioChannels ---> Exit\n", returnStatus);
+    return returnStatus;
+}
+
+/*******************************************************************************************
+ * Function Name        : ssp_WIFIHALGetEAPParam
+ * Description          : This function invokes WiFi HAL api wifi_getEAP_Param
+ * @param [in]          : apIndex - WiFi Access Point Index
+ *                        eapConfig - structure with the EAP configuration details
+ * @param [out]         : return status an integer value 0-success and 1-Failure
+ ********************************************************************************************/
+int ssp_WIFIHALGetEAPParam(int apIndex, wifi_eap_config_t * eapConfig, char * output_string)
+{
+    printf("\n ssp_WIFIHALGetEAPParam ----> Entry\n");
+    printf("apIndex : %d\n", apIndex);
+    int return_status = SSP_SUCCESS;
+
+    return_status = wifi_getEAP_Param(apIndex, eapConfig);
+
+    if(return_status != SSP_SUCCESS)
+    {
+        printf("\nssp_WIFIHALGetEAPParam :: Failed\n");
+        return_status = SSP_FAILURE;
+    }
+    else
+    {
+        if(eapConfig != NULL)
+        {
+            printf("ssp_WIFIHALGetEAPParam Success :: EAP Congiguration -- ");
+            printf("EAPOL Key Timeout: %u\n", eapConfig->uiEAPOLKeyTimeout);
+            printf("EAPOL Key Retries: %u\n", eapConfig->uiEAPOLKeyRetries);
+            printf("EAP Identity Request Timeout: %u\n", eapConfig->uiEAPIdentityRequestTimeout);
+            printf("EAP Identity Request Retries: %u\n", eapConfig->uiEAPIdentityRequestRetries);
+            printf("EAP Request Timeout: %u\n", eapConfig->uiEAPRequestTimeout);
+            printf("EAP Request Retries: %u\n", eapConfig->uiEAPRequestRetries);
+
+            sprintf(output_string, "EAP Congiguration -- EAPOL Key Timeout: %u, EAPOL Key Retries: %u, EAP Identity Request Timeout: %u, EAP Identity Request Retries: %u, EAP Request Timeout: %u, EAP Request Retries: %u", eapConfig->uiEAPOLKeyTimeout, eapConfig->uiEAPOLKeyRetries, eapConfig->uiEAPIdentityRequestTimeout, eapConfig->uiEAPIdentityRequestRetries, eapConfig->uiEAPRequestTimeout, eapConfig->uiEAPRequestRetries);
+        }
+        else
+        {
+            printf("\nssp_WIFIHALGetEAPParam::HAL API returned NULL Buffer::Failure");
+            return_status = SSP_FAILURE;
+        }
+    }
+
+    printf("\nReturn Status : %d :: ssp_WIFIHALGetEAPParam ---> Exit\n", return_status);
     return return_status;
 }

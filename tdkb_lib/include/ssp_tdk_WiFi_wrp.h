@@ -117,3 +117,7 @@ int ssp_WIFIHALSetApWpsConfiguration(int apIndex, wifi_wps_t * wpsConfig);
 int ssp_WIFIHALGetOrSetFTR1KeyHolderID(int apIndex, unsigned char * KeyHolderID, char * method);
 int ssp_WIFIHALSetBSSColor(int radio_index, unsigned char color);
 int ssp_WIFIHALPushApFastTransitionConfig(int apIndex, wifi_FastTransitionConfig_t * ftCfg);
+int ssp_WIFIHALGetMuEdca(int radioIndex, wifi_access_category_t accessCategory, wifi_edca_t * edca, char * outputString);
+int ssp_WIFIHALGetRadioOperatingParameters(wifi_radio_index_t radioIndex, wifi_radio_operationParam_t *operationParams, char * output_string);
+int ssp_WIFIHALGetRadioChannels(int radioIndex, wifi_channelMap_t *outputMap, int outputMapSize, int numberOfChannels, char * output_string);
+int ssp_WIFIHALGetEAPParam(int apIndex, wifi_eap_config_t * eapConfig, char * output_string);

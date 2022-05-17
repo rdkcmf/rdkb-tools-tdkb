@@ -48,6 +48,10 @@
 #define MAX_CHANNELS    64
 #define MAXIFACENAMESIZE    64
 #define MAX_VENDOR_SPECIFIC 32
+#define NUM_CH_24 13 // 1-13
+#define NUM_CH_5  24 // 36-165
+#define NUM_CH_6  58 // 1-229
+#define NUM_CH_ALL (NUM_CH_24 + NUM_CH_5 + NUM_CH_6) // 1-165
 
 typedef unsigned int    wifi_radio_index_t;
 typedef unsigned int    wifi_vap_index_t;
@@ -851,7 +855,7 @@ typedef struct {
     unsigned int adminControl;
     unsigned int chanUtilThreshold;
     bool chanUtilSelfHealEnable;
-} wifi_radio_operationParam_t;
+} __attribute__((packed)) wifi_radio_operationParam_t;
 
 typedef enum {
     wifi_security_mode_none = 0x00000001,
@@ -1405,6 +1409,36 @@ typedef struct {
     wifi_r1KH_t                 r1KH[MAX_KEY_HOLDERS];
 } wifi_FastTransitionConfig_t;
 
+typedef struct {
+    char aifsn;    /**< Arbitration Inter-Frame Space Number */
+    char cw_min;   /**< Lower bound Contention Window. */
+    char cw_max;   /**< Upper bound Contention Window. */
+    char timer;    /**< */
+} wifi_edca_t;
+
+typedef enum {
+    CHAN_STATE_AVAILABLE = 1,
+    CHAN_STATE_DFS_NOP_FINISHED,
+    CHAN_STATE_DFS_NOP_START,
+    CHAN_STATE_DFS_CAC_START,
+    CHAN_STATE_DFS_CAC_COMPLETED
+} wifi_channelState_t;
+
+typedef struct _wifi_channelMap_t {
+    int ch_number;
+    wifi_channelState_t ch_state;
+} wifi_channelMap_t;
+
+typedef struct _wifi_eap_config_t
+{
+    unsigned int    uiEAPOLKeyTimeout;
+    unsigned int    uiEAPOLKeyRetries;
+    unsigned int    uiEAPIdentityRequestTimeout;
+    unsigned int    uiEAPIdentityRequestRetries;
+    unsigned int    uiEAPRequestTimeout;
+    unsigned int    uiEAPRequestRetries;
+} wifi_eap_config_t;
+
 /* To provide external linkage to C Functions defined in TDKB Component folder */
 extern "C"
 {
@@ -1488,6 +1522,10 @@ extern "C"
     int ssp_WIFIHALGetOrSetFTR1KeyHolderID(int apIndex, unsigned char * KeyHolderID, char * method);
     int ssp_WIFIHALSetBSSColor(int radio_index, unsigned char color);
     int ssp_WIFIHALPushApFastTransitionConfig(int apIndex, wifi_FastTransitionConfig_t * ftCfg);
+    int ssp_WIFIHALGetMuEdca(int radioIndex, wifi_access_category_t accessCategory, wifi_edca_t *edca, char * outputString);
+    int ssp_WIFIHALGetRadioOperatingParameters(wifi_radio_index_t radioIndex, wifi_radio_operationParam_t *operationParams, char * output_string);
+    int ssp_WIFIHALGetRadioChannels(int radioIndex, wifi_channelMap_t *outputMap, int outputMapSize, int numberOfChannels, char * output_string);
+    int ssp_WIFIHALGetEAPParam(int apIndex, wifi_eap_config_t * eapConfig, char * output_string);
 };
 
 class RDKTestAgent;
@@ -1578,6 +1616,10 @@ class WIFIHAL : public RDKTestStubInterface, public AbstractServer<WIFIHAL>
                   this->bindAndAddMethod(Procedure("WIFIHAL_GetOrSetFTR1KeyHolderID",PARAMS_BY_NAME, JSON_STRING, "apIndex", JSON_INTEGER, "radioIndex", JSON_INTEGER, "KeyHolderID", JSON_STRING, "methodName", JSON_STRING, NULL), &WIFIHAL::WIFIHAL_GetOrSetFTR1KeyHolderID);
                   this->bindAndAddMethod(Procedure("WIFIHAL_SetBSSColor",PARAMS_BY_NAME, JSON_STRING, "radioIndex", JSON_INTEGER, "color", JSON_INTEGER, NULL), &WIFIHAL::WIFIHAL_SetBSSColor);
                   this->bindAndAddMethod(Procedure("WIFIHAL_PushApFastTransitionConfig",PARAMS_BY_NAME, JSON_STRING, "apIndex", JSON_INTEGER, "support", JSON_INTEGER, "mobilityDomain", JSON_INTEGER, "overDS", JSON_INTEGER, "radioIndex", JSON_INTEGER, NULL), &WIFIHAL::WIFIHAL_PushApFastTransitionConfig);
+                  this->bindAndAddMethod(Procedure("WIFIHAL_GetMuEdca",PARAMS_BY_NAME, JSON_STRING, "radioIndex", JSON_INTEGER, "accessCategory", JSON_INTEGER, NULL), &WIFIHAL::WIFIHAL_GetMuEdca);
+                  this->bindAndAddMethod(Procedure("WIFIHAL_GetRadioOperatingParameters",PARAMS_BY_NAME, JSON_STRING, "radioIndex", JSON_INTEGER, NULL), &WIFIHAL::WIFIHAL_GetRadioOperatingParameters);
+                  this->bindAndAddMethod(Procedure("WIFIHAL_GetRadioChannels",PARAMS_BY_NAME, JSON_STRING, "radioIndex", JSON_INTEGER, "numberOfChannels", JSON_INTEGER, NULL), &WIFIHAL::WIFIHAL_GetRadioChannels);
+                  this->bindAndAddMethod(Procedure("WIFIHAL_GetEAPParam",PARAMS_BY_NAME, JSON_STRING, "apIndex", JSON_INTEGER, NULL), &WIFIHAL::WIFIHAL_GetEAPParam);
 		}
         /*inherited functions*/
         bool initialize(IN const char* szVersion);
@@ -1665,6 +1707,10 @@ class WIFIHAL : public RDKTestStubInterface, public AbstractServer<WIFIHAL>
         void WIFIHAL_GetOrSetFTR1KeyHolderID(IN const Json::Value& req, OUT Json::Value& response);
         void WIFIHAL_SetBSSColor(IN const Json::Value& req, OUT Json::Value& response);
         void WIFIHAL_PushApFastTransitionConfig(IN const Json::Value& req, OUT Json::Value& response);
+        void WIFIHAL_GetMuEdca(IN const Json::Value& req, OUT Json::Value& response);
+        void WIFIHAL_GetRadioOperatingParameters(IN const Json::Value& req, OUT Json::Value& response);
+        void WIFIHAL_GetRadioChannels(IN const Json::Value& req, OUT Json::Value& response);
+        void WIFIHAL_GetEAPParam(IN const Json::Value& req, OUT Json::Value& response);
 };
 #endif //__WIFIHAL_STUB_H__
 
