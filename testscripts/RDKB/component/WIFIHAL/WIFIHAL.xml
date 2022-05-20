@@ -634,6 +634,32 @@
           <parameter name="support" value=""/>
         </parameters>
       </primitiveTest>
+      <primitiveTest name="WIFIHAL_GetMuEdca" id=" " version="2">
+        <function>WIFIHAL_GetMuEdca</function>
+        <parameters>
+          <parameter name="radioIndex" value=""/>
+          <parameter name="accessCategory" value=""/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest name="WIFIHAL_GetRadioOperatingParameters" id=" " version="2">
+        <function>WIFIHAL_GetRadioOperatingParameters</function>
+        <parameters>
+          <parameter name="radioIndex" value=""/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest name="WIFIHAL_GetRadioChannels" id=" " version="2">
+        <function>WIFIHAL_GetRadioChannels</function>
+        <parameters>
+          <parameter name="radioIndex" value=""/>
+          <parameter name="numberOfChannels" value=""/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest name="WIFIHAL_GetEAPParam" id=" " version="2">
+        <function>WIFIHAL_GetEAPParam</function>
+        <parameters>
+          <parameter name="apIndex" value=""/>
+        </parameters>
+      </primitiveTest>
     </primitiveTests>
   </module>
 </xml>

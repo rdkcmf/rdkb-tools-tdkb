@@ -107,6 +107,10 @@
       <function name='WIFIHAL_GetOrSetFTR1KeyHolderID' />
       <function name='WIFIHAL_SetBSSColor' />
       <function name='WIFIHAL_PushApFastTransitionConfig' />
+      <function name='WIFIHAL_GetMuEdca' />
+      <function name='WIFIHAL_GetRadioOperatingParameters' />
+      <function name='WIFIHAL_GetRadioChannels' />
+      <function name='WIFIHAL_GetEAPParam' />
     </functions>
   <!-- Total parameters corresponding module  -->
     <parameters>
@@ -333,6 +337,12 @@
       <parameter funName='WIFIHAL_PushApFastTransitionConfig' parameterName='mobilityDomain' parameterType='INTEGER' range='0-10000' />
       <parameter funName='WIFIHAL_PushApFastTransitionConfig' parameterName='overDS' parameterType='INTEGER' range='0-1' />
       <parameter funName='WIFIHAL_PushApFastTransitionConfig' parameterName='radioIndex' parameterType='INTEGER' range='0-10' />
+      <parameter funName='WIFIHAL_GetMuEdca' parameterName='radioIndex' parameterType='INTEGER' range='0-2' />
+      <parameter funName='WIFIHAL_GetMuEdca' parameterName='accessCategory' parameterType='INTEGER' range='0-10' />
+      <parameter funName='WIFIHAL_GetRadioOperatingParameters' parameterName='radioIndex' parameterType='INTEGER' range='0-2' />
+      <parameter funName='WIFIHAL_GetRadioChannels' parameterName='radioIndex' parameterType='INTEGER' range='0-2' />
+      <parameter funName='WIFIHAL_GetRadioChannels' parameterName='numberOfChannels' parameterType='INTEGER' range='0-200' />
+      <parameter funName='WIFIHAL_GetEAPParam' parameterName='apIndex' parameterType='INTEGER' range='0-100' />
     </parameters>
   </module>
 </xml>
