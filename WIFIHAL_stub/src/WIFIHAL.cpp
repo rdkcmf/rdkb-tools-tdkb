@@ -1249,7 +1249,7 @@ void WIFIHAL::WIFIHAL_GetOrSetSecurityRadiusSettings (IN const Json::Value& req,
 {
     DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_GetOrSetSecurityRadiusSettings ----->Entry\n");
 
-    wifiRadiusSetting radiusSetting;
+    wifi_radius_setting_t radiusSetting;
     char methodName[50] = {'\0'};
     int radioIndex = 0;
     int returnValue;
@@ -1350,7 +1350,7 @@ void WIFIHAL::WIFIHAL_GetSSIDTrafficStats2(IN const Json::Value& req, OUT Json::
 void WIFIHAL::WIFIHAL_GetRadioTrafficStats2 (IN const Json::Value& req, OUT Json::Value& response)
 {
     DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_GetRadioTrafficStats2 ----->Entry\n");
-    GetRadioTrafficStats2 TrafficStats2;
+    wifi_radioTrafficStats2_t TrafficStats2;
     int radioIndex = 0;
     int returnValue;
     char details[1000] = {'\0'};
@@ -3279,7 +3279,7 @@ void WIFIHAL::WIFIHAL_GetApInterworkingElement (IN const Json::Value& req, OUT J
     returnValue = ssp_WIFIHALGetApInterworkingElement(radioIndex, &element);
     if(0 == returnValue)
     {
-        sprintf(details, "Value returned is :interworkingEnabled=%d, accessNetworkType=%d, internetAvailable=%d, asra=%d, esra=%d, uesa=%d, venueOptionPresent=%d, venueType=%d, venueGroup=%d, hessOptionPresent=%d, hessid=%s", element.interworkingEnabled, element.accessNetworkType, element.internetAvailable, element.asra, element.esra, element.uesa, element.venueOptionPresent, element.venueType, element.venueGroup, element.hessOptionPresent, element.hessid);
+        sprintf(details, "Value returned is :interworkingEnabled=%d, accessNetworkType=%d, internetAvailable=%d, asra=%d, esra=%d, uesa=%d, venueOptionPresent=%d, venueType=%d, venueGroup=%d, hessOptionPresent=%d, hessid=%s", element.interworkingEnabled, element.accessNetworkType, element.internetAvailable, element.asra, element.esr, element.uesa, element.venueOptionPresent, element.venueType, element.venueGroup, element.hessOptionPresent, element.hessid);
         DEBUG_PRINT(DEBUG_TRACE,"\n %s", details);
 	response["result"]="SUCCESS";
         response["details"]=details;
@@ -3333,7 +3333,7 @@ void WIFIHAL::WIFIHAL_PushApInterworkingElement (IN const Json::Value& req, OUT 
     element.accessNetworkType = req["accessNetworkType"].asUInt();
     element.internetAvailable = req["internetAvailable"].asBool();
     element.asra = req["asra"].asBool();
-    element.esra = req["esra"].asBool();
+    element.esr = req["esra"].asBool();
     element.uesa = req["uesa"].asBool();
     element.venueOptionPresent = req["venueOptionPresent"].asBool();
     element.venueType = req["venueType"].asInt();
@@ -4877,7 +4877,8 @@ void WIFIHAL::WIFIHAL_GetRadioOperatingParameters(IN const Json::Value& req, OUT
 void WIFIHAL::WIFIHAL_GetRadioChannels(IN const Json::Value& req, OUT Json::Value& response)
 {
     DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_GetRadioChannels ----->Entry\n");
-    wifi_channelMap_t radioChannels[NUM_CH_ALL];
+    int numChAll = 165;
+    wifi_channelMap_t radioChannels[165];
     memset(&radioChannels, 0, sizeof(radioChannels));
     int radioIndex = 0;
     int numberOfChannels = 0;
@@ -4898,7 +4899,7 @@ void WIFIHAL::WIFIHAL_GetRadioChannels(IN const Json::Value& req, OUT Json::Valu
     numberOfChannels = req["numberOfChannels"].asInt();
     DEBUG_PRINT(DEBUG_TRACE,"\n Number of channels : %d", numberOfChannels);
 
-    returnValue = ssp_WIFIHALGetRadioChannels(radioIndex, radioChannels, NUM_CH_ALL, numberOfChannels, output);
+    returnValue = ssp_WIFIHALGetRadioChannels(radioIndex, radioChannels, numChAll, numberOfChannels, output);
 
     if(0 == returnValue)
     {
