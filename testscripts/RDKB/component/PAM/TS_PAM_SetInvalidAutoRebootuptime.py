@@ -50,7 +50,7 @@
 Device.DeviceInfo.X_RDKCENTRAL-COM_RFC.Feature.AutoReboot.Enable
 Device.DeviceInfo.X_RDKCENTRAL-COM_RFC.Feature.AutoReboot.UpTime</input_parameters>
     <automation_approch>1. Load the Module
-2.Perform a Factory reset and check if Device.DeviceInfo.X_RDKCENTRAL-COM_RFC.Feature.AutoReboot.UpTime is 10 and Device.DeviceInfo.X_RDKCENTRAL-COM_RFC.Feature.AutoReboot.Enable is false
+2.Perform a Factory reset and check if Device.DeviceInfo.X_RDKCENTRAL-COM_RFC.Feature.AutoReboot.UpTime is 120 and Device.DeviceInfo.X_RDKCENTRAL-COM_RFC.Feature.AutoReboot.Enable is true
 3.Try setting Device.DeviceInfo.X_RDKCENTRAL-COM_RFC.Feature.AutoReboot.UpTime  to the invalid range of values and should fail
 4.Revert the Auto Reboot UpTime to initial if a invalid value is set and mark the script as failure
 5.Unload the Module.</automation_approch>
@@ -121,11 +121,11 @@ if "SUCCESS" in loadmodulestatus.upper() and "SUCCESS" in loadmodulestatus1.uppe
        actualresult = tdkTestObj.getResult();
        details = tdkTestObj.getResultDetails();
 
-       if expectedresult in actualresult  and details == "false":
+       if expectedresult in actualresult  and details == "true":
           #Set the result status of execution
           tdkTestObj.setResultStatus("SUCCESS");
           print "TEST STEP 2: Get the Auto Reboot Status";
-          print "EXPECTED RESULT 2: Should Get the Auto Reboot Status as disabled";
+          print "EXPECTED RESULT 2: Should Get the Auto Reboot Status as enabled";
           print "ACTUAL RESULT 2: %s" %details;
           #Get the result of execution
           print "[TEST EXECUTION RESULT] : SUCCESS";
@@ -138,17 +138,17 @@ if "SUCCESS" in loadmodulestatus.upper() and "SUCCESS" in loadmodulestatus1.uppe
           actualresult = tdkTestObj.getResult();
           defaultUptime = tdkTestObj.getResultDetails();
 
-          if expectedresult in actualresult  and int(defaultUptime)== 10:
+          if expectedresult in actualresult  and int(defaultUptime)== 120:
              #Set the result status of execution
              tdkTestObj.setResultStatus("SUCCESS");
              print "TEST STEP 3: Get the AutoReboot UpTime";
-             print "EXPECTED RESULT 3: Should Get the Auto Reboot Uptime as 10";
+             print "EXPECTED RESULT 3: Should Get the Auto Reboot Uptime as 120";
              print "ACTUAL RESULT 3: %s" %defaultUptime;
              #Get the result of execution
              print "[TEST EXECUTION RESULT] : SUCCESS";
 
-             #The valid range is 1-30
-             InvalidValue = [-1,0,31,32]
+             #The valid range is 1-365
+             InvalidValue = [-1,0,366,367]
              # getting length of list
              length = len(InvalidValue);
 
