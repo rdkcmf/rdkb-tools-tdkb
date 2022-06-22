@@ -862,7 +862,7 @@ int ssp_CosaDmlDnsGet(char* MethodName, void* cfg)
     else if( !(strcmp(MethodName, "DnsClientServers")) )
     {
        int* temp =cfg;
-       return_status = (int)CosaDmlDnsClientGetServers(pam_handle,&DNSServers);
+       return_status = (int)((long int)CosaDmlDnsClientGetServers(pam_handle,&DNSServers));
        if (return_status != 0)
        {
        printf("ssp_CosaDmlDnsGet: number of servers is %lu\n",DNSServers);
@@ -887,7 +887,7 @@ int ssp_CosaDmlDnsGet(char* MethodName, void* cfg)
     else if( !(strcmp(MethodName, "DnsRelayServers")) )
     {
        int* temp =cfg;
-       return_status = (int)CosaDmlDnsRelayGetServers(pam_handle,&DNSServers);
+       return_status = (int)((long int)CosaDmlDnsRelayGetServers(pam_handle,&DNSServers));
        if (return_status != 0)
        {
        printf("ssp_CosaDmlDnsGet: number of servers is %lu\n",DNSServers);

@@ -896,7 +896,7 @@ int ssp_CMHAL_GetParamUlongValue(char* paramName, unsigned long* value)
         if(value)
         {
             return_status = cm_hal_GetDHCPInfo(&v4dhcpinfo);
-	    printf("ssp_CMHal_GetParamUlongValue: IPAddress retreived :%zu\n",v4dhcpinfo.IPAddress.Value);
+	    printf("ssp_CMHal_GetParamUlongValue: IPAddress retreived :%lu\n",(long unsigned int)v4dhcpinfo.IPAddress.Value);
             *value = v4dhcpinfo.IPAddress.Value;
         }
         else
