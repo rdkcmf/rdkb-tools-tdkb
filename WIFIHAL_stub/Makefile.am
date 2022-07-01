@@ -17,12 +17,12 @@
 # limitations under the License.
 ##########################################################################
 ACLOCAL_AMFLAGS = -Im4 --install
-AM_CPPFLAGS = ${COPTS} -fPIC -DDEBUG_LEVEL_TRACE
-AM_CXXFLAGS = -I${PKG_CONFIG_SYSROOT_DIR}$(includedir) -I${PKG_CONFIG_SYSROOT_DIR}$(includedir)/ccsp -I${top_srcdir}/WIFIHAL_stub/include -I${top_srcdir}/agent/include -I${top_srcdir}/tdkb_lib/include
+AM_CPPFLAGS = ${COPTS} -fPIC -DDEBUG_LEVEL_TRACE -Wall
+AM_CXXFLAGS = -I${PKG_CONFIG_SYSROOT_DIR}$(includedir) -I${PKG_CONFIG_SYSROOT_DIR}$(includedir)/ccsp -I${top_srcdir}/WIFIHAL_stub/include -I${top_srcdir}/agent/include
 
 lib_LTLIBRARIES = libwifihalstub.la
 libwifihalstub_la_SOURCES = src/WIFIHAL.cpp
-libwifihalstub_la_DEPENDENCIES= ${top_builddir}/tdkb_lib/.libs/libtdkagentssp.la
+libwifihalstub_la_LDFLAGS  = -lhal_wifi
 libwifihalstub_la_LIBADD =  $(libwifihalstub_la_DEPENDENCIES)
 libwifihalstub_la_includedir = ${includedir}
 libwifihalstub_la_include_HEADERS = ${top_srcdir}/WIFIHAL_stub/include/WIFIHAL.h

@@ -22,11 +22,39 @@
 
 #include "rdkteststubintf.h"
 #include "rdktestagentintf.h"
-#include "ssp_tdk_WiFi_wrp.h"
 #include <jsonrpccpp/server/connectors/tcpsocketserver.h>
+extern "C"
+{
+#include "wifi_hal.h"
+
+extern int wifi_getDeclineBARequestEnable(int radioIndex, unsigned char *enable);
+extern int wifi_setDeclineBARequestEnable(int radioIndex, unsigned char enable);
+extern int wifi_getDfsEnable(int radioIndex, unsigned char *enable);
+extern int wifi_setDfsEnable(int radioIndex, unsigned char enable);
+extern int wifi_setRadioDfsRefreshPeriod(int radioIndex, long unsigned int uLongVar);
+extern int wifi_getApBasicAuthenticationMode(int radioIndex, char* output);
+extern int wifi_kickAssociatedDevice(int radioIndex, wifi_device_t* dev);
+extern int wifi_getAssociatedDeviceDetail(int apIndex, int devIndex, wifi_device_t *dev);
+extern int wifi_setDTIMInterval(int radioIndex, int output);
+extern int wifi_getApVlanID(int radioIndex, int* output);
+extern int wifi_pushChannel(int radioIndex, int output);
+extern int wifi_getIndexFromName(char* ssidName, int *output);
+extern int wifi_clearRadioResetCount();
+extern int wifi_ifConfigUp(int apIndex);
+extern int wifi_ifConfigDown(int apIndex);
+extern int wifi_initRadio(int radioIndex);
+extern int wifi_getAutoBlockAckEnable(int radioIndex, unsigned char *output_bool);
+extern int wifi_setAutoBlockAckEnable(int radioIndex, unsigned char output_bool);
+extern int wifi_getRadioAbsoluteTransmitPower_priv(int radioIndex, long unsigned int *output_ulong);
+extern int wifi_factoryReset_post(int index, int commit, int restart);
+extern int wifi_apply_wldm(void);
+}
 
 #define TEST_SUCCESS true
 #define TEST_FAILURE false
+
+#define SSP_SUCCESS       0
+#define SSP_FAILURE       1
 
 /* for reference added it,(IN) indicates accepting the request from Test Manager and (OUT)
    indicates sending the response for the request back to the Manager */
