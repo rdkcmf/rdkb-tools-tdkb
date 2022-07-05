@@ -66,7 +66,7 @@
 wifi_getRadioChannel()
 wifi_getRadioPossibleChannels()
 wifi_setRadioChannel()</api_or_interface_used>
-    <input_parameters>methodName : setAutoChannelEnable
+    <input_parameters>methodName : setRadioAutoChannelEnable
 methodName : getRadioChannel
 methodName : getRadioPossibleChannels
 methodName : setRadioChannel
@@ -194,7 +194,7 @@ if "SUCCESS" in loadmodulestatus.upper():
 			
 			tdkTestObj = obj.createTestStep("WIFIHAL_GetOrSetParamBoolValue");
 			#Giving the method name to invoke the api to set auto channel enable. ie,wifi_setRadioAutoChannelEnable()
-			tdkTestObj.addParameter("methodName","setAutoChannelEnable");
+			tdkTestObj.addParameter("methodName","setRadioAutoChannelEnable");
 			#Radio index is 0 for 2.4GHz and 5 for 5GHz
 			tdkTestObj.addParameter("radioIndex",idx);
 			tdkTestObj.addParameter("param",1);
