@@ -111,7 +111,7 @@ if "SUCCESS" in loadmodulestatus.upper() and "SUCCESS" in loadmodulestatus1.uppe
 
         port = 1;
         DuplexMode_List = ["CCSP_HAL_ETHSW_DUPLEX_Auto","CCSP_HAL_ETHSW_DUPLEX_Half","CCSP_HAL_ETHSW_DUPLEX_Full"];
-        Bitrate_List = ["0","1","10","100","1000","10000"];
+        Bitrate_List = ["0","1","10","100","1000","10000","2500"];
 
         while port <= NumOfPorts:
             #Script to load the configuration file of the component

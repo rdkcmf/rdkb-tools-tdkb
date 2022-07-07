@@ -66,10 +66,12 @@
 </xml>
 
 '''
+
 # use tdklib library,which provides a wrapper for tdk testcase script
 import tdklib;
 from tdkbVariables import *;
 import time;
+from tdkutility import *;
 from xfinityWiFiLib import *
 
 #Test component to be tested
@@ -82,6 +84,7 @@ ip = <ipaddress>
 port = <port>
 obj.configureTestCase(ip,port,'TS_SANITY_CheckForDuplicateProcess');
 obj1.configureTestCase(ip,port,'TS_SANITY_CheckForDuplicateProcess');
+
 #Get the result of connection with test component and DUT
 loadmodulestatus1 =obj.getLoadModuleResult();
 loadmodulestatus2 =obj1.getLoadModuleResult();
@@ -91,6 +94,7 @@ if "SUCCESS" in loadmodulestatus1.upper() and "SUCCESS" in loadmodulestatus2.upp
     obj.setLoadModuleStatus("SUCCESS");
     obj1.setLoadModuleStatus("SUCCESS");
 
+    step = 1;
     tdkTestObj = obj.createTestStep('ExecuteCmd');
     process= "sh %s/tdk_utility.sh parseConfigFile LIST_OF_PROCESSES" %TDK_PATH;
     print process;
@@ -100,6 +104,7 @@ if "SUCCESS" in loadmodulestatus1.upper() and "SUCCESS" in loadmodulestatus2.upp
     actualresult = tdkTestObj.getResult();
     ProcessList = tdkTestObj.getResultDetails().strip();
     ProcessList = ProcessList.replace("\\n", "");
+
     if "Invalid Argument passed" not in ProcessList:
         tdkTestObj.setResultStatus("SUCCESS");
         print "TEST STEP 1: Get the list of processes ";
@@ -107,64 +112,150 @@ if "SUCCESS" in loadmodulestatus1.upper() and "SUCCESS" in loadmodulestatus2.upp
         print "ACTUAL RESULT 1: %s" %ProcessList;
         #Get the result of execution
         print "[TEST EXECUTION RESULT] : SUCCESS"
-
         ProcessList = ProcessList.split(",");
+
+        #If CcspTr069PaSsp in ProcessList, check if the TR069 RFC is enabled
+        revert_flag = 0;
+        if "CcspTr069PaSsp" in ProcessList :
+            step = step + 1;
+            #Get current values of public wifi params
+            tdkTestObj= obj1.createTestStep('TDKB_TR181Stub_Get');
+            actualresult,enable = getTR181Value(tdkTestObj, "Device.DeviceInfo.X_RDKCENTRAL-COM_RFC.Feature.TR069support.Enable");
+
+            print "\nTEST STEP %d : Get the value of Device.DeviceInfo.X_RDKCENTRAL-COM_RFC.Feature.TR069support.Enable" %step;
+            print "EXPECTED RESULT %d : Should get the value of Device.DeviceInfo.X_RDKCENTRAL-COM_RFC.Feature.TR069support.Enable" %step;
+
+            if expectedresult in actualresult and enable != "":
+                #Set the result status of execution
+                tdkTestObj.setResultStatus("SUCCESS");
+                print "ACTUAL RESULT %d : Enable Status of Device.DeviceInfo.X_RDKCENTRAL-COM_RFC.Feature.TR069support.Enable is : %s" %(step, enable);
+                #Get the result of execution
+                print "[TEST EXECUTION RESULT] : SUCCESS";
+
+                if enable != "true":
+                    #Set TR69 RFC to true
+                    step = step + 1;
+                    tdkTestObj= obj1.createTestStep('TDKB_TR181Stub_SetOnly');
+                    actualresult, details = setTR181Value(tdkTestObj, "Device.DeviceInfo.X_RDKCENTRAL-COM_RFC.Feature.TR069support.Enable", "true", "boolean");
+
+                    print "\nTEST STEP %d : Set the value of Device.DeviceInfo.X_RDKCENTRAL-COM_RFC.Feature.TR069support.Enable to true" %step;
+                    print "EXPECTED RESULT %d : Should set the value of Device.DeviceInfo.X_RDKCENTRAL-COM_RFC.Feature.TR069support.Enable to true" %step;
+
+                    if expectedresult in actualresult and details != "":
+                        #Set the result status of execution
+                        tdkTestObj.setResultStatus("SUCCESS");
+                        print "ACTUAL RESULT %d : Device.DeviceInfo.X_RDKCENTRAL-COM_RFC.Feature.TR069support.Enable enabled successfully" %step;
+                        #Get the result of execution
+                        print "[TEST EXECUTION RESULT] : SUCCESS";
+
+                        #Cross check with GET
+                        time.sleep(10);
+                        tdkTestObj= obj1.createTestStep('TDKB_TR181Stub_Get');
+                        actualresult,new_enable = getTR181Value(tdkTestObj, "Device.DeviceInfo.X_RDKCENTRAL-COM_RFC.Feature.TR069support.Enable");
+
+                        if expectedresult in actualresult and new_enable == "true":
+                            revert_flag = 1;
+                            #Set the result status of execution
+                            tdkTestObj.setResultStatus("SUCCESS");
+                            print "TR069 RFC enabled successfully";
+                        else:
+                            #Set the result status of execution
+                            tdkTestObj.setResultStatus("FAILURE");
+                            print "TR069 RFC NOT enabled successfully";
+                    else:
+                        #Set the result status of execution
+                        tdkTestObj.setResultStatus("FAILURE");
+                        print "ACTUAL RESULT %d : Device.DeviceInfo.X_RDKCENTRAL-COM_RFC.Feature.TR069support.Enable NOT enabled successfully" %step;
+                        #Get the result of execution
+                        print "[TEST EXECUTION RESULT] : FAILURE";
+                else:
+                    print "TR69 RFC is enabled already...SET operation not required";
+            else:
+                #Set the result status of execution
+                tdkTestObj.setResultStatus("FAILURE");
+                print "ACTUAL RESULT %d : Enable Status of Device.DeviceInfo.X_RDKCENTRAL-COM_RFC.Feature.TR069support.Enable is not retrieved" %step;
+                #Get the result of execution
+                print "[TEST EXECUTION RESULT] : FAILURE";
+
         for item in ProcessList:
             if item == "CcspHotspot":
-               #Get current values of public wifi params
-               tdkTestObj= obj1.createTestStep('TDKB_TR181Stub_Get');
-               tdkTestObj.addParameter("ParamName","Device.DeviceInfo.X_COMCAST_COM_xfinitywifiEnable");
-               expectedresult="SUCCESS";
-               #Execute the test case in DUT
-               tdkTestObj.executeTestCase(expectedresult);
-               actualresult = tdkTestObj.getResult();
-               details = tdkTestObj.getResultDetails();
+                step = step + 1;
+                #Get current values of public wifi params
+                tdkTestObj= obj1.createTestStep('TDKB_TR181Stub_Get');
+                tdkTestObj.addParameter("ParamName","Device.DeviceInfo.X_COMCAST_COM_xfinitywifiEnable");
+                expectedresult="SUCCESS";
+                #Execute the test case in DUT
+                tdkTestObj.executeTestCase(expectedresult);
+                actualresult = tdkTestObj.getResult();
+                details = tdkTestObj.getResultDetails();
 
-               if expectedresult in  actualresult and details == "true":
-                  command1 = "ps  | grep  %s  | grep -v \"grep\"| wc -l" %item
-                  tdkTestObj = obj.createTestStep('ExecuteCmd');
-                  tdkTestObj.addParameter("command", command1);
-                  tdkTestObj.executeTestCase(expectedresult);
-                  actualresult = tdkTestObj.getResult();
-                  details = tdkTestObj.getResultDetails().strip();
-                  details = details.replace("\\n", "");
-                  if expectedresult in actualresult and int(details) == 1:
-                     tdkTestObj.setResultStatus("SUCCESS");
-                     print "TEST STEP 2: Check if two instances of %s process is running " %item;
-                     print "EXPECTED RESULT 2: %s process is expected to have a single instances" %item;
-                     print "ACTUAL RESULT 2: %s is having %s instance" %(item,details);
-                     print "[TEST EXECUTION RESULT] : SUCCESS"
-                  else:
-                      tdkTestObj.setResultStatus("FAILURE");
-                      print "TEST STEP 2: Check if two instances of %s process is running " %item;
-                      print "EXPECTED RESULT 2: %s process is  expected to have a single instances" %item;
-                      print "ACTUAL RESULT 2: %s is having %s instance" %(item,details);
-                      print "[TEST EXECUTION RESULT] : FAILURE"
-               else:
-                   tdkTestObj.setResultStatus("SUCCESS");
-                   print "Since xfinitywifi is disabled CcspHotspot is not running"
-                   print "[TEST EXECUTION RESULT] : SUCCESS"
+                if expectedresult in  actualresult and details == "true":
+                    command1 = "ps  | grep  %s  | grep -v \"grep\"| wc -l" %item
+                    tdkTestObj = obj.createTestStep('ExecuteCmd');
+                    tdkTestObj.addParameter("command", command1);
+                    tdkTestObj.executeTestCase(expectedresult);
+                    actualresult = tdkTestObj.getResult();
+                    details = tdkTestObj.getResultDetails().strip();
+                    details = details.replace("\\n", "");
 
-            else:
-                 command1 =  "ps  | grep  %s  | grep -v \"grep\"| wc -l" %item
-                 tdkTestObj = obj.createTestStep('ExecuteCmd');
-                 tdkTestObj.addParameter("command", command1);
-                 tdkTestObj.executeTestCase(expectedresult);
-                 actualresult = tdkTestObj.getResult();
-                 details = tdkTestObj.getResultDetails().strip();
-                 details = details.replace("\\n", "");
-                 if expectedresult in actualresult and int(details) == 1:
+                    print "\nTEST STEP %d: Check if two instances of %s process is running " %(step, item);
+                    print "EXPECTED RESULT %d: %s process is expected to have a single instances" %(step, item);
+
+                    if expectedresult in actualresult and int(details) == 1:
+                        tdkTestObj.setResultStatus("SUCCESS");
+                        print "ACTUAL RESULT %d: %s is having %s instance" %(step,item,details);
+                        print "[TEST EXECUTION RESULT] : SUCCESS"
+                    else:
+                        tdkTestObj.setResultStatus("FAILURE");
+                        print "ACTUAL RESULT %d: %s is having %s instance" %(step,item,details);
+                        print "[TEST EXECUTION RESULT] : FAILURE"
+                else:
                     tdkTestObj.setResultStatus("SUCCESS");
-                    print "TEST STEP 2: Check if two instances of %s process is running " %item;
-                    print "EXPECTED RESULT 2: %s process is expected to have a single instances" %item;
-                    print "ACTUAL RESULT 2: %s is having %s instance" %(item,details);
+                    print "Since xfinitywifi is disabled CcspHotspot is not running"
                     print "[TEST EXECUTION RESULT] : SUCCESS"
-                 else:
-                     tdkTestObj.setResultStatus("FAILURE");
-                     print "TEST STEP 2: Check if two instances of %s process is running " %item;
-                     print "EXPECTED RESULT 2: %s process is expected to have a single instances" %item;
-                     print "ACTUAL RESULT 2: %s is having %s instance" %(item,details);
-                     print "[TEST EXECUTION RESULT] : FAILURE"
+            else:
+                step = step + 1;
+                command1 =  "ps  | grep  %s  | grep -v \"grep\"| wc -l" %item
+                tdkTestObj = obj.createTestStep('ExecuteCmd');
+                tdkTestObj.addParameter("command", command1);
+                tdkTestObj.executeTestCase(expectedresult);
+                actualresult = tdkTestObj.getResult();
+                details = tdkTestObj.getResultDetails().strip();
+                details = details.replace("\\n", "");
+
+                print "\nTEST STEP %d: Check if two instances of %s process is running " %(step,item);
+                print "EXPECTED RESULT %d: %s process is expected to have a single instances" %(step,item);
+
+                if expectedresult in actualresult and int(details) == 1:
+                    tdkTestObj.setResultStatus("SUCCESS");
+                    print "ACTUAL RESULT %d: %s is having %s instance" %(step,item,details);
+                    print "[TEST EXECUTION RESULT] : SUCCESS"
+                else:
+                    tdkTestObj.setResultStatus("FAILURE");
+                    print "ACTUAL RESULT %d: %s is having %s instance" %(step,item,details);
+                    print "[TEST EXECUTION RESULT] : FAILURE"
+
+        #Revert operation
+        if revert_flag == 1:
+            step = step + 1;
+            tdkTestObj= obj1.createTestStep('TDKB_TR181Stub_SetOnly');
+            actualresult, details = setTR181Value(tdkTestObj, "Device.DeviceInfo.X_RDKCENTRAL-COM_RFC.Feature.TR069support.Enable", enable, "boolean");
+
+            print "\nTEST STEP %d : Revert the value of Device.DeviceInfo.X_RDKCENTRAL-COM_RFC.Feature.TR069support.Enable" %step;
+            print "EXPECTED RESULT %d : Should revert the value of Device.DeviceInfo.X_RDKCENTRAL-COM_RFC.Feature.TR069support.Enable" %step;
+
+            if expectedresult in actualresult and details != "":
+                #Set the result status of execution
+                tdkTestObj.setResultStatus("SUCCESS");
+                print "ACTUAL RESULT %d : Device.DeviceInfo.X_RDKCENTRAL-COM_RFC.Feature.TR069support.Enable reverted successfully" %step;
+                #Get the result of execution
+                print "[TEST EXECUTION RESULT] : SUCCESS";
+            else:
+                #Set the result status of execution
+                tdkTestObj.setResultStatus("FAILURE");
+                print "ACTUAL RESULT %d : Device.DeviceInfo.X_RDKCENTRAL-COM_RFC.Feature.TR069support.Enable NOT reverted successfully" %step;
+                #Get the result of execution
+                print "[TEST EXECUTION RESULT] : FAILURE";
     else:
         tdkTestObj.setResultStatus("FAILURE");
         print "TEST STEP 1: Get the list of processes ";
