@@ -109,6 +109,21 @@ AC_ARG_ENABLE([redirect],
 
 AC_SUBST(REDIRECT_FLAG)
 
+AC_ARG_ENABLE([nonCM],
+        AS_HELP_STRING([--enable-nonCM],[enable nonCM]),
+        [
+          case "${enableval}" in
+             yes) nonCM=true
+                  echo dsl based platform;;
+             no) nonCM=false;;
+          *) AC_MSG_ERROR([bad value ${enableval} for --enable-dsl ]) ;;
+           esac
+           ],
+         [echo "DSL is not enabled"])
+
+AM_CONDITIONAL([NON_CM], [test x$nonCM = xtrue])
+
+
 AC_ARG_ENABLE([rdkb_telcovoice_manager],
         AS_HELP_STRING([--enable-rdkb_telcovoice_manager],[enable rdkb_telcovoice_manager]),
         [
