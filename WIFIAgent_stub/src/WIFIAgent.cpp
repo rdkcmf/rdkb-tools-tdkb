@@ -245,6 +245,11 @@ void WIFIAgent::WIFIAgent_Set(IN const Json::Value& req, OUT Json::Value& respon
         printf("Apply the wifi settings for 5GHZ\n");
         retVal = ssp_setParameterValue((char *)"Device.WiFi.Radio.2.X_CISCO_COM_ApplySetting",(char *)"true",(char *)"boolean",commit);
     }
+    else if ((!strncmp(ParamName, "Device.WiFi.Radio.3.", 20)) || (!strncmp(ParamName, "Device.WiFi.AccessPoint.17.", 27)))
+    {
+        printf("Apply the wifi settings for 6GHZ\n");
+        retVal = ssp_setParameterValue((char *)"Device.WiFi.Radio.3.X_CISCO_COM_ApplySetting",(char *)"true",(char *)"boolean",commit);
+    }
 
     if((0 == returnValue) && (0 == retVal))
     {
@@ -341,6 +346,11 @@ void WIFIAgent::WIFIAgent_SetMultiple(IN const Json::Value& req, OUT Json::Value
         printf("Apply the wifi settings for 5GHZ\n");
         retVal = ssp_setParameterValue((char *)"Device.WiFi.Radio.2.X_CISCO_COM_ApplySetting",(char *)"true",(char *)"boolean",commit);
     }
+    else if ((!strncmp(paramlist[0], "Device.WiFi.Radio.3.", 20)) || (!strncmp(paramlist[0], "Device.WiFi.AccessPoint.17.", 27)))
+    {
+        printf("Apply the wifi settings for 6GHZ\n");
+        retVal = ssp_setParameterValue((char *)"Device.WiFi.Radio.3.X_CISCO_COM_ApplySetting",(char *)"true",(char *)"boolean",commit);
+    }
 
     if((0 == returnValue) && (0 == retVal))
     {
@@ -424,6 +434,12 @@ void WIFIAgent::WIFIAgent_Set_Get(IN const Json::Value& req, OUT Json::Value& re
         printf("Apply the wifi settings for 5GHZ\n");
         retVal = ssp_setParameterValue((char *)"Device.WiFi.Radio.2.X_CISCO_COM_ApplySetting",(char *)"true",(char *)"boolean",commit);
     }
+    else if ((!strncmp(ParamName, "Device.WiFi.Radio.3.", 20)) || (!strncmp(ParamName, "Device.WiFi.AccessPoint.17.", 27)))
+    {
+        printf("Apply the wifi settings for 6GHZ\n");
+        retVal = ssp_setParameterValue((char *)"Device.WiFi.Radio.3.X_CISCO_COM_ApplySetting",(char *)"true",(char *)"boolean",commit);
+    }
+
     if((0 == returnValue) && (0 == retVal))
     {
         response["result"]="SUCCESS";

@@ -1084,7 +1084,7 @@ void WIFIHAL::WIFIHAL_GetOrSetParamBoolValue(IN const Json::Value& req, OUT Json
             response["result"]="SUCCESS";
             response["details"]=details;
 
-            if(strstr(methodName, "Radio")||strstr(methodName, "SSID")||strstr(methodName, "Ap")||strstr(methodName, "BandSteering"))
+            if(strstr(methodName, "Radio")||strstr(methodName, "SSID")||strstr(methodName, "Ap")||strstr(methodName, "BandSteering")||strstr(methodName, "BSSColor"))
             {
                 retValue = ssp_WIFIHALApplySettings(radioIndex,methodName);
                 if(SSP_SUCCESS == retValue)
@@ -1467,7 +1467,7 @@ void WIFIHAL::WIFIHAL_GetOrSetParamIntValue(IN const Json::Value& req, OUT Json:
             response["result"]="SUCCESS";
             response["details"]=details;
 
-            if(strstr(methodName, "Radio")||strstr(methodName, "SSID")||strstr(methodName, "Ap"))
+            if(strstr(methodName, "Radio")||strstr(methodName, "SSID")||strstr(methodName, "Ap")||strstr(methodName, "MuType"))
             {
                 retValue = ssp_WIFIHALApplySettings(radioIndex,methodName);
                 if(SSP_SUCCESS == retValue)
@@ -2527,6 +2527,7 @@ void WIFIHAL::WIFIHAL_GetRadioTrafficStats2 (IN const Json::Value& req, OUT Json
         return;
     }
 }
+
 /*******************************************************************************************
  *
  * Function Name        : WIFIHAL_GetApAssociatedDeviceDiagnosticResult
@@ -2538,43 +2539,67 @@ void WIFIHAL::WIFIHAL_GetRadioTrafficStats2 (IN const Json::Value& req, OUT Json
 void WIFIHAL::WIFIHAL_GetApAssociatedDeviceDiagnosticResult(IN const Json::Value& req, OUT Json::Value& response)
 {
     DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_GetApAssociatedDeviceDiagnosticResult ----->Entry\n");
-//    wifi_associated_dev_t *associated_dev = (wifi_associated_dev_t*)malloc(sizeof(wifi_associated_dev_t));
-    wifi_associated_dev_t *associated_dev = NULL;
+    wifi_associated_dev_t *associated_dev = NULL, *iteration_ptr = NULL;
     unsigned int output_array_size = 0;
+    int iteration = 0;
     int radioIndex = 0;
     int return_status = SSP_FAILURE;
-    char details[2000] = {'\0'};
-    radioIndex = req["radioIndex"].asInt();
-/*    if (associated_dev != NULL)
+    char details[4000] = {'\0'};
+    char output[2000] = {'\0'};
+
+    if (&req["radioIndex"] == NULL)
     {
-         DEBUG_PRINT(DEBUG_TRACE,"\n Memory Allocated Successfully");
+        response["result"]="FAILURE";
+        response["details"]="NULL parameter as input argument";
+        return;
     }
-    else
-    {
-         DEBUG_PRINT(DEBUG_TRACE, "\n Memory Allocation Failed");
-    }*/
-//    returnValue = ssp_WIFIHALGetApAssociatedDeviceDiagnosticResult(radioIndex, &associated_dev, &output_array_size);
-     return_status = wifi_getApAssociatedDeviceDiagnosticResult(radioIndex, &associated_dev, &output_array_size);
+
+    radioIndex = req["radioIndex"].asInt();
+    DEBUG_PRINT(DEBUG_TRACE,"\n Radio Index : %d", radioIndex);
+
+    return_status = wifi_getApAssociatedDeviceDiagnosticResult(radioIndex, &associated_dev, &output_array_size);
+    DEBUG_PRINT(DEBUG_TRACE,"\n Return status from wifi_getApAssociatedDeviceDiagnosticResult() : %d", return_status);
+
     if(SSP_SUCCESS == return_status)
     {
-        //sprintf(details, "Value returned is :cli_MACAddress=%s,cli_IPAddress=%s,cli_AuthenticationState=%d,cli_LastDataDownlinkRate=%d,cli_LastDataUplinkRate=%d,cli_SignalStrength=%d,cli_Retransmissions=%d,cli_Active=%d,cli_OperatingStandard=%s,cli_OperatingChannelBandwidth=%s,cli_SNR=%d,cli_InterferenceSources=%s,cli_DataFramesSentAck=%lu,cli_DataFramesSentNoAck=%lu,cli_BytesSent=%lu,cli_BytesReceived=%lu,cli_RSSI=%d,cli_MinRSSI=%d,cli_MaxRSSI=%d,cli_Disassociations=%d,cli_AuthenticationFailures=%d,output_array_size=%d",associated_dev->cli_MACAddress,associated_dev->cli_IPAddress,associated_dev->cli_AuthenticationState,associated_dev->cli_LastDataDownlinkRate,associated_dev->cli_LastDataUplinkRate,associated_dev->cli_SignalStrength,associated_dev->cli_Retransmissions,associated_dev->cli_Active,associated_dev->cli_OperatingStandard,associated_dev->cli_OperatingChannelBandwidth,associated_dev->cli_SNR,associated_dev->cli_InterferenceSources,associated_dev->cli_DataFramesSentAck,associated_dev->cli_DataFramesSentNoAck,associated_dev->cli_BytesSent,associated_dev->cli_BytesReceived,associated_dev->cli_RSSI,associated_dev->cli_MinRSSI,associated_dev->cli_MaxRSSI,associated_dev->cli_Disassociations,associated_dev->cli_AuthenticationFailures,output_array_size);
-        sprintf(details,"Value returned is : output_array_size=%u",output_array_size);
+        DEBUG_PRINT(DEBUG_TRACE,"\nOutput Array Size = %u", output_array_size);
+        sprintf(output, "Output Array Size = %u", output_array_size);
+        strcat(details, output);
+
+        if(associated_dev and output_array_size > 0)
+        {
+            for (iteration = 0, iteration_ptr = associated_dev; iteration < output_array_size; iteration++, iteration_ptr++)
+            {
+                DEBUG_PRINT(DEBUG_TRACE, "\nFor STA %d : MAC=%02x:%02x:%02x:%02x:%02x:%02x, AuthState=%d, LastDataDownlinkRate=%u, LastDataUplinkRate=%u, SignalStrength=%d, Retransmissions=%u, OperatingStd= %s, OperatingChBw=%s, SNR=%d, DataFramesSentAck=%lu, cli_DataFramesSentNoAck=%lu, cli_RSSI=%d, Disassociations=%u, AuthFailures=%u", iteration + 1, iteration_ptr->cli_MACAddress[0], iteration_ptr->cli_MACAddress[1], iteration_ptr->cli_MACAddress[2], iteration_ptr->cli_MACAddress[3], iteration_ptr->cli_MACAddress[4], iteration_ptr->cli_MACAddress[5], iteration_ptr->cli_AuthenticationState, iteration_ptr->cli_LastDataDownlinkRate, iteration_ptr->cli_LastDataUplinkRate, iteration_ptr->cli_SignalStrength, iteration_ptr->cli_Retransmissions, iteration_ptr->cli_OperatingStandard, iteration_ptr->cli_OperatingChannelBandwidth, iteration_ptr->cli_SNR, iteration_ptr->cli_DataFramesSentAck, iteration_ptr->cli_DataFramesSentNoAck, iteration_ptr->cli_RSSI, iteration_ptr->cli_Disassociations, iteration_ptr->cli_AuthenticationFailures);
+                sprintf(output, " For STA %d : MAC=%02x:%02x:%02x:%02x:%02x:%02x, AuthState=%d, LastDataDownlinkRate=%u, LastDataUplinkRate=%u, SignalStrength=%d, Retransmissions=%u, OperatingStd= %s, OperatingChBw=%s, SNR=%d, DataFramesSentAck=%lu, cli_DataFramesSentNoAck=%lu, cli_RSSI=%d, Disassociations=%u, AuthFailures=%u", iteration + 1, iteration_ptr->cli_MACAddress[0], iteration_ptr->cli_MACAddress[1], iteration_ptr->cli_MACAddress[2], iteration_ptr->cli_MACAddress[3], iteration_ptr->cli_MACAddress[4], iteration_ptr->cli_MACAddress[5], iteration_ptr->cli_AuthenticationState, iteration_ptr->cli_LastDataDownlinkRate, iteration_ptr->cli_LastDataUplinkRate, iteration_ptr->cli_SignalStrength, iteration_ptr->cli_Retransmissions, iteration_ptr->cli_OperatingStandard, iteration_ptr->cli_OperatingChannelBandwidth, iteration_ptr->cli_SNR, iteration_ptr->cli_DataFramesSentAck, iteration_ptr->cli_DataFramesSentNoAck, iteration_ptr->cli_RSSI, iteration_ptr->cli_Disassociations, iteration_ptr->cli_AuthenticationFailures);
+                strcat(details, output);
+            }
+
+        }
+        else
+        {
+            DEBUG_PRINT(DEBUG_TRACE,"\nwifi_getApAssociatedDeviceDiagnosticResult returned empty buffer");
+            sprintf(output, " wifi_getApAssociatedDeviceDiagnosticResult returned empty buffer");
+            strcat(details, output);
+        }
+
         response["result"]="SUCCESS";
         response["details"]=details;
-	DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_GetApAssociatedDeviceDiagnosticResult ----->Entry\n");
-//        free(associated_dev);
-        return;
+        free(associated_dev);
     }
     else
     {
         sprintf(details, "wifi_getApAssociatedDeviceDiagnosticResult operation failed");
         response["result"]="FAILURE";
         response["details"]=details;
-//        free(associated_dev);
         DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_GetApAssociatedDeviceDiagnosticResult ---->Error in execution\n");
-        return;
     }
+
+
+    DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_GetApAssociatedDeviceDiagnosticResult ---->Exiting\n");
+    return;
 }
+
 /*******************************************************************************************
  *
  * Function Name        : WIFIHAL_GetNeighboringWiFiDiagnosticResult2
@@ -2874,40 +2899,63 @@ void WIFIHAL::WIFIHAL_GetNeighboringWiFiStatus(IN const Json::Value& req, OUT Js
  * Function Name        : WIFIHAL_GetRadioChannelStats
  * Description          : This function invokes WiFi hal get api which are
                           related to wifi_getRadioChannelStats()
-
  * @param [in] req-     : radioIndex : radio index of the wifi
+                          channel : the channel number of which stats need to be retrieved
+                          inPool : whether channel is in pool or not
  * @param [out] response - filled with SUCCESS or FAILURE based on the output status of operation
  *
  ********************************************************************************************/
 void WIFIHAL::WIFIHAL_GetRadioChannelStats (IN const Json::Value& req, OUT Json::Value& response)
 {
     wifi_channelStats_t channelStats;
+    memset(&channelStats, 0, sizeof(channelStats));
     int array_size = 1;
     int radioIndex = 0;
+    int channel = 0;
+    int inPool = 0;
     int return_status = SSP_FAILURE;
     char details[1000] = {'\0'};
 
+    if (&req["radioIndex"] == NULL || &req["channel"] == NULL || &req["inPool"] == NULL)
+    {
+        response["result"]="FAILURE";
+        response["details"]="NULL parameter as input argument";
+        return;
+    }
+
     radioIndex = req["radioIndex"].asInt();
+    DEBUG_PRINT(DEBUG_TRACE,"\nRadio Index : %d", radioIndex);
+
+    channel = req["channel"].asInt();
+    channelStats.ch_number = channel;
+    DEBUG_PRINT(DEBUG_TRACE,"\nChannel : %d", channelStats.ch_number);
+
+    inPool = req["inPool"].asInt();
+    channelStats.ch_in_pool = inPool;
+    DEBUG_PRINT(DEBUG_TRACE,"\nChannel in Pool : %d", channelStats.ch_in_pool);
+
     return_status = wifi_getRadioChannelStats(radioIndex, &channelStats, array_size);
-    printf("return value from wifi_getRadioChannelStats() is %d\n",return_status);
+    DEBUG_PRINT(DEBUG_TRACE, "\n Return value from wifi_getRadioChannelStats() is : %d\n", return_status);
+
     if(return_status == SSP_SUCCESS)
     {
-        sprintf(details, "Value returned is :ch_number=%d,ch_in_pool=%d,ch_noise=%d,ch_radar_noise=%d,ch_max_80211_rssi=%d,ch_non_80211_noise=%d,ch_utilization=%d,ch_utilization_total=%llu,ch_utilization_busy=%llu,ch_utilization_busy_tx=%llu,ch_utilization_busy_rx=%llu,ch_utilization_busy_self=%llu,ch_utilization_busy_ext=%llu",channelStats.ch_number,channelStats.ch_in_pool,channelStats.ch_noise,channelStats.ch_radar_noise,channelStats.ch_max_80211_rssi,channelStats.ch_non_80211_noise,channelStats.ch_utilization,channelStats.ch_utilization_total,channelStats.ch_utilization_busy,channelStats.ch_utilization_busy_tx,channelStats.ch_utilization_busy_rx,channelStats.ch_utilization_busy_self,channelStats.ch_utilization_busy_ext);
+
+        DEBUG_PRINT(DEBUG_TRACE, "\nwifi_getRadioChannelStats returned success; Retrieving the channel stats : ch_number=%d, ch_in_pool=%d, ch_noise=%d, ch_radar_noise=%d, ch_max_80211_rssi=%d, ch_non_80211_noise=%d, ch_utilization=%d, ch_utilization_total=%llu, ch_utilization_busy=%llu, ch_utilization_busy_tx=%llu, ch_utilization_busy_rx=%llu, ch_utilization_busy_self=%llu, ch_utilization_busy_ext=%llu", channelStats.ch_number, channelStats.ch_in_pool, channelStats.ch_noise, channelStats.ch_radar_noise, channelStats.ch_max_80211_rssi, channelStats.ch_non_80211_noise, channelStats.ch_utilization, channelStats.ch_utilization_total, channelStats.ch_utilization_busy, channelStats.ch_utilization_busy_tx, channelStats.ch_utilization_busy_rx, channelStats.ch_utilization_busy_self, channelStats.ch_utilization_busy_ext);
+        sprintf(details, "wifi_getRadioChannelStats returned success; Retrieving the channel stats : ch_number=%d, ch_in_pool=%d, ch_noise=%d, ch_radar_noise=%d, ch_max_80211_rssi=%d, ch_non_80211_noise=%d, ch_utilization=%d, ch_utilization_total=%llu, ch_utilization_busy=%llu, ch_utilization_busy_tx=%llu, ch_utilization_busy_rx=%llu, ch_utilization_busy_self=%llu, ch_utilization_busy_ext=%llu", channelStats.ch_number, channelStats.ch_in_pool, channelStats.ch_noise, channelStats.ch_radar_noise, channelStats.ch_max_80211_rssi, channelStats.ch_non_80211_noise, channelStats.ch_utilization, channelStats.ch_utilization_total, channelStats.ch_utilization_busy, channelStats.ch_utilization_busy_tx, channelStats.ch_utilization_busy_rx, channelStats.ch_utilization_busy_self, channelStats.ch_utilization_busy_ext);
         response["result"]="SUCCESS";
         response["details"]=details;
-        DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_GetRadioChannelStats ----->Exit\n");
-        return;
     }
     else
     {
         sprintf(details, "wifi_getRadioChannelStats operation failed");
         response["result"]="FAILURE";
         response["details"]=details;
-        DEBUG_PRINT(DEBUG_TRACE,"\n WiFiCallMethodForGetRadioChannelStats  --->Error in execution\n");
-        return;
+        DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_GetRadioChannelStats  --->Error in execution\n");
     }
-}
 
+    DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_GetRadioChannelStats ---->Exiting\n");
+    return;
+}
 
 /*******************************************************************************************
  *
@@ -2988,7 +3036,6 @@ void WIFIHAL::WIFIHAL_GetApAssociatedDevice(IN const Json::Value& req, OUT Json:
     int return_status = SSP_FAILURE;
     char details[2000] = {'\0'};
     apIndex = req["apIndex"].asInt();
-
     return_status = wifi_getApAssociatedDevice(apIndex, associated_dev, output_array_size);
     if(return_status == SSP_SUCCESS)
     {

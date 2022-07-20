@@ -107,7 +107,7 @@ class WIFIHAL : public RDKTestStubInterface, public AbstractServer<WIFIHAL>
             this->bindAndAddMethod(Procedure("WIFIHAL_GetNeighboringWiFiDiagnosticResult2",PARAMS_BY_NAME, JSON_STRING, "radioIndex",JSON_INTEGER,NULL), &WIFIHAL::WIFIHAL_GetNeighboringWiFiDiagnosticResult2);
             this->bindAndAddMethod(Procedure("WIFIHAL_PushRadioChannel2",PARAMS_BY_NAME, JSON_STRING, "radioIndex",JSON_INTEGER, "channel",JSON_INTEGER, "channel_width_MHz",JSON_INTEGER, "csa_beacon_count",JSON_INTEGER, NULL), &WIFIHAL::WIFIHAL_PushRadioChannel2);
             this->bindAndAddMethod(Procedure("WIFIHAL_GetNeighboringWiFiStatus",PARAMS_BY_NAME, JSON_STRING, "radioIndex",JSON_INTEGER,NULL), &WIFIHAL::WIFIHAL_GetNeighboringWiFiStatus);
-            this->bindAndAddMethod(Procedure("WIFIHAL_GetRadioChannelStats",PARAMS_BY_NAME, JSON_STRING, "radioIndex",JSON_INTEGER,NULL), &WIFIHAL::WIFIHAL_GetRadioChannelStats);
+            this->bindAndAddMethod(Procedure("WIFIHAL_GetRadioChannelStats",PARAMS_BY_NAME, JSON_STRING, "radioIndex",JSON_INTEGER, "channel", JSON_INTEGER, "inPool", JSON_INTEGER, NULL), &WIFIHAL::WIFIHAL_GetRadioChannelStats);
             this->bindAndAddMethod(Procedure("WIFIHAL_ParamApIndex", PARAMS_BY_NAME, JSON_STRING, "methodName", JSON_STRING, "apIndex", JSON_INTEGER,NULL), &WIFIHAL::WIFIHAL_ParamApIndex);
             this->bindAndAddMethod(Procedure("WIFIHAL_GetApAssociatedDevice", PARAMS_BY_NAME, JSON_STRING,"apIndex", JSON_INTEGER,NULL), &WIFIHAL::WIFIHAL_GetApAssociatedDevice);
             this->bindAndAddMethod(Procedure("WIFIHAL_GetApDeviceRSSI", PARAMS_BY_NAME, JSON_STRING, "methodName", JSON_STRING, "apIndex", JSON_INTEGER, "MAC", JSON_STRING,NULL), &WIFIHAL::WIFIHAL_GetApDeviceRSSI);
