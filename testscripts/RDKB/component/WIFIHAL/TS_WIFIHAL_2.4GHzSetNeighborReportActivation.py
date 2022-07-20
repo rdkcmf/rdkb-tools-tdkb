@@ -72,6 +72,7 @@ param : 0 or 1</input_parameters>
 # use tdklib library,which provides a wrapper for tdk testcase script
 import tdklib;
 from wifiUtility import *;
+from time import sleep;
 
 radio = "2.4G"
 
@@ -143,6 +144,7 @@ if "SUCCESS" in loadmodulestatus.upper():
                 print "[TEST EXECUTION RESULT] : SUCCESS";
 
                 #Cross check the enable SET with enable GET
+                sleep(10);
                 print "\nTEST STEP 3: Invoke  wifi_getNeighborReportActivation to verify toggling done by wifi_setNeighborReportActivation api";
                 print "EXPECTED RESULT 3: wifi_getNeighborReportActivation should be invoked successfully after the set operation";
                 tdkTestObj = obj.createTestStep("WIFIHAL_GetOrSetParamBoolValue");

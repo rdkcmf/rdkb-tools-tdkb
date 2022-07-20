@@ -27,7 +27,7 @@
   <status>FREE</status>
   <synopsis>To set the auto channel refresh period if the automatic channel selection is enabled for 6GHz.</synopsis>
   <groups_id/>
-  <execution_time>10</execution_time>
+  <execution_time>15</execution_time>
   <long_duration>false</long_duration>
   <advanced_script>false</advanced_script>
   <remarks/>
@@ -189,10 +189,10 @@ def setandgetAutoChannelRefreshPeriod(radioIndex):
                 print "*********************************************************";
                 #Giving the method name to invoke the api wifi_setRadioAutoChannelRefreshPeriod()
                 primitive = 'WIFIHAL_GetOrSetParamULongValue'
-                setMethod = "setAutoChannelRefreshPeriod"
+                setMethod = "setRadioAutoChannelRefreshPeriod"
                 expectedresult="SUCCESS";
 
-                setRefreshPeriod = 60;
+                setRefreshPeriod = 600;
                 tdkTestObj ,actualresult ,details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, setRefreshPeriod, setMethod)
 
                 if expectedresult in actualresult:
@@ -269,7 +269,7 @@ def setandgetAutoChannelRefreshPeriod(radioIndex):
                         #Giving the method name to invoke the api wifi_setRadioAutoChannelRefreshPeriod()
                         print "*********************************************************";
                         primitive = 'WIFIHAL_GetOrSetParamULongValue'
-                        setMethod = "setAutoChannelRefreshPeriod"
+                        setMethod = "setRadioAutoChannelRefreshPeriod"
                         expectedresult="SUCCESS";
                         setRefreshPeriod = int(initialRefreshPeriod);
 
@@ -369,7 +369,7 @@ if "SUCCESS" in loadmodulestatus.upper():
                     print "*********************************************************";
                     #Giving the method name to invoke the api to set auto channel enable. ie,wifi_setRadioAutoChannelEnable()
                     primitive = 'WIFIHAL_GetOrSetParamBoolValue'
-                    setMethod = "setAutoChannelEnable"
+                    setMethod = "setRadioAutoChannelEnable"
                     expectedresult="SUCCESS";
                     radioIndex = idx;
                     tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, 1, setMethod)

@@ -122,13 +122,12 @@ if "SUCCESS" in loadmodulestatus.upper():
 	    expectedresult="SUCCESS";
 	    tdkTestObj.executeTestCase(expectedresult);
 	    actualresult = tdkTestObj.getResult();
-	    details = tdkTestObj.getResultDetails();
+	    details = tdkTestObj.getResultDetails().strip().replace("\\n", "");
 
 	    if expectedresult in actualresult :
 		tdkTestObj.setResultStatus("SUCCESS");
 		print "wifi_getApAssociatedDeviceDiagnosticResult() call to get STA details is SUCCESS";
-		details = details.split(":")[1].strip();
-		output_array_size = details.split("=")[1].strip();
+		output_array_size = details.split("Output Array Size = ")[1].split(" ")[0];
 		if int(output_array_size) > 0 :
 		    tdkTestObj.setResultStatus("SUCCESS");
 		    print "**********STA Associated with DUT**********";

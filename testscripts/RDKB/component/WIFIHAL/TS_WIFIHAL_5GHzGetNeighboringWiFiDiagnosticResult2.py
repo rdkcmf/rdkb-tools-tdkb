@@ -100,7 +100,7 @@ if "SUCCESS" in loadmodulestatus.upper():
 	    actualresult = tdkTestObj.getResult();
 	    details = tdkTestObj.getResultDetails();
 
-	    if expectedresult in actualresult :
+	    if expectedresult in actualresult and "Value returned is :" in details:
 		details = details.split(":ap_")[1].strip();
 		tdkTestObj.setResultStatus("SUCCESS");
 		print "TEST STEP : Get the NeighboringWiFiDiagnosticResult"

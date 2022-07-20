@@ -90,6 +90,7 @@ setMode : 1</input_parameters>
 import tdklib;
 from wifiUtility import *;
 from tdkbVariables import *;
+from time import sleep;
 
 #Test component to be tested
 obj = tdklib.TDKScriptingLibrary("wifihal","1");
@@ -177,6 +178,7 @@ if "SUCCESS" in loadmodulestatus.upper() and "SUCCESS" in loadmodulestatus1.uppe
                     print "[TEST EXECUTION RESULT] : SUCCESS";
 
                     #Get the Mode
+                    sleep(10);
                     print "\nTEST STEP 4: Invoke the wifi_getApMacAddressControlMode API for 5GHz Public WiFi";
                     print "EXPECTED RESULT 4: Invocation of wifi_getApMacAddressControlMode should be success";
                     tdkTestObj = obj.createTestStep("WIFIHAL_GetOrSetParamIntValue");

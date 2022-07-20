@@ -63,38 +63,38 @@
 </xml>
 
 '''
+
 # use tdklib library,which provides a wrapper for tdk testcase script
 import tdklib;
 from wifiUtility import *;
-from tdkbVariables import *;
+
 #Test component to be tested
 obj = tdklib.TDKScriptingLibrary("wifihal","1");
-sysobj = tdklib.TDKScriptingLibrary("sysutil","1");
+
 #IP and Port of box, No need to change,
 #This will be replaced with corresponding DUT Ip and port while executing script
 ip = <ipaddress>
 port = <port>
 obj.configureTestCase(ip,port,'TS_WIFIHAL_6GHzGetRadioNumofVaps');
-sysobj.configureTestCase(ip,port,'TS_WIFIHAL_6GHzGetRadioNumofVaps');
+
 radio ="6G";
+
+#Get the result of connection with test component and DUT
 loadmodulestatus =obj.getLoadModuleResult();
-loadmodulestatus1 =sysobj.getLoadModuleResult();
 print "[LIB LOAD STATUS]  :  %s" %loadmodulestatus
-print "[LIB LOAD STATUS]  :  %s" %loadmodulestatus1
-if "SUCCESS" in loadmodulestatus.upper() and "SUCCESS" in loadmodulestatus1.upper():
+
+if "SUCCESS" in loadmodulestatus.upper():
     obj.setLoadModuleStatus("SUCCESS");
-    sysobj.setLoadModuleStatus("SUCCESS");
     expectedresult = "SUCCESS";
-    #Getting PRIVATE_6G_AP_INDEX value from tdk_platform_properties"
-    tdkTestObjTemp, idx = getApIndexfor6G(sysobj, TDK_PATH);
+
+    tdkTestObjTemp, idx = getIndex(obj, radio);
     ## Check if a invalid index is returned
     if idx == -1:
         print "Failed to get radio index for radio %s\n" %radio;
         tdkTestObjTemp.setResultStatus("FAILURE");
     else:
-        print "TEST STEP 1: Invoke the HAL API wifi_getetRadioVapInfoMap() successfully";
+        print "\nTEST STEP 1: Invoke the HAL API wifi_getetRadioVapInfoMap() successfully";
         print "EXPECTED RESULT 1: Should invoke wifi_getetRadioVapInfoMap() successfully";
-
         tdkTestObj = obj.createTestStep("WIFIHAL_GetRadioVapInfoMap");
         tdkTestObj.addParameter("apIndex", idx);
         tdkTestObj.executeTestCase(expectedresult);
@@ -103,6 +103,7 @@ if "SUCCESS" in loadmodulestatus.upper() and "SUCCESS" in loadmodulestatus1.uppe
 
         if expectedresult in actualresult and details!="":
             details =  details.split(":")[1].split(",")[0].strip();
+
             if details.isdigit() and int (details) > 0:
                tdkTestObj.setResultStatus("SUCCESS");
                print "ACTUAL RESULT 1: wifi_getetRadioVapInfoMap() invoked successfully";
@@ -122,9 +123,7 @@ if "SUCCESS" in loadmodulestatus.upper() and "SUCCESS" in loadmodulestatus1.uppe
             print "[TEST EXECUTION RESULT] : FAILURE";
 
     obj.unloadModule("wifihal");
-    obj1.unloadModule("wifiagent");
 else:
     print "Failed to load the module";
     obj.setLoadModuleStatus("FAILURE");
-    obj1.setLoadModuleStatus("FAILURE");
     print "Module loading failed";

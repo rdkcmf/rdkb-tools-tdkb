@@ -229,6 +229,8 @@
         <function>WIFIHAL_GetRadioChannelStats</function>
         <parameters>
           <parameter name="radioIndex" value=""/>
+          <parameter name="channel" value=""/>
+          <parameter name="inPool" value=""/>
         </parameters>
       </primitiveTest>
       <primitiveTest name="WIFIHAL_ParamApIndex" id=" " version="1">

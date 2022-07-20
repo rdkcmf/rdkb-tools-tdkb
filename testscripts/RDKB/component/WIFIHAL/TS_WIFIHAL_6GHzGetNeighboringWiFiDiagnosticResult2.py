@@ -100,7 +100,7 @@ if "SUCCESS" in loadmodulestatus.upper():
         print "\nTEST STEP 1: Get the NeighboringWiFiDiagnosticResult by invoking the HAL API wifi_getNeighboringWiFiDiagnosticResult2()"
         print "EXPECTED RESULT 1: Should successfully invoke the HAL API wifi_getNeighboringWiFiDiagnosticResult2() and get the NeighboringWiFiDiagnosticResult";
 
-        if expectedresult in actualresult :
+        if expectedresult in actualresult and "Value returned is :" in details:
             details = details.split(":ap_")[1].strip();
             tdkTestObj.setResultStatus("SUCCESS");
             print "ACTUAL RESULT 1: wifi_getNeighboringWiFiDiagnosticResult2() invoked successfully";

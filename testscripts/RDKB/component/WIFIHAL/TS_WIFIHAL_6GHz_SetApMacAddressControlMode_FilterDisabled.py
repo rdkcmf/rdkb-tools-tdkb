@@ -73,6 +73,7 @@ filterMode = 0</input_parameters>
 import tdklib;
 from wifiUtility import *;
 from tdkbVariables import *;
+from time import sleep;
 #Test component to be tested
 obj = tdklib.TDKScriptingLibrary("wifihal","1");
 sysobj = tdklib.TDKScriptingLibrary("sysutil","1");
@@ -116,6 +117,7 @@ if "SUCCESS" in loadmodulestatus.upper() and "SUCCESS" in loadmodulestatus1.uppe
                 getMethod = "getApMacAddressControlMode"
                 primitive = 'WIFIHAL_GetOrSetParamIntValue'
                 #Calling the method to execute wifi_getApMacAddressControlMode()
+                sleep(10);
                 tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, 0, getMethod)
                 if expectedresult in actualresult:
                     finalMode = details.split(":")[1].strip()

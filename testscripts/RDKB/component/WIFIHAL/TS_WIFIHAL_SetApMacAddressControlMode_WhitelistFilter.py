@@ -37,7 +37,7 @@
   <!--  -->
   <groups_id />
   <!--  -->
-  <execution_time>1</execution_time>
+  <execution_time>2</execution_time>
   <!--  -->
   <long_duration>false</long_duration>
   <!--  -->
@@ -89,6 +89,7 @@ filterMode = 1</input_parameters>
 # use tdklib library,which provides a wrapper for tdk testcase script
 import tdklib;
 from wifiUtility import *;
+from time import sleep;
 
 #Test component to be tested
 obj = tdklib.TDKScriptingLibrary("wifihal","1");
@@ -131,6 +132,7 @@ if "SUCCESS" in loadmodulestatus.upper():
                 primitive = 'WIFIHAL_GetOrSetParamIntValue'
 
                 #Calling the method to execute wifi_getApMacAddressControlMode()
+                sleep(10);
                 tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, 0, getMethod)
 
                 if expectedresult in actualresult:

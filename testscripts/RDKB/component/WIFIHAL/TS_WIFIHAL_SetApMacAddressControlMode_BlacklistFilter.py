@@ -27,7 +27,7 @@
   <status>FREE</status>
   <synopsis>To set and get the the mac address filter control mode with filter as black list for index 0 and 1</synopsis>
   <groups_id/>
-  <execution_time>1</execution_time>
+  <execution_time>2</execution_time>
   <long_duration>false</long_duration>
   <advanced_script>false</advanced_script>
   <remarks/>
@@ -70,6 +70,7 @@ filterMode = 2</input_parameters>
 # use tdklib library,which provides a wrapper for tdk testcase script 
 import tdklib; 
 from wifiUtility import *;
+from time import sleep;
 
 #Test component to be tested
 obj = tdklib.TDKScriptingLibrary("wifihal","1");
@@ -112,6 +113,7 @@ if "SUCCESS" in loadmodulestatus.upper():
                 primitive = 'WIFIHAL_GetOrSetParamIntValue'
 
                 #Calling the method to execute wifi_getApMacAddressControlMode()
+                sleep(10);
                 tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, 0, getMethod)
 
                 if expectedresult in actualresult:

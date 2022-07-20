@@ -322,7 +322,7 @@ if "SUCCESS" in loadmodulestatus.upper():
 		    print "*********************************************************";
 		    #Giving the method name to invoke the api to set auto channel enable. ie,wifi_setRadioAutoChannelEnable()
 		    primitive = 'WIFIHAL_GetOrSetParamBoolValue'
-		    setMethod = "setAutoChannelEnable"
+		    setMethod = "setRadioAutoChannelEnable"
 		    expectedresult="SUCCESS";
 		    radioIndex = idx;
 		    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, 1, setMethod)

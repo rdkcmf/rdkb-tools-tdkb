@@ -225,7 +225,7 @@ def revert(newEnable,index,obj) :
     else :
         #If newEnable is false, directly toggle the AutoChannelEnable to true
         print "Revert AutoChannelEnable to True"
-        setMethod = "setAutoChannelEnable"
+        setMethod = "setRadioAutoChannelEnable"
         primitive = 'WIFIHAL_GetOrSetParamBoolValue'
         tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, oldEnable, setMethod)
         expectedresult="SUCCESS";
@@ -235,6 +235,7 @@ def revert(newEnable,index,obj) :
         if expectedresult in actualresult :
             getMethod = "getAutoChannelEnable"
             primitive = 'WIFIHAL_GetOrSetParamBoolValue'
+            sleep(5);
             tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, 0, getMethod)
             expectedresult="SUCCESS";
             print "TEST STEP : Get AutoChannelEnable value after set operation"
@@ -250,6 +251,7 @@ def revert(newEnable,index,obj) :
 # use tdklib library,which provides a wrapper for tdk testcase script
 import tdklib;
 from wifiUtility import *;
+from time import sleep;
 
 #Test component to be tested
 obj = tdklib.TDKScriptingLibrary("wifihal","1");
@@ -326,7 +328,7 @@ if "SUCCESS" in loadmodulestatus.upper():
                newEnable = 1
                #If oldEnable is false, directly toggle the AutoChannelEnable to true
                print "Initially AutoChannelEnable is Disabled"
-               setMethod = "setAutoChannelEnable"
+               setMethod = "setRadioAutoChannelEnable"
                tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, newEnable, setMethod)
                expectedresult="SUCCESS";
                print "TEST STEP 2 : Get AutoChannelEnable value after set operation"
@@ -337,6 +339,7 @@ if "SUCCESS" in loadmodulestatus.upper():
                    tdkTestObj.setResultStatus("SUCCESS");
                    getMethod = "getAutoChannelEnable"
                    primitive = 'WIFIHAL_GetOrSetParamBoolValue'
+                   sleep(5);
                    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, 0, getMethod)
                    expectedresult="SUCCESS";
                    print "TEST STEP 3: Get AutoChannelEnable value after set operation"

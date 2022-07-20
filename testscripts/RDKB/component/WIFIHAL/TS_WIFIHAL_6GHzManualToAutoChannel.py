@@ -236,7 +236,7 @@ if "SUCCESS" in loadmodulestatus.upper():
                                     step = step + 1;
                                     tdkTestObj = obj.createTestStep("WIFIHAL_GetOrSetParamBoolValue");
                                     setValue = 1;
-                                    methodname = "setAutoChannelEnable"
+                                    methodname = "setRadioAutoChannelEnable"
                                     details, actualresult = set_function(tdkTestObj, idx, setValue, methodname);
 
                                     print "\nTEST STEP %d : Set the AutoChannel Enable to false using the HAL API wifi_setRadioAutoChannelEnable()" %step;

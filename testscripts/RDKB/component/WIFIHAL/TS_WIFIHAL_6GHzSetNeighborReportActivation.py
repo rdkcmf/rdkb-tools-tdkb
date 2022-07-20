@@ -73,6 +73,7 @@ param : 0 or 1</input_parameters>
 import tdklib;
 from wifiUtility import *;
 from tdkbVariables import *;
+from time import sleep;
 
 #Test component to be tested
 obj = tdklib.TDKScriptingLibrary("wifihal","1");
@@ -131,6 +132,7 @@ if "SUCCESS" in loadmodulestatus.upper() and "SUCCESS" in loadmodulestatus.upper
                 newStatus = "Enabled"
 
             #Toggle the enable state
+            sleep(10);
             print "\nTEST STEP 2: Toggle the enabled state using wifi_setNeighborReportActivation() HAL API";
             print "EXPECTED RESULT 2: wifi_setNeighborReportActivation should successfully toggle Neighbor Report Activation Enable status to ",newStatus ;
             tdkTestObj = obj.createTestStep("WIFIHAL_GetOrSetParamBoolValue");

@@ -37,7 +37,7 @@
   <!--  -->
   <groups_id />
   <!--  -->
-  <execution_time>3</execution_time>
+  <execution_time>15</execution_time>
   <!--  -->
   <long_duration>false</long_duration>
   <!--  -->
@@ -206,10 +206,10 @@ def setandgetAutoChannelRefreshPeriod(radioIndex):
 		print "*********************************************************";
                 #Giving the method name to invoke the api wifi_setRadioAutoChannelRefreshPeriod()
                 primitive = 'WIFIHAL_GetOrSetParamULongValue'
-        	setMethod = "setAutoChannelRefreshPeriod"
+        	setMethod = "setRadioAutoChannelRefreshPeriod"
         	expectedresult="SUCCESS";
         
-		setRefreshPeriod = 60;
+		setRefreshPeriod = 600;
 		tdkTestObj ,actualresult ,details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, setRefreshPeriod, setMethod)
 
                 if expectedresult in actualresult:
@@ -286,7 +286,7 @@ def setandgetAutoChannelRefreshPeriod(radioIndex):
                         #Giving the method name to invoke the api wifi_setRadioAutoChannelRefreshPeriod()
 			print "*********************************************************";
 	                primitive = 'WIFIHAL_GetOrSetParamULongValue'
-        		setMethod = "setAutoChannelRefreshPeriod"
+        		setMethod = "setRadioAutoChannelRefreshPeriod"
         		expectedresult="SUCCESS";
 			setRefreshPeriod = int(initialRefreshPeriod);
 	        	
@@ -386,7 +386,7 @@ if "SUCCESS" in loadmodulestatus.upper():
 		    print "*********************************************************";
 		    #Giving the method name to invoke the api to set auto channel enable. ie,wifi_setRadioAutoChannelEnable()
 		    primitive = 'WIFIHAL_GetOrSetParamBoolValue'
-		    setMethod = "setAutoChannelEnable"
+		    setMethod = "setRadioAutoChannelEnable"
 		    expectedresult="SUCCESS";
 		    radioIndex = idx;
 		    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, 1, setMethod)

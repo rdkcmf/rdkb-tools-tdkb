@@ -191,10 +191,9 @@
       <parameter funName='WIFIHAL_GetApAssociatedDeviceStats' parameterName='MAC' parameterType='STRING' range='A-Z' />
       <parameter funName='WIFIHAL_GetApAssociatedDeviceRxStatsResult' parameterName='radioIndex' parameterType='INTEGER' range='0-1' />
       <parameter funName='WIFIHAL_GetApAssociatedDeviceRxStatsResult' parameterName='MAC' parameterType='STRING' range='A-Z' />
-      <parameter funName='WIFIHAL_GetRadioChannelStats' parameterName='radioIndex' parameterType='INTEGER' range='0-1' />
-      <parameter funName='WIFIHAL_GetRadioChannelStats' parameterName='ch_number' parameterType='INTEGER' range='0-100' />
-      <parameter funName='WIFIHAL_GetRadioChannelStats' parameterName='ch_in_pool' parameterType='INTEGER' range='0-1' />
-      <parameter funName='WIFIHAL_GetRadioChannelStats' parameterName='array_size' parameterType='INTEGER' range='0-256' />
+      <parameter funName='WIFIHAL_GetRadioChannelStats' parameterName='radioIndex' parameterType='INTEGER' range='0-2' />
+      <parameter funName='WIFIHAL_GetRadioChannelStats' parameterName='channel' parameterType='INTEGER' range='0-1000' />
+      <parameter funName='WIFIHAL_GetRadioChannelStats' parameterName='inPool' parameterType='INTEGER' range='0-1' />
       <parameter funName='WIFIHAL_PushRadioChannel2' parameterName='radioIndex' parameterType='INTEGER' range='0-1' />
       <parameter funName='WIFIHAL_PushRadioChannel2' parameterName='channel' parameterType='INTEGER' range='0-100' />
       <parameter funName='WIFIHAL_PushRadioChannel2' parameterName='channel_width_MHz' parameterType='INTEGER' range='0-100' />
