@@ -412,7 +412,7 @@ int ssp_ethsw_stub_hal_LocatePort_By_MacAddress(char *pMacAddr, int *pPortId, in
 		result = CcspHalEthSwLocatePortByMacAddress(pMacAddr, pPortId);
 	}
 
-	if(result == RETURN_OK)
+	if(result != RETURN_OK)
 	{
 		DEBUG_PRINT(DEBUG_ERROR, "ssp_EthSw_LocatePort_By_MacAddress function returns failure\n");
 	}
