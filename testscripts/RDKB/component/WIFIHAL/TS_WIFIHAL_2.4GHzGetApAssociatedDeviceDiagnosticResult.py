@@ -150,7 +150,7 @@ if "SUCCESS" in loadmodulestatus.upper():
 
                         print "\n%s: MAC = %s, Authentication State = %s, Last Data Downlink Rate = %s, Last Data Uplink Rate : %s, Signal Strength = %s, Retransmissions = %s, Operating Standard = %s, Operating Channel Bandwidth = %s, SNR = %s, Data Frames Sent Ack = %s, Data Frames Sent No Ack = %s, RSSI = %s, Disassociations = %s, Authentication Failures = %s" %(sta_to_check, sta_mac, sta_auth, sta_downlink, sta_uplink, sta_sigstrength, sta_retransmissions, sta_operstd, sta_operchanbw, sta_snr, sta_dataframessentack, sta_dataframessentnoack, sta_rssi, sta_dissasso, sta_authfail)
 
-                        if sta_mac != "" and sta_auth.isdigit() and sta_downlink.isdigit() and sta_uplink.isdigit() and sta_sigstrength.lstrip('-').isdigit() and sta_retransmissions.isdigit() and sta_operstd != "" and sta_operchanbw.isdigit() and sta_snr.isdigit() and  sta_dataframessentack.isdigit() and sta_dataframessentnoack.isdigit() and sta_rssi.lstrip('-').isdigit() and sta_dissasso.isdigit() and sta_authfail.isdigit():
+                        if sta_mac != "" and sta_auth.isdigit() and sta_downlink.isdigit() and sta_uplink.isdigit() and sta_sigstrength.lstrip('-').isdigit() and sta_retransmissions.isdigit() and sta_operstd != "" and sta_operchanbw.strip(' MHZ').isdigit() and sta_snr.isdigit() and  sta_dataframessentack.isdigit() and sta_dataframessentnoack.isdigit() and sta_rssi.lstrip('-').isdigit() and sta_dissasso.isdigit() and sta_authfail.isdigit():
                             tdkTestObj.setResultStatus("SUCCESS");
                             print "The STA details are valid";
                         else:
