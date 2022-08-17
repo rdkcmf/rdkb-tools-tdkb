@@ -1724,7 +1724,7 @@ void platform_stub_hal::platform_stub_hal_setFactoryCmVariant(IN const Json::Val
 /*****************************************************************************************************
  *Function name : platform_stub_hal_getRPM
  *Description   : This function will invoke the HAL wrapper to get the RPM value
- *@param [in]   : req - 
+ *@param [in]   : fanIndex - the index of the fan for which RPM is to be retrieved
  *@param [out]  : response - filled with SUCCESS or FAILURE based on the return value
  ******************************************************************************************************/
 void platform_stub_hal::platform_stub_hal_getRPM(IN const Json::Value& req, OUT Json::Value& response)
@@ -1755,7 +1755,7 @@ void platform_stub_hal::platform_stub_hal_getRPM(IN const Json::Value& req, OUT 
 /*****************************************************************************************************
  *Function name : platform_stub_hal_getRotorLock
  *Description   : This function will invoke the HAL wrapper to get the Rotor Lock value
- *@param [in]   : req -
+ *@param [in]   : fanIndex - the index of the fan for which the Rotor Lock value needs to be retrieved
  *@param [out]  : response - filled with SUCCESS or FAILURE based on the return value
  ******************************************************************************************************/
 void platform_stub_hal::platform_stub_hal_getRotorLock(IN const Json::Value& req, OUT Json::Value& response)
@@ -1785,7 +1785,7 @@ void platform_stub_hal::platform_stub_hal_getRotorLock(IN const Json::Value& req
 /*****************************************************************************************************
  *Function name : platform_stub_hal_getFanStatus
  *Description   : This function will invoke the HAL wrapper to get the Fan status value
- *@param [in]   : req - 
+ *@param [in]   : fanIndex - the index of the fan for which status is to be retrieved
  *@param [out]  : response - filled with SUCCESS or FAILURE based on the return value
  ******************************************************************************************************/
 void platform_stub_hal::platform_stub_hal_getFanStatus(IN const Json::Value& req, OUT Json::Value& response)
@@ -1979,7 +1979,7 @@ void platform_stub_hal::platform_stub_hal_GetMemoryPaths(IN const Json::Value& r
     }
     cpus_1 = req["cpus"].asInt();
     cpus = (RDK_CPUS)cpus_1;
-    
+
     if(&req["flag"])
     {
         isNegativeScenario = req["flag"].asInt();
@@ -2121,7 +2121,7 @@ void platform_stub_hal::platform_stub_hal_StopMACsec(IN const Json::Value& req, 
         DEBUG_PRINT(DEBUG_TRACE, "%s:: Test execution failed\n", __func__);
         return;
     }
-}	
+}
 /*****************************************************************************************************
  *Function name : platform_stub_hal_GetWebAccessLevel
  *Description   : This function will invoke the HAL wrapper to get the Web Access Level value
@@ -2175,6 +2175,209 @@ void platform_stub_hal::platform_stub_hal_GetWebAccessLevel(IN const Json::Value
         return;
     }
 }
+
+
+/************************************************************************************************
+ *Function name : platform_stub_hal_SetDscp
+ *Description   : This function will invoke the SSP  HAL wrapper to Control/Set traffic counting based on Dscp value
+ *@param [in]   : interfaceType - 1 for DOCSIS , 2 for EWAN
+ *@param [in]   : cmd - START/STOP
+ *@param [in]   : dscpVal - comma seperated string , e.g. "10,0" , NULL
+ *@param [in]   : isDscpValNull - whether the dscpVal is Null or not
+ *@param [out]  : response - filled with SUCCESS or FAILURE based on the return value
+ ************************************************************************************************/
+void platform_stub_hal::platform_stub_hal_SetDscp(IN const Json::Value& req, OUT Json::Value& response)
+{
+    DEBUG_PRINT(DEBUG_TRACE,"Inside Function platform_stub_hal_SetDscp\n");
+    WAN_INTERFACE  interfaceType = DOCSIS;
+    TRAFFIC_CNT_COMMAND cmd = TRAFFIC_CNT_START;
+    int nullFlag = 0;
+    char dscpVal[100] = {'\0'};
+    int returnValue = RETURN_FAILURE;
+
+    if(&req["interfaceType"] == NULL || &req["cmd"] == NULL)
+    {
+        response["result"] = "FAILURE";
+        response["details"] = "NULL parameters as input argument";
+        return;
+    }
+
+    interfaceType = (WAN_INTERFACE)req["interfaceType"].asInt();
+    DEBUG_PRINT(DEBUG_TRACE,"\nInterface Type : %s", (interfaceType == DOCSIS) ? "DOCSIS" :  "EWAN");
+
+    cmd = (TRAFFIC_CNT_COMMAND)req["cmd"].asInt();
+    DEBUG_PRINT(DEBUG_TRACE,"\nTraffic count command : %s", (cmd == TRAFFIC_CNT_START) ? "TRAFFIC_CNT_START" :  "TRAFFIC_CNT_STOP");
+
+    if(&req["isDscpValNull"])
+    {
+        nullFlag = req["isDscpValNull"].asInt();
+    }
+
+    if(nullFlag)
+    {
+        DEBUG_PRINT(DEBUG_TRACE,"\nDSCP Values to be set is Null");
+        returnValue = ssp_setDscp(interfaceType, cmd, NULL);
+    }
+    else
+    {
+        if(&req["dscpVal"] == NULL)
+        {
+            response["result"] = "FAILURE";
+            response["details"] = "NULL dscpVal parameter as input argument";
+            return;
+        }
+        strcpy(dscpVal, req["dscpVal"].asCString());
+        DEBUG_PRINT(DEBUG_TRACE,"\nDSCP Values : %s", dscpVal);
+
+        returnValue = ssp_setDscp(interfaceType, cmd, dscpVal);
+    }
+
+    DEBUG_PRINT(DEBUG_TRACE,"\nReturn status from ssp_setDscp: %d", returnValue);
+
+    if(returnValue == RETURN_SUCCESS)
+    {
+        response["result"] = "SUCCESS";
+        response["details"] = "platform_hal_setDscp() function invocation was successful";
+        DEBUG_PRINT(DEBUG_TRACE, "%s:: Test execution successful", __func__);
+    }
+    else
+    {
+        response["result"] = "FAILURE";
+        response["details"] = "platform_hal_setDscp() function invocation was NOT successful, Please check logs";
+        DEBUG_PRINT(DEBUG_TRACE, "%s:: Test execution failed\n", __func__);
+    }
+
+    DEBUG_PRINT(DEBUG_TRACE,"\nplatform_stub_hal_SetDscp ---->Exiting\n");
+    return;
+}
+
+
+/************************************************************************************************
+ *Function name : platform_stub_hal_ResetDscpCounts
+ *Description   : This function will invoke the SSP  HAL wrapper to reset Dscp Counter values
+ *@param [in]   : interfaceType - 1 for DOCSIS , 2 for EWAN
+ *@param [out]  : response - filled with SUCCESS or FAILURE based on the return value
+ ************************************************************************************************/
+void platform_stub_hal::platform_stub_hal_ResetDscpCounts(IN const Json::Value& req, OUT Json::Value& response)
+{
+    DEBUG_PRINT(DEBUG_TRACE,"Inside Function platform_stub_hal_ResetDscpCounts\n");
+    WAN_INTERFACE  interfaceType = DOCSIS;
+    int returnValue = RETURN_FAILURE;
+
+    if(&req["interfaceType"] == NULL)
+    {
+        response["result"] = "FAILURE";
+        response["details"] = "NULL interfaceType parameter as input argument";
+        return;
+    }
+    interfaceType = (WAN_INTERFACE)req["interfaceType"].asInt();
+    DEBUG_PRINT(DEBUG_TRACE,"\nInterface Type : %s", (interfaceType == DOCSIS) ? "DOCSIS" :  "EWAN");
+
+    returnValue = ssp_resetDscpCounts(interfaceType);
+    DEBUG_PRINT(DEBUG_TRACE,"\nReturn status from ssp_resetDscpCounts: %d", returnValue);
+
+    if(returnValue == RETURN_SUCCESS)
+    {
+        response["result"] = "SUCCESS";
+        response["details"] = "platform_hal_resetDscpCounts() function invocation was successful";
+        DEBUG_PRINT(DEBUG_TRACE, "%s:: Test execution successful", __func__);
+    }
+    else
+    {
+        response["result"] = "FAILURE";
+        response["details"] = "platform_hal_resetDscpCounts() function invocation was NOT successful, Please check logs";
+        DEBUG_PRINT(DEBUG_TRACE, "%s:: Test execution failed\n", __func__);
+    }
+
+    DEBUG_PRINT(DEBUG_TRACE,"\nplatform_stub_hal_ResetDscpCounts ---->Exiting\n");
+    return;
+}
+
+
+/************************************************************************************************
+ *Function name : platform_stub_hal_GetDscpClientList
+ *Description   : This function will invoke the SSP  HAL wrapper to get the counter data
+ *@param [in]   : interfaceType - 1 for DOCSIS , 2 for EWAN
+ *@param [in]   : isClientListNull - whether the clientList buffer is NULL or not
+ *@param [out]  : response - filled with SUCCESS or FAILURE based on the return value
+ ************************************************************************************************/
+void platform_stub_hal::platform_stub_hal_GetDscpClientList(IN const Json::Value& req, OUT Json::Value& response)
+{
+    DEBUG_PRINT(DEBUG_TRACE,"Inside Function platform_stub_hal_GetDscpClientList\n");
+    WAN_INTERFACE  interfaceType = DOCSIS;
+    DSCP_list_t clientList;
+    int returnValue = RETURN_FAILURE;
+    int isNegativeScenario = 0;
+    unsigned int iteration = 0;
+    unsigned int client = 0;
+    char output[2000] = {'\0'};
+    char details[4000] = {'\0'};
+
+    if(&req["interfaceType"] == NULL)
+    {
+        response["result"] = "FAILURE";
+        response["details"] = "NULL interfaceType parameter as input argument";
+        return;
+    }
+    interfaceType = (WAN_INTERFACE)req["interfaceType"].asInt();
+    DEBUG_PRINT(DEBUG_TRACE,"\nInterface Type : %s", (interfaceType == DOCSIS) ? "DOCSIS" :  "EWAN");
+
+    if(&req["isClientListNull"])
+    {
+        isNegativeScenario = req["isClientListNull"].asInt();
+    }
+
+    if(isNegativeScenario)
+    {
+        DEBUG_PRINT(DEBUG_TRACE,"\nExecuting Negative Scenario by passing Null Buffer input");
+        returnValue = ssp_getDscpClientList(interfaceType, NULL);
+    }
+    else
+    {
+        returnValue = ssp_getDscpClientList(interfaceType, &clientList);
+    }
+
+    DEBUG_PRINT(DEBUG_TRACE,"\nReturn status from ssp_getDscpClientList: %d", returnValue);
+
+    if(returnValue == RETURN_SUCCESS)
+    {
+        DEBUG_PRINT(DEBUG_TRACE,"platform_hal_getDscpClientList() function invocation was successful; Total DSCP number of elements = %d", clientList.numElements);
+        sprintf(output, "platform_hal_getDscpClientList() function invocation was successful; Total DSCP number of elements = %d", clientList.numElements);
+        strcat(details, output);
+
+        for (iteration = 0; iteration < clientList.numElements; iteration++)
+        {
+            DEBUG_PRINT(DEBUG_TRACE,"For DSCP element[%d], DSCP value[%d], DSCP numClients[%d] :", iteration, clientList.DSCP_Element[iteration].dscp_value, clientList.DSCP_Element[iteration].numClients);
+            sprintf(output, "; For DSCP element[%d], DSCP value[%d], DSCP numClients[%d] :", iteration, clientList.DSCP_Element[iteration].dscp_value, clientList.DSCP_Element[iteration].numClients);
+            strcat(details, output);
+
+            for (client = 0; client < clientList.DSCP_Element[iteration].numClients; client++)
+            {
+                DEBUG_PRINT(DEBUG_TRACE,"DSCP client num[%d] :- ", client);
+                DEBUG_PRINT(DEBUG_TRACE,"mac - %s", clientList.DSCP_Element[iteration].Client[client].mac);
+                DEBUG_PRINT(DEBUG_TRACE,"rxBytes - %ld", clientList.DSCP_Element[iteration].Client[client].rxBytes);
+                DEBUG_PRINT(DEBUG_TRACE,"txBytes - %ld", clientList.DSCP_Element[iteration].Client[client].txBytes);
+
+                sprintf(output, " DSCP client num[%d]:- mac - %s, rxBytes - %ld, txBytes - %ld", client, clientList.DSCP_Element[iteration].Client[client].mac, clientList.DSCP_Element[iteration].Client[client].rxBytes, clientList.DSCP_Element[iteration].Client[client].txBytes);
+                strcat(details, output);
+            }
+        }
+
+        response["result"] = "SUCCESS";
+        response["details"] = details;
+        DEBUG_PRINT(DEBUG_TRACE, "%s:: Test execution successful", __func__);
+    }
+    else
+    {
+        response["result"] = "FAILURE";
+        response["details"] = "platform_hal_getDscpClientList() function invocation was NOT successful, Please check logs";
+        DEBUG_PRINT(DEBUG_TRACE, "%s:: Test execution failed\n", __func__);
+    }
+
+    DEBUG_PRINT(DEBUG_TRACE,"\nplatform_stub_hal_GetDscpClientList ---->Exiting\n");
+    return;
+}
+
 
 /********************************************************************************************
  *Function Name   : CreateObject

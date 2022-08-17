@@ -197,7 +197,95 @@ void LMLiteStub::LMLiteStub_Set(IN const Json::Value& req, OUT Json::Value& resp
     return;
 }
 
+/*******************************************************************************************
+ *
+ * Function Name         : LMLiteStub_Set_Get
+ * Description           : This function will invoke TDK Component SET and GET Value wrapper
+ *                         function for functional Validation
+ * @param [in] req       : This holds Path name, Value to set and its type
+ * @param [out] response : filled with SUCCESS or FAILURE based on the return value of
+ *                         ssp_setParameterValue and ssp_getParameterValue
+ ********************************************************************************************/
+void LMLiteStub::LMLiteStub_Set_Get(IN const Json::Value& req, OUT Json::Value& response)
+{
+    DEBUG_PRINT(DEBUG_TRACE,"\nLMLiteStub_Set_Get --->Entry\n");
 
+    int returnValue = 0;
+    char ParamName[MAX_PARAM_SIZE];
+    char ParamValue[MAX_PARAM_SIZE];
+    char ParamType[MAX_PARAM_SIZE];
+    GETPARAMVALUES *resultDetails;
+    int paramsize=0;
+    int commit = 1;
+
+    if(&req["ParamName"] == NULL || &req["ParamValue"] == NULL || &req["ParamType"] == NULL)
+    {
+        response["result"] = "FAILURE";
+        response["details"] = "NULL parameter as input argument";
+        return;
+    }
+
+    //Set Param
+    strcpy(ParamName,req["ParamName"].asCString());
+    strcpy(ParamValue,req["ParamValue"].asCString());
+    strcpy(ParamType,req["ParamType"].asCString());
+
+    DEBUG_PRINT(DEBUG_TRACE,"\nLMLiteStub_Set_Get:: ParamName input is %s",ParamName);
+    DEBUG_PRINT(DEBUG_TRACE,"\nLMLiteStub_Set_Get:: ParamValue input is %s",ParamValue);
+    DEBUG_PRINT(DEBUG_TRACE,"\nLMLiteStub_Set_Get:: ParamType input is %s",ParamType);
+
+    //Setting the parameter value
+    returnValue = ssp_setParameterValue(&ParamName[0],&ParamValue[0],&ParamType[0],commit);
+
+    if(0 == returnValue)
+    {
+        DEBUG_PRINT(DEBUG_TRACE,"\nLMLiteStub_Set_Get --->Set operation success in DUT !!! \n");
+    }
+    else
+    {
+        response["result"]="FAILURE";
+        response["details"]="LMLiteStub::SET Operation is Failure";
+        DEBUG_PRINT(DEBUG_TRACE,"\nLMLiteStub_Set_Get --->Error in Set operation in DUT !!! \n");
+        return;
+    }
+
+    //Getting the parameter value
+    resultDetails = ssp_getParameterValue(&ParamName[0],&paramsize);
+
+    if(resultDetails == NULL)
+    {
+        response["result"]="FAILURE";
+        response["details"]="Get Parameter Value Failure";
+        DEBUG_PRINT(DEBUG_TRACE,"\nLMLiteStub_Set_Get --->Error in Get operation in DUT !!! \n");
+        return;
+    }
+
+    DEBUG_PRINT(DEBUG_TRACE,"\nLMLiteStub_Set_Get:: Value of resultDetails[0].pParamValues is %s and strlen is %d",resultDetails[0].pParamValues,strlen((const char *)resultDetails[0].pParamValues));
+    DEBUG_PRINT(DEBUG_TRACE,"\nLMLiteStub_Set_Get:: Value of ParamValue[0] is %s and strlen is %d",&ParamValue[0],strlen((const char *)&ParamValue[0]));
+
+    if((strcmp(resultDetails[0].pParamValues,&ParamValue[0])) == 0)
+    {
+        response["result"]="SUCCESS";
+        response["details"]="Set Get Functional Validation is success";
+    }
+    else
+    {
+        response["result"]="FAILURE";
+        response["details"]="Set Get Functional Validation failed";
+        DEBUG_PRINT(DEBUG_TRACE,"\nLMLiteStub_Set_Get --->Error in Functional Validation in DUT !!! \n");
+    }
+
+    if(resultDetails != NULL)
+    {
+        for(int i=0; i < paramsize; i++)
+        {
+            free(resultDetails[i].pParamValues);
+        }
+    }
+
+    DEBUG_PRINT(DEBUG_TRACE,"\nLMLiteStub_Set_Get --->Exit\n");
+    return;
+}
 
 /**************************************************************************
  * Function Name        : CreateObject

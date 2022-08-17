@@ -88,6 +88,9 @@ class platform_stub_hal : public RDKTestStubInterface, public AbstractServer<pla
                         this->bindAndAddMethod(Procedure("platform_stub_hal_StartMACsec", PARAMS_BY_NAME, JSON_STRING, "ethPort", JSON_INTEGER, "timeoutSec", JSON_INTEGER, NULL), &platform_stub_hal::platform_stub_hal_StartMACsec);
                         this->bindAndAddMethod(Procedure("platform_stub_hal_StopMACsec", PARAMS_BY_NAME, JSON_STRING, "ethPort", JSON_INTEGER, NULL), &platform_stub_hal::platform_stub_hal_StopMACsec);
                         this->bindAndAddMethod(Procedure("platform_stub_hal_GetWebAccessLevel", PARAMS_BY_NAME, JSON_STRING, "flag", JSON_INTEGER, "userIndex", JSON_INTEGER, "ifIndex", JSON_INTEGER, NULL), &platform_stub_hal::platform_stub_hal_GetWebAccessLevel);
+                        this->bindAndAddMethod(Procedure("platform_stub_hal_SetDscp", PARAMS_BY_NAME, JSON_STRING, "interfaceType", JSON_INTEGER, "cmd", JSON_INTEGER, "isDscpValNull", JSON_INTEGER, "dscpVal", JSON_STRING, NULL), &platform_stub_hal::platform_stub_hal_SetDscp);
+                        this->bindAndAddMethod(Procedure("platform_stub_hal_ResetDscpCounts", PARAMS_BY_NAME, JSON_STRING, "interfaceType", JSON_INTEGER, NULL), &platform_stub_hal::platform_stub_hal_ResetDscpCounts);
+                        this->bindAndAddMethod(Procedure("platform_stub_hal_GetDscpClientList", PARAMS_BY_NAME, JSON_STRING, "interfaceType", JSON_INTEGER, "isClientListNull", JSON_INTEGER, NULL), &platform_stub_hal::platform_stub_hal_GetDscpClientList);
                  }
 
                 bool initialize(IN const char* szVersion);
@@ -144,6 +147,8 @@ class platform_stub_hal : public RDKTestStubInterface, public AbstractServer<pla
                 void platform_stub_hal_SetLowPowerModeState(IN const Json::Value& req, OUT Json::Value& response);
                 void platform_stub_hal_StartMACsec(IN const Json::Value& req, OUT Json::Value& response);
                 void platform_stub_hal_StopMACsec(IN const Json::Value& req, OUT Json::Value& response);
-
+                void platform_stub_hal_SetDscp(IN const Json::Value& req, OUT Json::Value& response);
+                void platform_stub_hal_ResetDscpCounts(IN const Json::Value& req, OUT Json::Value& response);
+                void platform_stub_hal_GetDscpClientList(IN const Json::Value& req, OUT Json::Value& response);
 };
 #endif

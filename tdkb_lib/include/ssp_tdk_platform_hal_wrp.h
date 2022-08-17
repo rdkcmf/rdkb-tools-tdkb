@@ -71,6 +71,9 @@ extern "C"
         int ssp_SetLowPowerModeState(PSM_STATE);
         int ssp_StartMACsec(int, int);
         int ssp_StopMACsec(int);
+        int ssp_setDscp(WAN_INTERFACE interfaceType , TRAFFIC_CNT_COMMAND cmd , char* dscpVal);
+        int ssp_resetDscpCounts(WAN_INTERFACE interfaceType);
+        int ssp_getDscpClientList(WAN_INTERFACE interfaceType , pDSCP_list_t DSCP_List);
 #ifdef __cplusplus
 }
 #endif

@@ -877,7 +877,7 @@ int ssp_GetRouterRegion(char* pValue)
 
         DEBUG_PRINT(DEBUG_TRACE, "platform_hal_GetRouterRegion call was success\n");
         if(pValue)
-            DEBUG_PRINT(DEBUG_TRACE, "platform_hal_GetRouterRegion returns value: %s\n", pValue); 
+            DEBUG_PRINT(DEBUG_TRACE, "platform_hal_GetRouterRegion returns value: %s\n", pValue);
         return RETURN_OK;
 }
 
@@ -985,6 +985,102 @@ int ssp_GetWebAccessLevel(int user, int index, unsigned long int* pulValue)
         return RETURN_ERR;
     }
     DEBUG_PRINT(DEBUG_TRACE, "platform_hal_GetWebAccessLevel call was success\n");
-    DEBUG_PRINT(DEBUG_TRACE, "The WebAccessLevel Value is :%lu\n",*pulValue);  
+    DEBUG_PRINT(DEBUG_TRACE, "The WebAccessLevel Value is :%lu\n",*pulValue);
     return RETURN_OK;
+}
+
+/*******************************************************************************************
+ * Function Name       : ssp_setDscp
+ * Description         : This function will invoke the HAL API platform_hal_setDscp() to Control/Set traffic counting based on Dscp value
+ * @param [in]         : interfaceType - 1 for DOCSIS , 2 for EWAN
+ * @param [in]         : cmd - START/STOP
+ * @param [in]         : dscpVal - comma seperated string , e.g. "10,0" , NULL
+ * @param [out]        : return status an integer value 0-success and 1-Failure
+ *********************************************************************************************/
+int ssp_setDscp(WAN_INTERFACE interfaceType , TRAFFIC_CNT_COMMAND cmd , char* dscpVal)
+{
+    int returnValue = RETURN_OK;
+    DEBUG_PRINT(DEBUG_TRACE, "Entering the ssp_setDscp wrapper\n");
+    DEBUG_PRINT(DEBUG_TRACE, "Interface Type is %d \n",(int)interfaceType);
+    DEBUG_PRINT(DEBUG_TRACE, "Traffic Count Command is %d \n",(int)cmd);
+
+    if(dscpVal)
+    {
+        DEBUG_PRINT(DEBUG_TRACE, "DSCP Value is %s \n", dscpVal);
+    }
+    else
+    {
+        DEBUG_PRINT(DEBUG_TRACE, "DSCP Value is Null\n");
+    }
+
+    returnValue = platform_hal_setDscp(interfaceType, cmd, dscpVal);
+
+    if(returnValue == RETURN_OK)
+    {
+        DEBUG_PRINT(DEBUG_TRACE, "platform_hal_setDscp call was success::return value : %d\n", returnValue);
+    }
+    else
+    {
+        DEBUG_PRINT(DEBUG_TRACE, "platform_hal_setDscp call failed::return value : %d\n", returnValue);
+    }
+
+    DEBUG_PRINT(DEBUG_TRACE, "ssp_setDscp -----> Exiting\n");
+    return returnValue;
+}
+
+
+/*******************************************************************************************
+ * Function Name       : ssp_resetDscpCounts
+ * Description         : This function will invoke the HAL API platform_hal_resetDscpCounts() to reset Dscp Counter values
+ * @param [in]         : interfaceType - 1 for DOCSIS , 2 for EWAN
+ * @param [out]        : return status an integer value 0-success and 1-Failure
+ *********************************************************************************************/
+int ssp_resetDscpCounts(WAN_INTERFACE interfaceType)
+{
+    int returnValue = RETURN_OK;
+    DEBUG_PRINT(DEBUG_TRACE, "Entering the ssp_resetDscpCounts wrapper\n");
+    DEBUG_PRINT(DEBUG_TRACE, "Interface Type is %d \n",(int)interfaceType);
+
+    returnValue = platform_hal_resetDscpCounts(interfaceType);
+
+    if(returnValue == RETURN_OK)
+    {
+        DEBUG_PRINT(DEBUG_TRACE, "platform_hal_resetDscpCounts call was success::return value : %d\n", returnValue);
+    }
+    else
+    {
+        DEBUG_PRINT(DEBUG_TRACE, "platform_hal_resetDscpCounts call failed::return value : %d\n", returnValue);
+    }
+
+    DEBUG_PRINT(DEBUG_TRACE, "ssp_resetDscpCounts -----> Exiting\n");
+    return returnValue;
+}
+
+
+/*******************************************************************************************
+ * Function Name       : ssp_getDscpClientList
+ * Description         : This function will invoke the HAL API platform_hal_getDscpClientList() to get the counter data
+ * @param [in]         : interfaceType - 1 for DOCSIS , 2 for EWAN
+ * @param [in]         : DSCP_List - List of client structure to be filled by hal
+ * @param [out]        : return status an integer value 0-success and 1-Failure
+ *********************************************************************************************/
+int ssp_getDscpClientList(WAN_INTERFACE interfaceType , pDSCP_list_t DSCP_List)
+{
+    int returnValue = RETURN_OK;
+    DEBUG_PRINT(DEBUG_TRACE, "Entering the ssp_getDscpClientList wrapper\n");
+    DEBUG_PRINT(DEBUG_TRACE, "Interface Type is %d \n",(int)interfaceType);
+
+    returnValue = platform_hal_getDscpClientList(interfaceType, DSCP_List);
+
+    if(returnValue == RETURN_OK)
+    {
+        DEBUG_PRINT(DEBUG_TRACE, "platform_hal_getDscpClientList call was success::return value : %d\n", returnValue);
+    }
+    else
+    {
+        DEBUG_PRINT(DEBUG_TRACE, "platform_hal_getDscpClientList call failed::return value : %d\n", returnValue);
+    }
+
+    DEBUG_PRINT(DEBUG_TRACE, "ssp_getDscpClientList -----> Exiting\n");
+    return returnValue;
 }

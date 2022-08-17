@@ -48,6 +48,7 @@ class LMLiteStub : public RDKTestStubInterface, public AbstractServer<LMLiteStub
 		{
 			this->bindAndAddMethod(Procedure("LMLiteStub_Get", PARAMS_BY_NAME, JSON_STRING, "paramName", JSON_STRING, NULL), &LMLiteStub::LMLiteStub_Get);
 			this->bindAndAddMethod(Procedure("LMLiteStub_Set", PARAMS_BY_NAME, JSON_STRING, "ParamName", JSON_STRING, "ParamValue", JSON_STRING, "Type", JSON_STRING, NULL), &LMLiteStub::LMLiteStub_Set);
+                        this->bindAndAddMethod(Procedure("LMLiteStub_Set_Get", PARAMS_BY_NAME, JSON_STRING, "ParamName", JSON_STRING, "ParamValue", JSON_STRING, "ParamType", JSON_STRING, NULL), &LMLiteStub::LMLiteStub_Set_Get);
 		}
 
         /*inherited functions*/
@@ -59,5 +60,6 @@ class LMLiteStub : public RDKTestStubInterface, public AbstractServer<LMLiteStub
         /*LMlite Stub Wrapper functions*/
         void LMLiteStub_Get(IN const Json::Value& req, OUT Json::Value& response);
         void LMLiteStub_Set(IN const Json::Value& req, OUT Json::Value& response);
+        void LMLiteStub_Set_Get(IN const Json::Value& req, OUT Json::Value& response);
 };
 #endif //__LMLITE_STUB_H__
