@@ -34,6 +34,14 @@
           <parameter name="Type" value="null"/>
         </parameters>
       </primitiveTest>
+      <primitiveTest name="LMLiteStub_Set_Get" id=" " version="2">
+        <function>LMLiteStub_Set_Get</function>
+        <parameters>
+          <parameter name="ParamName" value=""/>
+          <parameter name="ParamValue" value=""/>
+          <parameter name="ParamType" value=""/>
+        </parameters>
+      </primitiveTest>
     </primitiveTests>
   </module>
 </xml>

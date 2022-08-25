@@ -37,6 +37,7 @@
       <function name='LMLiteStub_GetAllHosts' />
       <function name='LMLiteStub_GetOnlineDevice' />
       <function name='LMLiteStub_Set' />
+      <function name='LMLiteStub_Set_Get' />
     </functions>
   <!-- Total parameters corresponding module  -->
     <parameters>
@@ -44,6 +45,9 @@
       <parameter funName='LMLiteStub_Set' parameterName='ParamName' parameterType='STRING' range='A-Z' />
       <parameter funName='LMLiteStub_Set' parameterName='ParamValue' parameterType='STRING' range='A-Z' />
       <parameter funName='LMLiteStub_Set' parameterName='Type' parameterType='STRING' range='A-Z' />
+      <parameter funName='LMLiteStub_Set_Get' parameterName='ParamName' parameterType='STRING' range='A-Z' />
+      <parameter funName='LMLiteStub_Set_Get' parameterName='ParamValue' parameterType='STRING' range='A-Z' />
+      <parameter funName='LMLiteStub_Set_Get' parameterName='ParamType' parameterType='STRING' range='A-Z' />
     </parameters>
   </module>
 </xml>

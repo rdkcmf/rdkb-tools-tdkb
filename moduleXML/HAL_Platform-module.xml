@@ -81,6 +81,9 @@
       <function name='platform_stub_hal_SetLowPowerModeState' />
       <function name='platform_stub_hal_StartMACsec' />
       <function name='platform_stub_hal_StopMACsec' />
+      <function name='platform_stub_hal_SetDscp' />
+      <function name='platform_stub_hal_ResetDscpCounts' />
+      <function name='platform_stub_hal_GetDscpClientList' />
     </functions>
   <!-- Total parameters corresponding module  -->
     <parameters>
@@ -140,6 +143,13 @@
       <parameter funName='platform_stub_hal_StartMACsec' parameterName='ethPort' parameterType='INTEGER' range='0-100' />
       <parameter funName='platform_stub_hal_StartMACsec' parameterName='timeoutSec' parameterType='INTEGER' range='0-100' />
       <parameter funName='platform_stub_hal_StopMACsec' parameterName='ethPort' parameterType='INTEGER' range='0-100' />
+      <parameter funName='platform_stub_hal_SetDscp' parameterName='interfaceType' parameterType='INTEGER' range='0-10' />
+      <parameter funName='platform_stub_hal_SetDscp' parameterName='cmd' parameterType='INTEGER' range='1-2' />
+      <parameter funName='platform_stub_hal_SetDscp' parameterName='isDscpValNull' parameterType='INTEGER' range='0-1' />
+      <parameter funName='platform_stub_hal_SetDscp' parameterName='dscpVal' parameterType='STRING' range='A-Z' />
+      <parameter funName='platform_stub_hal_ResetDscpCounts' parameterName='interfaceType' parameterType='INTEGER' range='0-10' />
+      <parameter funName='platform_stub_hal_GetDscpClientList' parameterName='interfaceType' parameterType='INTEGER' range='0-10' />
+      <parameter funName='platform_stub_hal_GetDscpClientList' parameterName='isClientListNull' parameterType='INTEGER' range='0-1' />
     </parameters>
   </module>
 </xml>

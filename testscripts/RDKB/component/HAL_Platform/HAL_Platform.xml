@@ -300,6 +300,28 @@
           <parameter name="ethPort" value="0"/>
         </parameters>
       </primitiveTest>
+      <primitiveTest name="platform_stub_hal_SetDscp" id=" " version="1">
+        <function>platform_stub_hal_SetDscp</function>
+        <parameters>
+          <parameter name="cmd" value=""/>
+          <parameter name="dscpVal" value=""/>
+          <parameter name="interfaceType" value=""/>
+          <parameter name="isDscpValNull" value=""/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest name="platform_stub_hal_ResetDscpCounts" id=" " version="1">
+        <function>platform_stub_hal_ResetDscpCounts</function>
+        <parameters>
+          <parameter name="interfaceType" value=""/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest name="platform_stub_hal_GetDscpClientList" id=" " version="5">
+        <function>platform_stub_hal_GetDscpClientList</function>
+        <parameters>
+          <parameter name="interfaceType" value=""/>
+          <parameter name="isClientListNull" value=""/>
+        </parameters>
+      </primitiveTest>
     </primitiveTests>
   </module>
 </xml>
