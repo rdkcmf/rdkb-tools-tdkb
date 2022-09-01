@@ -49,15 +49,15 @@
 wifi_getRadioTransmitPower()
 wifi_setRadioTransmitPower()</api_or_interface_used>
     <input_parameters>methodName: getRadioTransmitPowerSupported
-methodName: getRadioTransmitPower
+methodName: getRadioPercentageTransmitPower
 methodName: setRadioTransmitPower
 radioIndex : 0</input_parameters>
     <automation_approch>1. Load wifihal module
 2. Using WIFIHAL_GetOrSetParamStringValue invoke wifi_getRadioTransmitPowerSupported() and save the supported transmit powers.
-3. Using  WIFIHAL_GetOrSetParamULongValue invoke wifi_getRadioTransmitPower()
+3. Using  WIFIHAL_GetOrSetParamULongValue invoke wifi_getRadioPercentageTransmitPower()
 4. Using WIFIHAL_GetOrSetParamULongValue
  invoke wifi_setRadioTransmitPower and set a valid value from the supported list
-5. Invoke wifi_getRadioTransmitPower() to get the previously set value.
+5. Invoke wifi_getRadioPercentageTransmitPower() to get the previously set value.
 6. Compare the above two results. If the two values  are same return SUCCESS else return FAILURE
 7. Revert the transmit power back to initial value
 8. Unload wifihal module</automation_approch>
@@ -114,7 +114,7 @@ if "SUCCESS" in loadmodulestatus.upper():
 		print "Supported Transmit Power: %s"%supportedTransmitPower
 		tdkTestObj.setResultStatus("SUCCESS");
 
-		getMethod = "getRadioTransmitPower"
+		getMethod = "getRadioPercentageTransmitPower"
 		primitive = 'WIFIHAL_GetOrSetParamULongValue'
 		radioIndex = idx;
 		tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, 0, getMethod)
@@ -133,7 +133,7 @@ if "SUCCESS" in loadmodulestatus.upper():
 			    time.sleep(60);
 
 			    if expectedresult in actualresult:
-				getMethod = "getRadioTransmitPower"
+				getMethod = "getRadioPercentageTransmitPower"
 				radioIndex = idx;
 				primitive = 'WIFIHAL_GetOrSetParamULongValue'
 				tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, 0, getMethod)
@@ -159,7 +159,7 @@ if "SUCCESS" in loadmodulestatus.upper():
 					tdkTestObj.setResultStatus("FAILURE");
 				else:
 				    tdkTestObj.setResultStatus("FAILURE");
-				    print "getRadioTransmitPower() call failed after set operation"
+				    print "getRadioPercentageTransmitPower() call failed after set operation"
 
 				#Revert back to initial value
 				setMethod = "setRadioTransmitPower"
@@ -179,7 +179,7 @@ if "SUCCESS" in loadmodulestatus.upper():
 			break;
 		else:
 		    tdkTestObj.setResultStatus("FAILURE");
-		    print "getRadioTransmitPower() call failed"
+		    print "getRadioPercentageTransmitPower() call failed"
 	    else:
 		tdkTestObj.setResultStatus("FAILURE");
 		print "getRadioTransmitPowerSupported() call failed"

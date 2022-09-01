@@ -102,6 +102,7 @@ wifi_setRadioOperatingChannelBandwidth() and wifi_getRadioOperatingChannelBandwi
 # use tdklib library,which provides a wrapper for tdk testcase script
 import tdklib;
 from wifiUtility import *;
+from time import sleep;
 
 #Test component to be tested
 obj = tdklib.TDKScriptingLibrary("wifihal","1");
@@ -185,7 +186,8 @@ def setExtChannel(idx):
                     #Get the result of execution
                     print "[TEST EXECUTION RESULT] : SUCCESS";
 
-                    setMethod = "getRadioExtChannel"
+                    sleep(10);
+                    getMethod = "getRadioExtChannel"
                     primitive = 'WIFIHAL_GetOrSetParamStringValue'
 
                     #Calling the method to execute wifi_getRadioExtChannel()
@@ -281,7 +283,7 @@ if "SUCCESS" in loadmodulestatus.upper():
                 setExtChannel(idx);
 
             else:
-                setMethod = "setChannelBandwidth"
+                setMethod = "setRadioOperatingChannelBandwidth"
                 primitive = 'WIFIHAL_GetOrSetParamStringValue'
 
                 #Calling the method to execute wifi_setRadioOperatingChannelBandwidth()
@@ -316,7 +318,7 @@ if "SUCCESS" in loadmodulestatus.upper():
                         setExtChannel(idx);
 
                         #Reverting the channel bandwidth
-                        setMethod = "setChannelBandwidth"
+                        setMethod = "setRadioOperatingChannelBandwidth"
                         primitive = 'WIFIHAL_GetOrSetParamStringValue'
 
                         #Calling the method to execute wifi_setRadioOperatingChannelBandwidth()

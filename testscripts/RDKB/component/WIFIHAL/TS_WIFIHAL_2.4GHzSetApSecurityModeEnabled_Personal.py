@@ -94,6 +94,7 @@ ApIndex : 0</input_parameters>
 # use tdklib library,which provides a wrapper for tdk testcase script
 import tdklib;
 from wifiUtility import *;
+from time import sleep;
 
 radio = "2.4G"
 
@@ -155,6 +156,7 @@ if "SUCCESS" in loadmodulestatus.upper():
 			tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, apIndex, setMode, setMethod)
 
                         if expectedresult in actualresult:
+                            sleep(10);
 			    expectedresult="SUCCESS";
 			    apIndex = idx;
 		            getMethod = "getApSecurityModeEnabled"

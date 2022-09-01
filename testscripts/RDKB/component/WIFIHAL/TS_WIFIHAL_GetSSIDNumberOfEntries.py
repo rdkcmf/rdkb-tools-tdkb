@@ -49,11 +49,12 @@
 2.TDK Agent should be in running state or invoke it through StartTdk.sh script</pre_requisite>
     <api_or_interface_used>wifi_getSSIDNumberOfEntries()</api_or_interface_used>
     <input_parameters>methodName : getSSIDNumberOfEntries</input_parameters>
-    <automation_approch>1. Load wifihal module
-2. Using  WIFIHAL_GetOrSetParamULongValue invoke wifi_getSSIDNumberOfEntries()
-3. The api returns the number of ssid entries
-4. Depending upon the values return SUCCESS else return FAILURE
-5. Unload wifihal module</automation_approch>
+    <automation_approch>1. Load wifihal and sysutil modules
+2. From platform properties file retrieve the expected SSID number of entries for the DUT
+3. Using  WIFIHAL_GetOrSetParamULongValue invoke wifi_getSSIDNumberOfEntries()
+4. The api returns the number of ssid entries and check if the value match with the value from platform properties
+5. Depending upon the values return SUCCESS else return FAILURE
+6. Unload wifihal and sysutil modules</automation_approch>
     <except_output>Should return a ulong value as the number of ssid entires</except_output>
     <priority>High</priority>
     <test_stub_interface>WIFIHAL</test_stub_interface>
@@ -65,57 +66,92 @@
 </xml>
 
 '''
-# use tdklib library,which provides a wrapper for tdk testcase script 
-import tdklib; 
+
+# use tdklib library,which provides a wrapper for tdk testcase script
+import tdklib;
 from wifiUtility import *
+from tdkbVariables import *;
 
 #Test component to be tested
 obj = tdklib.TDKScriptingLibrary("wifihal","1");
+sysobj = tdklib.TDKScriptingLibrary("sysutil","1");
+
 
 #IP and Port of box, No need to change,
 #This will be replaced with correspoing Box Ip and port while executing script
 ip = <ipaddress>
 port = <port>
-obj.configureTestCase(ip,port,'TS_WIFIHAL_GetSSIDNumberOfEntries ');
+obj.configureTestCase(ip,port,'TS_WIFIHAL_GetSSIDNumberOfEntries');
+sysobj.configureTestCase(ip,port,'TS_WIFIHAL_GetSSIDNumberOfEntries ');
 
 #Get the result of connection with test component and DUT
 loadmodulestatus =obj.getLoadModuleResult();
+loadmodulestatus1 =sysobj.getLoadModuleResult();
 print "[LIB LOAD STATUS]  :  %s" %loadmodulestatus ;
+print "[LIB LOAD STATUS]  :  %s" %loadmodulestatus1 ;
 
-if "SUCCESS" in loadmodulestatus.upper():
+if "SUCCESS" in loadmodulestatus.upper() and "SUCCESS" in loadmodulestatus1.upper():
     obj.setLoadModuleStatus("SUCCESS");
-
+    sysobj.setLoadModuleStatus("SUCCESS");
     expectedresult="SUCCESS";
-    getMethod = "getSSIDNumberOfEntries"
-    primitive = 'WIFIHAL_GetOrSetParamULongValue'
 
-    #Calling the method from wifiUtility to execute test case and set result status for the test.
-    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, 0, 0, getMethod)
+    #Getting SSID_NUMBER_OF_ENTRIES value from tdk_platform_properties"
+    cmd= "sh %s/tdk_utility.sh parseConfigFile SSID_NUMBER_OF_ENTRIES" %TDK_PATH;
+    print cmd;
+    expectedresult="SUCCESS";
+    tdkTestObj = sysobj.createTestStep('ExecuteCmd');
+    tdkTestObj.addParameter("command",cmd);
+    tdkTestObj.executeTestCase(expectedresult);
+    actualresult = tdkTestObj.getResult();
+    details = tdkTestObj.getResultDetails().replace("\\n", "");
 
-    if expectedresult in actualresult:
-	SSIDNumber = details.split(":")[1].strip()
-	if int(SSIDNumber) == 16 or int(SSIDNumber) == 6:
-	    tdkTestObj.setResultStatus("SUCCESS");
-	    print "TEST STEP: Check if the SSIDNumberOfEntries returned is 16 or 6"
-	    print "EXPECTED RESULT: Return value is 16 or 6"
-	    print "ACTUAL RESULT: SSIDNumber =",SSIDNumber
-	    print "TEST EXECUTION RESULT: SUCCESS"
-	else:
-	    tdkTestObj.setResultStatus("FAILURE");
-	    print "TEST STEP: Check if the SSIDNumberOfEntries returned is 16 or 6"
-	    print "EXPECTED RESULT: Return value is 16 or 6"
-	    print "ACTUAL RESULT: SSIDNumber =",SSIDNumber
-	    print "TEST EXECUTION RESULT: FAILURE"
+    print "\nTEST STEP 1 : Get the Number of SSID entries from platform properties";
+    print "EXPECTED RESULT 1 : Should get the number of SSID entries from platform properties successfully";
 
+    if expectedresult in actualresult and details != "":
+        print "ACTUAL RESULT 1: SSID Number of Entries :", details ;
+        print "TEST EXECUTION RESULT :SUCCESS";
+        tdkTestObj.setResultStatus("SUCCESS");
+
+        tdkTestObj = obj.createTestStep("WIFIHAL_GetOrSetParamULongValue");
+        tdkTestObj.addParameter("methodName", "getSSIDNumberOfEntries");
+        tdkTestObj.executeTestCase(expectedresult);
+        actualresult = tdkTestObj.getResult();
+        ssiddetails = tdkTestObj.getResultDetails().replace("\\n", "");
+
+        print "\nTEST STEP 2: Invoke the HAL API wifi_getSSIDNumberOfEntries()";
+        print "EXPECTED RESULT 2: wifi_getSSIDNumberOfEntries() API should be invoked successfully and the ";
+
+        if expectedresult in actualresult:
+            print "ACTUAL RESULT 2: API invoked successfully : ", ssiddetails;
+            print "TEST EXECUTION RESULT :SUCCESS";
+            tdkTestObj.setResultStatus("SUCCESS");
+            ssidnumber = ssiddetails.split(":")[1].strip();
+
+            print "\nTEST STEP 3 : Check if the value retrieved from API is same as the value in platform properties";
+            print "EXPECTED RESULT 3 : The value retrieved from the API should be the same as the value in platform properties";
+
+            if ssidnumber.isdigit() and int(ssidnumber) == int(details):
+                print "ACTUAL RESULT 3: The value retrieved from the API is the same as the value in platform properties";
+                print "TEST EXECUTION RESULT :SUCCESS";
+                tdkTestObj.setResultStatus("SUCCESS");
+            else:
+                print "ACTUAL RESULT 3: The value retrieved from the API is NOT the same as the value in platform properties";
+                print "TEST EXECUTION RESULT :FAILURE";
+                tdkTestObj.setResultStatus("FAILURE");
+        else:
+            print "ACTUAL RESULT 2: API NOT invoked successfully";
+            print "TEST EXECUTION RESULT :FAILURE";
+            tdkTestObj.setResultStatus("FAILURE");
     else:
-	tdkTestObj.setResultStatus("FAILURE");
-	print "wifi_getSSIDNumberOfEntries() call failed"
+        print "ACTUAL RESULT 1: SSID Number of Entries :", details ;
+        print "TEST EXECUTION RESULT : FAILURE";
+        tdkTestObj.setResultStatus("FAILURE");
+
     obj.unloadModule("wifihal");
-
+    sysobj.unloadModule("sysutil");
 else:
-    print "Failed to load wifi module";
+    print "Failed to load wifi/sysutil module";
     obj.setLoadModuleStatus("FAILURE");
-
-
-
-    
+    sysobj.setLoadModuleStatus("FAILURE");
+    print "Module loading failure";

@@ -111,7 +111,7 @@ if "SUCCESS" in loadmodulestatus.upper():
             print "Current OperatingChannelBandwidth is  %s"%CurrBW
             tdkTestObj = obj.createTestStep("WIFIHAL_GetOrSetParamStringValue");
             #Giving the method name to invoke the api to set the operating channel bandwidth, wifi_setRadioOperatingChannelBandwidth()
-            tdkTestObj.addParameter("methodName","setChannelBandwidth");
+            tdkTestObj.addParameter("methodName","setRadioOperatingChannelBandwidth");
             tdkTestObj.addParameter("radioIndex",idx);
             tdkTestObj.addParameter("param",setBW);
             expectedresult="SUCCESS";
@@ -152,7 +152,7 @@ if "SUCCESS" in loadmodulestatus.upper():
                         if CheckBW != CurrBW :
                             tdkTestObj = obj.createTestStep("WIFIHAL_GetOrSetParamStringValue");
                             #Giving the method name to invoke the api to set the operating channel bandwidth, wifi_setRadioOperatingChannelBandwidth()
-                            tdkTestObj.addParameter("methodName","setChannelBandwidth");
+                            tdkTestObj.addParameter("methodName","setRadioOperatingChannelBandwidth");
                             tdkTestObj.addParameter("radioIndex",idx);
                             tdkTestObj.addParameter("param",CurrBW);
                             expectedresult="SUCCESS";

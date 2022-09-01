@@ -553,7 +553,7 @@ int ssp_WIFIHALGetOrSetParamStringValue(int radioIndex, char* output, char* meth
         return_status = wifi_getRadioPossibleChannels(radioIndex, output);
     else if(!strcmp(method, "getChannelBandwidth"))
         return_status = wifi_getRadioOperatingChannelBandwidth(radioIndex, output);
-    else if(!strcmp(method, "setChannelBandwidth"))
+    else if(!strcmp(method, "setRadioOperatingChannelBandwidth"))
         return_status = wifi_setRadioOperatingChannelBandwidth(radioIndex, output);
     else if(!strcmp(method, "getRadioGuardInterval"))
         return_status = wifi_getRadioGuardInterval(radioIndex, output);
