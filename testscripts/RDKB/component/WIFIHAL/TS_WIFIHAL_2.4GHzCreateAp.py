@@ -85,7 +85,7 @@
 # use tdklib library,which provides a wrapper for tdk testcase script
 import tdklib;
 from wifiUtility import *;
-
+import time;
 #Test component to be tested
 obj = tdklib.TDKScriptingLibrary("wifihal","1");
 wifiobj = tdklib.TDKScriptingLibrary("wifiagent","1");
@@ -192,6 +192,7 @@ if "SUCCESS" in loadmodulestatus.upper() and sysloadmodulestatus.upper():
                     print "EXPECTED RESULT 3: Should create the new AP using wifi_createAp api";
                     print "ACTUAL RESULT 3: %s" %details;
                     #Get the result of execution
+                    time.sleep(20);
                     print "[TEST EXECUTION RESULT] 3 : SUCCESS";
 	            #Calling the method from wifiUtility to execute test case and set result status for the test.
 	            tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, newapIndex, "0", getMethod)

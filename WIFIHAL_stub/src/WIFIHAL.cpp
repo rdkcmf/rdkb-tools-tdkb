@@ -3250,6 +3250,7 @@ void WIFIHAL::WIFIHAL_CreateAp(IN const Json::Value& req, OUT Json::Value& respo
     int radioIndex = 1;
     int return_status = SSP_FAILURE;
     char details[1000] = {'\0'};
+    char detailsAdd[1000] = {'\0'};
     char essid[20] = {'\0'};
     unsigned char hideSsid;
 
@@ -3273,10 +3274,25 @@ void WIFIHAL::WIFIHAL_CreateAp(IN const Json::Value& req, OUT Json::Value& respo
 
     if(return_status == SSP_SUCCESS)
     {
-        sprintf(details, "wifi_createAp operation SUCCESS");
-        response["result"]="SUCCESS";
-        response["details"]=details;
-        return;
+	sprintf(detailsAdd, "wifi_createAp operation SUCCESS");
+	DEBUG_PRINT(DEBUG_TRACE,"\n%s", detailsAdd);
+	strcat(details, detailsAdd);
+	return_status = ssp_WIFIHALApplySettings(radioIndex, (char *)"createAp");
+	if(return_status == SSP_SUCCESS)
+	{
+		sprintf(detailsAdd, " applyRadioSettings operation success");
+		DEBUG_PRINT(DEBUG_TRACE,"\n%s", detailsAdd);
+		strcat(details, detailsAdd);
+		response["result"]="SUCCESS";
+	}
+	else
+	{
+		sprintf(detailsAdd, " applyRadioSettings operation failed");
+		DEBUG_PRINT(DEBUG_TRACE,"\n%s", detailsAdd);
+		strcat(details, detailsAdd);
+		response["result"]="FAILURE";
+	}
+	response["details"]=details;
     }
     else
     {
@@ -3284,8 +3300,9 @@ void WIFIHAL::WIFIHAL_CreateAp(IN const Json::Value& req, OUT Json::Value& respo
         response["result"]="FAILURE";
         response["details"]=details;
         DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_CreateAp ---->Error in execution\n");
-        return;
     }
+    DEBUG_PRINT(DEBUG_TRACE,"\n WIFIHAL_CreateAp ---->Exiting\n");
+    return;
 }
 
 /*******************************************************************************************
