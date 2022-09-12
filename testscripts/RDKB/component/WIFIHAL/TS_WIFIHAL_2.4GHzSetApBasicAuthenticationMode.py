@@ -33,7 +33,7 @@
   <!--  -->
   <status>FREE</status>
   <!--  -->
-  <synopsis>To set the ApSecurityModeEnabled to "None" and check if the BasicAuthenticationMode for 2.4GHz is changed to "None"<synopsis>
+  <synopsis>To set the ApSecurityModeEnabled to "None" and check if the BasicAuthenticationMode for 2.4GHz is changed to "None"</synopsis>
   <!--  -->
   <groups_id />
   <!--  -->
