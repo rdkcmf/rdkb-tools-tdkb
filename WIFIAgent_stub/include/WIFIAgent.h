@@ -61,7 +61,9 @@ class WIFIAgent :  public RDKTestStubInterface, public AbstractServer<WIFIAgent>
                   this->bindAndAddMethod(Procedure("WIFIAgent_SetSessionId", PARAMS_BY_NAME, JSON_STRING,"pathname",JSON_STRING,"priority", JSON_INTEGER,"sessionId", JSON_INTEGER,"override", JSON_INTEGER,NULL), &WIFIAgent::WIFIAgent_SetSessionId);
                   this->bindAndAddMethod(Procedure("WIFIAgent_Stop", PARAMS_BY_NAME, JSON_STRING,NULL), &WIFIAgent::WIFIAgent_Stop);
                   this->bindAndAddMethod(Procedure("WIFIAgent_SetMultiple", PARAMS_BY_NAME, JSON_STRING,"paramList", JSON_STRING,NULL), &WIFIAgent::WIFIAgent_SetMultiple);
-               }
+                  this->bindAndAddMethod(Procedure("WIFIAgent_Get_LargeValue", PARAMS_BY_NAME, JSON_STRING, "ParamName", JSON_STRING,NULL), &WIFIAgent::WIFIAgent_Get_LargeValue);
+                  this->bindAndAddMethod(Procedure("WIFIAgent_Set_LargeValue", PARAMS_BY_NAME, JSON_STRING, "ParamName", JSON_STRING, "ParamValue", JSON_STRING, "ParamType", JSON_STRING, NULL), &WIFIAgent::WIFIAgent_Set_LargeValue);
+              }
 
         /*inherited functions*/
         bool initialize(IN const char* szVersion);
@@ -84,5 +86,7 @@ class WIFIAgent :  public RDKTestStubInterface, public AbstractServer<WIFIAgent>
         void WIFIAgent_SetSessionId(IN const Json::Value& req, OUT Json::Value& response);
         void WIFIAgent_Stop(IN const Json::Value& req, OUT Json::Value& response);
         void WIFIAgent_SetMultiple(IN const Json::Value& req, OUT Json::Value& response);
+        void WIFIAgent_Get_LargeValue(IN const Json::Value& req, OUT Json::Value& response);
+        void WIFIAgent_Set_LargeValue(IN const Json::Value& req, OUT Json::Value& response);
 };
 #endif //__WIFIAGENT_STUB_H__

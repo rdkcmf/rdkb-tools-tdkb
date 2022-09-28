@@ -958,6 +958,139 @@ void WIFIAgent::WIFIAgent_Stop(IN const Json::Value& req, OUT Json::Value& respo
     return;
 }
 
+/*******************************************************************************************
+ *
+ * Function Name        : WIFIAgent_Get_LargeValue
+ * Description          : This function will invoke TDK Component GET Value wrapper
+ *                      function to get parameter value
+ * @param [in] req-     : ParamName - name of the parameter
+ * @param [out] response : filled with SUCCESS or FAILURE based on the return value of
+ *                         ssp_getParameterValue
+ ********************************************************************************************/
+void WIFIAgent::WIFIAgent_Get_LargeValue(IN const Json::Value& req, OUT Json::Value& response)
+{
+    DEBUG_PRINT(DEBUG_TRACE,"\n WIFIAgent_Get_LargeValue --->Entry\n");
+    char ParamName[MAX_PARAM_SIZE] = {'\0'};
+    GETPARAMVALUES *resultDetails;
+    int paramsize = 0;
+    char paramDetails[10000] = {'\0'};
+
+    if(&req["ParamName"] == NULL)
+    {
+        response["result"] = "FAILURE";
+        response["details"] = "NULL parameter as input argument";
+        return;
+    }
+
+    strcpy(ParamName,req["ParamName"].asCString());
+    DEBUG_PRINT(DEBUG_TRACE,"\n ParamName input is %s",ParamName);
+
+    resultDetails = ssp_getParameterValue(&ParamName[0],&paramsize);
+
+    if(resultDetails == NULL)
+    {
+        response["result"]="FAILURE";
+        response["details"]="Get Parameter Value API Validation Failure";
+    }
+    else
+    {
+        DEBUG_PRINT(DEBUG_TRACE,"Parameter Name retrieved is: %s\n",resultDetails[0].pParamNames);
+        DEBUG_PRINT(DEBUG_TRACE,"Parameter Value retrieved is: %s",resultDetails[0].pParamValues);
+        DEBUG_PRINT(DEBUG_TRACE,"Parameter Type retrieved is: %d\n",resultDetails[0].pParamType);
+
+        sprintf(paramDetails, "NAME:%s VALUE:%s TYPE:%d",resultDetails[0].pParamNames,resultDetails[0].pParamValues,resultDetails[0].pParamType);
+        response["result"]="SUCCESS";
+        response["details"]=paramDetails;
+        free(resultDetails[0].pParamValues);
+    }
+
+    DEBUG_PRINT(DEBUG_TRACE,"\n WIFIAgent_Get_LargeValue --->Exit\n");
+    return;
+}
+
+
+/*******************************************************************************************
+ *
+ * Function Name        : WIFIAgent_Set_LargeValue
+ * Description          : This function will invoke TDK Component SET Value wrapper
+ *                        function
+ * @param [in] req      : ParamName - name of the parameter
+ *                        ParamValue - value to be set
+ *                        ParamType - type of the parameter value to be set
+ * @param [out] response : filled with SUCCESS or FAILURE based on the return value of
+ *                         ssp_setParameterValue
+ ********************************************************************************************/
+void WIFIAgent::WIFIAgent_Set_LargeValue(IN const Json::Value& req, OUT Json::Value& response)
+{
+    DEBUG_PRINT(DEBUG_TRACE,"\n WIFIAgent_Set_LargeValue --->Entry\n");
+    int returnValue = 0;
+    int retVal = 0;
+    int commit = 1;
+    char ParamName[MAX_PARAM_SIZE] = {'\0'};
+    char ParamValue[10000] = {'\0'};
+    char ParamType[MAX_PARAM_SIZE] = {'\0'};
+
+    if(&req["ParamName"] == NULL || &req["ParamValue"] == NULL || &req["ParamType"] == NULL)
+    {
+        response["result"] = "FAILURE";
+        response["details"] = "NULL parameter as input argument";
+        return;
+    }
+
+    //Set Param
+    strcpy(ParamName,req["ParamName"].asCString());
+    strcpy(ParamValue,req["ParamValue"].asCString());
+    strcpy(ParamType,req["ParamType"].asCString());
+    DEBUG_PRINT(DEBUG_TRACE,"\nWIFIAgent_Set_LargeValue:: ParamName input is %s",ParamName);
+    DEBUG_PRINT(DEBUG_TRACE,"\nWIFIAgent_Set_LargeValue:: ParamValue input is %s",ParamValue);
+    DEBUG_PRINT(DEBUG_TRACE,"\nWIFIAgent_Set_LargeValue:: ParamType input is %s",ParamType);
+
+    //Setting the parameter value
+    returnValue = ssp_setParameterValue(&ParamName[0],&ParamValue[0],&ParamType[0],commit);
+    if(0 == returnValue)
+    {
+        DEBUG_PRINT(DEBUG_TRACE,"\nWIFIAgent_Set_LargeValue --->Set operation success in DUT !!! \n");
+
+        if ((!strncmp(ParamName, "Device.WiFi.Radio.1.", 20)) || (!strncmp(ParamName, "Device.WiFi.AccessPoint.1.", 26)) || (!strncmp(ParamName, "Device.WiFi.SSID.1.", 19)) || (!strncmp(ParamName, "Device.WiFi.AccessPoint.3.", 26)) || (!strncmp(ParamName, "Device.WiFi.SSID.3.", 19)) || (!strncmp(ParamName, "Device.WiFi.AccessPoint.5.", 26)) || (!strncmp(ParamName, "Device.WiFi.SSID.5.", 19)) || (!strncmp(ParamName, "Device.WiFi.AccessPoint.7.", 26)) || (!strncmp(ParamName, "Device.WiFi.SSID.7.", 19)) || (!strncmp(ParamName, "Device.WiFi.AccessPoint.9.", 26)) || (!strncmp(ParamName, "Device.WiFi.SSID.9.", 19)))
+        {
+            printf("Apply the wifi settings for 2.4GHZ\n");
+            retVal = ssp_setParameterValue((char *)"Device.WiFi.Radio.1.X_CISCO_COM_ApplySetting",(char *)"true",(char *)"boolean",commit);
+        }
+        else if ((!strncmp(ParamName, "Device.WiFi.Radio.2.", 20)) || (!strncmp(ParamName, "Device.WiFi.AccessPoint.2.", 26)) || (!strncmp(ParamName, "Device.WiFi.SSID.2.", 19)) || (!strncmp(ParamName, "Device.WiFi.AccessPoint.4.", 26)) || (!strncmp(ParamName, "Device.WiFi.SSID.4.", 19)) || (!strncmp(ParamName, "Device.WiFi.AccessPoint.6.", 26)) || (!strncmp(ParamName, "Device.WiFi.SSID.6.", 19)) || (!strncmp(ParamName, "Device.WiFi.AccessPoint.8.", 26)) || (!strncmp(ParamName, "Device.WiFi.SSID.8.", 19)) || (!strncmp(ParamName, "Device.WiFi.AccessPoint.10.", 27)) || (!strncmp(ParamName, "Device.WiFi.SSID.10.", 20)))
+        {
+            printf("Apply the wifi settings for 5GHZ\n");
+            retVal = ssp_setParameterValue((char *)"Device.WiFi.Radio.2.X_CISCO_COM_ApplySetting",(char *)"true",(char *)"boolean",commit);
+        }
+        else if ((!strncmp(ParamName, "Device.WiFi.Radio.3.", 20)) || (!strncmp(ParamName, "Device.WiFi.AccessPoint.17.", 27)))
+        {
+            printf("Apply the wifi settings for 6GHZ\n");
+            retVal = ssp_setParameterValue((char *)"Device.WiFi.Radio.3.X_CISCO_COM_ApplySetting",(char *)"true",(char *)"boolean",commit);
+        }
+
+        if(0 == retVal)
+        {
+            DEBUG_PRINT(DEBUG_TRACE,"\nWIFIAgent_Set_LargeValue --->ApplySettings operation success in DUT !!! \n");
+            response["result"]="SUCCESS";
+            response["details"]="WIFIAgent::Set operation success in DUT !!!";
+        }
+        else
+        {
+            response["result"]="FAILURE";
+            response["details"]="WIFIAgent::ApplySettings Operation is Failure";
+            DEBUG_PRINT(DEBUG_TRACE,"\nWIFIAgent_Set_LargeValue --->Error in ApplySettings operation in DUT !!! \n");
+        }
+    }
+    else
+    {
+        response["result"]="FAILURE";
+        response["details"]="WIFIAgent::SET Operation is Failure";
+        DEBUG_PRINT(DEBUG_TRACE,"\nWIFIAgent_Set_LargeValue --->Error in Set operation in DUT !!! \n");
+    }
+
+    DEBUG_PRINT(DEBUG_TRACE,"\n WIFIAgent_Set_LargeValue --->Exit\n");
+    return;
+}
+
 /**************************************************************************
  * Function Name	: CreateObject
  * Description	: This function will be used to create a new object for the
