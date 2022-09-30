@@ -69,11 +69,11 @@ rbus_closeBrokerConnection</api_or_interface_used>
     <automation_approch>1. Load the rbus module
 2. open the rbus broker connection using rbus_openBrokerConnection API
 3. The rbus_openBrokerConnection should be success
-4. Try to open the broker connection again with the same name, the return status should be failure
+4. Try to open the broker connection again with the same name, the return status should be success
 5. Close the rbus broker connection using rbus_closeBrokerConnection API
 6. The rbus_closeBrokerConnection should be success
 7. Unload the rbus module</automation_approch>
-    <expected_output>Duplicate RBUS Broker Connection should not be allowed</expected_output>
+    <expected_output>Duplicate RBUS Broker Connection should be allowed</expected_output>
     <priority>High</priority>
     <test_stub_interface>rbus</test_stub_interface>
     <test_script>TS_RBUS_OpenMultipleBrokerConnection</test_script>
@@ -132,7 +132,6 @@ if "SUCCESS" in loadmodulestatus.upper():
         tdkTestObj.addParameter("operation","openBrokerConnection");
         tdkTestObj.addParameter("objectName","tdk-b"); #This Will be converted to Component name in Wrapper code
         tdkTestObj.addParameter("methodName","dummy"); #Dont close the Previous opened connection in Wrapper
-        expectedresult="FAILURE";
         tdkTestObj.executeTestCase(expectedresult);
         actualresult = tdkTestObj.getResult();
         details = tdkTestObj.getResultDetails();
@@ -142,16 +141,16 @@ if "SUCCESS" in loadmodulestatus.upper():
             #Set the result status of execution
             tdkTestObj.setResultStatus("SUCCESS");
             print "TEST STEP 2: Open the RBUS Broker connection with same component name";
-            print "EXPECTED RESULT 2: rbus_openBrokerConnection Should be failed for duplicate connection request";
-            print "ACTUAL RESULT 2: rbus_openBrokerConnection was Failed for duplicate connection request";
+            print "EXPECTED RESULT 2: rbus_openBrokerConnection Should be success for duplicate connection request";
+            print "ACTUAL RESULT 2: rbus_openBrokerConnection was success for duplicate connection request";
             #Get the result of execution
             print "[TEST EXECUTION RESULT] : SUCCESS";
         else:
             #Set the result status of execution
             tdkTestObj.setResultStatus("FAILURE");
             print "TEST STEP 2: Open the RBUS Broker connection with same component name";
-            print "EXPECTED RESULT 2: rbus_openBrokerConnection Should be failed for duplicate connection request";
-            print "ACTUAL RESULT 2: rbus_openBrokerConnection was NOT Failed for duplicate connection request";
+            print "EXPECTED RESULT 2: rbus_openBrokerConnection Should be success for duplicate connection request";
+            print "ACTUAL RESULT 2: rbus_openBrokerConnection was NOT success for duplicate connection request";
             #Get the result of execution
             print "[TEST EXECUTION RESULT] : FAILURE";
 
@@ -196,3 +195,4 @@ else:
     print "Failed to load the module";
     obj.setLoadModuleStatus("FAILURE");
     print "Module loading failed";
+

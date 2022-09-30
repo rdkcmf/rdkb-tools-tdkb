@@ -46,6 +46,8 @@
       <function name='WIFIAgent_Set_Get' />
       <function name='WIFIAgent_SetMultiple' />
       <function name='WIFIHal_CallMethodForInt' />
+      <function name='WIFIAgent_Get_LargeValue' />
+      <function name='WIFIAgent_Set_LargeValue' />
     </functions>
   <!-- Total parameters corresponding module  -->
     <parameters>
@@ -72,6 +74,10 @@
       <parameter funName='WIFIAgent_Set_Get' parameterName='paramValue' parameterType='STRING' range='a-z,A-Z' />
       <parameter funName='WIFIAgent_Set_Get' parameterName='paramName' parameterType='STRING' range='a-z,A-Z' />
       <parameter funName='WIFIAgent_SetMultiple' parameterName='paramList' parameterType='STRING' range='A-Z' />
+      <parameter funName='WIFIAgent_Get_LargeValue' parameterName='ParamName' parameterType='STRING' range='A-Z' />
+      <parameter funName='WIFIAgent_Set_LargeValue' parameterName='ParamName' parameterType='STRING' range='A-Z' />
+      <parameter funName='WIFIAgent_Set_LargeValue' parameterName='ParamValue' parameterType='STRING' range='A-Z' />
+      <parameter funName='WIFIAgent_Set_LargeValue' parameterName='ParamType' parameterType='STRING' range='A-Z' />
     </parameters>
   </module>
 </xml>

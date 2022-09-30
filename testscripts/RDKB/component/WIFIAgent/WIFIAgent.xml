@@ -135,6 +135,20 @@
           <parameter name="radioIndex" value=""/>
         </parameters>
       </primitiveTest>
+      <primitiveTest name="WIFIAgent_Get_LargeValue" id=" " version="1">
+        <function>WIFIAgent_Get_LargeValue</function>
+        <parameters>
+          <parameter name="ParamName" value=""/>
+        </parameters>
+      </primitiveTest>
+      <primitiveTest name="WIFIAgent_Set_LargeValue" id=" " version="1">
+        <function>WIFIAgent_Set_LargeValue</function>
+        <parameters>
+          <parameter name="ParamName" value=""/>
+          <parameter name="ParamType" value=""/>
+          <parameter name="ParamValue" value=""/>
+        </parameters>
+      </primitiveTest>
     </primitiveTests>
   </module>
 </xml>

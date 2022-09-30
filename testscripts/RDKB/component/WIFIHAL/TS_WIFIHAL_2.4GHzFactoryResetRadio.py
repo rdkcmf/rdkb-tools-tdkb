@@ -70,7 +70,7 @@ wifi_factoryResetRadio()</api_or_interface_used>
     <input_parameters>methodName : getAutoChannelEnable
 methodName : getRadioGuardInterval
 methodName : getChannelBandwidth
-methodName : setChannelBandwidth
+methodName : setRadioOperatingChannelBandwidth
 methodName : setRadioGuardInterval
 methodName : factoryResetRadio
 radioIndex : 0</input_parameters>
@@ -137,14 +137,14 @@ if "SUCCESS" in loadmodulestatus.upper()and "SUCCESS" in sysloadmodulestatus.upp
     if idx == -1:
         print "Failed to get radio index for radio %s\n" %radio;
         tdkTestObjTemp.setResultStatus("FAILURE");
-    else: 
+    else:
 
 	    details_Enable = InvokeGetSetMethod( idx,'WIFIHAL_GetOrSetParamStringValue',"0","getChannelBandwidth");
 	    ChannelBandwidth_initial = details_Enable.split(":")[1].strip(" ");
 	    details_interval = InvokeGetSetMethod(idx, 'WIFIHAL_GetOrSetParamStringValue',"0","getRadioGuardInterval");
 	    GuardInterval_initial = details_interval.split(":")[1].strip(" ");
 
-	    InvokeGetSetMethod(idx, 'WIFIHAL_GetOrSetParamStringValue',"160MHz","setChannelBandwidth");
+	    InvokeGetSetMethod(idx, 'WIFIHAL_GetOrSetParamStringValue',"160MHz","setRadioOperatingChannelBandwidth");
 	    InvokeGetSetMethod(idx, 'WIFIHAL_GetOrSetParamStringValue',"800nsec","setRadioGuardInterval");
 	    time.sleep(5);
 	    InvokeGetSetMethod(idx, 'WIFIHAL_GetOrSetParamStringValue',"0","getChannelBandwidth");
@@ -201,7 +201,7 @@ if "SUCCESS" in loadmodulestatus.upper()and "SUCCESS" in sysloadmodulestatus.upp
 		    print"[TEST EXECUTION RESULT 1]:FAILURE";
 		#Reverting the values back to initial values
 		print "REVERTING CHANNEL BANDWIDTH TO INITIAL VALUE";
-		InvokeGetSetMethod(idx, 'WIFIHAL_GetOrSetParamStringValue',ChannelBandwidth_initial,"setChannelBandwidth");
+		InvokeGetSetMethod(idx, 'WIFIHAL_GetOrSetParamStringValue',ChannelBandwidth_initial,"setRadioOperatingChannelBandwidth");
 
 		details_interval_reset = InvokeGetSetMethod(idx, 'WIFIHAL_GetOrSetParamStringValue',"0","getRadioGuardInterval");
 		GuardInterval = details_interval_reset.split(":")[1].strip(" ");
@@ -228,4 +228,3 @@ if "SUCCESS" in loadmodulestatus.upper()and "SUCCESS" in sysloadmodulestatus.upp
 else:
     print "Failed to load wifi module";
     obj.setLoadModuleStatus("FAILURE");
-
