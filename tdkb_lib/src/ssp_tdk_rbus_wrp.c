@@ -25,7 +25,7 @@
 #include <unistd.h>
 #include <inttypes.h>
 #include <rbus/rbus.h>
-#include <rbus-core/rbus_core.h>
+#include <rbus/rbuscore.h>
 #include "ssp_tdk_rbus_wrp.h"
 #include "ssp_hal_logger.h"
 
