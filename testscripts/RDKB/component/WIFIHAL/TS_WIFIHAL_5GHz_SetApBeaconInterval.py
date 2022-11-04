@@ -71,6 +71,7 @@ import tdklib;
 from wifiUtility import *;
 from tdkbVariables import *;
 import random;
+import time;
 #Test component to be tested
 obj = tdklib.TDKScriptingLibrary("wifihal","1");
 sysObj = tdklib.TDKScriptingLibrary("sysutil","RDKB");
@@ -170,6 +171,7 @@ if "SUCCESS" in (loadmodulestatus.upper() and  sysutilloadmodulestatus.upper()):
 
                  tdkTestObj = sysObj.createTestStep('ExecuteCmd');
                  expectedresult="SUCCESS";
+                 time.sleep(20);
                  bcon,actualresult = get_Ap1BeaconInterval(tdkTestObj);
                  if expectedresult in actualresult and bcon!= "" and  int(defBconInt) ==  int(bcon):
                     tdkTestObj.setResultStatus("SUCCESS");
