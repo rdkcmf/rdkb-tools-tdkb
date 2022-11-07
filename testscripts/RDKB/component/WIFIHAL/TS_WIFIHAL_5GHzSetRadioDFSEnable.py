@@ -123,7 +123,7 @@ if "SUCCESS" in loadmodulestatus.upper():
 		    oldEnable = 0
 		    newEnable = 1
 
-		setMethod = "setRadioDFSEnable"
+		setMethod = "setRadioDfsEnable"
 		tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, newEnable, setMethod)
 
 		if expectedresult in actualresult :
@@ -142,7 +142,7 @@ if "SUCCESS" in loadmodulestatus.upper():
 			print "Set validation with get api failed"
 			tdkTestObj.setResultStatus("FAILURE");
 		else:
-		    print "wifi_setRadioDFSEnable() call failed"
+		    print "wifi_setRadioDfsEnable() call failed"
 		    tdkTestObj.setResultStatus("FAILURE");
 	    else:
 		print "wifi_getRadioDFSEnable() call failed"

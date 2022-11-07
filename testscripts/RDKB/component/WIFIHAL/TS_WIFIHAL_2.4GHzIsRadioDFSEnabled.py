@@ -46,7 +46,7 @@
 2.TDK Agent should be in running state or invoke it through StartTdk.sh script</pre_requisite>
     <api_or_interface_used>wifi_getRadioDFSEnable()</api_or_interface_used>
     <input_parameters>methodName   :   getRadioDFSEnable
-methodName   :   setRadioDFSEnable
+methodName   :   setRadioDfsEnable
 radioIndex   : 0</input_parameters>
     <automation_approch>1.Configure the Function info in Test Manager GUI  which needs to be tested  
 (WIFIHAL_GetOrSetParamBoolValue  - func name - "If not exists already"
@@ -57,7 +57,7 @@ radioIndex   : 0</input_parameters>
 
 4.wifihalstub which is a part of TDK Agent process, will be in listening mode to execute TDK Component function named WIFIHAL_GetOrSetParamBoolValue through registered TDK wifihalstub function along with necessary arguments
 5.WIFIHAL_GetOrSetParamBoolValue function will call Ccsp Base Function named "ssp_WIFIHALGetOrSetParamBoolValue", that inturn will call WIFIHAL Library Functions 
-wifi_getRadioDFSEnable() and wifi_setRadioDFSEnable()
+wifi_getRadioDFSEnable() and wifi_setRadioDfsEnable()
 
 6.Response(s)(printf) from TDK Component,Ccsp Library function and wifihalstub would be logged in Agent Console log based on the debug info redirected to agent console
 7.wifihalstub will validate the available result (from agent console log and Pointer to instance as updated) with expected result
@@ -121,7 +121,7 @@ if "SUCCESS" in loadmodulestatus.upper():
 		    oldEnable = 0
 		    newEnable = 1
 
-		setMethod = "setRadioDFSEnable"
+		setMethod = "setRadioDfsEnable"
 		#Toggle the enable status using set
 		tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, newEnable, setMethod)
 
@@ -131,7 +131,7 @@ if "SUCCESS" in loadmodulestatus.upper():
 		    tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, 0, getMethod)
 
 		    if expectedresult in actualresult and enable not in details.split(":")[1].strip():
-			print "getRadioDFSEnable Success, verified along with setRadioDFSEnable() api"
+			print "getRadioDFSEnable Success, verified along with setRadioDfsEnable() api"
 			#Revert back to original Enable status
 			tdkTestObj, actualresult, details = ExecuteWIFIHalCallMethod(obj, primitive, radioIndex, oldEnable, setMethod)
 
@@ -144,7 +144,7 @@ if "SUCCESS" in loadmodulestatus.upper():
 			print "getRadioDFSEnable() failed after set function"
 			tdkTestObj.setResultStatus("FAILURE");
 		else:
-		    print "setRadioDFSEnable() failed"
+		    print "setRadioDfsEnable() failed"
 		    tdkTestObj.setResultStatus("FAILURE");
 	    else:
 		print "getRadioDFSEnable() failed"
