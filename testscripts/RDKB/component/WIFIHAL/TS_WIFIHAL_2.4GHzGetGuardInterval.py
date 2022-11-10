@@ -123,11 +123,11 @@ if "SUCCESS" in loadmodulestatus.upper():
             #Get the result of execution
             print "[TEST EXECUTION RESULT] : SUCCESS";
 
-            guardList = {"0":"wifi_guard_interval_400", "1":"wifi_guard_interval_800", "2":"wifi_guard_interval_1600", "3":"wifi_guard_interval_3200", "4":"wifi_guard_interval_auto"};
+            guardList = {"1":"wifi_guard_interval_400", "2":"wifi_guard_interval_800", "4":"wifi_guard_interval_1600", "8":"wifi_guard_interval_3200", "16":"wifi_guard_interval_auto"};
             print "TEST STEP 2: Check if value returned by wifi_getGuardInterval api is from the list ",guardList;
             print "EXPECTED RESULT 2 : The value returned by wifi_getGuardInterval api should be from the above list";
             guardInterval= details.split(":")[1].strip()
-            if guardInterval.isdigit() and 0 <= int(guardInterval) and int(guardInterval) <= 4:
+            if guardInterval and 0 <= int(guardInterval) and int(guardInterval) <= 16:
                  tdkTestObj.setResultStatus("SUCCESS");
                  print "ACTUAL RESULT 2: GuardInterval = %s. Value is from the expected list" %guardList[guardInterval]
                  print "[TEST EXECUTION RESULT] : SUCCESS";

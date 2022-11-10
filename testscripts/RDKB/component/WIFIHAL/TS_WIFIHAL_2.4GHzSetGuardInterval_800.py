@@ -127,8 +127,8 @@ if "SUCCESS" in loadmodulestatus.upper():
             print "[TEST EXECUTION RESULT] : SUCCESS";
 
             initGuardInterval= details.split(":")[1].strip()
-            guardList = {"0":"wifi_guard_interval_400", "1":"wifi_guard_interval_800", "2":"wifi_guard_interval_1600", "3":"wifi_guard_interval_3200", "4":"wifi_guard_interval_auto"};
-            newInterval = "1"
+            guardList = {"1":"wifi_guard_interval_400", "2":"wifi_guard_interval_800", "4":"wifi_guard_interval_1600", "8":"wifi_guard_interval_3200", "16":"wifi_guard_interval_auto"};
+            newInterval = "2"
 
             print "Current guard interval is ",guardList[initGuardInterval]
             print "TEST STEP 2: Set guard interval as wifi_guard_interval_800 using wifi_setGuardInterval() from the supported list of ", guardList
