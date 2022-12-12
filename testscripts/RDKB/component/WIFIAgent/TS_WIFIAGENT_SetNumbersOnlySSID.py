@@ -37,7 +37,7 @@
   <!--  -->
   <groups_id />
   <!--  -->
-  <execution_time>1</execution_time>
+  <execution_time>2</execution_time>
   <!--  -->
   <long_duration>false</long_duration>
   <!--  -->
@@ -145,7 +145,7 @@ if "SUCCESS" in loadmodulestatus.upper():
             #Get the result of execution
             print "[TEST EXECUTION RESULT] : SUCCESS";
 
-            sleep(5);
+            sleep(20);
 	    #check if SSID name is set
             tdkTestObj = obj.createTestStep('WIFIAgent_Get');
             tdkTestObj.addParameter("paramName","Device.WiFi.SSID.1.SSID")
